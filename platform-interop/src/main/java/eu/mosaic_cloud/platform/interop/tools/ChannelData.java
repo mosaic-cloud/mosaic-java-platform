@@ -25,7 +25,6 @@ package eu.mosaic_cloud.platform.interop.tools;
  * Data class holding interoperability channel parameters.
  * 
  * @author Georgiana Macariu
- * 
  */
 public class ChannelData
 {
@@ -35,19 +34,16 @@ public class ChannelData
 	 * @param channelIdentifier
 	 *            the identifier of the channel
 	 * @param channelEndpoint
-	 *            the endpoint (<host>:<port>) where the channel is accepting
-	 *            requests
+	 *            the endpoint (<host>:<port>) where the channel is accepting requests
 	 */
-	public ChannelData (final String channelIdentifier, final String channelEndpoint)
-	{
+	public ChannelData (final String channelIdentifier, final String channelEndpoint) {
 		super ();
 		this.channelIdentifier = channelIdentifier;
 		this.channelEndpoint = channelEndpoint;
 	}
 	
 	@Override
-	public boolean equals (final Object obj)
-	{
+	public boolean equals (final Object obj) {
 		boolean isEqual;
 		isEqual = (this == obj);
 		if (!isEqual) {
@@ -60,19 +56,16 @@ public class ChannelData
 		return isEqual;
 	}
 	
-	public String getChannelEndpoint ()
-	{
+	public String getChannelEndpoint () {
 		return this.channelEndpoint;
 	}
 	
-	public String getChannelIdentifier ()
-	{
+	public String getChannelIdentifier () {
 		return this.channelIdentifier;
 	}
 	
 	@Override
-	public int hashCode ()
-	{
+	public int hashCode () {
 		final int prime = 31;
 		int result = 1;
 		result = (prime * result) + ((this.channelEndpoint == null) ? 0 : this.channelEndpoint.hashCode ());
@@ -86,8 +79,7 @@ public class ChannelData
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
-	public String toString ()
-	{
+	public String toString () {
 		return this.channelIdentifier + "(" + this.channelEndpoint + ")";
 	}
 	

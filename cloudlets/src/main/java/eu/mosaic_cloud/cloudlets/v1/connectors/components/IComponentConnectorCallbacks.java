@@ -26,8 +26,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 public interface IComponentConnectorCallbacks<TContext, TExtra>
-		extends
-			IConnectorCallback<TContext>
+			extends
+				IConnectorCallback<TContext>
 {
 	CallbackCompletion<Void> acquireFailed (TContext context, ComponentRequestFailedCallbackArguments<TExtra> arguments);
 	

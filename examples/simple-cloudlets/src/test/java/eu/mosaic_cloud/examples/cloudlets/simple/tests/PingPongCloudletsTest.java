@@ -34,8 +34,7 @@ import org.junit.runner.Result;
 public class PingPongCloudletsTest
 {
 	@Test
-	public void test ()
-	{
+	public void test () {
 		PingPongCloudletsTest.doRun = true;
 		try {
 			final ParallelComputer computer = new ParallelComputer (true, false);
@@ -49,22 +48,20 @@ public class PingPongCloudletsTest
 	static boolean doRun = false;
 	
 	public static class PingCloudletTest
-			extends BaseCloudletTest
+				extends BaseCloudletTest
 	{
 		@Override
-		public void setUp ()
-		{
+		public void setUp () {
 			this.doRun = PingPongCloudletsTest.doRun;
 			this.setUp (PingCloudlet.LifeCycleHandler.class, PingCloudlet.PingCloudletContext.class, "ping-cloudlet.properties");
 		}
 	}
 	
 	public static class PongCloudletTest
-			extends BaseCloudletTest
+				extends BaseCloudletTest
 	{
 		@Override
-		public void setUp ()
-		{
+		public void setUp () {
 			this.doRun = PingPongCloudletsTest.doRun;
 			this.setUp (PongCloudlet.LifeCycleHandler.class, PongCloudlet.PongCloudletContext.class, "pong-cloudlet.properties");
 		}

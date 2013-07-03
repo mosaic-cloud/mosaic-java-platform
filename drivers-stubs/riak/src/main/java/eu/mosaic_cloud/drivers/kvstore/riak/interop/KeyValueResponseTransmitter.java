@@ -45,14 +45,13 @@ import com.google.protobuf.ByteString;
 
 
 /**
- * Serializes responses for key-value stores operation requests and sends them
- * to the connector proxy which requested the operations.
+ * Serializes responses for key-value stores operation requests and sends them to the connector proxy which requested the
+ * operations.
  * 
  * @author Georgiana Macariu
- * 
  */
 public class KeyValueResponseTransmitter
-		extends ResponseTransmitter
+			extends ResponseTransmitter
 {
 	/**
 	 * Builds the result and sends it to the operation originator.
@@ -68,8 +67,7 @@ public class KeyValueResponseTransmitter
 	 * @param isError
 	 *            <code>true</code> if the result is actual an error
 	 */
-	public void sendResponse (final Session session, final CompletionToken token, final IOperationType operation, final Object result, final boolean isError)
-	{
+	public void sendResponse (final Session session, final CompletionToken token, final IOperationType operation, final Object result, final boolean isError) {
 		this.packAndSend (session, token, (KeyValueOperations) operation, result, isError);
 	}
 	
@@ -84,8 +82,7 @@ public class KeyValueResponseTransmitter
 	 *            the result of the operation
 	 * @return the message
 	 */
-	protected Message buildKeyValueResponse (final KeyValueOperations operation, final CompletionToken token, final Object result)
-	{
+	protected Message buildKeyValueResponse (final KeyValueOperations operation, final CompletionToken token, final Object result) {
 		Message message = null;
 		switch (operation) {
 			case SET :
@@ -136,14 +133,13 @@ public class KeyValueResponseTransmitter
 				getPayload.addAllResults (getResults);
 				message = new Message (KeyValueMessage.GET_REPLY, getPayload.build ());
 				break;
-			default:
+			default :
 				break;
 		}
 		return message;
 	}
 	
-	protected void packAndSend (final Session session, final CompletionToken token, final KeyValueOperations operation, final Object result, final boolean isError)
-	{
+	protected void packAndSend (final Session session, final CompletionToken token, final KeyValueOperations operation, final Object result, final boolean isError) {
 		Message message;
 		this.logger.trace ("KeyValueResponseTransmitter: send response for " + operation + " request " + token.getMessageId () + " client id " + token.getClientId ());
 		if (isError) {

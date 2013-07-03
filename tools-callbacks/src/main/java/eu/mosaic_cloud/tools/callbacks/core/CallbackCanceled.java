@@ -22,7 +22,7 @@ package eu.mosaic_cloud.tools.callbacks.core;
 
 
 public final class CallbackCanceled
-		extends Throwable
+			extends Throwable
 {
 	private static final long serialVersionUID = 1L;
 }

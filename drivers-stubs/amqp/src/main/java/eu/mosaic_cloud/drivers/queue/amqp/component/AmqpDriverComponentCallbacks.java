@@ -50,21 +50,18 @@ import com.google.common.base.Preconditions;
 
 
 /**
- * This callback class enables the AMQP driver to be exposed as a component.
- * Upon initialization it will look for a RabbitMQ server and will create a
- * driver object for the server.
+ * This callback class enables the AMQP driver to be exposed as a component. Upon initialization it will look for a RabbitMQ
+ * server and will create a driver object for the server.
  * 
  * @author Georgiana Macariu
- * 
  */
 public final class AmqpDriverComponentCallbacks
-		extends AbstractDriverComponentCallbacks
+			extends AbstractDriverComponentCallbacks
 {
 	/**
 	 * Creates a driver callback.
 	 */
-	public AmqpDriverComponentCallbacks (final ComponentEnvironment context)
-	{
+	public AmqpDriverComponentCallbacks (final ComponentEnvironment context) {
 		super (context);
 		try {
 			final IConfiguration configuration = PropertyTypeConfiguration.create (AmqpDriverComponentCallbacks.class.getResourceAsStream ("driver-component.properties"));
@@ -78,14 +75,12 @@ public final class AmqpDriverComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> acquireReturned (final ComponentController component, final ComponentAcquireReply reply)
-	{
+	public final CallbackCompletion<Void> acquireReturned (final ComponentController component, final ComponentAcquireReply reply) {
 		throw (new IllegalStateException ());
 	}
 	
 	@Override
-	public CallbackCompletion<Void> called (final ComponentController component, final ComponentCallRequest request)
-	{
+	public CallbackCompletion<Void> called (final ComponentController component, final ComponentCallRequest request) {
 		Preconditions.checkState (this.component == component);
 		Preconditions.checkState ((this.status != Status.Terminated) && (this.status != Status.Unregistered));
 		if (this.status == Status.Registered) {
@@ -120,8 +115,7 @@ public final class AmqpDriverComponentCallbacks
 	}
 	
 	@Override
-	public CallbackCompletion<Void> callReturned (final ComponentController component, final ComponentCallReply reply)
-	{
+	public CallbackCompletion<Void> callReturned (final ComponentController component, final ComponentCallReply reply) {
 		Preconditions.checkState (this.component == component);
 		if ((this.pendingReference == reply.reference) && (this.status == Status.WaitingResourceResolved)) {
 			String rabbitmqTransport;
@@ -161,8 +155,7 @@ public final class AmqpDriverComponentCallbacks
 	}
 	
 	@Override
-	public CallbackCompletion<Void> initialized (final ComponentController component)
-	{
+	public CallbackCompletion<Void> initialized (final ComponentController component) {
 		Preconditions.checkState (this.component == null);
 		Preconditions.checkState (this.status == Status.Created);
 		this.component = component;
@@ -175,8 +168,7 @@ public final class AmqpDriverComponentCallbacks
 	}
 	
 	@Override
-	public CallbackCompletion<Void> registerReturned (final ComponentController component, final ComponentCallReference reference, final boolean registerOk)
-	{
+	public CallbackCompletion<Void> registerReturned (final ComponentController component, final ComponentCallReference reference, final boolean registerOk) {
 		Preconditions.checkState (this.component == component);
 		if (this.pendingReference == reference) {
 			if (!registerOk) {
@@ -198,8 +190,7 @@ public final class AmqpDriverComponentCallbacks
 		return null;
 	}
 	
-	private void configureDriver (final String brokerIp, final String port, final String user, final String pass, final String vHost)
-	{
+	private void configureDriver (final String brokerIp, final String port, final String user, final String pass, final String vHost) {
 		try {
 			this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.AmqpDriver_1), brokerIp);
 			this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.AmqpDriver_2), port);

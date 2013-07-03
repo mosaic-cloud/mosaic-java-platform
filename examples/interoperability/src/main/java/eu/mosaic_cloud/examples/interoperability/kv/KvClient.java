@@ -41,11 +41,10 @@ import com.google.common.base.Preconditions;
 
 
 public final class KvClient
-		implements
-			SessionCallbacks
+			implements
+				SessionCallbacks
 {
-	public KvClient ()
-	{
+	public KvClient () {
 		this.logger = LoggerFactory.getLogger (this.getClass ());
 		this.futures = Collections.synchronizedMap (new HashMap<Long, DeferredFuture<?>> ());
 		this.session = null;
@@ -53,8 +52,7 @@ public final class KvClient
 	}
 	
 	@Override
-	public final synchronized CallbackCompletion<Void> created (final Session session)
-	{
+	public final synchronized CallbackCompletion<Void> created (final Session session) {
 		Preconditions.checkState (this.session == null);
 		final DeferredFuture<Boolean> future = (DeferredFuture<Boolean>) this.futures.remove (Long.valueOf (0));
 		if (future != null)
@@ -64,8 +62,7 @@ public final class KvClient
 	}
 	
 	@Override
-	public final synchronized CallbackCompletion<Void> destroyed (final Session session)
-	{
+	public final synchronized CallbackCompletion<Void> destroyed (final Session session) {
 		Preconditions.checkState (this.session == session);
 		synchronized (this.futures) {
 			for (final DeferredFuture<?> future : this.futures.values ())
@@ -76,14 +73,12 @@ public final class KvClient
 	}
 	
 	@Override
-	public final synchronized CallbackCompletion<Void> failed (final Session session, final Throwable exception)
-	{
+	public final synchronized CallbackCompletion<Void> failed (final Session session, final Throwable exception) {
 		Preconditions.checkState (this.session == session);
 		return (null);
 	}
 	
-	public final synchronized Future<String> get (final String key)
-	{
+	public final synchronized Future<String> get (final String key) {
 		Preconditions.checkState (this.session != null);
 		final long sequence = this.sequence.incrementAndGet ();
 		final DeferredFuture<String> future = DeferredFuture.create (String.class);
@@ -92,8 +87,7 @@ public final class KvClient
 		return (future);
 	}
 	
-	public final synchronized Future<Boolean> initialize (final Channel channel, final String serverIdentifier)
-	{
+	public final synchronized Future<Boolean> initialize (final Channel channel, final String serverIdentifier) {
 		Preconditions.checkState (this.session == null);
 		Preconditions.checkState (this.sequence.get () == 0);
 		final DeferredFuture<Boolean> future = DeferredFuture.create (Boolean.class);
@@ -102,8 +96,7 @@ public final class KvClient
 		return (future);
 	}
 	
-	public final synchronized Future<Boolean> put (final String key, final String value)
-	{
+	public final synchronized Future<Boolean> put (final String key, final String value) {
 		Preconditions.checkState (this.session != null);
 		final long sequence = this.sequence.incrementAndGet ();
 		final DeferredFuture<Boolean> future = DeferredFuture.create (Boolean.class);
@@ -113,8 +106,7 @@ public final class KvClient
 	}
 	
 	@Override
-	public final synchronized CallbackCompletion<Void> received (final Session session, final Message message)
-	{
+	public final synchronized CallbackCompletion<Void> received (final Session session, final Message message) {
 		Preconditions.checkState (this.session == session);
 		switch ((KvMessage) message.specification) {
 			case GetReply : {
@@ -141,7 +133,7 @@ public final class KvClient
 					future.trigger.triggerSucceeded (Boolean.FALSE);
 			}
 				break;
-			default: {
+			default : {
 				this.logger.error ("unexpected message: {}", message.specification);
 				session.send (new Message (KvMessage.Aborted, null));
 			}

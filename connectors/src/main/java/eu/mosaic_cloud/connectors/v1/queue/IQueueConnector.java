@@ -28,9 +28,8 @@ import eu.mosaic_cloud.connectors.v1.core.IConnector;
  * Interface for working with queueing systems.
  * 
  * @author Georgiana Macariu
- * 
  */
 public interface IQueueConnector
-		extends
-			IConnector
+			extends
+				IConnector
 {}

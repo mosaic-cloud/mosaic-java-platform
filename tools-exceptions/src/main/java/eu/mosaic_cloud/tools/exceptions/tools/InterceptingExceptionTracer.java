@@ -29,16 +29,14 @@ import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 
 
 public abstract class InterceptingExceptionTracer
-		extends BaseExceptionTracer
+			extends BaseExceptionTracer
 {
-	protected InterceptingExceptionTracer ()
-	{
+	protected InterceptingExceptionTracer () {
 		super ();
 	}
 	
 	@Override
-	public final void trace (final ExceptionResolution resolution, final Throwable exception)
-	{
+	public final void trace (final ExceptionResolution resolution, final Throwable exception) {
 		try {
 			this.trace_ (resolution, exception);
 		} catch (final Throwable exception1) {
@@ -54,8 +52,7 @@ public abstract class InterceptingExceptionTracer
 	}
 	
 	@Override
-	public final void trace (final ExceptionResolution resolution, final Throwable exception, final String message)
-	{
+	public final void trace (final ExceptionResolution resolution, final Throwable exception, final String message) {
 		try {
 			this.trace_ (resolution, exception, message);
 		} catch (final Throwable exception1) {
@@ -71,8 +68,7 @@ public abstract class InterceptingExceptionTracer
 	}
 	
 	@Override
-	public final void trace (final ExceptionResolution resolution, final Throwable exception, final String format, final Object ... tokens)
-	{
+	public final void trace (final ExceptionResolution resolution, final Throwable exception, final String format, final Object ... tokens) {
 		try {
 			this.trace_ (resolution, exception, format, tokens);
 		} catch (final Throwable exception1) {
@@ -89,8 +85,7 @@ public abstract class InterceptingExceptionTracer
 	
 	protected abstract ExceptionTracer getDelegate ();
 	
-	protected final ExceptionTracer getDelegateSafe ()
-	{
+	protected final ExceptionTracer getDelegateSafe () {
 		final ExceptionTracer directDelegate = this.getDelegate ();
 		if (directDelegate == this)
 			return (null);

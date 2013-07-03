@@ -33,8 +33,8 @@ import com.google.protobuf.GeneratedMessage;
 
 
 public enum DFSMessage
-		implements
-			MessageSpecification
+			implements
+				MessageSpecification
 {
 	ABORTED (MessageType.Termination, IdlCommon.AbortRequest.class),
 	ACCESS (MessageType.Initiation, null),
@@ -53,8 +53,7 @@ public enum DFSMessage
 	//	CLOSE (MessageType.Exchange, DFSPayloads.CloseFile.class),
 	REMOVE_FILE (MessageType.Exchange, DFSPayloads.RemoveFile.class),
 	SUCCESS (MessageType.Exchange, DFSPayloads.SuccessResponse.class);
-	DFSMessage (final MessageType type, final Class<? extends GeneratedMessage> clasz)
-	{
+	DFSMessage (final MessageType type, final Class<? extends GeneratedMessage> clasz) {
 		this.identifier = Identifiers.generate (this);
 		this.type = type;
 		if (clasz != null) {
@@ -63,26 +62,22 @@ public enum DFSMessage
 	}
 	
 	@Override
-	public String getIdentifier ()
-	{
+	public String getIdentifier () {
 		return this.identifier;
 	}
 	
 	@Override
-	public PayloadCoder getPayloadCoder ()
-	{
+	public PayloadCoder getPayloadCoder () {
 		return this.coder;
 	}
 	
 	@Override
-	public String getQualifiedName ()
-	{
+	public String getQualifiedName () {
 		return (Identifiers.generateName (this));
 	}
 	
 	@Override
-	public MessageType getType ()
-	{
+	public MessageType getType () {
 		return this.type;
 	}
 	

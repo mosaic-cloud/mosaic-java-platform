@@ -28,28 +28,21 @@ import com.google.common.collect.HashBiMap;
 
 
 public final class ComponentIdentifier
-		extends Object
+			extends Object
 {
-	private ComponentIdentifier (final String string)
-	{
+	private ComponentIdentifier (final String string) {
 		super ();
 		this.string = string;
 	}
 	
 	@Override
-	public final String toString ()
-	{
+	public final String toString () {
 		return (this.string);
 	}
 	
-	static {
-		identifiers = HashBiMap.create ();
-		stringPattern = Pattern.compile ("^[0-9a-f]{40}$");
-		standalone = ComponentIdentifier.resolve ("ffffffffffffffffffffffffffffffffffffffff");
-	}
+	public final String string;
 	
-	public static final ComponentIdentifier resolve (final String string)
-	{
+	public static final ComponentIdentifier resolve (final String string) {
 		Preconditions.checkNotNull (string);
 		Preconditions.checkArgument (ComponentIdentifier.stringPattern.matcher (string).matches ());
 		synchronized (ComponentIdentifier.identifiers) {
@@ -65,7 +58,11 @@ public final class ComponentIdentifier
 		}
 	}
 	
-	public final String string;
+	static {
+		identifiers = HashBiMap.create ();
+		stringPattern = Pattern.compile ("^[0-9a-f]{40}$");
+		standalone = ComponentIdentifier.resolve ("ffffffffffffffffffffffffffffffffffffffff");
+	}
 	public static final ComponentIdentifier standalone;
 	public static final Pattern stringPattern;
 	private static final HashBiMap<String, ComponentIdentifier> identifiers;

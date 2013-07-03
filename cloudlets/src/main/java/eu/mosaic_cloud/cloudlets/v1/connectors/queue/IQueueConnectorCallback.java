@@ -25,6 +25,6 @@ import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorCallback;
 
 
 public interface IQueueConnectorCallback<TContext>
-		extends
-			IConnectorCallback<TContext>
+			extends
+				IConnectorCallback<TContext>
 {}

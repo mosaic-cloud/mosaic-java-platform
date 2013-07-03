@@ -38,10 +38,9 @@ import com.google.common.base.Preconditions;
 
 
 public final class ZeroMqChannelSocket
-		extends Object
+			extends Object
 {
-	private ZeroMqChannelSocket (final String self, final Runnable dequeueTrigger, final ThreadingContext threading, final ExceptionTracer exceptions)
-	{
+	private ZeroMqChannelSocket (final String self, final Runnable dequeueTrigger, final ThreadingContext threading, final ExceptionTracer exceptions) {
 		super ();
 		Preconditions.checkNotNull (self);
 		Preconditions.checkNotNull (threading);
@@ -58,8 +57,7 @@ public final class ZeroMqChannelSocket
 		this.loop = Threading.createAndStartDaemonThread (ZeroMqChannelSocket.this.threading, ZeroMqChannelSocket.this, "loop", new Loop ());
 	}
 	
-	public final void accept (final String endpoint)
-	{
+	public final void accept (final String endpoint) {
 		Preconditions.checkNotNull (endpoint);
 		this.transcript.traceDebugging ("accepting on `%s`...", endpoint);
 		if (this.socket == null)
@@ -72,8 +70,7 @@ public final class ZeroMqChannelSocket
 		Threading.sleep (ZeroMqChannelSocket.defaultWaitDelay);
 	}
 	
-	public final void connect (final String endpoint)
-	{
+	public final void connect (final String endpoint) {
 		Preconditions.checkNotNull (endpoint);
 		this.transcript.traceDebugging ("connecting to `%s`...", endpoint);
 		if (this.socket == null)
@@ -87,30 +84,25 @@ public final class ZeroMqChannelSocket
 		Threading.sleep (ZeroMqChannelSocket.defaultWaitDelay);
 	}
 	
-	public final ZeroMqChannelPacket dequeue (final long timeout)
-	{
+	public final ZeroMqChannelPacket dequeue (final long timeout) {
 		return (Threading.poll (this.inboundPackets, timeout));
 	}
 	
-	public final boolean enqueue (final ZeroMqChannelPacket packet, final long timeout)
-	{
+	public final boolean enqueue (final ZeroMqChannelPacket packet, final long timeout) {
 		return (Threading.offer (this.outboundPackets, packet, timeout));
 	}
 	
-	public final void terminate ()
-	{
+	public final void terminate () {
 		this.terminate (0);
 	}
 	
-	public final boolean terminate (final long timeout)
-	{
+	public final boolean terminate (final long timeout) {
 		this.transcript.traceDebugging ("terminating...");
 		this.shouldStop = true;
 		return (Threading.join (this.loop, timeout));
 	}
 	
-	final void loop ()
-	{
+	final void loop () {
 		// this.transcript.traceDebugging ("loopping...");
 		final ZMQ.Poller poller = ZeroMqChannelSocket.defaultContext.poller (3);
 		while (true) {
@@ -149,8 +141,7 @@ public final class ZeroMqChannelSocket
 		}
 	}
 	
-	final void setup ()
-	{
+	final void setup () {
 		this.transcript.traceDebugging ("setting-up...");
 		this.connectedEndpoints.clear ();
 		this.acceptingEndpoints.clear ();
@@ -158,20 +149,17 @@ public final class ZeroMqChannelSocket
 		this.socket.setIdentity (this.self.getBytes ());
 	}
 	
-	final void teardown ()
-	{
+	final void teardown () {
 		this.transcript.traceDebugging ("tearing-down...");
 		this.socket.close ();
 		this.socket = null;
 	}
 	
-	private final void failed ()
-	{
+	private final void failed () {
 		this.transcript.traceError ("socket failed; ignoring!");
 	}
 	
-	private final void receive ()
-	{
+	private final void receive () {
 		// this.transcript.traceDebugging ("receiving packet...");
 		final String peer;
 		final byte[] peer_;
@@ -237,14 +225,12 @@ public final class ZeroMqChannelSocket
 			}
 	}
 	
-	private final void receiveFlush ()
-	{
+	private final void receiveFlush () {
 		while (this.socket.hasReceiveMore ())
 			this.socket.recv (0);
 	}
 	
-	private final void send ()
-	{
+	private final void send () {
 		// this.transcript.traceDebugging ("sending packet...");
 		final ZeroMqChannelPacket packet = this.outboundPackets.remove ();
 		if (!this.socket.send (packet.peer.getBytes (), ZMQ.SNDMORE)) {
@@ -274,11 +260,6 @@ public final class ZeroMqChannelSocket
 			}
 	}
 	
-	public static final ZeroMqChannelSocket create (final String self, final Runnable dequeueTrigger, final ThreadingContext threading, final ExceptionTracer exceptions)
-	{
-		return (new ZeroMqChannelSocket (self, dequeueTrigger, threading, exceptions));
-	}
-	
 	final HashSet<String> acceptingEndpoints;
 	final HashSet<String> connectedEndpoints;
 	final Runnable dequeueTrigger;
@@ -291,23 +272,26 @@ public final class ZeroMqChannelSocket
 	ZMQ.Socket socket;
 	final ThreadingContext threading;
 	final Transcript transcript;
+	
+	public static final ZeroMqChannelSocket create (final String self, final Runnable dequeueTrigger, final ThreadingContext threading, final ExceptionTracer exceptions) {
+		return (new ZeroMqChannelSocket (self, dequeueTrigger, threading, exceptions));
+	}
+	
 	public static final long defaultPollDelay = 5;
 	public static final long defaultWaitDelay = 50;
 	static final ZMQ.Context defaultContext = ZMQ.context (1);
 	
 	private final class Loop
-			extends Object
-			implements
-				Runnable
+				extends Object
+				implements
+					Runnable
 	{
-		Loop ()
-		{
+		Loop () {
 			super ();
 		}
 		
 		@Override
-		public final void run ()
-		{
+		public final void run () {
 			ZeroMqChannelSocket.this.setup ();
 			ZeroMqChannelSocket.this.loop ();
 			ZeroMqChannelSocket.this.teardown ();

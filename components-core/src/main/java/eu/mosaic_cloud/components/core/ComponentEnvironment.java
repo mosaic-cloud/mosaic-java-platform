@@ -35,10 +35,9 @@ import com.google.common.base.Preconditions;
 
 
 public final class ComponentEnvironment
-		extends Object
+			extends Object
 {
-	private ComponentEnvironment (final ComponentIdentifier identifier, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final Map<String, Object> supplementary)
-	{
+	private ComponentEnvironment (final ComponentIdentifier identifier, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final Map<String, Object> supplementary) {
 		super ();
 		Preconditions.checkNotNull (identifier);
 		Preconditions.checkNotNull (classLoader);
@@ -53,21 +52,10 @@ public final class ComponentEnvironment
 		this.exceptions = exceptions;
 		this.supplementary = SupplementaryEnvironment.create (supplementary, new UncaughtExceptionHandler () {
 			@Override
-			public void uncaughtException (final Thread thread, final Throwable exception)
-			{
+			public void uncaughtException (final Thread thread, final Throwable exception) {
 				ComponentEnvironment.this.exceptions.trace (ExceptionResolution.Ignored, exception);
 			}
 		});
-	}
-	
-	public static final ComponentEnvironment create (final ComponentIdentifier identifier, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions)
-	{
-		return (new ComponentEnvironment (identifier, classLoader, reactor, threading, exceptions, new HashMap<String, Object> ()));
-	}
-	
-	public static final ComponentEnvironment create (final ComponentIdentifier identifier, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final Map<String, Object> supplementary)
-	{
-		return (new ComponentEnvironment (identifier, classLoader, reactor, threading, exceptions, supplementary));
 	}
 	
 	public final ClassLoader classLoader;
@@ -76,4 +64,12 @@ public final class ComponentEnvironment
 	public final CallbackReactor reactor;
 	public final SupplementaryEnvironment supplementary;
 	public final ThreadingContext threading;
+	
+	public static final ComponentEnvironment create (final ComponentIdentifier identifier, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions) {
+		return (new ComponentEnvironment (identifier, classLoader, reactor, threading, exceptions, new HashMap<String, Object> ()));
+	}
+	
+	public static final ComponentEnvironment create (final ComponentIdentifier identifier, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final Map<String, Object> supplementary) {
+		return (new ComponentEnvironment (identifier, classLoader, reactor, threading, exceptions, supplementary));
+	}
 }

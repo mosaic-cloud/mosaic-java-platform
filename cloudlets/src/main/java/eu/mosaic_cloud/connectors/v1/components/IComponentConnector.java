@@ -29,8 +29,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 public interface IComponentConnector
-		extends
-			IConnector
+			extends
+				IConnector
 {
 	CallbackCompletion<ComponentResourceDescriptor> acquire (final ComponentResourceSpecification resource);
 	

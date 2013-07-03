@@ -44,26 +44,22 @@ import com.rabbitmq.client.GetResponse;
 
 
 /**
- * Factory class which builds the asynchronous calls for the operations defined
- * for the AMQP protocol.
+ * Factory class which builds the asynchronous calls for the operations defined for the AMQP protocol.
  * 
  * @author Georgiana Macariu
- * 
  */
 final class AmqpOperationFactory
-		implements
-			IOperationFactory
+			implements
+				IOperationFactory
 {
-	AmqpOperationFactory (final AmqpDriver amqpDriver)
-	{
+	AmqpOperationFactory (final AmqpDriver amqpDriver) {
 		super ();
 		this.amqpDriver = amqpDriver;
 		this.exceptions = FallbackExceptionTracer.defaultInstance;
 	}
 	
 	@Override
-	public void destroy ()
-	{
+	public void destroy () {
 		// NOTE: nothing to do here
 	}
 	
@@ -75,15 +71,13 @@ final class AmqpOperationFactory
 	 * .platform.core.IOperationType , java.lang.Object[])
 	 */
 	@Override
-	public IOperation<?> getOperation (final IOperationType type, final Object ... parameters)
-	{
+	public IOperation<?> getOperation (final IOperationType type, final Object ... parameters) {
 		IOperation<?> operation;
 		if (!(type instanceof AmqpOperations)) {
 			return new GenericOperation<Object> (new Callable<Object> () {
 				@Override
 				public Object call ()
-						throws UnsupportedOperationException
-				{
+							throws UnsupportedOperationException {
 					throw new UnsupportedOperationException ("Unsupported operation: " + type.toString ());
 				}
 			});
@@ -114,12 +108,11 @@ final class AmqpOperationFactory
 			case CANCEL :
 				operation = this.buildCancelOperation (parameters);
 				break;
-			default:
+			default :
 				operation = new GenericOperation<Object> (new Callable<Object> () {
 					@Override
 					public Object call ()
-							throws UnsupportedOperationException
-					{
+								throws UnsupportedOperationException {
 						throw new UnsupportedOperationException ("Unsupported operation: " + mType.toString ());
 					}
 				});
@@ -127,12 +120,10 @@ final class AmqpOperationFactory
 		return operation;
 	}
 	
-	private IOperation<?> buildAckOperation (final Object ... parameters)
-	{
+	private IOperation<?> buildAckOperation (final Object ... parameters) {
 		return new GenericOperation<Boolean> (new Callable<Boolean> () {
 			@Override
-			public Boolean call ()
-			{
+			public Boolean call () {
 				boolean succeeded = false;
 				final long delivery = (Long) parameters[0];
 				final boolean multiple = (Boolean) parameters[1];
@@ -151,12 +142,10 @@ final class AmqpOperationFactory
 		});
 	}
 	
-	private IOperation<?> buildBindQueueOperation (final Object ... parameters)
-	{
+	private IOperation<?> buildBindQueueOperation (final Object ... parameters) {
 		return new GenericOperation<Boolean> (new Callable<Boolean> () {
 			@Override
-			public Boolean call ()
-			{
+			public Boolean call () {
 				boolean succeeded = false;
 				final String exchange = (String) parameters[0];
 				final String queue = (String) parameters[1];
@@ -176,12 +165,10 @@ final class AmqpOperationFactory
 		});
 	}
 	
-	private IOperation<?> buildCancelOperation (final Object ... parameters)
-	{
+	private IOperation<?> buildCancelOperation (final Object ... parameters) {
 		return new GenericOperation<Boolean> (new Callable<Boolean> () {
 			@Override
-			public Boolean call ()
-			{
+			public Boolean call () {
 				boolean succeeded = false;
 				final String consumer = (String) parameters[0];
 				final Channel channel = AmqpOperationFactory.this.amqpDriver.getChannel (consumer);
@@ -198,13 +185,11 @@ final class AmqpOperationFactory
 		});
 	}
 	
-	private IOperation<?> buildConsumeOperation (final Object ... parameters)
-	{
+	private IOperation<?> buildConsumeOperation (final Object ... parameters) {
 		return new GenericOperation<String> (new Callable<String> () {
 			@Override
 			public String call ()
-					throws IOException
-			{
+						throws IOException {
 				final String queue = (String) parameters[0];
 				final String consumer = (String) parameters[1];
 				final boolean exclusive = (Boolean) parameters[2];
@@ -227,13 +212,11 @@ final class AmqpOperationFactory
 		});
 	}
 	
-	private IOperation<?> buildDeclareExchangeOperation (final Object ... parameters)
-	{
+	private IOperation<?> buildDeclareExchangeOperation (final Object ... parameters) {
 		return new GenericOperation<Boolean> (new Callable<Boolean> () {
 			@Override
 			public Boolean call ()
-					throws IOException
-			{
+						throws IOException {
 				boolean succeeded = false;
 				final String exchange = (String) parameters[0];
 				final boolean durable = (Boolean) parameters[2];
@@ -256,13 +239,11 @@ final class AmqpOperationFactory
 		});
 	}
 	
-	private IOperation<?> buildDeclareQueueOperation (final Object ... parameters)
-	{
+	private IOperation<?> buildDeclareQueueOperation (final Object ... parameters) {
 		return new GenericOperation<Boolean> (new Callable<Boolean> () {
 			@Override
 			public Boolean call ()
-					throws IOException
-			{
+						throws IOException {
 				boolean succeeded = false;
 				final String queue = (String) parameters[0];
 				final boolean exclusive = (Boolean) parameters[1];
@@ -285,12 +266,10 @@ final class AmqpOperationFactory
 		});
 	}
 	
-	private IOperation<?> buildGetOperation (final Object ... parameters)
-	{
+	private IOperation<?> buildGetOperation (final Object ... parameters) {
 		return new GenericOperation<AmqpInboundMessage> (new Callable<AmqpInboundMessage> () {
 			@Override
-			public AmqpInboundMessage call ()
-			{
+			public AmqpInboundMessage call () {
 				AmqpInboundMessage message = null;
 				final String queue = (String) parameters[0];
 				final boolean autoAck = (Boolean) parameters[1];
@@ -314,13 +293,11 @@ final class AmqpOperationFactory
 		});
 	}
 	
-	private IOperation<?> buildPublishOperation (final Object ... parameters)
-	{
+	private IOperation<?> buildPublishOperation (final Object ... parameters) {
 		return new GenericOperation<Boolean> (new Callable<Boolean> () {
 			@Override
 			public Boolean call ()
-					throws IOException
-			{
+						throws IOException {
 				boolean succeeded = false;
 				final AmqpOutboundMessage message = (AmqpOutboundMessage) parameters[0];
 				final String clientId = (String) parameters[1];

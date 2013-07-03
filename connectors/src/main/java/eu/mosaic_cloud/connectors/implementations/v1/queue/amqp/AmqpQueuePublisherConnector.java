@@ -28,23 +28,20 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 public class AmqpQueuePublisherConnector<TMessage>
-		extends AmqpQueueConnector<AmqpQueuePublisherConnectorProxy<TMessage>>
-		implements
-			IAmqpQueuePublisherConnector<TMessage>
+			extends AmqpQueueConnector<AmqpQueuePublisherConnectorProxy<TMessage>>
+			implements
+				IAmqpQueuePublisherConnector<TMessage>
 {
-	protected AmqpQueuePublisherConnector (final AmqpQueuePublisherConnectorProxy<TMessage> proxy)
-	{
+	protected AmqpQueuePublisherConnector (final AmqpQueuePublisherConnectorProxy<TMessage> proxy) {
 		super (proxy);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> publish (final TMessage message)
-	{
+	public CallbackCompletion<Void> publish (final TMessage message) {
 		return this.proxy.publish (message);
 	}
 	
-	public static <M> AmqpQueuePublisherConnector<M> create (final ConnectorConfiguration configuration, final Class<M> messageClass, final DataEncoder<M> messageEncoder)
-	{
+	public static <M> AmqpQueuePublisherConnector<M> create (final ConnectorConfiguration configuration, final Class<M> messageClass, final DataEncoder<M> messageEncoder) {
 		final AmqpQueuePublisherConnectorProxy<M> proxy = AmqpQueuePublisherConnectorProxy.create (configuration, messageClass, messageEncoder);
 		return new AmqpQueuePublisherConnector<M> (proxy);
 	}

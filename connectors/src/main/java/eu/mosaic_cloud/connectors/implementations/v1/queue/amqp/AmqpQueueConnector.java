@@ -29,11 +29,10 @@ import com.google.common.base.Preconditions;
 
 
 public abstract class AmqpQueueConnector<TProxy extends AmqpQueueConnectorProxy<?>>
-		implements
-			IAmqpQueueConnector
+			implements
+				IAmqpQueueConnector
 {
-	protected AmqpQueueConnector (final TProxy proxy)
-	{
+	protected AmqpQueueConnector (final TProxy proxy) {
 		super ();
 		Preconditions.checkNotNull (proxy);
 		this.proxy = proxy;
@@ -43,14 +42,12 @@ public abstract class AmqpQueueConnector<TProxy extends AmqpQueueConnectorProxy<
 	}
 	
 	@Override
-	public CallbackCompletion<Void> destroy ()
-	{
+	public CallbackCompletion<Void> destroy () {
 		return this.proxy.destroy ();
 	}
 	
 	@Override
-	public CallbackCompletion<Void> initialize ()
-	{
+	public CallbackCompletion<Void> initialize () {
 		return this.proxy.initialize ();
 	}
 	

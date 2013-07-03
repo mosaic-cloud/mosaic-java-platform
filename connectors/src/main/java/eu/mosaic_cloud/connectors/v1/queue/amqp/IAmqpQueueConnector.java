@@ -28,9 +28,8 @@ import eu.mosaic_cloud.connectors.v1.queue.IQueueConnector;
  * Interface for working with AMQP compatible queueing systems.
  * 
  * @author Georgiana Macariu
- * 
  */
 public interface IAmqpQueueConnector
-		extends
-			IQueueConnector
+			extends
+				IQueueConnector
 {}

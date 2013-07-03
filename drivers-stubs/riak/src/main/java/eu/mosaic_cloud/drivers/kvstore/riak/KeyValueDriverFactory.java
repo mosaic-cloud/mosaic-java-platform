@@ -34,12 +34,10 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * A factory for key-value drivers.
  * 
  * @author Georgiana Macariu
- * 
  */
 public final class KeyValueDriverFactory
 {
-	private KeyValueDriverFactory ()
-	{}
+	private KeyValueDriverFactory () {}
 	
 	/**
 	 * Creates a driver of requested type with the specified configuration.
@@ -55,8 +53,7 @@ public final class KeyValueDriverFactory
 	 *             if driver cannot be instantiated for any reason
 	 */
 	public static AbstractKeyValueDriver createDriver (final String driverName, final IConfiguration config, final ThreadingContext threadingContext)
-			throws DriverNotFoundException
-	{
+				throws DriverNotFoundException {
 		DriverType type = null;
 		AbstractKeyValueDriver driver = null;
 		for (final DriverType t : DriverType.values ()) {
@@ -88,18 +85,15 @@ public final class KeyValueDriverFactory
 	{
 		RIAKPB ("eu.mosaic_cloud.drivers.kvstore.riak.RiakDriver"),
 		RIAKREST ("eu.mosaic_cloud.drivers.kvstore.riak.RiakDriver");
-		DriverType (final String canonicalClassName)
-		{
+		DriverType (final String canonicalClassName) {
 			this.driverClassName = canonicalClassName;
 		}
 		
-		public Class<? extends AbstractKeyValueDriver> getDriverClass ()
-		{
+		public Class<? extends AbstractKeyValueDriver> getDriverClass () {
 			return this.getDriverClass (DriverType.class.getClassLoader ());
 		}
 		
-		private Class<? extends AbstractKeyValueDriver> getDriverClass (final ClassLoader loader)
-		{
+		private Class<? extends AbstractKeyValueDriver> getDriverClass (final ClassLoader loader) {
 			try {
 				return (Class<? extends AbstractKeyValueDriver>) loader.loadClass (this.driverClassName);
 			} catch (final ClassNotFoundException e) {

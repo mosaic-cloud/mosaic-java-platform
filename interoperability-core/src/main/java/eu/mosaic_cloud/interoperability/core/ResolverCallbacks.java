@@ -26,8 +26,8 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
 
 public interface ResolverCallbacks
-		extends
-			Callbacks
+			extends
+				Callbacks
 {
 	public abstract CallbackCompletion<Void> resolved (final ChannelResolver resolver, final String target, final String peer, final String endpoint);
 }

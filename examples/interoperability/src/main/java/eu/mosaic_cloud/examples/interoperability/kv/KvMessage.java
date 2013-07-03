@@ -31,8 +31,8 @@ import eu.mosaic_cloud.interoperability.tools.Identifiers;
 
 
 public enum KvMessage
-		implements
-			MessageSpecification
+			implements
+				MessageSpecification
 {
 	Aborted (MessageType.Termination, null),
 	Access (MessageType.Initiation, null),
@@ -41,8 +41,7 @@ public enum KvMessage
 	GetRequest (MessageType.Exchange, KvPayloads.GetRequest.class),
 	Ok (MessageType.Exchange, KvPayloads.Ok.class),
 	PutRequest (MessageType.Exchange, KvPayloads.PutRequest.class);
-	private KvMessage (final MessageType type, final Class<? extends Serializable> clasz)
-	{
+	private KvMessage (final MessageType type, final Class<? extends Serializable> clasz) {
 		this.identifier = Identifiers.generate (this);
 		this.type = type;
 		if (clasz != null)
@@ -52,26 +51,22 @@ public enum KvMessage
 	}
 	
 	@Override
-	public String getIdentifier ()
-	{
+	public String getIdentifier () {
 		return (this.identifier);
 	}
 	
 	@Override
-	public PayloadCoder getPayloadCoder ()
-	{
+	public PayloadCoder getPayloadCoder () {
 		return (this.coder);
 	}
 	
 	@Override
-	public String getQualifiedName ()
-	{
+	public String getQualifiedName () {
 		return (Identifiers.generateName (this));
 	}
 	
 	@Override
-	public MessageType getType ()
-	{
+	public MessageType getType () {
 		return (this.type);
 	}
 	

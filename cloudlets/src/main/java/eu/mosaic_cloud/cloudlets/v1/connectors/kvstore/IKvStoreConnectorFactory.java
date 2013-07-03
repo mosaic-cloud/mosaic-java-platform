@@ -30,11 +30,10 @@ import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
  * Factory for creating key-value store connectors.
  * 
  * @author Ciprian Craciun
- * 
  */
 public interface IKvStoreConnectorFactory
-		extends
-			IConnectorFactory<IKvStoreConnector<?, ?>>
+			extends
+				IConnectorFactory<IKvStoreConnector<?, ?>>
 {
 	/**
 	 * Creates a key-value store connector.

@@ -28,12 +28,11 @@ import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.IAmqpQueueConnectorCal
  * Default AMQP resource accessor callback.
  * 
  * @author Georgiana Macariu
- * 
  * @param <TContext>
  *            the type of the context of the cloudlet using this callback
  */
 public class DefaultAmqpQueueConnectorCallback<TContext>
-		extends DefaultQueueConnectorCallback<TContext>
-		implements
-			IAmqpQueueConnectorCallback<TContext>
+			extends DefaultQueueConnectorCallback<TContext>
+			implements
+				IAmqpQueueConnectorCallback<TContext>
 {}

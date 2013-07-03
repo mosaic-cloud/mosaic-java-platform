@@ -25,8 +25,8 @@ import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 
 
 public interface TranscriptBackend
-		extends
-			ExceptionTracer
+			extends
+				ExceptionTracer
 {
 	public abstract <_Logger_ extends Object> _Logger_ adaptAs (final Class<_Logger_> loggerClass);
 	

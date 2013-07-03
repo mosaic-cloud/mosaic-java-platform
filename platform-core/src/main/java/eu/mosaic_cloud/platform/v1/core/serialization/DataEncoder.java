@@ -22,14 +22,11 @@ package eu.mosaic_cloud.platform.v1.core.serialization;
 
 
 /**
- * Interface for defining data specific encoders (serializers) and decode
- * (deserializers).
+ * Interface for defining data specific encoders (serializers) and decode (deserializers).
  * 
  * @param <TData>
  *            the type of data to encode and decode
- * 
  * @author Georgiana Macariu
- * 
  */
 public interface DataEncoder<TData extends Object>
 {
@@ -41,7 +38,7 @@ public interface DataEncoder<TData extends Object>
 	 * @return the decoded object
 	 */
 	TData decode (byte[] data, EncodingMetadata metadata)
-			throws EncodingException;
+				throws EncodingException;
 	
 	/**
 	 * Encodes (serializes) an object as a stream of bytes.
@@ -53,7 +50,7 @@ public interface DataEncoder<TData extends Object>
 	 * @return the bytes and the actual metadata which must match the input one if set
 	 */
 	EncodeOutcome encode (TData data, EncodingMetadata metadata)
-			throws EncodingException;
+				throws EncodingException;
 	
 	/**
 	 * Returns encoding metadata, such as message content type.
@@ -64,8 +61,7 @@ public interface DataEncoder<TData extends Object>
 	
 	public static final class EncodeOutcome
 	{
-		public EncodeOutcome (final byte[] data, final EncodingMetadata metadata)
-		{
+		public EncodeOutcome (final byte[] data, final EncodingMetadata metadata) {
 			this.data = data;
 			this.metadata = metadata;
 		}

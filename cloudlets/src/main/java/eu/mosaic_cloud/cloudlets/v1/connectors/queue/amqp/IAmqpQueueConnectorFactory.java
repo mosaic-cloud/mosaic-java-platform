@@ -25,6 +25,6 @@ import eu.mosaic_cloud.cloudlets.v1.connectors.queue.IQueueConnectorFactory;
 
 
 public interface IAmqpQueueConnectorFactory<TConnector extends IAmqpQueueConnector>
-		extends
-			IQueueConnectorFactory<TConnector>
+			extends
+				IQueueConnectorFactory<TConnector>
 {}

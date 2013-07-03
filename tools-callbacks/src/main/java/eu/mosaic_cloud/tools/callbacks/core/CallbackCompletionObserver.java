@@ -22,8 +22,8 @@ package eu.mosaic_cloud.tools.callbacks.core;
 
 
 public interface CallbackCompletionObserver
-		extends
-			Callbacks
+			extends
+				Callbacks
 {
 	public abstract CallbackCompletion<Void> completed (final CallbackCompletion<?> completion);
 }

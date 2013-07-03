@@ -65,14 +65,12 @@ import com.google.common.base.Preconditions;
 
 
 /**
- * Stub for the driver for key-value distributed storage systems. This is used
- * for communicating with a key-value driver.
+ * Stub for the driver for key-value distributed storage systems. This is used for communicating with a key-value driver.
  * 
  * @author Georgiana Macariu
- * 
  */
 public class KeyValueStub
-		extends AbstractDriverStub
+			extends AbstractDriverStub
 {
 	/**
 	 * Creates a new stub for the key-value store driver.
@@ -80,21 +78,18 @@ public class KeyValueStub
 	 * @param config
 	 *            the configuration data for the stub and driver
 	 * @param transmitter
-	 *            the transmitter object which will send responses to requests
-	 *            submitted to this stub
+	 *            the transmitter object which will send responses to requests submitted to this stub
 	 * @param driver
 	 *            the driver used for processing requests submitted to this stub
 	 * @param commChannel
 	 *            the channel for communicating with connectors
 	 */
-	public KeyValueStub (final IConfiguration config, final KeyValueResponseTransmitter transmitter, final AbstractKeyValueDriver driver, final ZeroMqChannel commChannel)
-	{
+	public KeyValueStub (final IConfiguration config, final KeyValueResponseTransmitter transmitter, final AbstractKeyValueDriver driver, final ZeroMqChannel commChannel) {
 		super (config, transmitter, driver, commChannel);
 	}
 	
 	@Override
-	public synchronized void destroy ()
-	{
+	public synchronized void destroy () {
 		synchronized (AbstractDriverStub.MONITOR) {
 			final int ref = AbstractDriverStub.decDriverReference (this);
 			if ((ref == 0)) {
@@ -121,9 +116,7 @@ public class KeyValueStub
 	 */
 	@SuppressWarnings ("unchecked")
 	protected void handleKVOperation (final Message message, final Session session, final AbstractKeyValueDriver driver, final Class<? extends KeyValueResponseTransmitter> transmitterClass)
-			throws IOException,
-				ClassNotFoundException
-	{
+				throws IOException, ClassNotFoundException {
 		byte[] data;
 		boolean unknownMessage = false;
 		final KeyValueMessage kvMessage = (KeyValueMessage) message.specification;
@@ -205,7 +198,7 @@ public class KeyValueStub
 				token = ((KeyValuePayloads.ListReply) message.payload).getToken ();
 				unknownMessage = true;
 				break;
-			default:
+			default :
 				break;
 		}
 		if (unknownMessage) {
@@ -213,8 +206,7 @@ public class KeyValueStub
 		}
 	}
 	
-	protected void handleUnknownMessage (final Session session, final AbstractKeyValueDriver driver, final String messageType, final CompletionToken token, final Class<? extends KeyValueResponseTransmitter> transmitterClass)
-	{
+	protected void handleUnknownMessage (final Session session, final AbstractKeyValueDriver driver, final String messageType, final CompletionToken token, final Class<? extends KeyValueResponseTransmitter> transmitterClass) {
 		KeyValueStub.logger.error ("Unexpected message type: " + messageType + " - request id: " + token.getMessageId () + " client id: " + token.getClientId ());
 		// NOTE: create callback
 		final DriverOperationFinishedHandler failCallback = new DriverOperationFinishedHandler (token, session, driver.getClass (), transmitterClass);
@@ -223,13 +215,13 @@ public class KeyValueStub
 	
 	@Override
 	protected void startOperation (final Message message, final Session session)
-			throws IOException,
-				ClassNotFoundException
-	{
+				throws IOException, ClassNotFoundException {
 		Preconditions.checkArgument (message.specification instanceof KeyValueMessage);
 		final AbstractKeyValueDriver driver = super.getDriver (this.driverClass);
 		this.handleKVOperation (message, session, driver, KeyValueResponseTransmitter.class);
 	}
+	
+	private Class<? extends AbstractKeyValueDriver> driverClass;
 	
 	/**
 	 * Returns a stub for the key-value store driver.
@@ -242,8 +234,7 @@ public class KeyValueStub
 	 *            the channel used by the driver for receiving requests
 	 * @return the driver stub
 	 */
-	public static KeyValueStub create (final IConfiguration config, final ThreadingContext threadingContext, final ZeroMqChannel channel)
-	{
+	public static KeyValueStub create (final IConfiguration config, final ThreadingContext threadingContext, final ZeroMqChannel channel) {
 		final DriverConnectionData cData = KeyValueStub.readConnectionData (config);
 		KeyValueStub stub;
 		synchronized (AbstractDriverStub.MONITOR) {
@@ -272,8 +263,7 @@ public class KeyValueStub
 		return stub;
 	}
 	
-	public static KeyValueStub createDetached (final IConfiguration config, final ThreadingContext threadingContext, final ZeroMqChannel channel)
-	{
+	public static KeyValueStub createDetached (final IConfiguration config, final ThreadingContext threadingContext, final ZeroMqChannel channel) {
 		KeyValueStub stub;
 		try {
 			KeyValueStub.logger.trace ("KeyValueStub: create new stub.");
@@ -300,17 +290,12 @@ public class KeyValueStub
 	 *            the configuration data
 	 * @return resource connection data
 	 */
-	protected static DriverConnectionData readConnectionData (final IConfiguration config)
-	{
+	protected static DriverConnectionData readConnectionData (final IConfiguration config) {
 		final String resourceHost = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_0, String.class, "localhost");
-																																						
 		final int resourcePort = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_1, Integer.class, 0);
 		final String driver = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_6, String.class, "");
-																																		
 		final String user = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_5, String.class, "");
-																																		
 		final String passwd = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_4, String.class, "");
-																																		
 		DriverConnectionData cData;
 		if ("".equals (user) && "".equals (passwd)) {
 			cData = new DriverConnectionData (resourceHost, resourcePort, driver);
@@ -320,24 +305,21 @@ public class KeyValueStub
 		return cData;
 	}
 	
-	private Class<? extends AbstractKeyValueDriver> driverClass;
 	private static final Logger logger = Transcript.create (KeyValueStub.class).adaptAs (Logger.class);
 	private static Map<DriverConnectionData, KeyValueStub> stubs = new HashMap<DriverConnectionData, KeyValueStub> ();
 	
 	/**
-	 * Handler for processing responses of the requests submitted to the stub.
-	 * This will basically call the transmitter associated with the stub.
+	 * Handler for processing responses of the requests submitted to the stub. This will basically call the transmitter
+	 * associated with the stub.
 	 * 
 	 * @author Georgiana Macariu
-	 * 
 	 */
 	@SuppressWarnings ("rawtypes")
 	protected class DriverOperationFinishedHandler
-			implements
-				IOperationCompletionHandler
+				implements
+					IOperationCompletionHandler
 	{
-		public DriverOperationFinishedHandler (final CompletionToken complToken, final Session session, final Class<? extends AbstractKeyValueDriver> driverClass, final Class<? extends KeyValueResponseTransmitter> transmitterClass)
-		{
+		public DriverOperationFinishedHandler (final CompletionToken complToken, final Session session, final Class<? extends AbstractKeyValueDriver> driverClass, final Class<? extends KeyValueResponseTransmitter> transmitterClass) {
 			this.complToken = complToken;
 			this.signal = new CountDownLatch (1);
 			this.driver = KeyValueStub.this.getDriver (driverClass);
@@ -346,8 +328,7 @@ public class KeyValueStub
 		}
 		
 		@Override
-		public void onFailure (final Throwable error)
-		{
+		public void onFailure (final Throwable error) {
 			try {
 				this.signal.await ();
 			} catch (final InterruptedException e) {
@@ -359,8 +340,7 @@ public class KeyValueStub
 		}
 		
 		@Override
-		public void onSuccess (final Object response)
-		{
+		public void onSuccess (final Object response) {
 			try {
 				this.signal.await ();
 			} catch (final InterruptedException e) {
@@ -376,8 +356,7 @@ public class KeyValueStub
 			}
 		}
 		
-		public void setDetails (final KeyValueOperations operation, final IResult<?> result)
-		{
+		public void setDetails (final KeyValueOperations operation, final IResult<?> result) {
 			this.operation = operation;
 			this.result = result;
 			this.signal.countDown ();

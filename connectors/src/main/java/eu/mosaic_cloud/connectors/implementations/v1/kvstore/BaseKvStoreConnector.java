@@ -29,47 +29,40 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 /**
- * Basic key-value store connector. This connector implements only the
- * operations common to most of the key-value store systems.
+ * Basic key-value store connector. This connector implements only the operations common to most of the key-value store systems.
  * 
  * @author Georgiana Macariu
- * 
  * @param <TValue>
  *            type of stored data
  * @param <TProxy>
  *            type of connector proxy
  */
 public abstract class BaseKvStoreConnector<TValue extends Object, TProxy extends BaseKvStoreConnectorProxy<TValue>>
-		extends BaseConnector<TProxy>
-		implements
-			IKvStoreConnector<TValue>
+			extends BaseConnector<TProxy>
+			implements
+				IKvStoreConnector<TValue>
 {
-	protected BaseKvStoreConnector (final TProxy proxy)
-	{
+	protected BaseKvStoreConnector (final TProxy proxy) {
 		super (proxy);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> delete (final String key)
-	{
+	public CallbackCompletion<Void> delete (final String key) {
 		return this.proxy.delete (key);
 	}
 	
 	@Override
-	public CallbackCompletion<TValue> get (final String key)
-	{
+	public CallbackCompletion<TValue> get (final String key) {
 		return this.proxy.get (key);
 	}
 	
 	@Override
-	public CallbackCompletion<List<String>> list ()
-	{
+	public CallbackCompletion<List<String>> list () {
 		return this.proxy.list ();
 	}
 	
 	@Override
-	public CallbackCompletion<Void> set (final String key, final TValue data)
-	{
+	public CallbackCompletion<Void> set (final String key, final TValue data) {
 		return this.proxy.set (key, data);
 	}
 }

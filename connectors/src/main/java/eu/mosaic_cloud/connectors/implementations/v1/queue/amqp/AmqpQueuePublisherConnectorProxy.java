@@ -39,12 +39,11 @@ import com.google.common.base.Preconditions;
 
 
 public final class AmqpQueuePublisherConnectorProxy<TMessage>
-		extends AmqpQueueConnectorProxy<TMessage>
-		implements
-			IAmqpQueuePublisherConnector<TMessage>
+			extends AmqpQueueConnectorProxy<TMessage>
+			implements
+				IAmqpQueuePublisherConnector<TMessage>
 {
-	private AmqpQueuePublisherConnectorProxy (final AmqpQueueRawConnectorProxy rawProxy, final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder)
-	{
+	private AmqpQueuePublisherConnectorProxy (final AmqpQueueRawConnectorProxy rawProxy, final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder) {
 		super (rawProxy, configuration, messageClass, messageEncoder);
 		this.exchange = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_0, String.class, this.raw.getIdentifier ());
 		this.exchangeType = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_5, AmqpExchangeType.class, AmqpExchangeType.DIRECT);
@@ -56,29 +55,25 @@ public final class AmqpQueuePublisherConnectorProxy<TMessage>
 	}
 	
 	@Override
-	public CallbackCompletion<Void> destroy ()
-	{
+	public CallbackCompletion<Void> destroy () {
 		this.transcript.traceDebugging ("destroying the proxy...");
 		this.transcript.traceDebugging ("destroying the underlying raw proxy...");
 		return this.raw.destroy ();
 	}
 	
 	@Override
-	public CallbackCompletion<Void> initialize ()
-	{
+	public CallbackCompletion<Void> initialize () {
 		this.transcript.traceDebugging ("initializing the proxy...");
 		final Callable<CallbackCompletion<Void>> initializeOperation = new Callable<CallbackCompletion<Void>> () {
 			@Override
-			public CallbackCompletion<Void> call ()
-			{
+			public CallbackCompletion<Void> call () {
 				AmqpQueuePublisherConnectorProxy.this.transcript.traceDebugging ("initializing the underlying raw proxy...");
 				return (AmqpQueuePublisherConnectorProxy.this.raw.initialize ());
 			}
 		};
 		final Callable<CallbackCompletion<Void>> declareExchangeOperation = new Callable<CallbackCompletion<Void>> () {
 			@Override
-			public CallbackCompletion<Void> call ()
-			{
+			public CallbackCompletion<Void> call () {
 				AmqpQueuePublisherConnectorProxy.this.transcript.traceDebugging ("declaring the exchange `%s` of type `%s`...", AmqpQueuePublisherConnectorProxy.this.exchange, AmqpQueuePublisherConnectorProxy.this.exchangeType);
 				return (AmqpQueuePublisherConnectorProxy.this.raw.declareExchange (AmqpQueuePublisherConnectorProxy.this.exchange, AmqpQueuePublisherConnectorProxy.this.exchangeType, AmqpQueuePublisherConnectorProxy.this.exchangeDurable, AmqpQueuePublisherConnectorProxy.this.exchangeAutoDelete, AmqpQueuePublisherConnectorProxy.this.definePassive));
 			}
@@ -88,8 +83,7 @@ public final class AmqpQueuePublisherConnectorProxy<TMessage>
 	}
 	
 	@Override
-	public CallbackCompletion<Void> publish (final TMessage message)
-	{
+	public CallbackCompletion<Void> publish (final TMessage message) {
 		Preconditions.checkNotNull (message);
 		this.transcript.traceDebugging ("publishing a message to exchange `%s` (of type `%s`) with routing key `%s`...", this.exchange, this.exchangeType, this.publishRoutingKey);
 		byte[] data = null;
@@ -116,19 +110,18 @@ public final class AmqpQueuePublisherConnectorProxy<TMessage>
 		return (result);
 	}
 	
-	public static <TMessage> AmqpQueuePublisherConnectorProxy<TMessage> create (final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder)
-	{
-		final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create (configuration);
-		// FIXME: the splice below will be done when creating the environment
-		//# final IConfiguration subConfiguration = configuration.spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
-		final AmqpQueuePublisherConnectorProxy<TMessage> proxy = new AmqpQueuePublisherConnectorProxy<TMessage> (rawProxy, configuration, messageClass, messageEncoder);
-		return proxy;
-	}
-	
 	private final boolean definePassive;
 	private final String exchange;
 	private final boolean exchangeAutoDelete;
 	private final boolean exchangeDurable;
 	private final AmqpExchangeType exchangeType;
 	private final String publishRoutingKey;
+	
+	public static <TMessage> AmqpQueuePublisherConnectorProxy<TMessage> create (final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder) {
+		final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create (configuration);
+		// FIXME: the splice below will be done when creating the environment
+		//# final IConfiguration subConfiguration = configuration.spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
+		final AmqpQueuePublisherConnectorProxy<TMessage> proxy = new AmqpQueuePublisherConnectorProxy<TMessage> (rawProxy, configuration, messageClass, messageEncoder);
+		return proxy;
+	}
 }

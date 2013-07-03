@@ -33,11 +33,10 @@ import com.google.common.base.Preconditions;
 
 
 public class HttpgQueueConnector<TRequestBody, TResponseBody>
-		implements
-			IHttpgQueueConnector<TRequestBody, TResponseBody>
+			implements
+				IHttpgQueueConnector<TRequestBody, TResponseBody>
 {
-	protected HttpgQueueConnector (final HttpgQueueConnectorProxy<TRequestBody, TResponseBody> proxy)
-	{
+	protected HttpgQueueConnector (final HttpgQueueConnectorProxy<TRequestBody, TResponseBody> proxy) {
 		super ();
 		Preconditions.checkNotNull (proxy);
 		this.proxy = proxy;
@@ -47,29 +46,25 @@ public class HttpgQueueConnector<TRequestBody, TResponseBody>
 	}
 	
 	@Override
-	public CallbackCompletion<Void> destroy ()
-	{
+	public CallbackCompletion<Void> destroy () {
 		return this.proxy.destroy ();
 	}
 	
 	@Override
-	public CallbackCompletion<Void> initialize ()
-	{
+	public CallbackCompletion<Void> initialize () {
 		return this.proxy.initialize ();
 	}
 	
 	@Override
-	public CallbackCompletion<Void> respond (final HttpgResponseMessage<TResponseBody> response)
-	{
+	public CallbackCompletion<Void> respond (final HttpgResponseMessage<TResponseBody> response) {
 		return this.proxy.respond (response);
-	}
-	
-	public static <TRequestBody, TResponseBody> HttpgQueueConnector<TRequestBody, TResponseBody> create (final ConnectorConfiguration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final IHttpgQueueCallback<TRequestBody, TResponseBody> callback)
-	{
-		final HttpgQueueConnectorProxy<TRequestBody, TResponseBody> proxy = HttpgQueueConnectorProxy.create (configuration, requestBodyClass, requestBodyEncoder, responseBodyClass, responseBodyEncoder, callback);
-		return (new HttpgQueueConnector<TRequestBody, TResponseBody> (proxy));
 	}
 	
 	protected final HttpgQueueConnectorProxy<TRequestBody, TResponseBody> proxy;
 	protected final Transcript transcript;
+	
+	public static <TRequestBody, TResponseBody> HttpgQueueConnector<TRequestBody, TResponseBody> create (final ConnectorConfiguration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final IHttpgQueueCallback<TRequestBody, TResponseBody> callback) {
+		final HttpgQueueConnectorProxy<TRequestBody, TResponseBody> proxy = HttpgQueueConnectorProxy.create (configuration, requestBodyClass, requestBodyEncoder, responseBodyClass, responseBodyEncoder, callback);
+		return (new HttpgQueueConnector<TRequestBody, TResponseBody> (proxy));
+	}
 }

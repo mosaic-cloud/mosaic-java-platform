@@ -37,10 +37,9 @@ import com.google.common.base.Preconditions;
 
 
 public class JsonDataEncoder<TData extends Object>
-		extends BaseDataEncoder<TData>
+			extends BaseDataEncoder<TData>
 {
-	protected JsonDataEncoder (final Class<TData> dataClass, final boolean nullAllowed, final Charset charset, final ExceptionTracer exceptions)
-	{
+	protected JsonDataEncoder (final Class<TData> dataClass, final boolean nullAllowed, final Charset charset, final ExceptionTracer exceptions) {
 		super (dataClass, nullAllowed, JsonDataEncoder.EXPECTED_ENCODING_METADATA, exceptions);
 		Preconditions.checkNotNull (charset);
 		this.charset = charset;
@@ -48,8 +47,7 @@ public class JsonDataEncoder<TData extends Object>
 	
 	@Override
 	protected TData decodeActual (final byte[] dataBytes, final EncodingMetadata metadata)
-			throws EncodingException
-	{
+				throws EncodingException {
 		try {
 			final TData data;
 			if (this.dataClass == JSONObject.class) {
@@ -69,8 +67,7 @@ public class JsonDataEncoder<TData extends Object>
 	
 	@Override
 	protected byte[] encodeActual (final TData data, final EncodingMetadata metadata)
-			throws EncodingException
-	{
+				throws EncodingException {
 		try {
 			final byte[] dataBytes;
 			if (this.dataClass == JSONObject.class) {
@@ -88,38 +85,33 @@ public class JsonDataEncoder<TData extends Object>
 		}
 	}
 	
+	protected final Charset charset;
+	
+	public static JsonDataEncoder<JSONObject> create () {
+		return (new JsonDataEncoder<JSONObject> (JSONObject.class, false, JsonDataEncoder.DEFAULT_CHARSET, FallbackExceptionTracer.defaultInstance));
+	}
+	
+	public static <TData extends Object> JsonDataEncoder<TData> create (final Class<TData> dataClass) {
+		return (new JsonDataEncoder<TData> (dataClass, false, JsonDataEncoder.DEFAULT_CHARSET, FallbackExceptionTracer.defaultInstance));
+	}
+	
+	public static <TData extends Object> JsonDataEncoder<TData> create (final Class<TData> dataClass, final boolean nullAllowed) {
+		return (new JsonDataEncoder<TData> (dataClass, nullAllowed, JsonDataEncoder.DEFAULT_CHARSET, FallbackExceptionTracer.defaultInstance));
+	}
+	
+	public static <TData extends Object> JsonDataEncoder<TData> create (final Class<TData> dataClass, final boolean nullAllowed, final Charset charset) {
+		return (new JsonDataEncoder<TData> (dataClass, nullAllowed, charset, FallbackExceptionTracer.defaultInstance));
+	}
+	
+	public static <TData extends Object> JsonDataEncoder<TData> create (final Class<TData> dataClass, final Charset charset) {
+		return (new JsonDataEncoder<TData> (dataClass, false, charset, FallbackExceptionTracer.defaultInstance));
+	}
+	
 	static {
 		EXPECTED_ENCODING_METADATA = new EncodingMetadata ("application/json", "identity");
 		DEFAULT_CHARSET = Charsets.UTF_8;
 		DEFAULT_INSTANCE = JsonDataEncoder.create ();
 	}
-	
-	public static JsonDataEncoder<JSONObject> create ()
-	{
-		return (new JsonDataEncoder<JSONObject> (JSONObject.class, false, JsonDataEncoder.DEFAULT_CHARSET, FallbackExceptionTracer.defaultInstance));
-	}
-	
-	public static <TData extends Object> JsonDataEncoder<TData> create (final Class<TData> dataClass)
-	{
-		return (new JsonDataEncoder<TData> (dataClass, false, JsonDataEncoder.DEFAULT_CHARSET, FallbackExceptionTracer.defaultInstance));
-	}
-	
-	public static <TData extends Object> JsonDataEncoder<TData> create (final Class<TData> dataClass, final boolean nullAllowed)
-	{
-		return (new JsonDataEncoder<TData> (dataClass, nullAllowed, JsonDataEncoder.DEFAULT_CHARSET, FallbackExceptionTracer.defaultInstance));
-	}
-	
-	public static <TData extends Object> JsonDataEncoder<TData> create (final Class<TData> dataClass, final boolean nullAllowed, final Charset charset)
-	{
-		return (new JsonDataEncoder<TData> (dataClass, nullAllowed, charset, FallbackExceptionTracer.defaultInstance));
-	}
-	
-	public static <TData extends Object> JsonDataEncoder<TData> create (final Class<TData> dataClass, final Charset charset)
-	{
-		return (new JsonDataEncoder<TData> (dataClass, false, charset, FallbackExceptionTracer.defaultInstance));
-	}
-	
-	protected final Charset charset;
 	public static final Charset DEFAULT_CHARSET;
 	public static final JsonDataEncoder<JSONObject> DEFAULT_INSTANCE;
 	public static final EncodingMetadata EXPECTED_ENCODING_METADATA;

@@ -56,29 +56,25 @@ import com.google.protobuf.ByteString;
 
 
 /**
- * Proxy for the connector for key-value distributed storage systems. This is
- * used by the {@link BaseKvStoreConnector} to communicate with a key-value
- * store driver.
+ * Proxy for the connector for key-value distributed storage systems. This is used by the {@link BaseKvStoreConnector} to
+ * communicate with a key-value store driver.
  * 
  * @author Georgiana Macariu
  * @param <TValue>
  *            type of stored data
- * 
  */
 public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
-		extends BaseConnectorProxy
-		implements
-			IKvStoreConnector<TValue>
+			extends BaseConnectorProxy
+			implements
+				IKvStoreConnector<TValue>
 {
-	protected BaseKvStoreConnectorProxy (final ConnectorConfiguration configuration, final DataEncoder<TValue> encoder)
-	{
+	protected BaseKvStoreConnectorProxy (final ConnectorConfiguration configuration, final DataEncoder<TValue> encoder) {
 		super (configuration);
 		this.encoder = encoder;
 	}
 	
 	@Override
-	public CallbackCompletion<Void> delete (final String key)
-	{
+	public CallbackCompletion<Void> delete (final String key) {
 		final CompletionToken token = this.generateToken ();
 		this.transcript.traceDebugging ("deleting the record with key `%s` (with request token `%s`)...", key, token.getMessageId ());
 		final DeleteRequest.Builder requestBuilder = DeleteRequest.newBuilder ();
@@ -89,8 +85,7 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 	}
 	
 	@Override
-	public CallbackCompletion<Void> destroy ()
-	{
+	public CallbackCompletion<Void> destroy () {
 		this.transcript.traceDebugging ("destroying the proxy...");
 		final CompletionToken token = this.generateToken ();
 		final AbortRequest.Builder requestBuilder = AbortRequest.newBuilder ();
@@ -100,15 +95,13 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 	
 	@Override
 	@SuppressWarnings ("unchecked")
-	public CallbackCompletion<TValue> get (final String key)
-	{
+	public CallbackCompletion<TValue> get (final String key) {
 		return this.sendGetRequest (Arrays.asList (key), (Class<TValue>) Object.class);
 	}
 	
 	@Override
 	@SuppressWarnings ("unchecked")
-	public CallbackCompletion<List<String>> list ()
-	{
+	public CallbackCompletion<List<String>> list () {
 		final CompletionToken token = this.generateToken ();
 		this.transcript.traceDebugging ("listing the keys (with request token `%s`)...", token.getMessageId ());
 		final ListRequest.Builder requestBuilder = ListRequest.newBuilder ();
@@ -117,20 +110,17 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 		return ((CallbackCompletion<List<String>>) ((CallbackCompletion<?>) this.sendRequest (message, token, List.class)));
 	}
 	
-	public CallbackCompletion<Void> set (final String key, final int exp, final TValue data)
-	{
+	public CallbackCompletion<Void> set (final String key, final int exp, final TValue data) {
 		return this.sendSetRequest (key, data, exp);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> set (final String key, final TValue data)
-	{
+	public CallbackCompletion<Void> set (final String key, final TValue data) {
 		return this.set (key, 0, data);
 	}
 	
 	@Override
-	protected void processResponse (final Message message)
-	{
+	protected void processResponse (final Message message) {
 		final KeyValueMessage kvMessage = (KeyValueMessage) message.specification;
 		switch (kvMessage) {
 			case OK : {
@@ -217,15 +207,14 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 				this.pendingRequests.succeed (token.getMessageId (), outcome);
 			}
 				break;
-			default: {
+			default : {
 				this.transcript.traceWarning ("processing unexpected message of type `%s`; ignoring...", message.specification);
 			}
 				break;
 		}
 	}
 	
-	protected <TOutcome> CallbackCompletion<TOutcome> sendGetRequest (final List<String> keys, final Class<TOutcome> outcomeClass)
-	{
+	protected <TOutcome> CallbackCompletion<TOutcome> sendGetRequest (final List<String> keys, final Class<TOutcome> outcomeClass) {
 		final CompletionToken token = this.generateToken ();
 		this.transcript.traceDebugging ("getting the record with key `%s` (and `%d` other keys) (with request token `%s`)...", keys.get (0), Integer.valueOf (keys.size () - 1), token.getMessageId ());
 		final GetRequest.Builder requestBuilder = GetRequest.newBuilder ();
@@ -237,8 +226,7 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 		return (this.sendRequest (message, token, outcomeClass));
 	}
 	
-	protected CallbackCompletion<Void> sendSetRequest (final String key, final TValue data, final int exp)
-	{
+	protected CallbackCompletion<Void> sendSetRequest (final String key, final TValue data, final int exp) {
 		final CompletionToken token = this.generateToken ();
 		this.transcript.traceDebugging ("setting the record with key `%s` (with request token `%s`)...", key, token.getMessageId ());
 		final SetRequest.Builder requestBuilder = SetRequest.newBuilder ();

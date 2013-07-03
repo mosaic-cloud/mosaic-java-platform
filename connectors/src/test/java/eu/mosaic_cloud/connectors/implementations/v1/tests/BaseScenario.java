@@ -45,8 +45,7 @@ import org.junit.Assert;
 
 public class BaseScenario
 {
-	public BaseScenario (final Class<? extends BaseConnectorTest<?, ? extends BaseScenario>> owner, final IConfiguration configuration)
-	{
+	public BaseScenario (final Class<? extends BaseConnectorTest<?, ? extends BaseScenario>> owner, final IConfiguration configuration) {
 		this.configuration = configuration;
 		this.transcript = Transcript.create (owner);
 		this.exceptionsQueue = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
@@ -66,15 +65,13 @@ public class BaseScenario
 		final ChannelFactory channelFactory = new ChannelFactory () {
 			@SuppressWarnings ("synthetic-access")
 			@Override
-			public final Channel create ()
-			{
+			public final Channel create () {
 				return BaseScenario.this.connectorChannel;
 			}
 		};
 		this.channelResolver = new ChannelResolver () {
 			@Override
-			public final void resolve (final String target, final ResolverCallbacks callbacks)
-			{
+			public final void resolve (final String target, final ResolverCallbacks callbacks) {
 				Assert.assertEquals (driverIdentity, target);
 				callbacks.resolved (this, target, driverIdentity, driverEndpoint);
 			}
@@ -83,8 +80,7 @@ public class BaseScenario
 		this.driverChannel.register (KeyValueSession.DRIVER);
 	}
 	
-	public void destroy ()
-	{
+	public void destroy () {
 		Assert.assertTrue (this.driverChannel.terminate (this.poolTimeout));
 		Assert.assertTrue (this.connectorChannel.terminate (this.poolTimeout));
 		Assert.assertTrue (this.callbacks.destroy (this.poolTimeout));
@@ -92,33 +88,27 @@ public class BaseScenario
 		Assert.assertNull (this.exceptionsQueue.queue.poll ());
 	}
 	
-	public IConfiguration getConfiguration ()
-	{
+	public IConfiguration getConfiguration () {
 		return this.configuration;
 	}
 	
-	public ZeroMqChannel getDriverChannel ()
-	{
+	public ZeroMqChannel getDriverChannel () {
 		return this.driverChannel;
 	}
 	
-	public ConnectorEnvironment getEnvironment ()
-	{
+	public ConnectorEnvironment getEnvironment () {
 		return this.environment;
 	}
 	
-	public long getPoolTimeout ()
-	{
+	public long getPoolTimeout () {
 		return this.poolTimeout;
 	}
 	
-	public BasicThreadingContext getThreading ()
-	{
+	public BasicThreadingContext getThreading () {
 		return this.threading;
 	}
 	
-	public void registerDriverRole (final SessionSpecification sessionRole)
-	{
+	public void registerDriverRole (final SessionSpecification sessionRole) {
 		this.driverChannel.register (sessionRole);
 	}
 	

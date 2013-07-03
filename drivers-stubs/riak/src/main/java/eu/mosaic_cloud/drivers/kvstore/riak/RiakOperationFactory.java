@@ -55,19 +55,16 @@ import com.basho.riak.client.raw.pbc.PBClientConfig;
 
 
 /**
- * Factory class which builds the asynchronous calls for the operations defined
- * on the Riak key-value store.
+ * Factory class which builds the asynchronous calls for the operations defined on the Riak key-value store.
  * 
  * @author Georgiana Macariu
- * 
  */
 public final class RiakOperationFactory
-		implements
-			IOperationFactory
+			implements
+				IOperationFactory
 {
 	private RiakOperationFactory (final Configuration config, final String bucket, final String clientId)
-			throws RiakException
-	{
+				throws RiakException {
 		super ();
 		this.riakcl = RiakFactory.newClient (config);
 		this.bucket = this.riakcl.fetchBucket (bucket).execute ();
@@ -77,21 +74,18 @@ public final class RiakOperationFactory
 	}
 	
 	@Override
-	public void destroy ()
-	{
+	public void destroy () {
 		// NOTE: nothing to do here
 	}
 	
 	@Override
-	public IOperation<?> getOperation (final IOperationType type, final Object ... parameters)
-	{
+	public IOperation<?> getOperation (final IOperationType type, final Object ... parameters) {
 		IOperation<?> operation;
 		if (!(type instanceof KeyValueOperations)) {
 			return new GenericOperation<Object> (new Callable<Object> () {
 				@Override
 				public Object call ()
-						throws UnsupportedOperationException
-				{
+							throws UnsupportedOperationException {
 					throw new UnsupportedOperationException ("Unsupported operation: " + type.toString ());
 				}
 			});
@@ -111,12 +105,11 @@ public final class RiakOperationFactory
 				case DELETE :
 					operation = this.buildDeleteOperation (parameters);
 					break;
-				default:
+				default :
 					operation = new GenericOperation<Object> (new Callable<Object> () {
 						@Override
 						public Object call ()
-								throws UnsupportedOperationException
-						{
+									throws UnsupportedOperationException {
 							throw new UnsupportedOperationException ("Unsupported operation: " + mType.toString ());
 						}
 					});
@@ -126,8 +119,7 @@ public final class RiakOperationFactory
 			operation = new GenericOperation<Object> (new Callable<Object> () {
 				@Override
 				public Object call ()
-						throws Exception
-				{
+							throws Exception {
 					throw e;
 				}
 			});
@@ -135,13 +127,11 @@ public final class RiakOperationFactory
 		return operation;
 	}
 	
-	private IOperation<?> buildDeleteOperation (final Object ... parameters)
-	{
+	private IOperation<?> buildDeleteOperation (final Object ... parameters) {
 		return new GenericOperation<Boolean> (new Callable<Boolean> () {
 			@Override
 			public Boolean call ()
-					throws IOException
-			{
+						throws IOException {
 				final String key = (String) parameters[0];
 				// FIXME: use the vector clock...
 				try {
@@ -156,13 +146,11 @@ public final class RiakOperationFactory
 		});
 	}
 	
-	private IOperation<?> buildGetOperation (final Object ... parameters)
-	{
+	private IOperation<?> buildGetOperation (final Object ... parameters) {
 		return new GenericOperation<KeyValueMessage> (new Callable<KeyValueMessage> () {
 			@Override
 			public KeyValueMessage call ()
-					throws IOException
-			{
+						throws IOException {
 				KeyValueMessage result = null;
 				final String key = (String) parameters[0];
 				final EncodingMetadata expectedEncoding = (EncodingMetadata) parameters[1];
@@ -188,13 +176,11 @@ public final class RiakOperationFactory
 		});
 	}
 	
-	private IOperation<?> buildListOperation ()
-	{
+	private IOperation<?> buildListOperation () {
 		return new GenericOperation<List<String>> (new Callable<List<String>> () {
 			@Override
 			public List<String> call ()
-					throws IOException
-			{
+						throws IOException {
 				// FIXME: use the vector clock...
 				final List<String> keys = new ArrayList<String> ();
 				try {
@@ -211,13 +197,11 @@ public final class RiakOperationFactory
 		});
 	}
 	
-	private IOperation<?> buildSetOperation (final Object ... parameters)
-	{
+	private IOperation<?> buildSetOperation (final Object ... parameters) {
 		return new GenericOperation<Boolean> (new Callable<Boolean> () {
 			@Override
 			public Boolean call ()
-					throws IOException
-			{
+						throws IOException {
 				final KeyValueMessage kvMessage = (KeyValueMessage) parameters[0];
 				final String key = kvMessage.getKey ();
 				// FIXME: use the vector clock...
@@ -235,6 +219,12 @@ public final class RiakOperationFactory
 		});
 	}
 	
+	private final Bucket bucket;
+	@SuppressWarnings ("unused")
+	private final String clientId;
+	private final BaseExceptionTracer exceptions;
+	private final IRiakClient riakcl;
+	
 	/**
 	 * Creates a new factory.
 	 * 
@@ -246,8 +236,7 @@ public final class RiakOperationFactory
 	 *            the bucket associated with the connection
 	 * @return the factory
 	 */
-	public static IOperationFactory getFactory (final String riakHost, final int port, final String bucket, final String clientId, final boolean pb)
-	{
+	public static IOperationFactory getFactory (final String riakHost, final int port, final String bucket, final String clientId, final boolean pb) {
 		IOperationFactory factory = null;
 		try {
 			Configuration config = null;
@@ -264,10 +253,5 @@ public final class RiakOperationFactory
 		return factory;
 	}
 	
-	private final Bucket bucket;
-	@SuppressWarnings ("unused")
-	private final String clientId;
-	private final BaseExceptionTracer exceptions;
-	private final IRiakClient riakcl;
 	private static final Logger logger = Transcript.create (RiakOperationFactory.class).adaptAs (Logger.class);
 }

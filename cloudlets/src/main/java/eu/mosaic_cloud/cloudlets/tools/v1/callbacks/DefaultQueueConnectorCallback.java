@@ -25,12 +25,11 @@ import eu.mosaic_cloud.cloudlets.v1.connectors.queue.IQueueConnectorCallback;
 
 
 public class DefaultQueueConnectorCallback<TContext>
-		extends DefaultConnectorCallback<TContext>
-		implements
-			IQueueConnectorCallback<TContext>
+			extends DefaultConnectorCallback<TContext>
+			implements
+				IQueueConnectorCallback<TContext>
 {
-	protected DefaultQueueConnectorCallback ()
-	{
+	protected DefaultQueueConnectorCallback () {
 		super ();
 	}
 }

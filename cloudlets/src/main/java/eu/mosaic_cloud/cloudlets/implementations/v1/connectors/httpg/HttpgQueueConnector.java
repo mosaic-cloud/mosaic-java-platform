@@ -35,33 +35,29 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 
 
 public class HttpgQueueConnector<TContext, TRequestBody, TResponseBody, TExtra>
-		extends BaseConnector<eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueConnector<TRequestBody, TResponseBody>, IHttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra>, TContext>
-		implements
-			IHttpgQueueConnector<TRequestBody, TResponseBody, TExtra>
+			extends BaseConnector<eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueConnector<TRequestBody, TResponseBody>, IHttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra>, TContext>
+			implements
+				IHttpgQueueConnector<TRequestBody, TResponseBody, TExtra>
 {
 	@SuppressWarnings ("synthetic-access")
-	public HttpgQueueConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueConnector<TRequestBody, TResponseBody> connector, final IConfiguration configuration, final IHttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra> callback, final TContext context, final Callback<TRequestBody, TResponseBody> backingCallback)
-	{
+	public HttpgQueueConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueConnector<TRequestBody, TResponseBody> connector, final IConfiguration configuration, final IHttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra> callback, final TContext context, final Callback<TRequestBody, TResponseBody> backingCallback) {
 		super (cloudlet, connector, configuration, callback, context);
 		backingCallback.connector = this;
 	}
 	
 	@Override
-	public CallbackCompletion<Void> respond (final HttpgResponseMessage<TResponseBody> response)
-	{
+	public CallbackCompletion<Void> respond (final HttpgResponseMessage<TResponseBody> response) {
 		return this.respond (response, null);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> respond (final HttpgResponseMessage<TResponseBody> response, final TExtra extra)
-	{
+	public CallbackCompletion<Void> respond (final HttpgResponseMessage<TResponseBody> response, final TExtra extra) {
 		final CallbackCompletion<Void> completion = this.connector.respond (response);
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
 				@SuppressWarnings ("synthetic-access")
 				@Override
-				public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_)
-				{
+				public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_) {
 					assert (completion_ == completion);
 					CallbackCompletion<Void> result;
 					if (completion.getException () == null) {
@@ -76,8 +72,7 @@ public class HttpgQueueConnector<TContext, TRequestBody, TResponseBody, TExtra>
 		return completion;
 	}
 	
-	protected CallbackCompletion<Void> requested (final HttpgRequestMessage<TRequestBody> request)
-	{
+	protected CallbackCompletion<Void> requested (final HttpgRequestMessage<TRequestBody> request) {
 		CallbackCompletion<Void> result;
 		if (this.callback == null) {
 			result = CallbackCompletion.createFailure (new IllegalStateException ());
@@ -88,12 +83,11 @@ public class HttpgQueueConnector<TContext, TRequestBody, TResponseBody, TExtra>
 	}
 	
 	public static final class Callback<TRequestBody, TResponseBody>
-			implements
-				eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueCallback<TRequestBody, TResponseBody>
+				implements
+					eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueCallback<TRequestBody, TResponseBody>
 	{
 		@Override
-		public CallbackCompletion<Void> requested (final HttpgRequestMessage<TRequestBody> request)
-		{
+		public CallbackCompletion<Void> requested (final HttpgRequestMessage<TRequestBody> request) {
 			return this.connector.requested (request);
 		}
 		

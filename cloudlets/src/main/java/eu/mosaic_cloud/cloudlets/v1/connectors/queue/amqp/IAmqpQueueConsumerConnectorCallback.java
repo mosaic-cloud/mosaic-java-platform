@@ -26,8 +26,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 /**
- * Interface for AMQP queue consumers. This will be implemented by cloudlets
- * which need to receive messages from a queue.
+ * Interface for AMQP queue consumers. This will be implemented by cloudlets which need to receive messages from a queue.
  * 
  * @author Georgiana Macariu
  * @param <TContext>
@@ -35,12 +34,11 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <TMessage>
  *            the type of consumed data
  * @param <TExtra>
- *            the type of the extra data; as an example, this data can be used
- *            correlation
+ *            the type of the extra data; as an example, this data can be used correlation
  */
 public interface IAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra>
-		extends
-			IAmqpQueueConnectorCallback<TContext>
+			extends
+				IAmqpQueueConnectorCallback<TContext>
 {
 	/**
 	 * Handles unsuccessful message acknowledge events.
@@ -63,8 +61,7 @@ public interface IAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra>
 	CallbackCompletion<Void> acknowledgeSucceeded (TContext context, GenericCallbackCompletionArguments<TExtra> arguments);
 	
 	/**
-	 * Called when this consumer receives a message. This will deliver the
-	 * message
+	 * Called when this consumer receives a message. This will deliver the message
 	 * 
 	 * @param context
 	 *            the context of the cloudlet

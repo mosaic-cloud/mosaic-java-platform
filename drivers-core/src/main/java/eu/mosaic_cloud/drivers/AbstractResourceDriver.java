@@ -39,11 +39,10 @@ import org.slf4j.Logger;
  * Base class for the resource drivers.
  * 
  * @author Georgiana Macariu
- * 
  */
 public abstract class AbstractResourceDriver
-		implements
-			IResourceDriver
+			implements
+				IResourceDriver
 {
 	/**
 	 * Constructs a driver.
@@ -51,26 +50,22 @@ public abstract class AbstractResourceDriver
 	 * @param noThreads
 	 *            number of threads to be used for serving requests
 	 */
-	protected AbstractResourceDriver (final ThreadingContext threading, final int noThreads)
-	{
+	protected AbstractResourceDriver (final ThreadingContext threading, final int noThreads) {
 		this.pendingResults = new ArrayList<IResult<?>> ();
 		this.executor = threading.createFixedThreadPool (threading.getThreadConfiguration ().override (this, "operations", true), noThreads);
 		this.logger = Transcript.create (this, true).adaptAs (Logger.class);
 	}
 	
-	public void addPendingOperation (final IResult<?> pendingOp)
-	{
+	public void addPendingOperation (final IResult<?> pendingOp) {
 		this.pendingResults.add (pendingOp);
 	}
 	
-	public int countPendingOperations ()
-	{
+	public int countPendingOperations () {
 		return this.pendingResults.size ();
 	}
 	
 	@Override
-	public synchronized void destroy ()
-	{
+	public synchronized void destroy () {
 		IResult<?> pResult;
 		this.destroyed = true;
 		this.executor.shutdown ();
@@ -84,20 +79,17 @@ public abstract class AbstractResourceDriver
 	}
 	
 	/**
-	 * Handles unsupported operation errors. The base implementation sends an
-	 * error operation to the caller.
+	 * Handles unsupported operation errors. The base implementation sends an error operation to the caller.
 	 * 
 	 * @param opName
 	 *            the name of the operation
 	 * @param handler
 	 *            the handler used for sending the error
 	 */
-	public void handleUnsupportedOperationError (final String opName, final IOperationCompletionHandler<?> handler)
-	{
+	public void handleUnsupportedOperationError (final String opName, final IOperationCompletionHandler<?> handler) {
 		final Runnable task = new Runnable () {
 			@Override
-			public void run ()
-			{
+			public void run () {
 				final Exception error = new UnsupportedOperationException ("Operation " + opName + " is not supported by this driver.");
 				handler.onFailure (error);
 			}
@@ -105,42 +97,35 @@ public abstract class AbstractResourceDriver
 		this.executeOperation (task);
 	}
 	
-	public void removePendingOperation (final IResult<?> pendingOp)
-	{
+	public void removePendingOperation (final IResult<?> pendingOp) {
 		this.pendingResults.remove (pendingOp);
 	}
 	
 	/**
-	 * Submit a new asynchronous operation for execution. This operation should
-	 * be called for operations which do not return anything. For the other
-	 * operations see {@link AbstractResourceDriver#submitOperation(FutureTask)}
-	 * .
+	 * Submit a new asynchronous operation for execution. This operation should be called for operations which do not return
+	 * anything. For the other operations see {@link AbstractResourceDriver#submitOperation(FutureTask)} .
 	 * 
 	 * @param operation
 	 *            the operation
 	 */
-	protected void executeOperation (final Runnable operation)
-	{
+	protected void executeOperation (final Runnable operation) {
 		this.executor.execute (operation);
 	}
 	
-	protected synchronized boolean isDestroyed ()
-	{
+	protected synchronized boolean isDestroyed () {
 		return this.destroyed;
 	}
 	
 	/**
-	 * Submit a new asynchronous operation for execution. This operation should
-	 * be called for operations which return something. For the other operations
-	 * see {@link AbstractResourceDriver#executeOperation(Runnable)}.
+	 * Submit a new asynchronous operation for execution. This operation should be called for operations which return something.
+	 * For the other operations see {@link AbstractResourceDriver#executeOperation(Runnable)}.
 	 * 
 	 * @param <T>
 	 *            the operation's return type
 	 * @param operation
 	 *            the operation
 	 */
-	protected <T extends Object> void submitOperation (final FutureTask<T> operation)
-	{
+	protected <T extends Object> void submitOperation (final FutureTask<T> operation) {
 		this.executor.submit (operation);
 	}
 	

@@ -61,11 +61,10 @@ import com.google.common.collect.ImmutableSet;
 
 
 public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
-		implements
-			IHttpgQueueConnector<TRequestBody, TResponseBody>
+			implements
+				IHttpgQueueConnector<TRequestBody, TResponseBody>
 {
-	private HttpgQueueConnectorProxy (final AmqpQueueRawConnectorProxy raw, final ConnectorConfiguration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final IHttpgQueueCallback<TRequestBody, TResponseBody> callback)
-	{
+	private HttpgQueueConnectorProxy (final AmqpQueueRawConnectorProxy raw, final ConnectorConfiguration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final IHttpgQueueCallback<TRequestBody, TResponseBody> callback) {
 		super ();
 		Preconditions.checkNotNull (raw);
 		Preconditions.checkNotNull (configuration);
@@ -108,21 +107,18 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 	}
 	
 	@Override
-	public CallbackCompletion<Void> destroy ()
-	{
+	public CallbackCompletion<Void> destroy () {
 		this.transcript.traceDebugging ("destroying the proxy...");
 		final Callable<CallbackCompletion<Void>> cancelOperation = new Callable<CallbackCompletion<Void>> () {
 			@Override
-			public CallbackCompletion<Void> call ()
-			{
+			public CallbackCompletion<Void> call () {
 				HttpgQueueConnectorProxy.this.transcript.traceDebugging ("canceling the consumer `%s`...", HttpgQueueConnectorProxy.this.requestConsumerIdentifier);
 				return (HttpgQueueConnectorProxy.this.raw.cancel (HttpgQueueConnectorProxy.this.requestConsumerIdentifier));
 			}
 		};
 		final Callable<CallbackCompletion<Void>> destroyOperation = new Callable<CallbackCompletion<Void>> () {
 			@Override
-			public CallbackCompletion<Void> call ()
-			{
+			public CallbackCompletion<Void> call () {
 				HttpgQueueConnectorProxy.this.transcript.traceDebugging ("destroying the underlying raw proxy...");
 				return (HttpgQueueConnectorProxy.this.raw.destroy ());
 			}
@@ -131,53 +127,46 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 	}
 	
 	@Override
-	public CallbackCompletion<Void> initialize ()
-	{
+	public CallbackCompletion<Void> initialize () {
 		this.transcript.traceDebugging ("initializing the proxy...");
 		final Callable<CallbackCompletion<Void>> initializeOperation = new Callable<CallbackCompletion<Void>> () {
 			@Override
-			public CallbackCompletion<Void> call ()
-			{
+			public CallbackCompletion<Void> call () {
 				HttpgQueueConnectorProxy.this.transcript.traceDebugging ("initializing the underlying raw proxy...");
 				return (HttpgQueueConnectorProxy.this.raw.initialize ());
 			}
 		};
 		final Callable<CallbackCompletion<Void>> declareRequestExchangeOperation = new Callable<CallbackCompletion<Void>> () {
 			@Override
-			public CallbackCompletion<Void> call ()
-			{
+			public CallbackCompletion<Void> call () {
 				HttpgQueueConnectorProxy.this.transcript.traceDebugging ("declaring the request exchange `%s` of type `%s`...", HttpgQueueConnectorProxy.this.requestExchange, HttpgQueueConnectorProxy.this.requestExchangeType);
 				return (HttpgQueueConnectorProxy.this.raw.declareExchange (HttpgQueueConnectorProxy.this.requestExchange, HttpgQueueConnectorProxy.this.requestExchangeType, HttpgQueueConnectorProxy.this.requestExchangeDurable, HttpgQueueConnectorProxy.this.requestExchangeAutoDelete, HttpgQueueConnectorProxy.this.definePassive));
 			}
 		};
 		final Callable<CallbackCompletion<Void>> declareResponseExchangeOperation = new Callable<CallbackCompletion<Void>> () {
 			@Override
-			public CallbackCompletion<Void> call ()
-			{
+			public CallbackCompletion<Void> call () {
 				HttpgQueueConnectorProxy.this.transcript.traceDebugging ("declaring the response exchange `%s` of type `%s`...", HttpgQueueConnectorProxy.this.responseExchange, HttpgQueueConnectorProxy.this.responseExchangeType);
 				return (HttpgQueueConnectorProxy.this.raw.declareExchange (HttpgQueueConnectorProxy.this.responseExchange, HttpgQueueConnectorProxy.this.responseExchangeType, HttpgQueueConnectorProxy.this.responseExchangeDurable, HttpgQueueConnectorProxy.this.responseExchangeAutoDelete, HttpgQueueConnectorProxy.this.definePassive));
 			}
 		};
 		final Callable<CallbackCompletion<Void>> declareRequestQueueOperation = new Callable<CallbackCompletion<Void>> () {
 			@Override
-			public CallbackCompletion<Void> call ()
-			{
+			public CallbackCompletion<Void> call () {
 				HttpgQueueConnectorProxy.this.transcript.traceDebugging ("declaring the request queue `%s`...", HttpgQueueConnectorProxy.this.requestQueue);
 				return (HttpgQueueConnectorProxy.this.raw.declareQueue (HttpgQueueConnectorProxy.this.requestQueue, HttpgQueueConnectorProxy.this.requestQueueExclusive, HttpgQueueConnectorProxy.this.requestQueueDurable, HttpgQueueConnectorProxy.this.requestQueueAutoDelete, HttpgQueueConnectorProxy.this.definePassive));
 			}
 		};
 		final Callable<CallbackCompletion<Void>> bindRequestQueueOperation = new Callable<CallbackCompletion<Void>> () {
 			@Override
-			public CallbackCompletion<Void> call ()
-			{
+			public CallbackCompletion<Void> call () {
 				HttpgQueueConnectorProxy.this.transcript.traceDebugging ("binding the request queue `%s` to request exchange `%s` (of type `%s`) with routing key `%s`...", HttpgQueueConnectorProxy.this.requestQueue, HttpgQueueConnectorProxy.this.requestExchange, HttpgQueueConnectorProxy.this.requestExchangeType, HttpgQueueConnectorProxy.this.requestBindingRoutingKey);
 				return (HttpgQueueConnectorProxy.this.raw.bindQueue (HttpgQueueConnectorProxy.this.requestExchange, HttpgQueueConnectorProxy.this.requestQueue, HttpgQueueConnectorProxy.this.requestBindingRoutingKey));
 			}
 		};
 		final Callable<CallbackCompletion<Void>> consumeRequestOperation = new Callable<CallbackCompletion<Void>> () {
 			@Override
-			public CallbackCompletion<Void> call ()
-			{
+			public CallbackCompletion<Void> call () {
 				HttpgQueueConnectorProxy.this.transcript.traceDebugging ("registering the consumer `%s` for request queue `%s`...", HttpgQueueConnectorProxy.this.requestConsumerIdentifier, HttpgQueueConnectorProxy.this.requestQueue);
 				return (HttpgQueueConnectorProxy.this.raw.consume (HttpgQueueConnectorProxy.this.requestQueue, HttpgQueueConnectorProxy.this.requestConsumerIdentifier, HttpgQueueConnectorProxy.this.requestQueueExclusive, HttpgQueueConnectorProxy.this.requestConsumerAutoAck, HttpgQueueConnectorProxy.this.callback));
 			}
@@ -187,8 +176,7 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 	}
 	
 	@Override
-	public CallbackCompletion<Void> respond (final HttpgResponseMessage<TResponseBody> response)
-	{
+	public CallbackCompletion<Void> respond (final HttpgResponseMessage<TResponseBody> response) {
 		Preconditions.checkNotNull (response);
 		final DeliveryToken delivery = (DeliveryToken) response.token;
 		Preconditions.checkNotNull (delivery);
@@ -208,8 +196,7 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 	}
 	
 	protected HttpgRequestMessage<TRequestBody> decodeRequest (final AmqpInboundMessage message)
-			throws EncodingException
-	{
+				throws EncodingException {
 		try {
 			final String contentType = message.getContentType ();
 			if (!HttpgQueueConnectorProxy.expectedContentType.equals (contentType)) {
@@ -264,7 +251,7 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 				httpVersion = metadata.getString ("http-version");
 				httpMethod = metadata.getString ("http-method");
 				httpPath = metadata.getString ("http-uri");
-				final ImmutableMap.Builder<String, String> httpHeadersBuilder = ImmutableMap.<String, String>builder ();
+				final ImmutableMap.Builder<String, String> httpHeadersBuilder = ImmutableMap.<String, String> builder ();
 				final JSONObject httpHeadersRaw = metadata.getJSONObject ("http-headers");
 				final Iterator<?> httpHeadersIterator = httpHeadersRaw.keys ();
 				while (httpHeadersIterator.hasNext ()) {
@@ -318,8 +305,7 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 	}
 	
 	protected AmqpOutboundMessage encodeResponse (final HttpgResponseMessage<TResponseBody> response)
-			throws EncodingException
-	{
+				throws EncodingException {
 		try {
 			final DeliveryToken token = (DeliveryToken) response.token;
 			final JSONObject httpHeaders = new JSONObject ();
@@ -378,13 +364,6 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 		}
 	}
 	
-	public static <TRequestBody, TResponseBody> HttpgQueueConnectorProxy<TRequestBody, TResponseBody> create (final ConnectorConfiguration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final IHttpgQueueCallback<TRequestBody, TResponseBody> callback)
-	{
-		final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create (configuration);
-		final HttpgQueueConnectorProxy<TRequestBody, TResponseBody> proxy = new HttpgQueueConnectorProxy<TRequestBody, TResponseBody> (rawProxy, configuration, requestBodyClass, requestBodyEncoder, responseBodyClass, responseBodyEncoder, callback);
-		return (proxy);
-	}
-	
 	protected final ConnectorConfiguration configuration;
 	protected final TranscriptExceptionTracer exceptions;
 	protected final AmqpQueueRawConnectorProxy raw;
@@ -410,37 +389,40 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 	private final boolean responseExchangeAutoDelete;
 	private final boolean responseExchangeDurable;
 	private final AmqpExchangeType responseExchangeType;
+	
+	public static <TRequestBody, TResponseBody> HttpgQueueConnectorProxy<TRequestBody, TResponseBody> create (final ConnectorConfiguration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final IHttpgQueueCallback<TRequestBody, TResponseBody> callback) {
+		final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create (configuration);
+		final HttpgQueueConnectorProxy<TRequestBody, TResponseBody> proxy = new HttpgQueueConnectorProxy<TRequestBody, TResponseBody> (rawProxy, configuration, requestBodyClass, requestBodyEncoder, responseBodyClass, responseBodyEncoder, callback);
+		return (proxy);
+	}
+	
 	public static final String expectedContentEncoding = "binary";
 	public static final String expectedContentType = "application/octet-stream";
 	protected static final ImmutableSet<String> ignoredHttpHeaders = ImmutableSet.of ("content-length", "connection");
 	
 	private final class AmqpConsumerCallback
-			implements
-				IAmqpQueueRawConsumerCallback
+				implements
+					IAmqpQueueRawConsumerCallback
 	{
-		AmqpConsumerCallback (final IHttpgQueueCallback<TRequestBody, TResponseBody> delegate)
-		{
+		AmqpConsumerCallback (final IHttpgQueueCallback<TRequestBody, TResponseBody> delegate) {
 			super ();
 			this.delegate = delegate;
 		}
 		
 		@Override
-		public CallbackCompletion<Void> handleCancelOk (final String consumerTag)
-		{
+		public CallbackCompletion<Void> handleCancelOk (final String consumerTag) {
 			HttpgQueueConnectorProxy.this.transcript.traceDebugging ("canceled the consumer `%s` successfully.", HttpgQueueConnectorProxy.this.requestConsumerIdentifier);
 			return (CallbackCompletion.createOutcome ());
 		}
 		
 		@Override
-		public CallbackCompletion<Void> handleConsumeOk (final String consumerTag)
-		{
+		public CallbackCompletion<Void> handleConsumeOk (final String consumerTag) {
 			HttpgQueueConnectorProxy.this.transcript.traceDebugging ("registered the consumer `%s` successfully.", HttpgQueueConnectorProxy.this.requestConsumerIdentifier);
 			return (CallbackCompletion.createOutcome ());
 		}
 		
 		@Override
-		public CallbackCompletion<Void> handleDelivery (final AmqpInboundMessage inbound)
-		{
+		public CallbackCompletion<Void> handleDelivery (final AmqpInboundMessage inbound) {
 			HttpgQueueConnectorProxy.this.transcript.traceDebugging ("delivered the message `%032x` for consumer `%s`...", Long.valueOf (inbound.getDelivery ()), HttpgQueueConnectorProxy.this.requestConsumerIdentifier);
 			HttpgRequestMessage<TRequestBody> request = null;
 			try {
@@ -454,8 +436,7 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 		}
 		
 		@Override
-		public CallbackCompletion<Void> handleShutdownSignal (final String consumerTag, final String message)
-		{
+		public CallbackCompletion<Void> handleShutdownSignal (final String consumerTag, final String message) {
 			// FIXME: this should be handled...
 			return (CallbackCompletion.createOutcome ());
 		}
@@ -464,11 +445,10 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 	}
 	
 	private static final class DeliveryToken
-			implements
-				IHttpgMessageToken
+				implements
+					IHttpgMessageToken
 	{
-		DeliveryToken (final HttpgQueueConnectorProxy<?, ?> proxy, final long acknowledgeToken, final String callbackExchange, final String callbackRoutingKey, final String callbackIdentifier)
-		{
+		DeliveryToken (final HttpgQueueConnectorProxy<?, ?> proxy, final long acknowledgeToken, final String callbackExchange, final String callbackRoutingKey, final String callbackIdentifier) {
 			super ();
 			this.proxy = proxy;
 			this.acknowledgeToken = acknowledgeToken;

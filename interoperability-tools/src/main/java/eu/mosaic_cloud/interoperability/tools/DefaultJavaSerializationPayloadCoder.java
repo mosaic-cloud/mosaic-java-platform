@@ -35,12 +35,11 @@ import com.google.common.base.Preconditions;
 
 
 public final class DefaultJavaSerializationPayloadCoder
-		extends Object
-		implements
-			PayloadCoder
+			extends Object
+			implements
+				PayloadCoder
 {
-	private DefaultJavaSerializationPayloadCoder (final Class<? extends Serializable> clasz, final boolean nullAllowed)
-	{
+	private DefaultJavaSerializationPayloadCoder (final Class<? extends Serializable> clasz, final boolean nullAllowed) {
 		super ();
 		Preconditions.checkNotNull (clasz);
 		Preconditions.checkArgument (Serializable.class.isAssignableFrom (clasz));
@@ -50,8 +49,7 @@ public final class DefaultJavaSerializationPayloadCoder
 	
 	@Override
 	public Object decode (final ByteBuffer buffer)
-			throws Throwable
-	{
+				throws Throwable {
 		final ByteArrayInputStream bufferStream = new ByteArrayInputStream (buffer.array (), buffer.arrayOffset () + buffer.position (), buffer.remaining ());
 		final ObjectInputStream objectStream = new ObjectInputStream (bufferStream);
 		final Object object = objectStream.readObject ();
@@ -66,8 +64,7 @@ public final class DefaultJavaSerializationPayloadCoder
 	
 	@Override
 	public ByteBuffer encode (final Object object)
-			throws Throwable
-	{
+				throws Throwable {
 		if (!this.nullAllowed)
 			Preconditions.checkNotNull (object);
 		Preconditions.checkArgument (this.clasz.isInstance (object));
@@ -79,11 +76,10 @@ public final class DefaultJavaSerializationPayloadCoder
 		return (buffer);
 	}
 	
-	public static final DefaultJavaSerializationPayloadCoder create (final Class<? extends Serializable> clasz, final boolean nullAllowed)
-	{
-		return (new DefaultJavaSerializationPayloadCoder (clasz, nullAllowed));
-	}
-	
 	private final Class<? extends Serializable> clasz;
 	private final boolean nullAllowed;
+	
+	public static final DefaultJavaSerializationPayloadCoder create (final Class<? extends Serializable> clasz, final boolean nullAllowed) {
+		return (new DefaultJavaSerializationPayloadCoder (clasz, nullAllowed));
+	}
 }

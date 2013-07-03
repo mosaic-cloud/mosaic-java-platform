@@ -36,11 +36,10 @@ import org.slf4j.LoggerFactory;
 
 
 public final class KvServer
-		implements
-			SessionCallbacks
+			implements
+				SessionCallbacks
 {
-	public KvServer (final ExceptionTracer exceptions, final long maxDelay)
-	{
+	public KvServer (final ExceptionTracer exceptions, final long maxDelay) {
 		this.exceptions = exceptions;
 		this.logger = LoggerFactory.getLogger (this.getClass ());
 		this.bucket = new ConcurrentHashMap<String, String> ();
@@ -48,31 +47,26 @@ public final class KvServer
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> created (final Session session)
-	{
+	public final CallbackCompletion<Void> created (final Session session) {
 		return (null);
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> destroyed (final Session session)
-	{
+	public final CallbackCompletion<Void> destroyed (final Session session) {
 		return (null);
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> failed (final Session session, final Throwable Exception)
-	{
+	public final CallbackCompletion<Void> failed (final Session session, final Throwable Exception) {
 		return (null);
 	}
 	
-	public final void initialize (final ZeroMqChannel channel)
-	{
+	public final void initialize (final ZeroMqChannel channel) {
 		channel.accept (KvSession.Server, this);
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> received (final Session session, final Message message)
-	{
+	public final CallbackCompletion<Void> received (final Session session, final Message message) {
 		switch ((KvMessage) message.specification) {
 			case Access : {
 				this.logger.info ("access requested");
@@ -102,7 +96,7 @@ public final class KvServer
 				this.logger.info ("put finished: [{}]", request.sequence);
 			}
 				break;
-			default: {
+			default : {
 				this.logger.error ("unexpected message: {}", message.specification);
 				session.send (new Message (KvMessage.Aborted, null));
 			}

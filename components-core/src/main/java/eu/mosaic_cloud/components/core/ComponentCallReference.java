@@ -22,15 +22,13 @@ package eu.mosaic_cloud.components.core;
 
 
 public final class ComponentCallReference
-		extends Object
+			extends Object
 {
-	private ComponentCallReference ()
-	{
+	private ComponentCallReference () {
 		super ();
 	}
 	
-	public static final ComponentCallReference create ()
-	{
+	public static final ComponentCallReference create () {
 		return (new ComponentCallReference ());
 	}
 }

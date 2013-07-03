@@ -28,25 +28,21 @@ import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
 
 
 /**
- * Generic cloudlet-level connector for key value storages. Cloudlets will use
- * an object of this type to get access to a key-value storage.
+ * Generic cloudlet-level connector for key value storages. Cloudlets will use an object of this type to get access to a
+ * key-value storage.
  * 
  * @author Georgiana Macariu
- * 
  * @param <TContext>
  *            the type of the context of the cloudlet using the connector
  * @param <TValue>
- *            the type of the values exchanged with the key-value store using
- *            this connector
+ *            the type of the values exchanged with the key-value store using this connector
  * @param <TExtra>
- *            the type of the extra data; as an example, this data can be used
- *            correlation
+ *            the type of the extra data; as an example, this data can be used correlation
  */
 public class GenericKvStoreConnector<TContext, TValue, TExtra>
-		extends BaseKvStoreConnector<eu.mosaic_cloud.connectors.implementations.v1.kvstore.generic.GenericKvStoreConnector<TValue>, IKvStoreConnectorCallback<TContext, TValue, TExtra>, TContext, TValue, TExtra>
+			extends BaseKvStoreConnector<eu.mosaic_cloud.connectors.implementations.v1.kvstore.generic.GenericKvStoreConnector<TValue>, IKvStoreConnectorCallback<TContext, TValue, TExtra>, TContext, TValue, TExtra>
 {
-	public GenericKvStoreConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.implementations.v1.kvstore.generic.GenericKvStoreConnector<TValue> connector, final IConfiguration config, final IKvStoreConnectorCallback<TContext, TValue, TExtra> callback, final TContext context)
-	{
+	public GenericKvStoreConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.implementations.v1.kvstore.generic.GenericKvStoreConnector<TValue> connector, final IConfiguration config, final IKvStoreConnectorCallback<TContext, TValue, TExtra> callback, final TContext context) {
 		super (cloudlet, connector, config, callback, context);
 	}
 }

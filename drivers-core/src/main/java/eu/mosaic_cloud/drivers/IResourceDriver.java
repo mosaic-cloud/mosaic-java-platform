@@ -25,7 +25,6 @@ package eu.mosaic_cloud.drivers;
  * Generic interface that should be implemented by all resource drivers.
  * 
  * @author Georgiana Macariu
- * 
  */
 public interface IResourceDriver
 {

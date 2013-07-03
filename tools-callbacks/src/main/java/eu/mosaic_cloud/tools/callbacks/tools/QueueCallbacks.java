@@ -26,8 +26,8 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
 
 public interface QueueCallbacks<_Element_ extends Object>
-		extends
-			Callbacks
+			extends
+				Callbacks
 {
 	public abstract CallbackCompletion<Void> enqueue (final _Element_ value);
 }

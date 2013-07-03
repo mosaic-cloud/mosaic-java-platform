@@ -29,8 +29,7 @@ import com.google.common.base.Preconditions;
 
 public final class ConnectorConfiguration
 {
-	private ConnectorConfiguration (final IConfiguration configuration, final ConnectorEnvironment environment)
-	{
+	private ConnectorConfiguration (final IConfiguration configuration, final ConnectorEnvironment environment) {
 		super ();
 		Preconditions.checkNotNull (configuration);
 		Preconditions.checkNotNull (environment);
@@ -38,24 +37,16 @@ public final class ConnectorConfiguration
 		this.environment = environment;
 	}
 	
-	public <T extends Object> T getConfigParameter (final String identifier, final Class<T> valueClass, final T defaultValue)
-	{
+	public <T extends Object> T getConfigParameter (final String identifier, final Class<T> valueClass, final T defaultValue) {
 		return ConfigUtils.resolveParameter (this.configuration, identifier, valueClass, defaultValue);
 	}
 	
-	public IConfiguration getConfiguration ()
-	{
+	public IConfiguration getConfiguration () {
 		return this.configuration;
 	}
 	
-	public ConnectorEnvironment getEnvironment ()
-	{
+	public ConnectorEnvironment getEnvironment () {
 		return this.environment;
-	}
-	
-	public static ConnectorConfiguration create (final IConfiguration configuration, final ConnectorEnvironment environment)
-	{
-		return new ConnectorConfiguration (configuration, environment);
 	}
 	
 	/**
@@ -63,8 +54,11 @@ public final class ConnectorConfiguration
 	 */
 	private final IConfiguration configuration;
 	/**
-	 * Configuration settings which can be applied to one or more connectors
-	 * (shared).
+	 * Configuration settings which can be applied to one or more connectors (shared).
 	 */
 	private final ConnectorEnvironment environment;
+	
+	public static ConnectorConfiguration create (final IConfiguration configuration, final ConnectorEnvironment environment) {
+		return new ConnectorConfiguration (configuration, environment);
+	}
 }

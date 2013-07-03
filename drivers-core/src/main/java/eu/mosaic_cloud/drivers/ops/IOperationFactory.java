@@ -22,12 +22,10 @@ package eu.mosaic_cloud.drivers.ops;
 
 
 /**
- * Factory class which builds the asynchronous calls for the operations
- * supported by a specific resource. This interface should be implemented for
- * each resource kind supported by the platform.
+ * Factory class which builds the asynchronous calls for the operations supported by a specific resource. This interface should
+ * be implemented for each resource kind supported by the platform.
  * 
  * @author Georgiana Macariu
- * 
  */
 public interface IOperationFactory
 {

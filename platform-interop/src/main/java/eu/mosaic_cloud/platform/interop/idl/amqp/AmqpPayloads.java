@@ -25,33 +25,24 @@ package eu.mosaic_cloud.platform.interop.idl.amqp;
 
 public final class AmqpPayloads
 {
-	private AmqpPayloads ()
-	{}
+	private AmqpPayloads () {}
+	
+	public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor () {
+		return AmqpPayloads.descriptor;
+	}
+	
+	public static void registerAllExtensions (final com.google.protobuf.ExtensionRegistry registry) {}
 	
 	static {
-		final java.lang.String[] descriptorData =
-				{
-						"\n\namqp.proto\022\025mosaic_cloud.idl.amqp\032\014com" + "mon.proto\"\252\002\n\026DeclareExchangeRequest\0227\n\005" + "token\030\001 \002(\0132(.mosaic_cloud.idl.common.Co" + "mpletionToken\022\020\n\010exchange\030\002 \002(\t\022H\n\004type\030" + "\003 \002(\0162:.mosaic_cloud.idl.amqp.DeclareExc" + "hangeRequest.ExchangeType\022\026\n\007durable\030\004 \001" + "(\010:\005false\022\031\n\013auto_delete\030\005 \001(\010:\004true\022\025\n\007"
-								+ "passive\030\006 \001(\010:\004true\"1\n\014ExchangeType\022\n\n\006D" + "IRECT\020\000\022\n\n\006FANOUT\020\001\022\t\n\005TOPIC\020\002\"\300\001\n\023Decla" + "reQueueRequest\0227\n\005token\030\001 \002(\0132(.mosaic_c",
-						"loud.idl.common.CompletionToken\022\r\n\005queue" + "\030\002 \002(\t\022\027\n\texclusive\030\003 \001(\010:\004true\022\026\n\007durab" + "le\030\004 \001(\010:\005false\022\031\n\013auto_delete\030\005 \001(\010:\004tr" + "ue\022\025\n\007passive\030\006 \001(\010:\004true\"\201\001\n\020BindQueueR" + "equest\0227\n\005token\030\001 \002(\0132(.mosaic_cloud.idl" + ".common.CompletionToken\022\020\n\010exchange\030\002 \002("
-								+ "\t\022\r\n\005queue\030\003 \002(\t\022\023\n\013routing_key\030\004 \002(\t\"\252\001" + "\n\016ConsumeRequest\0227\n\005token\030\001 \002(\0132(.mosaic" + "_cloud.idl.common.CompletionToken\022\r\n\005que" + "ue\030\002 \002(\t\022\020\n\010consumer\030\003 \002(\t\022\027\n\texclusive\030",
-						"\004 \001(\010:\004true\022\026\n\010auto_ack\030\005 \001(\010:\004true\022\r\n\005e" + "xtra\030\006 \002(\014\"]\n\014ConsumeReply\0227\n\005token\030\001 \002(" + "\0132(.mosaic_cloud.idl.common.CompletionTo" + "ken\022\024\n\014consumer_tag\030\002 \002(\t\"\247\002\n\016PublishReq" + "uest\0227\n\005token\030\001 \002(\0132(.mosaic_cloud.idl.c" + "ommon.CompletionToken\022\014\n\004data\030\002 \002(\014\022\026\n\007d"
-								+ "urable\030\003 \001(\010:\005false\022\020\n\010exchange\030\004 \002(\t\022\027\n" + "\timmediate\030\005 \001(\010:\004true\022\027\n\tmandatory\030\006 \001(" + "\010:\004true\022\023\n\013routing_key\030\007 \002(\t\0223\n\010envelope" + "\030\010 \002(\0132!.mosaic_cloud.idl.common.Envelop",
-						"e\022\026\n\016correlation_id\030\t \001(\t\022\020\n\010reply_to\030\n " + "\001(\t\"l\n\nGetRequest\0227\n\005token\030\001 \002(\0132(.mosai" + "c_cloud.idl.common.CompletionToken\022\r\n\005qu" + "eue\030\002 \002(\t\022\026\n\010auto_ack\030\003 \001(\010:\004true\"b\n\003Ack" + "\0227\n\005token\030\001 \002(\0132(.mosaic_cloud.idl.commo" + "n.CompletionToken\022\020\n\010delivery\030\002 \002(\003\022\020\n\010m"
-								+ "ultiple\030\003 \002(\010\"Z\n\rCancelRequest\0227\n\005token\030" + "\001 \002(\0132(.mosaic_cloud.idl.common.Completi" + "onToken\022\020\n\010consumer\030\002 \002(\t\"(\n\020ConsumeOkMe" + "ssage\022\024\n\014consumer_tag\030\001 \002(\t\"\'\n\017CancelOkM",
-						"essage\022\024\n\014consumer_tag\030\001 \002(\t\"+\n\023ServerCa" + "ncelRequest\022\024\n\014consumer_tag\030\001 \002(\t\"\350\001\n\017De" + "liveryMessage\022\024\n\014consumer_tag\030\001 \002(\t\022\024\n\014d" + "elivery_tag\030\002 \002(\003\022\020\n\010exchange\030\003 \002(\t\022\023\n\013r" + "outing_key\030\004 \002(\t\022\025\n\rdelivery_mode\030\005 \002(\005\022" + "\014\n\004data\030\006 \002(\014\0223\n\010envelope\030\007 \002(\0132!.mosaic"
-								+ "_cloud.idl.common.Envelope\022\026\n\016correlatio" + "n_id\030\010 \001(\t\022\020\n\010reply_to\030\t \001(\t\"8\n\017Shutdown" + "Message\022\024\n\014consumer_tag\030\001 \002(\t\022\017\n\007message" + "\030\002 \002(\tB;\n)eu.mosaic_cloud.platform.inter", "op.idl.amqpB\014AmqpPayloadsH\001"};
+		final java.lang.String[] descriptorData = {"\n\namqp.proto\022\025mosaic_cloud.idl.amqp\032\014com" + "mon.proto\"\252\002\n\026DeclareExchangeRequest\0227\n\005" + "token\030\001 \002(\0132(.mosaic_cloud.idl.common.Co" + "mpletionToken\022\020\n\010exchange\030\002 \002(\t\022H\n\004type\030" + "\003 \002(\0162:.mosaic_cloud.idl.amqp.DeclareExc" + "hangeRequest.ExchangeType\022\026\n\007durable\030\004 \001" + "(\010:\005false\022\031\n\013auto_delete\030\005 \001(\010:\004true\022\025\n\007" + "passive\030\006 \001(\010:\004true\"1\n\014ExchangeType\022\n\n\006D" + "IRECT\020\000\022\n\n\006FANOUT\020\001\022\t\n\005TOPIC\020\002\"\300\001\n\023Decla" + "reQueueRequest\0227\n\005token\030\001 \002(\0132(.mosaic_c", "loud.idl.common.CompletionToken\022\r\n\005queue" + "\030\002 \002(\t\022\027\n\texclusive\030\003 \001(\010:\004true\022\026\n\007durab" + "le\030\004 \001(\010:\005false\022\031\n\013auto_delete\030\005 \001(\010:\004tr" + "ue\022\025\n\007passive\030\006 \001(\010:\004true\"\201\001\n\020BindQueueR" + "equest\0227\n\005token\030\001 \002(\0132(.mosaic_cloud.idl" + ".common.CompletionToken\022\020\n\010exchange\030\002 \002(" + "\t\022\r\n\005queue\030\003 \002(\t\022\023\n\013routing_key\030\004 \002(\t\"\252\001" + "\n\016ConsumeRequest\0227\n\005token\030\001 \002(\0132(.mosaic" + "_cloud.idl.common.CompletionToken\022\r\n\005que" + "ue\030\002 \002(\t\022\020\n\010consumer\030\003 \002(\t\022\027\n\texclusive\030", "\004 \001(\010:\004true\022\026\n\010auto_ack\030\005 \001(\010:\004true\022\r\n\005e" + "xtra\030\006 \002(\014\"]\n\014ConsumeReply\0227\n\005token\030\001 \002(" + "\0132(.mosaic_cloud.idl.common.CompletionTo" + "ken\022\024\n\014consumer_tag\030\002 \002(\t\"\247\002\n\016PublishReq" + "uest\0227\n\005token\030\001 \002(\0132(.mosaic_cloud.idl.c" + "ommon.CompletionToken\022\014\n\004data\030\002 \002(\014\022\026\n\007d" + "urable\030\003 \001(\010:\005false\022\020\n\010exchange\030\004 \002(\t\022\027\n" + "\timmediate\030\005 \001(\010:\004true\022\027\n\tmandatory\030\006 \001(" + "\010:\004true\022\023\n\013routing_key\030\007 \002(\t\0223\n\010envelope" + "\030\010 \002(\0132!.mosaic_cloud.idl.common.Envelop", "e\022\026\n\016correlation_id\030\t \001(\t\022\020\n\010reply_to\030\n " + "\001(\t\"l\n\nGetRequest\0227\n\005token\030\001 \002(\0132(.mosai" + "c_cloud.idl.common.CompletionToken\022\r\n\005qu" + "eue\030\002 \002(\t\022\026\n\010auto_ack\030\003 \001(\010:\004true\"b\n\003Ack" + "\0227\n\005token\030\001 \002(\0132(.mosaic_cloud.idl.commo" + "n.CompletionToken\022\020\n\010delivery\030\002 \002(\003\022\020\n\010m" + "ultiple\030\003 \002(\010\"Z\n\rCancelRequest\0227\n\005token\030" + "\001 \002(\0132(.mosaic_cloud.idl.common.Completi" + "onToken\022\020\n\010consumer\030\002 \002(\t\"(\n\020ConsumeOkMe" + "ssage\022\024\n\014consumer_tag\030\001 \002(\t\"\'\n\017CancelOkM", "essage\022\024\n\014consumer_tag\030\001 \002(\t\"+\n\023ServerCa" + "ncelRequest\022\024\n\014consumer_tag\030\001 \002(\t\"\350\001\n\017De" + "liveryMessage\022\024\n\014consumer_tag\030\001 \002(\t\022\024\n\014d" + "elivery_tag\030\002 \002(\003\022\020\n\010exchange\030\003 \002(\t\022\023\n\013r" + "outing_key\030\004 \002(\t\022\025\n\rdelivery_mode\030\005 \002(\005\022" + "\014\n\004data\030\006 \002(\014\0223\n\010envelope\030\007 \002(\0132!.mosaic" + "_cloud.idl.common.Envelope\022\026\n\016correlatio" + "n_id\030\010 \001(\t\022\020\n\010reply_to\030\t \001(\t\"8\n\017Shutdown" + "Message\022\024\n\014consumer_tag\030\001 \002(\t\022\017\n\007message" + "\030\002 \002(\tB;\n)eu.mosaic_cloud.platform.inter", "op.idl.amqpB\014AmqpPayloadsH\001"};
 		final com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner = new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner () {
 			@Override
-			public com.google.protobuf.ExtensionRegistry assignDescriptors (final com.google.protobuf.Descriptors.FileDescriptor root)
-			{
+			public com.google.protobuf.ExtensionRegistry assignDescriptors (final com.google.protobuf.Descriptors.FileDescriptor root) {
 				AmqpPayloads.descriptor = root;
 				AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareExchangeRequest_descriptor = AmqpPayloads.getDescriptor ().getMessageTypes ().get (0);
-				AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareExchangeRequest_fieldAccessorTable =
-						new com.google.protobuf.GeneratedMessage.FieldAccessorTable (AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareExchangeRequest_descriptor, new java.lang.String[] {"Token", "Exchange", "Type", "Durable", "AutoDelete", "Passive",}, eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.class, eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.Builder.class);
+				AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareExchangeRequest_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable (AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareExchangeRequest_descriptor, new java.lang.String[] {"Token", "Exchange", "Type", "Durable", "AutoDelete", "Passive",}, eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.class, eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.Builder.class);
 				AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareQueueRequest_descriptor = AmqpPayloads.getDescriptor ().getMessageTypes ().get (1);
-				AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareQueueRequest_fieldAccessorTable =
-						new com.google.protobuf.GeneratedMessage.FieldAccessorTable (AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareQueueRequest_descriptor, new java.lang.String[] {"Token", "Queue", "Exclusive", "Durable", "AutoDelete", "Passive",}, eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest.class, eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest.Builder.class);
+				AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareQueueRequest_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable (AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareQueueRequest_descriptor, new java.lang.String[] {"Token", "Queue", "Exclusive", "Durable", "AutoDelete", "Passive",}, eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest.class, eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest.Builder.class);
 				AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_BindQueueRequest_descriptor = AmqpPayloads.getDescriptor ().getMessageTypes ().get (2);
 				AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_BindQueueRequest_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable (AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_BindQueueRequest_descriptor, new java.lang.String[] {"Token", "Exchange", "Queue", "RoutingKey",}, eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest.class, eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest.Builder.class);
 				AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeRequest_descriptor = AmqpPayloads.getDescriptor ().getMessageTypes ().get (3);
@@ -59,8 +50,7 @@ public final class AmqpPayloads
 				AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeReply_descriptor = AmqpPayloads.getDescriptor ().getMessageTypes ().get (4);
 				AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeReply_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable (AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeReply_descriptor, new java.lang.String[] {"Token", "ConsumerTag",}, eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply.class, eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply.Builder.class);
 				AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_PublishRequest_descriptor = AmqpPayloads.getDescriptor ().getMessageTypes ().get (5);
-				AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_PublishRequest_fieldAccessorTable =
-						new com.google.protobuf.GeneratedMessage.FieldAccessorTable (AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_PublishRequest_descriptor, new java.lang.String[] {"Token", "Data", "Durable", "Exchange", "Immediate", "Mandatory", "RoutingKey", "Envelope", "CorrelationId", "ReplyTo",}, eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest.class, eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest.Builder.class);
+				AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_PublishRequest_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable (AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_PublishRequest_descriptor, new java.lang.String[] {"Token", "Data", "Durable", "Exchange", "Immediate", "Mandatory", "RoutingKey", "Envelope", "CorrelationId", "ReplyTo",}, eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest.class, eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest.Builder.class);
 				AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_GetRequest_descriptor = AmqpPayloads.getDescriptor ().getMessageTypes ().get (6);
 				AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_GetRequest_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable (AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_GetRequest_descriptor, new java.lang.String[] {"Token", "Queue", "AutoAck",}, eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest.class, eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest.Builder.class);
 				AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_Ack_descriptor = AmqpPayloads.getDescriptor ().getMessageTypes ().get (7);
@@ -74,8 +64,7 @@ public final class AmqpPayloads
 				AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ServerCancelRequest_descriptor = AmqpPayloads.getDescriptor ().getMessageTypes ().get (11);
 				AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ServerCancelRequest_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable (AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ServerCancelRequest_descriptor, new java.lang.String[] {"ConsumerTag",}, eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest.class, eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest.Builder.class);
 				AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeliveryMessage_descriptor = AmqpPayloads.getDescriptor ().getMessageTypes ().get (12);
-				AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeliveryMessage_fieldAccessorTable =
-						new com.google.protobuf.GeneratedMessage.FieldAccessorTable (AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeliveryMessage_descriptor, new java.lang.String[] {"ConsumerTag", "DeliveryTag", "Exchange", "RoutingKey", "DeliveryMode", "Data", "Envelope", "CorrelationId", "ReplyTo",}, eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage.class, eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage.Builder.class);
+				AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeliveryMessage_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable (AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeliveryMessage_descriptor, new java.lang.String[] {"ConsumerTag", "DeliveryTag", "Exchange", "RoutingKey", "DeliveryMode", "Data", "Envelope", "CorrelationId", "ReplyTo",}, eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage.class, eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage.Builder.class);
 				AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ShutdownMessage_descriptor = AmqpPayloads.getDescriptor ().getMessageTypes ().get (13);
 				AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ShutdownMessage_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable (AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ShutdownMessage_descriptor, new java.lang.String[] {"ConsumerTag", "Message",}, eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage.class, eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage.Builder.class);
 				return null;
@@ -83,15 +72,6 @@ public final class AmqpPayloads
 		};
 		com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom (descriptorData, new com.google.protobuf.Descriptors.FileDescriptor[] {eu.mosaic_cloud.platform.interop.idl.IdlCommon.getDescriptor (),}, assigner);
 	}
-	
-	public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor ()
-	{
-		return AmqpPayloads.descriptor;
-	}
-	
-	public static void registerAllExtensions (final com.google.protobuf.ExtensionRegistry registry)
-	{}
-	
 	private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
 	private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_amqp_Ack_descriptor;
 	private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_amqp_Ack_fieldAccessorTable;
@@ -123,40 +103,34 @@ public final class AmqpPayloads
 	private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_amqp_ShutdownMessage_fieldAccessorTable;
 	
 	public static final class Ack
-			extends com.google.protobuf.GeneratedMessage
-			implements
-				AckOrBuilder
+				extends com.google.protobuf.GeneratedMessage
+				implements
+					AckOrBuilder
 	{
-		private Ack (final boolean noInit)
-		{}
+		private Ack (final boolean noInit) {}
 		
 		// Use Ack.newBuilder() to construct.
-		private Ack (final Builder builder)
-		{
+		private Ack (final Builder builder) {
 			super (builder);
 		}
 		
 		@Override
-		public Ack getDefaultInstanceForType ()
-		{
+		public Ack getDefaultInstanceForType () {
 			return Ack.defaultInstance;
 		}
 		
 		@Override
-		public long getDelivery ()
-		{
+		public long getDelivery () {
 			return this.delivery_;
 		}
 		
 		@Override
-		public boolean getMultiple ()
-		{
+		public boolean getMultiple () {
 			return this.multiple_;
 		}
 		
 		@Override
-		public int getSerializedSize ()
-		{
+		public int getSerializedSize () {
 			int size = this.memoizedSerializedSize;
 			if (size != -1)
 				return size;
@@ -176,38 +150,32 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 			return this.token_;
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 			return this.token_;
 		}
 		
 		@Override
-		public boolean hasDelivery ()
-		{
+		public boolean hasDelivery () {
 			return ((this.bitField0_ & 0x00000002) == 0x00000002);
 		}
 		
 		@Override
-		public boolean hasMultiple ()
-		{
+		public boolean hasMultiple () {
 			return ((this.bitField0_ & 0x00000004) == 0x00000004);
 		}
 		
 		@Override
-		public boolean hasToken ()
-		{
+		public boolean hasToken () {
 			return ((this.bitField0_ & 0x00000001) == 0x00000001);
 		}
 		
 		@Override
-		public final boolean isInitialized ()
-		{
+		public final boolean isInitialized () {
 			final byte isInitialized = this.memoizedIsInitialized;
 			if (isInitialized != -1)
 				return isInitialized == 1;
@@ -232,21 +200,18 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public Builder newBuilderForType ()
-		{
+		public Builder newBuilderForType () {
 			return Ack.newBuilder ();
 		}
 		
 		@Override
-		public Builder toBuilder ()
-		{
+		public Builder toBuilder () {
 			return Ack.newBuilder (this);
 		}
 		
 		@Override
 		public void writeTo (final com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			this.getSerializedSize ();
 			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
 				output.writeMessage (1, this.token_);
@@ -261,60 +226,53 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-		{
+		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_Ack_fieldAccessorTable;
 		}
 		
 		@java.lang.Override
-		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent)
-		{
+		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent) {
 			final Builder builder = new Builder (parent);
 			return builder;
 		}
 		
 		@java.lang.Override
 		protected java.lang.Object writeReplace ()
-				throws java.io.ObjectStreamException
-		{
+					throws java.io.ObjectStreamException {
 			return super.writeReplace ();
 		}
 		
-		private void initFields ()
-		{
+		private void initFields () {
 			this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			this.delivery_ = 0L;
 			this.multiple_ = false;
 		}
 		
-		static {
-			defaultInstance = new Ack (true);
-			Ack.defaultInstance.initFields ();
-		}
+		private int bitField0_;
+		private long delivery_;
+		private byte memoizedIsInitialized = -1;
+		private int memoizedSerializedSize = -1;
+		private boolean multiple_;
+		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
 		
-		public static Ack getDefaultInstance ()
-		{
+		public static Ack getDefaultInstance () {
 			return Ack.defaultInstance;
 		}
 		
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-		{
+		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
 			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_Ack_descriptor;
 		}
 		
-		public static Builder newBuilder ()
-		{
+		public static Builder newBuilder () {
 			return Builder.create ();
 		}
 		
-		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack prototype)
-		{
+		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack prototype) {
 			return Ack.newBuilder ().mergeFrom (prototype);
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack parseDelimitedFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = Ack.newBuilder ();
 			if (builder.mergeDelimitedFrom (input)) {
 				return builder.buildParsed ();
@@ -324,8 +282,7 @@ public final class AmqpPayloads
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = Ack.newBuilder ();
 			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
 				return builder.buildParsed ();
@@ -335,59 +292,49 @@ public final class AmqpPayloads
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack parseFrom (final byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return Ack.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return Ack.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack parseFrom (final com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return Ack.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return Ack.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack parseFrom (final com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return Ack.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return Ack.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack parseFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return Ack.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return Ack.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
-		private int bitField0_;
-		private long delivery_;
-		private byte memoizedIsInitialized = -1;
-		private int memoizedSerializedSize = -1;
-		private boolean multiple_;
-		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
+		static {
+			defaultInstance = new Ack (true);
+			Ack.defaultInstance.initFields ();
+		}
 		// required int64 delivery = 2;
 		public static final int DELIVERY_FIELD_NUMBER = 2;
 		// required bool multiple = 3;
@@ -398,25 +345,22 @@ public final class AmqpPayloads
 		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
-				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-					eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.AckOrBuilder
+					extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+					implements
+						eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.AckOrBuilder
 		{
 			// Construct using eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack.newBuilder()
-			private Builder ()
-			{
+			private Builder () {
 				this.maybeForceBuilderInitialization ();
 			}
 			
-			private Builder (final BuilderParent parent)
-			{
+			private Builder (final BuilderParent parent) {
 				super (parent);
 				this.maybeForceBuilderInitialization ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack build ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack build () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
@@ -425,8 +369,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack buildPartial ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack buildPartial () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack result = new eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack (this);
 				final int from_bitField0_ = this.bitField0_;
 				int to_bitField0_ = 0;
@@ -452,8 +395,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clear ()
-			{
+			public Builder clear () {
 				super.clear ();
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
@@ -468,24 +410,21 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder clearDelivery ()
-			{
+			public Builder clearDelivery () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000002);
 				this.delivery_ = 0L;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearMultiple ()
-			{
+			public Builder clearMultiple () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000004);
 				this.multiple_ = false;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearToken ()
-			{
+			public Builder clearToken () {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 					this.onChanged ();
@@ -497,38 +436,32 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clone ()
-			{
+			public Builder clone () {
 				return Builder.create ().mergeFrom (this.buildPartial ());
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack getDefaultInstanceForType ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack getDefaultInstanceForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack.getDefaultInstance ();
 			}
 			
 			@Override
-			public long getDelivery ()
-			{
+			public long getDelivery () {
 				return this.delivery_;
 			}
 			
 			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType ()
-			{
+			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack.getDescriptor ();
 			}
 			
 			@Override
-			public boolean getMultiple ()
-			{
+			public boolean getMultiple () {
 				return this.multiple_;
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 				if (this.tokenBuilder_ == null) {
 					return this.token_;
 				} else {
@@ -536,16 +469,14 @@ public final class AmqpPayloads
 				}
 			}
 			
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder () {
 				this.bitField0_ |= 0x00000001;
 				this.onChanged ();
 				return this.getTokenFieldBuilder ().getBuilder ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 				if (this.tokenBuilder_ != null) {
 					return this.tokenBuilder_.getMessageOrBuilder ();
 				} else {
@@ -554,26 +485,22 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public boolean hasDelivery ()
-			{
+			public boolean hasDelivery () {
 				return ((this.bitField0_ & 0x00000002) == 0x00000002);
 			}
 			
 			@Override
-			public boolean hasMultiple ()
-			{
+			public boolean hasMultiple () {
 				return ((this.bitField0_ & 0x00000004) == 0x00000004);
 			}
 			
 			@Override
-			public boolean hasToken ()
-			{
+			public boolean hasToken () {
 				return ((this.bitField0_ & 0x00000001) == 0x00000001);
 			}
 			
 			@Override
-			public final boolean isInitialized ()
-			{
+			public final boolean isInitialized () {
 				if (!this.hasToken ()) {
 					return false;
 				}
@@ -591,8 +518,7 @@ public final class AmqpPayloads
 			
 			@Override
 			public Builder mergeFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException
-			{
+						throws java.io.IOException {
 				final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder (this.getUnknownFields ());
 				while (true) {
 					final int tag = input.readTag ();
@@ -601,7 +527,7 @@ public final class AmqpPayloads
 							this.setUnknownFields (unknownFields.build ());
 							this.onChanged ();
 							return this;
-						default: {
+						default : {
 							if (!this.parseUnknownField (input, unknownFields, extensionRegistry, tag)) {
 								this.setUnknownFields (unknownFields.build ());
 								this.onChanged ();
@@ -633,8 +559,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder mergeFrom (final com.google.protobuf.Message other)
-			{
+			public Builder mergeFrom (final com.google.protobuf.Message other) {
 				if (other instanceof eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack) {
 					return this.mergeFrom ((eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack) other);
 				} else {
@@ -643,8 +568,7 @@ public final class AmqpPayloads
 				}
 			}
 			
-			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack other)
-			{
+			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack other) {
 				if (other == eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack.getDefaultInstance ())
 					return this;
 				if (other.hasToken ()) {
@@ -660,8 +584,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (((this.bitField0_ & 0x00000001) == 0x00000001) && (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ())) {
 						this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.newBuilder (this.token_).mergeFrom (value).buildPartial ();
@@ -676,24 +599,21 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setDelivery (final long value)
-			{
+			public Builder setDelivery (final long value) {
 				this.bitField0_ |= 0x00000002;
 				this.delivery_ = value;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder setMultiple (final boolean value)
-			{
+			public Builder setMultiple (final boolean value) {
 				this.bitField0_ |= 0x00000004;
 				this.multiple_ = value;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (value == null) {
 						throw new NullPointerException ();
@@ -707,8 +627,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = builderForValue.build ();
 					this.onChanged ();
@@ -720,14 +639,12 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-			{
+			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_Ack_fieldAccessorTable;
 			}
 			
 			private eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack buildParsed ()
-					throws com.google.protobuf.InvalidProtocolBufferException
-			{
+						throws com.google.protobuf.InvalidProtocolBufferException {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.Ack result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
@@ -735,8 +652,7 @@ public final class AmqpPayloads
 				return result;
 			}
 			
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder ()
-			{
+			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder () {
 				if (this.tokenBuilder_ == null) {
 					this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> (this.token_, this.getParentForChildren (), this.isClean ());
 					this.token_ = null;
@@ -744,21 +660,10 @@ public final class AmqpPayloads
 				return this.tokenBuilder_;
 			}
 			
-			private void maybeForceBuilderInitialization ()
-			{
+			private void maybeForceBuilderInitialization () {
 				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
 					this.getTokenFieldBuilder ();
 				}
-			}
-			
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-			{
-				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_Ack_descriptor;
-			}
-			
-			private static Builder create ()
-			{
-				return new Builder ();
 			}
 			
 			private int bitField0_;
@@ -769,14 +674,22 @@ public final class AmqpPayloads
 			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
+			
 			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.amqp.Ack)
+			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_Ack_descriptor;
+			}
+			
+			private static Builder create () {
+				return new Builder ();
+			}
 		}
 		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.amqp.Ack)
 	}
 	
 	public interface AckOrBuilder
-			extends
-				com.google.protobuf.MessageOrBuilder
+				extends
+					com.google.protobuf.MessageOrBuilder
 	{
 		long getDelivery ();
 		
@@ -797,28 +710,24 @@ public final class AmqpPayloads
 	}
 	
 	public static final class BindQueueRequest
-			extends com.google.protobuf.GeneratedMessage
-			implements
-				BindQueueRequestOrBuilder
+				extends com.google.protobuf.GeneratedMessage
+				implements
+					BindQueueRequestOrBuilder
 	{
-		private BindQueueRequest (final boolean noInit)
-		{}
+		private BindQueueRequest (final boolean noInit) {}
 		
 		// Use BindQueueRequest.newBuilder() to construct.
-		private BindQueueRequest (final Builder builder)
-		{
+		private BindQueueRequest (final Builder builder) {
 			super (builder);
 		}
 		
 		@Override
-		public BindQueueRequest getDefaultInstanceForType ()
-		{
+		public BindQueueRequest getDefaultInstanceForType () {
 			return BindQueueRequest.defaultInstance;
 		}
 		
 		@Override
-		public String getExchange ()
-		{
+		public String getExchange () {
 			final java.lang.Object ref = this.exchange_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -833,8 +742,7 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public String getQueue ()
-		{
+		public String getQueue () {
 			final java.lang.Object ref = this.queue_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -849,8 +757,7 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public String getRoutingKey ()
-		{
+		public String getRoutingKey () {
 			final java.lang.Object ref = this.routingKey_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -865,8 +772,7 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public int getSerializedSize ()
-		{
+		public int getSerializedSize () {
 			int size = this.memoizedSerializedSize;
 			if (size != -1)
 				return size;
@@ -889,44 +795,37 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 			return this.token_;
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 			return this.token_;
 		}
 		
 		@Override
-		public boolean hasExchange ()
-		{
+		public boolean hasExchange () {
 			return ((this.bitField0_ & 0x00000002) == 0x00000002);
 		}
 		
 		@Override
-		public boolean hasQueue ()
-		{
+		public boolean hasQueue () {
 			return ((this.bitField0_ & 0x00000004) == 0x00000004);
 		}
 		
 		@Override
-		public boolean hasRoutingKey ()
-		{
+		public boolean hasRoutingKey () {
 			return ((this.bitField0_ & 0x00000008) == 0x00000008);
 		}
 		
 		@Override
-		public boolean hasToken ()
-		{
+		public boolean hasToken () {
 			return ((this.bitField0_ & 0x00000001) == 0x00000001);
 		}
 		
 		@Override
-		public final boolean isInitialized ()
-		{
+		public final boolean isInitialized () {
 			final byte isInitialized = this.memoizedIsInitialized;
 			if (isInitialized != -1)
 				return isInitialized == 1;
@@ -955,21 +854,18 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public Builder newBuilderForType ()
-		{
+		public Builder newBuilderForType () {
 			return BindQueueRequest.newBuilder ();
 		}
 		
 		@Override
-		public Builder toBuilder ()
-		{
+		public Builder toBuilder () {
 			return BindQueueRequest.newBuilder (this);
 		}
 		
 		@Override
 		public void writeTo (final com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			this.getSerializedSize ();
 			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
 				output.writeMessage (1, this.token_);
@@ -987,27 +883,23 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-		{
+		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_BindQueueRequest_fieldAccessorTable;
 		}
 		
 		@java.lang.Override
-		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent)
-		{
+		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent) {
 			final Builder builder = new Builder (parent);
 			return builder;
 		}
 		
 		@java.lang.Override
 		protected java.lang.Object writeReplace ()
-				throws java.io.ObjectStreamException
-		{
+					throws java.io.ObjectStreamException {
 			return super.writeReplace ();
 		}
 		
-		private com.google.protobuf.ByteString getExchangeBytes ()
-		{
+		private com.google.protobuf.ByteString getExchangeBytes () {
 			final java.lang.Object ref = this.exchange_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -1018,8 +910,7 @@ public final class AmqpPayloads
 			}
 		}
 		
-		private com.google.protobuf.ByteString getQueueBytes ()
-		{
+		private com.google.protobuf.ByteString getQueueBytes () {
 			final java.lang.Object ref = this.queue_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -1030,8 +921,7 @@ public final class AmqpPayloads
 			}
 		}
 		
-		private com.google.protobuf.ByteString getRoutingKeyBytes ()
-		{
+		private com.google.protobuf.ByteString getRoutingKeyBytes () {
 			final java.lang.Object ref = this.routingKey_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -1042,107 +932,11 @@ public final class AmqpPayloads
 			}
 		}
 		
-		private void initFields ()
-		{
+		private void initFields () {
 			this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			this.exchange_ = "";
 			this.queue_ = "";
 			this.routingKey_ = "";
-		}
-		
-		static {
-			defaultInstance = new BindQueueRequest (true);
-			BindQueueRequest.defaultInstance.initFields ();
-		}
-		
-		public static BindQueueRequest getDefaultInstance ()
-		{
-			return BindQueueRequest.defaultInstance;
-		}
-		
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-		{
-			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_BindQueueRequest_descriptor;
-		}
-		
-		public static Builder newBuilder ()
-		{
-			return Builder.create ();
-		}
-		
-		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest prototype)
-		{
-			return BindQueueRequest.newBuilder ().mergeFrom (prototype);
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseDelimitedFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
-			final Builder builder = BindQueueRequest.newBuilder ();
-			if (builder.mergeDelimitedFrom (input)) {
-				return builder.buildParsed ();
-			} else {
-				return null;
-			}
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
-			final Builder builder = BindQueueRequest.newBuilder ();
-			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
-				return builder.buildParsed ();
-			} else {
-				return null;
-			}
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseFrom (final byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
-			return BindQueueRequest.newBuilder ().mergeFrom (data).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
-			return BindQueueRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseFrom (final com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
-			return BindQueueRequest.newBuilder ().mergeFrom (data).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
-			return BindQueueRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseFrom (final com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException
-		{
-			return BindQueueRequest.newBuilder ().mergeFrom (input).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
-			return BindQueueRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
-			return BindQueueRequest.newBuilder ().mergeFrom (input).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
-			return BindQueueRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
 		private int bitField0_;
@@ -1152,6 +946,87 @@ public final class AmqpPayloads
 		private java.lang.Object queue_;
 		private java.lang.Object routingKey_;
 		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
+		
+		public static BindQueueRequest getDefaultInstance () {
+			return BindQueueRequest.defaultInstance;
+		}
+		
+		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_BindQueueRequest_descriptor;
+		}
+		
+		public static Builder newBuilder () {
+			return Builder.create ();
+		}
+		
+		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest prototype) {
+			return BindQueueRequest.newBuilder ().mergeFrom (prototype);
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseDelimitedFrom (final java.io.InputStream input)
+					throws java.io.IOException {
+			final Builder builder = BindQueueRequest.newBuilder ();
+			if (builder.mergeDelimitedFrom (input)) {
+				return builder.buildParsed ();
+			} else {
+				return null;
+			}
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws java.io.IOException {
+			final Builder builder = BindQueueRequest.newBuilder ();
+			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
+				return builder.buildParsed ();
+			} else {
+				return null;
+			}
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseFrom (final byte[] data)
+					throws com.google.protobuf.InvalidProtocolBufferException {
+			return BindQueueRequest.newBuilder ().mergeFrom (data).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws com.google.protobuf.InvalidProtocolBufferException {
+			return BindQueueRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseFrom (final com.google.protobuf.ByteString data)
+					throws com.google.protobuf.InvalidProtocolBufferException {
+			return BindQueueRequest.newBuilder ().mergeFrom (data).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws com.google.protobuf.InvalidProtocolBufferException {
+			return BindQueueRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseFrom (final com.google.protobuf.CodedInputStream input)
+					throws java.io.IOException {
+			return BindQueueRequest.newBuilder ().mergeFrom (input).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws java.io.IOException {
+			return BindQueueRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseFrom (final java.io.InputStream input)
+					throws java.io.IOException {
+			return BindQueueRequest.newBuilder ().mergeFrom (input).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws java.io.IOException {
+			return BindQueueRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
+		}
+		
+		static {
+			defaultInstance = new BindQueueRequest (true);
+			BindQueueRequest.defaultInstance.initFields ();
+		}
 		// required string exchange = 2;
 		public static final int EXCHANGE_FIELD_NUMBER = 2;
 		// required string queue = 3;
@@ -1164,25 +1039,22 @@ public final class AmqpPayloads
 		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
-				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-					eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequestOrBuilder
+					extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+					implements
+						eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequestOrBuilder
 		{
 			// Construct using eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest.newBuilder()
-			private Builder ()
-			{
+			private Builder () {
 				this.maybeForceBuilderInitialization ();
 			}
 			
-			private Builder (final BuilderParent parent)
-			{
+			private Builder (final BuilderParent parent) {
 				super (parent);
 				this.maybeForceBuilderInitialization ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest build ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest build () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
@@ -1191,8 +1063,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest buildPartial ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest buildPartial () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest result = new eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest (this);
 				final int from_bitField0_ = this.bitField0_;
 				int to_bitField0_ = 0;
@@ -1222,8 +1093,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clear ()
-			{
+			public Builder clear () {
 				super.clear ();
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
@@ -1240,32 +1110,28 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder clearExchange ()
-			{
+			public Builder clearExchange () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000002);
 				this.exchange_ = BindQueueRequest.getDefaultInstance ().getExchange ();
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearQueue ()
-			{
+			public Builder clearQueue () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000004);
 				this.queue_ = BindQueueRequest.getDefaultInstance ().getQueue ();
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearRoutingKey ()
-			{
+			public Builder clearRoutingKey () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000008);
 				this.routingKey_ = BindQueueRequest.getDefaultInstance ().getRoutingKey ();
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearToken ()
-			{
+			public Builder clearToken () {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 					this.onChanged ();
@@ -1277,26 +1143,22 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clone ()
-			{
+			public Builder clone () {
 				return Builder.create ().mergeFrom (this.buildPartial ());
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest getDefaultInstanceForType ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest getDefaultInstanceForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest.getDefaultInstance ();
 			}
 			
 			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType ()
-			{
+			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest.getDescriptor ();
 			}
 			
 			@Override
-			public String getExchange ()
-			{
+			public String getExchange () {
 				final java.lang.Object ref = this.exchange_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -1308,8 +1170,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public String getQueue ()
-			{
+			public String getQueue () {
 				final java.lang.Object ref = this.queue_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -1321,8 +1182,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public String getRoutingKey ()
-			{
+			public String getRoutingKey () {
 				final java.lang.Object ref = this.routingKey_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -1334,8 +1194,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 				if (this.tokenBuilder_ == null) {
 					return this.token_;
 				} else {
@@ -1343,16 +1202,14 @@ public final class AmqpPayloads
 				}
 			}
 			
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder () {
 				this.bitField0_ |= 0x00000001;
 				this.onChanged ();
 				return this.getTokenFieldBuilder ().getBuilder ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 				if (this.tokenBuilder_ != null) {
 					return this.tokenBuilder_.getMessageOrBuilder ();
 				} else {
@@ -1361,32 +1218,27 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public boolean hasExchange ()
-			{
+			public boolean hasExchange () {
 				return ((this.bitField0_ & 0x00000002) == 0x00000002);
 			}
 			
 			@Override
-			public boolean hasQueue ()
-			{
+			public boolean hasQueue () {
 				return ((this.bitField0_ & 0x00000004) == 0x00000004);
 			}
 			
 			@Override
-			public boolean hasRoutingKey ()
-			{
+			public boolean hasRoutingKey () {
 				return ((this.bitField0_ & 0x00000008) == 0x00000008);
 			}
 			
 			@Override
-			public boolean hasToken ()
-			{
+			public boolean hasToken () {
 				return ((this.bitField0_ & 0x00000001) == 0x00000001);
 			}
 			
 			@Override
-			public final boolean isInitialized ()
-			{
+			public final boolean isInitialized () {
 				if (!this.hasToken ()) {
 					return false;
 				}
@@ -1407,8 +1259,7 @@ public final class AmqpPayloads
 			
 			@Override
 			public Builder mergeFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException
-			{
+						throws java.io.IOException {
 				final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder (this.getUnknownFields ());
 				while (true) {
 					final int tag = input.readTag ();
@@ -1417,7 +1268,7 @@ public final class AmqpPayloads
 							this.setUnknownFields (unknownFields.build ());
 							this.onChanged ();
 							return this;
-						default: {
+						default : {
 							if (!this.parseUnknownField (input, unknownFields, extensionRegistry, tag)) {
 								this.setUnknownFields (unknownFields.build ());
 								this.onChanged ();
@@ -1454,8 +1305,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder mergeFrom (final com.google.protobuf.Message other)
-			{
+			public Builder mergeFrom (final com.google.protobuf.Message other) {
 				if (other instanceof eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest) {
 					return this.mergeFrom ((eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest) other);
 				} else {
@@ -1464,8 +1314,7 @@ public final class AmqpPayloads
 				}
 			}
 			
-			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest other)
-			{
+			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest other) {
 				if (other == eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest.getDefaultInstance ())
 					return this;
 				if (other.hasToken ()) {
@@ -1484,8 +1333,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (((this.bitField0_ & 0x00000001) == 0x00000001) && (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ())) {
 						this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.newBuilder (this.token_).mergeFrom (value).buildPartial ();
@@ -1500,8 +1348,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setExchange (final String value)
-			{
+			public Builder setExchange (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -1511,8 +1358,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setQueue (final String value)
-			{
+			public Builder setQueue (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -1522,8 +1368,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setRoutingKey (final String value)
-			{
+			public Builder setRoutingKey (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -1533,8 +1378,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (value == null) {
 						throw new NullPointerException ();
@@ -1548,8 +1392,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = builderForValue.build ();
 					this.onChanged ();
@@ -1561,35 +1404,30 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-			{
+			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_BindQueueRequest_fieldAccessorTable;
 			}
 			
-			void setExchange (final com.google.protobuf.ByteString value)
-			{
+			void setExchange (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000002;
 				this.exchange_ = value;
 				this.onChanged ();
 			}
 			
-			void setQueue (final com.google.protobuf.ByteString value)
-			{
+			void setQueue (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000004;
 				this.queue_ = value;
 				this.onChanged ();
 			}
 			
-			void setRoutingKey (final com.google.protobuf.ByteString value)
-			{
+			void setRoutingKey (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000008;
 				this.routingKey_ = value;
 				this.onChanged ();
 			}
 			
 			private eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest buildParsed ()
-					throws com.google.protobuf.InvalidProtocolBufferException
-			{
+						throws com.google.protobuf.InvalidProtocolBufferException {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.BindQueueRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
@@ -1597,8 +1435,7 @@ public final class AmqpPayloads
 				return result;
 			}
 			
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder ()
-			{
+			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder () {
 				if (this.tokenBuilder_ == null) {
 					this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> (this.token_, this.getParentForChildren (), this.isClean ());
 					this.token_ = null;
@@ -1606,21 +1443,10 @@ public final class AmqpPayloads
 				return this.tokenBuilder_;
 			}
 			
-			private void maybeForceBuilderInitialization ()
-			{
+			private void maybeForceBuilderInitialization () {
 				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
 					this.getTokenFieldBuilder ();
 				}
-			}
-			
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-			{
-				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_BindQueueRequest_descriptor;
-			}
-			
-			private static Builder create ()
-			{
-				return new Builder ();
 			}
 			
 			private int bitField0_;
@@ -1633,14 +1459,22 @@ public final class AmqpPayloads
 			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
+			
 			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.amqp.BindQueueRequest)
+			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_BindQueueRequest_descriptor;
+			}
+			
+			private static Builder create () {
+				return new Builder ();
+			}
 		}
 		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.amqp.BindQueueRequest)
 	}
 	
 	public interface BindQueueRequestOrBuilder
-			extends
-				com.google.protobuf.MessageOrBuilder
+				extends
+					com.google.protobuf.MessageOrBuilder
 	{
 		String getExchange ();
 		
@@ -1666,22 +1500,19 @@ public final class AmqpPayloads
 	}
 	
 	public static final class CancelOkMessage
-			extends com.google.protobuf.GeneratedMessage
-			implements
-				CancelOkMessageOrBuilder
+				extends com.google.protobuf.GeneratedMessage
+				implements
+					CancelOkMessageOrBuilder
 	{
-		private CancelOkMessage (final boolean noInit)
-		{}
+		private CancelOkMessage (final boolean noInit) {}
 		
 		// Use CancelOkMessage.newBuilder() to construct.
-		private CancelOkMessage (final Builder builder)
-		{
+		private CancelOkMessage (final Builder builder) {
 			super (builder);
 		}
 		
 		@Override
-		public String getConsumerTag ()
-		{
+		public String getConsumerTag () {
 			final java.lang.Object ref = this.consumerTag_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -1696,14 +1527,12 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public CancelOkMessage getDefaultInstanceForType ()
-		{
+		public CancelOkMessage getDefaultInstanceForType () {
 			return CancelOkMessage.defaultInstance;
 		}
 		
 		@Override
-		public int getSerializedSize ()
-		{
+		public int getSerializedSize () {
 			int size = this.memoizedSerializedSize;
 			if (size != -1)
 				return size;
@@ -1717,14 +1546,12 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public boolean hasConsumerTag ()
-		{
+		public boolean hasConsumerTag () {
 			return ((this.bitField0_ & 0x00000001) == 0x00000001);
 		}
 		
 		@Override
-		public final boolean isInitialized ()
-		{
+		public final boolean isInitialized () {
 			final byte isInitialized = this.memoizedIsInitialized;
 			if (isInitialized != -1)
 				return isInitialized == 1;
@@ -1737,21 +1564,18 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public Builder newBuilderForType ()
-		{
+		public Builder newBuilderForType () {
 			return CancelOkMessage.newBuilder ();
 		}
 		
 		@Override
-		public Builder toBuilder ()
-		{
+		public Builder toBuilder () {
 			return CancelOkMessage.newBuilder (this);
 		}
 		
 		@Override
 		public void writeTo (final com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			this.getSerializedSize ();
 			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
 				output.writeBytes (1, this.getConsumerTagBytes ());
@@ -1760,27 +1584,23 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-		{
+		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_CancelOkMessage_fieldAccessorTable;
 		}
 		
 		@java.lang.Override
-		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent)
-		{
+		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent) {
 			final Builder builder = new Builder (parent);
 			return builder;
 		}
 		
 		@java.lang.Override
 		protected java.lang.Object writeReplace ()
-				throws java.io.ObjectStreamException
-		{
+					throws java.io.ObjectStreamException {
 			return super.writeReplace ();
 		}
 		
-		private com.google.protobuf.ByteString getConsumerTagBytes ()
-		{
+		private com.google.protobuf.ByteString getConsumerTagBytes () {
 			final java.lang.Object ref = this.consumerTag_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -1791,39 +1611,33 @@ public final class AmqpPayloads
 			}
 		}
 		
-		private void initFields ()
-		{
+		private void initFields () {
 			this.consumerTag_ = "";
 		}
 		
-		static {
-			defaultInstance = new CancelOkMessage (true);
-			CancelOkMessage.defaultInstance.initFields ();
-		}
+		private int bitField0_;
+		private java.lang.Object consumerTag_;
+		private byte memoizedIsInitialized = -1;
+		private int memoizedSerializedSize = -1;
 		
-		public static CancelOkMessage getDefaultInstance ()
-		{
+		public static CancelOkMessage getDefaultInstance () {
 			return CancelOkMessage.defaultInstance;
 		}
 		
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-		{
+		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
 			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_CancelOkMessage_descriptor;
 		}
 		
-		public static Builder newBuilder ()
-		{
+		public static Builder newBuilder () {
 			return Builder.create ();
 		}
 		
-		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage prototype)
-		{
+		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage prototype) {
 			return CancelOkMessage.newBuilder ().mergeFrom (prototype);
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage parseDelimitedFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = CancelOkMessage.newBuilder ();
 			if (builder.mergeDelimitedFrom (input)) {
 				return builder.buildParsed ();
@@ -1833,8 +1647,7 @@ public final class AmqpPayloads
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = CancelOkMessage.newBuilder ();
 			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
 				return builder.buildParsed ();
@@ -1844,82 +1657,71 @@ public final class AmqpPayloads
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage parseFrom (final byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return CancelOkMessage.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return CancelOkMessage.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage parseFrom (final com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return CancelOkMessage.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return CancelOkMessage.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage parseFrom (final com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return CancelOkMessage.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return CancelOkMessage.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage parseFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return CancelOkMessage.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return CancelOkMessage.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
-		private int bitField0_;
-		private java.lang.Object consumerTag_;
-		private byte memoizedIsInitialized = -1;
-		private int memoizedSerializedSize = -1;
+		static {
+			defaultInstance = new CancelOkMessage (true);
+			CancelOkMessage.defaultInstance.initFields ();
+		}
 		// required string consumer_tag = 1;
 		public static final int CONSUMER_TAG_FIELD_NUMBER = 1;
 		private static final CancelOkMessage defaultInstance;
 		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
-				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-					eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessageOrBuilder
+					extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+					implements
+						eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessageOrBuilder
 		{
 			// Construct using eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage.newBuilder()
-			private Builder ()
-			{
+			private Builder () {
 				this.maybeForceBuilderInitialization ();
 			}
 			
-			private Builder (final BuilderParent parent)
-			{
+			private Builder (final BuilderParent parent) {
 				super (parent);
 				this.maybeForceBuilderInitialization ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage build ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage build () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
@@ -1928,8 +1730,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage buildPartial ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage buildPartial () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage result = new eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage (this);
 				final int from_bitField0_ = this.bitField0_;
 				int to_bitField0_ = 0;
@@ -1943,16 +1744,14 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clear ()
-			{
+			public Builder clear () {
 				super.clear ();
 				this.consumerTag_ = "";
 				this.bitField0_ = (this.bitField0_ & ~0x00000001);
 				return this;
 			}
 			
-			public Builder clearConsumerTag ()
-			{
+			public Builder clearConsumerTag () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000001);
 				this.consumerTag_ = CancelOkMessage.getDefaultInstance ().getConsumerTag ();
 				this.onChanged ();
@@ -1960,14 +1759,12 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clone ()
-			{
+			public Builder clone () {
 				return Builder.create ().mergeFrom (this.buildPartial ());
 			}
 			
 			@Override
-			public String getConsumerTag ()
-			{
+			public String getConsumerTag () {
 				final java.lang.Object ref = this.consumerTag_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -1979,26 +1776,22 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage getDefaultInstanceForType ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage getDefaultInstanceForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage.getDefaultInstance ();
 			}
 			
 			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType ()
-			{
+			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage.getDescriptor ();
 			}
 			
 			@Override
-			public boolean hasConsumerTag ()
-			{
+			public boolean hasConsumerTag () {
 				return ((this.bitField0_ & 0x00000001) == 0x00000001);
 			}
 			
 			@Override
-			public final boolean isInitialized ()
-			{
+			public final boolean isInitialized () {
 				if (!this.hasConsumerTag ()) {
 					return false;
 				}
@@ -2007,8 +1800,7 @@ public final class AmqpPayloads
 			
 			@Override
 			public Builder mergeFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException
-			{
+						throws java.io.IOException {
 				final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder (this.getUnknownFields ());
 				while (true) {
 					final int tag = input.readTag ();
@@ -2017,7 +1809,7 @@ public final class AmqpPayloads
 							this.setUnknownFields (unknownFields.build ());
 							this.onChanged ();
 							return this;
-						default: {
+						default : {
 							if (!this.parseUnknownField (input, unknownFields, extensionRegistry, tag)) {
 								this.setUnknownFields (unknownFields.build ());
 								this.onChanged ();
@@ -2035,8 +1827,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder mergeFrom (final com.google.protobuf.Message other)
-			{
+			public Builder mergeFrom (final com.google.protobuf.Message other) {
 				if (other instanceof eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage) {
 					return this.mergeFrom ((eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage) other);
 				} else {
@@ -2045,8 +1836,7 @@ public final class AmqpPayloads
 				}
 			}
 			
-			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage other)
-			{
+			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage other) {
 				if (other == eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage.getDefaultInstance ())
 					return this;
 				if (other.hasConsumerTag ()) {
@@ -2056,8 +1846,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setConsumerTag (final String value)
-			{
+			public Builder setConsumerTag (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -2068,21 +1857,18 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-			{
+			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_CancelOkMessage_fieldAccessorTable;
 			}
 			
-			void setConsumerTag (final com.google.protobuf.ByteString value)
-			{
+			void setConsumerTag (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000001;
 				this.consumerTag_ = value;
 				this.onChanged ();
 			}
 			
 			private eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage buildParsed ()
-					throws com.google.protobuf.InvalidProtocolBufferException
-			{
+						throws com.google.protobuf.InvalidProtocolBufferException {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelOkMessage result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
@@ -2090,32 +1876,29 @@ public final class AmqpPayloads
 				return result;
 			}
 			
-			private void maybeForceBuilderInitialization ()
-			{
+			private void maybeForceBuilderInitialization () {
 				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {}
-			}
-			
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-			{
-				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_CancelOkMessage_descriptor;
-			}
-			
-			private static Builder create ()
-			{
-				return new Builder ();
 			}
 			
 			private int bitField0_;
 			// required string consumer_tag = 1;
 			private java.lang.Object consumerTag_ = "";
+			
 			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.amqp.CancelOkMessage)
+			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_CancelOkMessage_descriptor;
+			}
+			
+			private static Builder create () {
+				return new Builder ();
+			}
 		}
 		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.amqp.CancelOkMessage)
 	}
 	
 	public interface CancelOkMessageOrBuilder
-			extends
-				com.google.protobuf.MessageOrBuilder
+				extends
+					com.google.protobuf.MessageOrBuilder
 	{
 		String getConsumerTag ();
 		
@@ -2124,22 +1907,19 @@ public final class AmqpPayloads
 	}
 	
 	public static final class CancelRequest
-			extends com.google.protobuf.GeneratedMessage
-			implements
-				CancelRequestOrBuilder
+				extends com.google.protobuf.GeneratedMessage
+				implements
+					CancelRequestOrBuilder
 	{
-		private CancelRequest (final boolean noInit)
-		{}
+		private CancelRequest (final boolean noInit) {}
 		
 		// Use CancelRequest.newBuilder() to construct.
-		private CancelRequest (final Builder builder)
-		{
+		private CancelRequest (final Builder builder) {
 			super (builder);
 		}
 		
 		@Override
-		public String getConsumer ()
-		{
+		public String getConsumer () {
 			final java.lang.Object ref = this.consumer_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -2154,14 +1934,12 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public CancelRequest getDefaultInstanceForType ()
-		{
+		public CancelRequest getDefaultInstanceForType () {
 			return CancelRequest.defaultInstance;
 		}
 		
 		@Override
-		public int getSerializedSize ()
-		{
+		public int getSerializedSize () {
 			int size = this.memoizedSerializedSize;
 			if (size != -1)
 				return size;
@@ -2178,32 +1956,27 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 			return this.token_;
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 			return this.token_;
 		}
 		
 		@Override
-		public boolean hasConsumer ()
-		{
+		public boolean hasConsumer () {
 			return ((this.bitField0_ & 0x00000002) == 0x00000002);
 		}
 		
 		@Override
-		public boolean hasToken ()
-		{
+		public boolean hasToken () {
 			return ((this.bitField0_ & 0x00000001) == 0x00000001);
 		}
 		
 		@Override
-		public final boolean isInitialized ()
-		{
+		public final boolean isInitialized () {
 			final byte isInitialized = this.memoizedIsInitialized;
 			if (isInitialized != -1)
 				return isInitialized == 1;
@@ -2224,21 +1997,18 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public Builder newBuilderForType ()
-		{
+		public Builder newBuilderForType () {
 			return CancelRequest.newBuilder ();
 		}
 		
 		@Override
-		public Builder toBuilder ()
-		{
+		public Builder toBuilder () {
 			return CancelRequest.newBuilder (this);
 		}
 		
 		@Override
 		public void writeTo (final com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			this.getSerializedSize ();
 			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
 				output.writeMessage (1, this.token_);
@@ -2250,27 +2020,23 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-		{
+		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_CancelRequest_fieldAccessorTable;
 		}
 		
 		@java.lang.Override
-		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent)
-		{
+		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent) {
 			final Builder builder = new Builder (parent);
 			return builder;
 		}
 		
 		@java.lang.Override
 		protected java.lang.Object writeReplace ()
-				throws java.io.ObjectStreamException
-		{
+					throws java.io.ObjectStreamException {
 			return super.writeReplace ();
 		}
 		
-		private com.google.protobuf.ByteString getConsumerBytes ()
-		{
+		private com.google.protobuf.ByteString getConsumerBytes () {
 			final java.lang.Object ref = this.consumer_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -2281,40 +2047,35 @@ public final class AmqpPayloads
 			}
 		}
 		
-		private void initFields ()
-		{
+		private void initFields () {
 			this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			this.consumer_ = "";
 		}
 		
-		static {
-			defaultInstance = new CancelRequest (true);
-			CancelRequest.defaultInstance.initFields ();
-		}
+		private int bitField0_;
+		private java.lang.Object consumer_;
+		private byte memoizedIsInitialized = -1;
+		private int memoizedSerializedSize = -1;
+		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
 		
-		public static CancelRequest getDefaultInstance ()
-		{
+		public static CancelRequest getDefaultInstance () {
 			return CancelRequest.defaultInstance;
 		}
 		
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-		{
+		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
 			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_CancelRequest_descriptor;
 		}
 		
-		public static Builder newBuilder ()
-		{
+		public static Builder newBuilder () {
 			return Builder.create ();
 		}
 		
-		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest prototype)
-		{
+		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest prototype) {
 			return CancelRequest.newBuilder ().mergeFrom (prototype);
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest parseDelimitedFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = CancelRequest.newBuilder ();
 			if (builder.mergeDelimitedFrom (input)) {
 				return builder.buildParsed ();
@@ -2324,8 +2085,7 @@ public final class AmqpPayloads
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = CancelRequest.newBuilder ();
 			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
 				return builder.buildParsed ();
@@ -2335,58 +2095,49 @@ public final class AmqpPayloads
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest parseFrom (final byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return CancelRequest.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return CancelRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest parseFrom (final com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return CancelRequest.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return CancelRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest parseFrom (final com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return CancelRequest.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return CancelRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest parseFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return CancelRequest.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return CancelRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
-		private int bitField0_;
-		private java.lang.Object consumer_;
-		private byte memoizedIsInitialized = -1;
-		private int memoizedSerializedSize = -1;
-		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
+		static {
+			defaultInstance = new CancelRequest (true);
+			CancelRequest.defaultInstance.initFields ();
+		}
 		// required string consumer = 2;
 		public static final int CONSUMER_FIELD_NUMBER = 2;
 		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
@@ -2395,25 +2146,22 @@ public final class AmqpPayloads
 		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
-				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-					eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequestOrBuilder
+					extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+					implements
+						eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequestOrBuilder
 		{
 			// Construct using eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest.newBuilder()
-			private Builder ()
-			{
+			private Builder () {
 				this.maybeForceBuilderInitialization ();
 			}
 			
-			private Builder (final BuilderParent parent)
-			{
+			private Builder (final BuilderParent parent) {
 				super (parent);
 				this.maybeForceBuilderInitialization ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest build ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest build () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
@@ -2422,8 +2170,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest buildPartial ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest buildPartial () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest result = new eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest (this);
 				final int from_bitField0_ = this.bitField0_;
 				int to_bitField0_ = 0;
@@ -2445,8 +2192,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clear ()
-			{
+			public Builder clear () {
 				super.clear ();
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
@@ -2459,16 +2205,14 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder clearConsumer ()
-			{
+			public Builder clearConsumer () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000002);
 				this.consumer_ = CancelRequest.getDefaultInstance ().getConsumer ();
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearToken ()
-			{
+			public Builder clearToken () {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 					this.onChanged ();
@@ -2480,14 +2224,12 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clone ()
-			{
+			public Builder clone () {
 				return Builder.create ().mergeFrom (this.buildPartial ());
 			}
 			
 			@Override
-			public String getConsumer ()
-			{
+			public String getConsumer () {
 				final java.lang.Object ref = this.consumer_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -2499,20 +2241,17 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest getDefaultInstanceForType ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest getDefaultInstanceForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest.getDefaultInstance ();
 			}
 			
 			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType ()
-			{
+			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest.getDescriptor ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 				if (this.tokenBuilder_ == null) {
 					return this.token_;
 				} else {
@@ -2520,16 +2259,14 @@ public final class AmqpPayloads
 				}
 			}
 			
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder () {
 				this.bitField0_ |= 0x00000001;
 				this.onChanged ();
 				return this.getTokenFieldBuilder ().getBuilder ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 				if (this.tokenBuilder_ != null) {
 					return this.tokenBuilder_.getMessageOrBuilder ();
 				} else {
@@ -2538,20 +2275,17 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public boolean hasConsumer ()
-			{
+			public boolean hasConsumer () {
 				return ((this.bitField0_ & 0x00000002) == 0x00000002);
 			}
 			
 			@Override
-			public boolean hasToken ()
-			{
+			public boolean hasToken () {
 				return ((this.bitField0_ & 0x00000001) == 0x00000001);
 			}
 			
 			@Override
-			public final boolean isInitialized ()
-			{
+			public final boolean isInitialized () {
 				if (!this.hasToken ()) {
 					return false;
 				}
@@ -2566,8 +2300,7 @@ public final class AmqpPayloads
 			
 			@Override
 			public Builder mergeFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException
-			{
+						throws java.io.IOException {
 				final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder (this.getUnknownFields ());
 				while (true) {
 					final int tag = input.readTag ();
@@ -2576,7 +2309,7 @@ public final class AmqpPayloads
 							this.setUnknownFields (unknownFields.build ());
 							this.onChanged ();
 							return this;
-						default: {
+						default : {
 							if (!this.parseUnknownField (input, unknownFields, extensionRegistry, tag)) {
 								this.setUnknownFields (unknownFields.build ());
 								this.onChanged ();
@@ -2603,8 +2336,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder mergeFrom (final com.google.protobuf.Message other)
-			{
+			public Builder mergeFrom (final com.google.protobuf.Message other) {
 				if (other instanceof eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest) {
 					return this.mergeFrom ((eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest) other);
 				} else {
@@ -2613,8 +2345,7 @@ public final class AmqpPayloads
 				}
 			}
 			
-			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest other)
-			{
+			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest other) {
 				if (other == eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest.getDefaultInstance ())
 					return this;
 				if (other.hasToken ()) {
@@ -2627,8 +2358,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (((this.bitField0_ & 0x00000001) == 0x00000001) && (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ())) {
 						this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.newBuilder (this.token_).mergeFrom (value).buildPartial ();
@@ -2643,8 +2373,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setConsumer (final String value)
-			{
+			public Builder setConsumer (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -2654,8 +2383,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (value == null) {
 						throw new NullPointerException ();
@@ -2669,8 +2397,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = builderForValue.build ();
 					this.onChanged ();
@@ -2682,21 +2409,18 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-			{
+			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_CancelRequest_fieldAccessorTable;
 			}
 			
-			void setConsumer (final com.google.protobuf.ByteString value)
-			{
+			void setConsumer (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000002;
 				this.consumer_ = value;
 				this.onChanged ();
 			}
 			
 			private eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest buildParsed ()
-					throws com.google.protobuf.InvalidProtocolBufferException
-			{
+						throws com.google.protobuf.InvalidProtocolBufferException {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.CancelRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
@@ -2704,8 +2428,7 @@ public final class AmqpPayloads
 				return result;
 			}
 			
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder ()
-			{
+			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder () {
 				if (this.tokenBuilder_ == null) {
 					this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> (this.token_, this.getParentForChildren (), this.isClean ());
 					this.token_ = null;
@@ -2713,21 +2436,10 @@ public final class AmqpPayloads
 				return this.tokenBuilder_;
 			}
 			
-			private void maybeForceBuilderInitialization ()
-			{
+			private void maybeForceBuilderInitialization () {
 				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
 					this.getTokenFieldBuilder ();
 				}
-			}
-			
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-			{
-				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_CancelRequest_descriptor;
-			}
-			
-			private static Builder create ()
-			{
-				return new Builder ();
 			}
 			
 			private int bitField0_;
@@ -2736,14 +2448,22 @@ public final class AmqpPayloads
 			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
+			
 			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.amqp.CancelRequest)
+			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_CancelRequest_descriptor;
+			}
+			
+			private static Builder create () {
+				return new Builder ();
+			}
 		}
 		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.amqp.CancelRequest)
 	}
 	
 	public interface CancelRequestOrBuilder
-			extends
-				com.google.protobuf.MessageOrBuilder
+				extends
+					com.google.protobuf.MessageOrBuilder
 	{
 		String getConsumer ();
 		
@@ -2759,22 +2479,19 @@ public final class AmqpPayloads
 	}
 	
 	public static final class ConsumeOkMessage
-			extends com.google.protobuf.GeneratedMessage
-			implements
-				ConsumeOkMessageOrBuilder
+				extends com.google.protobuf.GeneratedMessage
+				implements
+					ConsumeOkMessageOrBuilder
 	{
-		private ConsumeOkMessage (final boolean noInit)
-		{}
+		private ConsumeOkMessage (final boolean noInit) {}
 		
 		// Use ConsumeOkMessage.newBuilder() to construct.
-		private ConsumeOkMessage (final Builder builder)
-		{
+		private ConsumeOkMessage (final Builder builder) {
 			super (builder);
 		}
 		
 		@Override
-		public String getConsumerTag ()
-		{
+		public String getConsumerTag () {
 			final java.lang.Object ref = this.consumerTag_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -2789,14 +2506,12 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public ConsumeOkMessage getDefaultInstanceForType ()
-		{
+		public ConsumeOkMessage getDefaultInstanceForType () {
 			return ConsumeOkMessage.defaultInstance;
 		}
 		
 		@Override
-		public int getSerializedSize ()
-		{
+		public int getSerializedSize () {
 			int size = this.memoizedSerializedSize;
 			if (size != -1)
 				return size;
@@ -2810,14 +2525,12 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public boolean hasConsumerTag ()
-		{
+		public boolean hasConsumerTag () {
 			return ((this.bitField0_ & 0x00000001) == 0x00000001);
 		}
 		
 		@Override
-		public final boolean isInitialized ()
-		{
+		public final boolean isInitialized () {
 			final byte isInitialized = this.memoizedIsInitialized;
 			if (isInitialized != -1)
 				return isInitialized == 1;
@@ -2830,21 +2543,18 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public Builder newBuilderForType ()
-		{
+		public Builder newBuilderForType () {
 			return ConsumeOkMessage.newBuilder ();
 		}
 		
 		@Override
-		public Builder toBuilder ()
-		{
+		public Builder toBuilder () {
 			return ConsumeOkMessage.newBuilder (this);
 		}
 		
 		@Override
 		public void writeTo (final com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			this.getSerializedSize ();
 			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
 				output.writeBytes (1, this.getConsumerTagBytes ());
@@ -2853,27 +2563,23 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-		{
+		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeOkMessage_fieldAccessorTable;
 		}
 		
 		@java.lang.Override
-		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent)
-		{
+		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent) {
 			final Builder builder = new Builder (parent);
 			return builder;
 		}
 		
 		@java.lang.Override
 		protected java.lang.Object writeReplace ()
-				throws java.io.ObjectStreamException
-		{
+					throws java.io.ObjectStreamException {
 			return super.writeReplace ();
 		}
 		
-		private com.google.protobuf.ByteString getConsumerTagBytes ()
-		{
+		private com.google.protobuf.ByteString getConsumerTagBytes () {
 			final java.lang.Object ref = this.consumerTag_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -2884,39 +2590,33 @@ public final class AmqpPayloads
 			}
 		}
 		
-		private void initFields ()
-		{
+		private void initFields () {
 			this.consumerTag_ = "";
 		}
 		
-		static {
-			defaultInstance = new ConsumeOkMessage (true);
-			ConsumeOkMessage.defaultInstance.initFields ();
-		}
+		private int bitField0_;
+		private java.lang.Object consumerTag_;
+		private byte memoizedIsInitialized = -1;
+		private int memoizedSerializedSize = -1;
 		
-		public static ConsumeOkMessage getDefaultInstance ()
-		{
+		public static ConsumeOkMessage getDefaultInstance () {
 			return ConsumeOkMessage.defaultInstance;
 		}
 		
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-		{
+		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
 			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeOkMessage_descriptor;
 		}
 		
-		public static Builder newBuilder ()
-		{
+		public static Builder newBuilder () {
 			return Builder.create ();
 		}
 		
-		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage prototype)
-		{
+		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage prototype) {
 			return ConsumeOkMessage.newBuilder ().mergeFrom (prototype);
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage parseDelimitedFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = ConsumeOkMessage.newBuilder ();
 			if (builder.mergeDelimitedFrom (input)) {
 				return builder.buildParsed ();
@@ -2926,8 +2626,7 @@ public final class AmqpPayloads
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = ConsumeOkMessage.newBuilder ();
 			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
 				return builder.buildParsed ();
@@ -2937,82 +2636,71 @@ public final class AmqpPayloads
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage parseFrom (final byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return ConsumeOkMessage.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return ConsumeOkMessage.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage parseFrom (final com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return ConsumeOkMessage.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return ConsumeOkMessage.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage parseFrom (final com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return ConsumeOkMessage.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return ConsumeOkMessage.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage parseFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return ConsumeOkMessage.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return ConsumeOkMessage.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
-		private int bitField0_;
-		private java.lang.Object consumerTag_;
-		private byte memoizedIsInitialized = -1;
-		private int memoizedSerializedSize = -1;
+		static {
+			defaultInstance = new ConsumeOkMessage (true);
+			ConsumeOkMessage.defaultInstance.initFields ();
+		}
 		// required string consumer_tag = 1;
 		public static final int CONSUMER_TAG_FIELD_NUMBER = 1;
 		private static final ConsumeOkMessage defaultInstance;
 		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
-				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-					eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessageOrBuilder
+					extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+					implements
+						eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessageOrBuilder
 		{
 			// Construct using eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage.newBuilder()
-			private Builder ()
-			{
+			private Builder () {
 				this.maybeForceBuilderInitialization ();
 			}
 			
-			private Builder (final BuilderParent parent)
-			{
+			private Builder (final BuilderParent parent) {
 				super (parent);
 				this.maybeForceBuilderInitialization ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage build ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage build () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
@@ -3021,8 +2709,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage buildPartial ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage buildPartial () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage result = new eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage (this);
 				final int from_bitField0_ = this.bitField0_;
 				int to_bitField0_ = 0;
@@ -3036,16 +2723,14 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clear ()
-			{
+			public Builder clear () {
 				super.clear ();
 				this.consumerTag_ = "";
 				this.bitField0_ = (this.bitField0_ & ~0x00000001);
 				return this;
 			}
 			
-			public Builder clearConsumerTag ()
-			{
+			public Builder clearConsumerTag () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000001);
 				this.consumerTag_ = ConsumeOkMessage.getDefaultInstance ().getConsumerTag ();
 				this.onChanged ();
@@ -3053,14 +2738,12 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clone ()
-			{
+			public Builder clone () {
 				return Builder.create ().mergeFrom (this.buildPartial ());
 			}
 			
 			@Override
-			public String getConsumerTag ()
-			{
+			public String getConsumerTag () {
 				final java.lang.Object ref = this.consumerTag_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -3072,26 +2755,22 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage getDefaultInstanceForType ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage getDefaultInstanceForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage.getDefaultInstance ();
 			}
 			
 			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType ()
-			{
+			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage.getDescriptor ();
 			}
 			
 			@Override
-			public boolean hasConsumerTag ()
-			{
+			public boolean hasConsumerTag () {
 				return ((this.bitField0_ & 0x00000001) == 0x00000001);
 			}
 			
 			@Override
-			public final boolean isInitialized ()
-			{
+			public final boolean isInitialized () {
 				if (!this.hasConsumerTag ()) {
 					return false;
 				}
@@ -3100,8 +2779,7 @@ public final class AmqpPayloads
 			
 			@Override
 			public Builder mergeFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException
-			{
+						throws java.io.IOException {
 				final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder (this.getUnknownFields ());
 				while (true) {
 					final int tag = input.readTag ();
@@ -3110,7 +2788,7 @@ public final class AmqpPayloads
 							this.setUnknownFields (unknownFields.build ());
 							this.onChanged ();
 							return this;
-						default: {
+						default : {
 							if (!this.parseUnknownField (input, unknownFields, extensionRegistry, tag)) {
 								this.setUnknownFields (unknownFields.build ());
 								this.onChanged ();
@@ -3128,8 +2806,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder mergeFrom (final com.google.protobuf.Message other)
-			{
+			public Builder mergeFrom (final com.google.protobuf.Message other) {
 				if (other instanceof eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage) {
 					return this.mergeFrom ((eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage) other);
 				} else {
@@ -3138,8 +2815,7 @@ public final class AmqpPayloads
 				}
 			}
 			
-			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage other)
-			{
+			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage other) {
 				if (other == eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage.getDefaultInstance ())
 					return this;
 				if (other.hasConsumerTag ()) {
@@ -3149,8 +2825,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setConsumerTag (final String value)
-			{
+			public Builder setConsumerTag (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -3161,21 +2836,18 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-			{
+			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeOkMessage_fieldAccessorTable;
 			}
 			
-			void setConsumerTag (final com.google.protobuf.ByteString value)
-			{
+			void setConsumerTag (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000001;
 				this.consumerTag_ = value;
 				this.onChanged ();
 			}
 			
 			private eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage buildParsed ()
-					throws com.google.protobuf.InvalidProtocolBufferException
-			{
+						throws com.google.protobuf.InvalidProtocolBufferException {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeOkMessage result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
@@ -3183,32 +2855,29 @@ public final class AmqpPayloads
 				return result;
 			}
 			
-			private void maybeForceBuilderInitialization ()
-			{
+			private void maybeForceBuilderInitialization () {
 				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {}
-			}
-			
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-			{
-				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeOkMessage_descriptor;
-			}
-			
-			private static Builder create ()
-			{
-				return new Builder ();
 			}
 			
 			private int bitField0_;
 			// required string consumer_tag = 1;
 			private java.lang.Object consumerTag_ = "";
+			
 			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.amqp.ConsumeOkMessage)
+			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeOkMessage_descriptor;
+			}
+			
+			private static Builder create () {
+				return new Builder ();
+			}
 		}
 		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.amqp.ConsumeOkMessage)
 	}
 	
 	public interface ConsumeOkMessageOrBuilder
-			extends
-				com.google.protobuf.MessageOrBuilder
+				extends
+					com.google.protobuf.MessageOrBuilder
 	{
 		String getConsumerTag ();
 		
@@ -3217,22 +2886,19 @@ public final class AmqpPayloads
 	}
 	
 	public static final class ConsumeReply
-			extends com.google.protobuf.GeneratedMessage
-			implements
-				ConsumeReplyOrBuilder
+				extends com.google.protobuf.GeneratedMessage
+				implements
+					ConsumeReplyOrBuilder
 	{
-		private ConsumeReply (final boolean noInit)
-		{}
+		private ConsumeReply (final boolean noInit) {}
 		
 		// Use ConsumeReply.newBuilder() to construct.
-		private ConsumeReply (final Builder builder)
-		{
+		private ConsumeReply (final Builder builder) {
 			super (builder);
 		}
 		
 		@Override
-		public String getConsumerTag ()
-		{
+		public String getConsumerTag () {
 			final java.lang.Object ref = this.consumerTag_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -3247,14 +2913,12 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public ConsumeReply getDefaultInstanceForType ()
-		{
+		public ConsumeReply getDefaultInstanceForType () {
 			return ConsumeReply.defaultInstance;
 		}
 		
 		@Override
-		public int getSerializedSize ()
-		{
+		public int getSerializedSize () {
 			int size = this.memoizedSerializedSize;
 			if (size != -1)
 				return size;
@@ -3271,32 +2935,27 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 			return this.token_;
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 			return this.token_;
 		}
 		
 		@Override
-		public boolean hasConsumerTag ()
-		{
+		public boolean hasConsumerTag () {
 			return ((this.bitField0_ & 0x00000002) == 0x00000002);
 		}
 		
 		@Override
-		public boolean hasToken ()
-		{
+		public boolean hasToken () {
 			return ((this.bitField0_ & 0x00000001) == 0x00000001);
 		}
 		
 		@Override
-		public final boolean isInitialized ()
-		{
+		public final boolean isInitialized () {
 			final byte isInitialized = this.memoizedIsInitialized;
 			if (isInitialized != -1)
 				return isInitialized == 1;
@@ -3317,21 +2976,18 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public Builder newBuilderForType ()
-		{
+		public Builder newBuilderForType () {
 			return ConsumeReply.newBuilder ();
 		}
 		
 		@Override
-		public Builder toBuilder ()
-		{
+		public Builder toBuilder () {
 			return ConsumeReply.newBuilder (this);
 		}
 		
 		@Override
 		public void writeTo (final com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			this.getSerializedSize ();
 			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
 				output.writeMessage (1, this.token_);
@@ -3343,27 +2999,23 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-		{
+		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeReply_fieldAccessorTable;
 		}
 		
 		@java.lang.Override
-		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent)
-		{
+		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent) {
 			final Builder builder = new Builder (parent);
 			return builder;
 		}
 		
 		@java.lang.Override
 		protected java.lang.Object writeReplace ()
-				throws java.io.ObjectStreamException
-		{
+					throws java.io.ObjectStreamException {
 			return super.writeReplace ();
 		}
 		
-		private com.google.protobuf.ByteString getConsumerTagBytes ()
-		{
+		private com.google.protobuf.ByteString getConsumerTagBytes () {
 			final java.lang.Object ref = this.consumerTag_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -3374,40 +3026,35 @@ public final class AmqpPayloads
 			}
 		}
 		
-		private void initFields ()
-		{
+		private void initFields () {
 			this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			this.consumerTag_ = "";
 		}
 		
-		static {
-			defaultInstance = new ConsumeReply (true);
-			ConsumeReply.defaultInstance.initFields ();
-		}
+		private int bitField0_;
+		private java.lang.Object consumerTag_;
+		private byte memoizedIsInitialized = -1;
+		private int memoizedSerializedSize = -1;
+		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
 		
-		public static ConsumeReply getDefaultInstance ()
-		{
+		public static ConsumeReply getDefaultInstance () {
 			return ConsumeReply.defaultInstance;
 		}
 		
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-		{
+		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
 			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeReply_descriptor;
 		}
 		
-		public static Builder newBuilder ()
-		{
+		public static Builder newBuilder () {
 			return Builder.create ();
 		}
 		
-		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply prototype)
-		{
+		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply prototype) {
 			return ConsumeReply.newBuilder ().mergeFrom (prototype);
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply parseDelimitedFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = ConsumeReply.newBuilder ();
 			if (builder.mergeDelimitedFrom (input)) {
 				return builder.buildParsed ();
@@ -3417,8 +3064,7 @@ public final class AmqpPayloads
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = ConsumeReply.newBuilder ();
 			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
 				return builder.buildParsed ();
@@ -3428,58 +3074,49 @@ public final class AmqpPayloads
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply parseFrom (final byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return ConsumeReply.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return ConsumeReply.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply parseFrom (final com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return ConsumeReply.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return ConsumeReply.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply parseFrom (final com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return ConsumeReply.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return ConsumeReply.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply parseFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return ConsumeReply.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return ConsumeReply.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
-		private int bitField0_;
-		private java.lang.Object consumerTag_;
-		private byte memoizedIsInitialized = -1;
-		private int memoizedSerializedSize = -1;
-		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
+		static {
+			defaultInstance = new ConsumeReply (true);
+			ConsumeReply.defaultInstance.initFields ();
+		}
 		// required string consumer_tag = 2;
 		public static final int CONSUMER_TAG_FIELD_NUMBER = 2;
 		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
@@ -3488,25 +3125,22 @@ public final class AmqpPayloads
 		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
-				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-					eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReplyOrBuilder
+					extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+					implements
+						eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReplyOrBuilder
 		{
 			// Construct using eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply.newBuilder()
-			private Builder ()
-			{
+			private Builder () {
 				this.maybeForceBuilderInitialization ();
 			}
 			
-			private Builder (final BuilderParent parent)
-			{
+			private Builder (final BuilderParent parent) {
 				super (parent);
 				this.maybeForceBuilderInitialization ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply build ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply build () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
@@ -3515,8 +3149,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply buildPartial ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply buildPartial () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply result = new eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply (this);
 				final int from_bitField0_ = this.bitField0_;
 				int to_bitField0_ = 0;
@@ -3538,8 +3171,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clear ()
-			{
+			public Builder clear () {
 				super.clear ();
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
@@ -3552,16 +3184,14 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder clearConsumerTag ()
-			{
+			public Builder clearConsumerTag () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000002);
 				this.consumerTag_ = ConsumeReply.getDefaultInstance ().getConsumerTag ();
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearToken ()
-			{
+			public Builder clearToken () {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 					this.onChanged ();
@@ -3573,14 +3203,12 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clone ()
-			{
+			public Builder clone () {
 				return Builder.create ().mergeFrom (this.buildPartial ());
 			}
 			
 			@Override
-			public String getConsumerTag ()
-			{
+			public String getConsumerTag () {
 				final java.lang.Object ref = this.consumerTag_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -3592,20 +3220,17 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply getDefaultInstanceForType ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply getDefaultInstanceForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply.getDefaultInstance ();
 			}
 			
 			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType ()
-			{
+			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply.getDescriptor ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 				if (this.tokenBuilder_ == null) {
 					return this.token_;
 				} else {
@@ -3613,16 +3238,14 @@ public final class AmqpPayloads
 				}
 			}
 			
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder () {
 				this.bitField0_ |= 0x00000001;
 				this.onChanged ();
 				return this.getTokenFieldBuilder ().getBuilder ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 				if (this.tokenBuilder_ != null) {
 					return this.tokenBuilder_.getMessageOrBuilder ();
 				} else {
@@ -3631,20 +3254,17 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public boolean hasConsumerTag ()
-			{
+			public boolean hasConsumerTag () {
 				return ((this.bitField0_ & 0x00000002) == 0x00000002);
 			}
 			
 			@Override
-			public boolean hasToken ()
-			{
+			public boolean hasToken () {
 				return ((this.bitField0_ & 0x00000001) == 0x00000001);
 			}
 			
 			@Override
-			public final boolean isInitialized ()
-			{
+			public final boolean isInitialized () {
 				if (!this.hasToken ()) {
 					return false;
 				}
@@ -3659,8 +3279,7 @@ public final class AmqpPayloads
 			
 			@Override
 			public Builder mergeFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException
-			{
+						throws java.io.IOException {
 				final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder (this.getUnknownFields ());
 				while (true) {
 					final int tag = input.readTag ();
@@ -3669,7 +3288,7 @@ public final class AmqpPayloads
 							this.setUnknownFields (unknownFields.build ());
 							this.onChanged ();
 							return this;
-						default: {
+						default : {
 							if (!this.parseUnknownField (input, unknownFields, extensionRegistry, tag)) {
 								this.setUnknownFields (unknownFields.build ());
 								this.onChanged ();
@@ -3696,8 +3315,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder mergeFrom (final com.google.protobuf.Message other)
-			{
+			public Builder mergeFrom (final com.google.protobuf.Message other) {
 				if (other instanceof eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply) {
 					return this.mergeFrom ((eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply) other);
 				} else {
@@ -3706,8 +3324,7 @@ public final class AmqpPayloads
 				}
 			}
 			
-			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply other)
-			{
+			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply other) {
 				if (other == eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply.getDefaultInstance ())
 					return this;
 				if (other.hasToken ()) {
@@ -3720,8 +3337,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (((this.bitField0_ & 0x00000001) == 0x00000001) && (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ())) {
 						this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.newBuilder (this.token_).mergeFrom (value).buildPartial ();
@@ -3736,8 +3352,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setConsumerTag (final String value)
-			{
+			public Builder setConsumerTag (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -3747,8 +3362,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (value == null) {
 						throw new NullPointerException ();
@@ -3762,8 +3376,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = builderForValue.build ();
 					this.onChanged ();
@@ -3775,21 +3388,18 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-			{
+			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeReply_fieldAccessorTable;
 			}
 			
-			void setConsumerTag (final com.google.protobuf.ByteString value)
-			{
+			void setConsumerTag (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000002;
 				this.consumerTag_ = value;
 				this.onChanged ();
 			}
 			
 			private eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply buildParsed ()
-					throws com.google.protobuf.InvalidProtocolBufferException
-			{
+						throws com.google.protobuf.InvalidProtocolBufferException {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeReply result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
@@ -3797,8 +3407,7 @@ public final class AmqpPayloads
 				return result;
 			}
 			
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder ()
-			{
+			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder () {
 				if (this.tokenBuilder_ == null) {
 					this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> (this.token_, this.getParentForChildren (), this.isClean ());
 					this.token_ = null;
@@ -3806,21 +3415,10 @@ public final class AmqpPayloads
 				return this.tokenBuilder_;
 			}
 			
-			private void maybeForceBuilderInitialization ()
-			{
+			private void maybeForceBuilderInitialization () {
 				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
 					this.getTokenFieldBuilder ();
 				}
-			}
-			
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-			{
-				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeReply_descriptor;
-			}
-			
-			private static Builder create ()
-			{
-				return new Builder ();
 			}
 			
 			private int bitField0_;
@@ -3829,14 +3427,22 @@ public final class AmqpPayloads
 			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
+			
 			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.amqp.ConsumeReply)
+			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeReply_descriptor;
+			}
+			
+			private static Builder create () {
+				return new Builder ();
+			}
 		}
 		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.amqp.ConsumeReply)
 	}
 	
 	public interface ConsumeReplyOrBuilder
-			extends
-				com.google.protobuf.MessageOrBuilder
+				extends
+					com.google.protobuf.MessageOrBuilder
 	{
 		String getConsumerTag ();
 		
@@ -3852,28 +3458,24 @@ public final class AmqpPayloads
 	}
 	
 	public static final class ConsumeRequest
-			extends com.google.protobuf.GeneratedMessage
-			implements
-				ConsumeRequestOrBuilder
+				extends com.google.protobuf.GeneratedMessage
+				implements
+					ConsumeRequestOrBuilder
 	{
-		private ConsumeRequest (final boolean noInit)
-		{}
+		private ConsumeRequest (final boolean noInit) {}
 		
 		// Use ConsumeRequest.newBuilder() to construct.
-		private ConsumeRequest (final Builder builder)
-		{
+		private ConsumeRequest (final Builder builder) {
 			super (builder);
 		}
 		
 		@Override
-		public boolean getAutoAck ()
-		{
+		public boolean getAutoAck () {
 			return this.autoAck_;
 		}
 		
 		@Override
-		public String getConsumer ()
-		{
+		public String getConsumer () {
 			final java.lang.Object ref = this.consumer_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -3888,26 +3490,22 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public ConsumeRequest getDefaultInstanceForType ()
-		{
+		public ConsumeRequest getDefaultInstanceForType () {
 			return ConsumeRequest.defaultInstance;
 		}
 		
 		@Override
-		public boolean getExclusive ()
-		{
+		public boolean getExclusive () {
 			return this.exclusive_;
 		}
 		
 		@Override
-		public com.google.protobuf.ByteString getExtra ()
-		{
+		public com.google.protobuf.ByteString getExtra () {
 			return this.extra_;
 		}
 		
 		@Override
-		public String getQueue ()
-		{
+		public String getQueue () {
 			final java.lang.Object ref = this.queue_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -3922,8 +3520,7 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public int getSerializedSize ()
-		{
+		public int getSerializedSize () {
 			int size = this.memoizedSerializedSize;
 			if (size != -1)
 				return size;
@@ -3952,56 +3549,47 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 			return this.token_;
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 			return this.token_;
 		}
 		
 		@Override
-		public boolean hasAutoAck ()
-		{
+		public boolean hasAutoAck () {
 			return ((this.bitField0_ & 0x00000010) == 0x00000010);
 		}
 		
 		@Override
-		public boolean hasConsumer ()
-		{
+		public boolean hasConsumer () {
 			return ((this.bitField0_ & 0x00000004) == 0x00000004);
 		}
 		
 		@Override
-		public boolean hasExclusive ()
-		{
+		public boolean hasExclusive () {
 			return ((this.bitField0_ & 0x00000008) == 0x00000008);
 		}
 		
 		@Override
-		public boolean hasExtra ()
-		{
+		public boolean hasExtra () {
 			return ((this.bitField0_ & 0x00000020) == 0x00000020);
 		}
 		
 		@Override
-		public boolean hasQueue ()
-		{
+		public boolean hasQueue () {
 			return ((this.bitField0_ & 0x00000002) == 0x00000002);
 		}
 		
 		@Override
-		public boolean hasToken ()
-		{
+		public boolean hasToken () {
 			return ((this.bitField0_ & 0x00000001) == 0x00000001);
 		}
 		
 		@Override
-		public final boolean isInitialized ()
-		{
+		public final boolean isInitialized () {
 			final byte isInitialized = this.memoizedIsInitialized;
 			if (isInitialized != -1)
 				return isInitialized == 1;
@@ -4030,21 +3618,18 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public Builder newBuilderForType ()
-		{
+		public Builder newBuilderForType () {
 			return ConsumeRequest.newBuilder ();
 		}
 		
 		@Override
-		public Builder toBuilder ()
-		{
+		public Builder toBuilder () {
 			return ConsumeRequest.newBuilder (this);
 		}
 		
 		@Override
 		public void writeTo (final com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			this.getSerializedSize ();
 			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
 				output.writeMessage (1, this.token_);
@@ -4068,27 +3653,23 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-		{
+		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeRequest_fieldAccessorTable;
 		}
 		
 		@java.lang.Override
-		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent)
-		{
+		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent) {
 			final Builder builder = new Builder (parent);
 			return builder;
 		}
 		
 		@java.lang.Override
 		protected java.lang.Object writeReplace ()
-				throws java.io.ObjectStreamException
-		{
+					throws java.io.ObjectStreamException {
 			return super.writeReplace ();
 		}
 		
-		private com.google.protobuf.ByteString getConsumerBytes ()
-		{
+		private com.google.protobuf.ByteString getConsumerBytes () {
 			final java.lang.Object ref = this.consumer_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -4099,8 +3680,7 @@ public final class AmqpPayloads
 			}
 		}
 		
-		private com.google.protobuf.ByteString getQueueBytes ()
-		{
+		private com.google.protobuf.ByteString getQueueBytes () {
 			final java.lang.Object ref = this.queue_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -4111,109 +3691,13 @@ public final class AmqpPayloads
 			}
 		}
 		
-		private void initFields ()
-		{
+		private void initFields () {
 			this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			this.queue_ = "";
 			this.consumer_ = "";
 			this.exclusive_ = true;
 			this.autoAck_ = true;
 			this.extra_ = com.google.protobuf.ByteString.EMPTY;
-		}
-		
-		static {
-			defaultInstance = new ConsumeRequest (true);
-			ConsumeRequest.defaultInstance.initFields ();
-		}
-		
-		public static ConsumeRequest getDefaultInstance ()
-		{
-			return ConsumeRequest.defaultInstance;
-		}
-		
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-		{
-			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeRequest_descriptor;
-		}
-		
-		public static Builder newBuilder ()
-		{
-			return Builder.create ();
-		}
-		
-		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest prototype)
-		{
-			return ConsumeRequest.newBuilder ().mergeFrom (prototype);
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseDelimitedFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
-			final Builder builder = ConsumeRequest.newBuilder ();
-			if (builder.mergeDelimitedFrom (input)) {
-				return builder.buildParsed ();
-			} else {
-				return null;
-			}
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
-			final Builder builder = ConsumeRequest.newBuilder ();
-			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
-				return builder.buildParsed ();
-			} else {
-				return null;
-			}
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseFrom (final byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
-			return ConsumeRequest.newBuilder ().mergeFrom (data).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
-			return ConsumeRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseFrom (final com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
-			return ConsumeRequest.newBuilder ().mergeFrom (data).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
-			return ConsumeRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseFrom (final com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException
-		{
-			return ConsumeRequest.newBuilder ().mergeFrom (input).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
-			return ConsumeRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
-			return ConsumeRequest.newBuilder ().mergeFrom (input).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
-			return ConsumeRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
 		private boolean autoAck_;
@@ -4225,6 +3709,87 @@ public final class AmqpPayloads
 		private int memoizedSerializedSize = -1;
 		private java.lang.Object queue_;
 		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
+		
+		public static ConsumeRequest getDefaultInstance () {
+			return ConsumeRequest.defaultInstance;
+		}
+		
+		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeRequest_descriptor;
+		}
+		
+		public static Builder newBuilder () {
+			return Builder.create ();
+		}
+		
+		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest prototype) {
+			return ConsumeRequest.newBuilder ().mergeFrom (prototype);
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseDelimitedFrom (final java.io.InputStream input)
+					throws java.io.IOException {
+			final Builder builder = ConsumeRequest.newBuilder ();
+			if (builder.mergeDelimitedFrom (input)) {
+				return builder.buildParsed ();
+			} else {
+				return null;
+			}
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws java.io.IOException {
+			final Builder builder = ConsumeRequest.newBuilder ();
+			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
+				return builder.buildParsed ();
+			} else {
+				return null;
+			}
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseFrom (final byte[] data)
+					throws com.google.protobuf.InvalidProtocolBufferException {
+			return ConsumeRequest.newBuilder ().mergeFrom (data).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws com.google.protobuf.InvalidProtocolBufferException {
+			return ConsumeRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseFrom (final com.google.protobuf.ByteString data)
+					throws com.google.protobuf.InvalidProtocolBufferException {
+			return ConsumeRequest.newBuilder ().mergeFrom (data).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws com.google.protobuf.InvalidProtocolBufferException {
+			return ConsumeRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseFrom (final com.google.protobuf.CodedInputStream input)
+					throws java.io.IOException {
+			return ConsumeRequest.newBuilder ().mergeFrom (input).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws java.io.IOException {
+			return ConsumeRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseFrom (final java.io.InputStream input)
+					throws java.io.IOException {
+			return ConsumeRequest.newBuilder ().mergeFrom (input).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws java.io.IOException {
+			return ConsumeRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
+		}
+		
+		static {
+			defaultInstance = new ConsumeRequest (true);
+			ConsumeRequest.defaultInstance.initFields ();
+		}
 		// optional bool auto_ack = 5 [default = true];
 		public static final int AUTO_ACK_FIELD_NUMBER = 5;
 		// required string consumer = 3;
@@ -4241,25 +3806,22 @@ public final class AmqpPayloads
 		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
-				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-					eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequestOrBuilder
+					extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+					implements
+						eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequestOrBuilder
 		{
 			// Construct using eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest.newBuilder()
-			private Builder ()
-			{
+			private Builder () {
 				this.maybeForceBuilderInitialization ();
 			}
 			
-			private Builder (final BuilderParent parent)
-			{
+			private Builder (final BuilderParent parent) {
 				super (parent);
 				this.maybeForceBuilderInitialization ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest build ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest build () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
@@ -4268,8 +3830,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest buildPartial ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest buildPartial () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest result = new eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest (this);
 				final int from_bitField0_ = this.bitField0_;
 				int to_bitField0_ = 0;
@@ -4307,8 +3868,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clear ()
-			{
+			public Builder clear () {
 				super.clear ();
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
@@ -4329,48 +3889,42 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder clearAutoAck ()
-			{
+			public Builder clearAutoAck () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000010);
 				this.autoAck_ = true;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearConsumer ()
-			{
+			public Builder clearConsumer () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000004);
 				this.consumer_ = ConsumeRequest.getDefaultInstance ().getConsumer ();
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearExclusive ()
-			{
+			public Builder clearExclusive () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000008);
 				this.exclusive_ = true;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearExtra ()
-			{
+			public Builder clearExtra () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000020);
 				this.extra_ = ConsumeRequest.getDefaultInstance ().getExtra ();
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearQueue ()
-			{
+			public Builder clearQueue () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000002);
 				this.queue_ = ConsumeRequest.getDefaultInstance ().getQueue ();
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearToken ()
-			{
+			public Builder clearToken () {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 					this.onChanged ();
@@ -4382,20 +3936,17 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clone ()
-			{
+			public Builder clone () {
 				return Builder.create ().mergeFrom (this.buildPartial ());
 			}
 			
 			@Override
-			public boolean getAutoAck ()
-			{
+			public boolean getAutoAck () {
 				return this.autoAck_;
 			}
 			
 			@Override
-			public String getConsumer ()
-			{
+			public String getConsumer () {
 				final java.lang.Object ref = this.consumer_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -4407,32 +3958,27 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest getDefaultInstanceForType ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest getDefaultInstanceForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest.getDefaultInstance ();
 			}
 			
 			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType ()
-			{
+			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest.getDescriptor ();
 			}
 			
 			@Override
-			public boolean getExclusive ()
-			{
+			public boolean getExclusive () {
 				return this.exclusive_;
 			}
 			
 			@Override
-			public com.google.protobuf.ByteString getExtra ()
-			{
+			public com.google.protobuf.ByteString getExtra () {
 				return this.extra_;
 			}
 			
 			@Override
-			public String getQueue ()
-			{
+			public String getQueue () {
 				final java.lang.Object ref = this.queue_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -4444,8 +3990,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 				if (this.tokenBuilder_ == null) {
 					return this.token_;
 				} else {
@@ -4453,16 +3998,14 @@ public final class AmqpPayloads
 				}
 			}
 			
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder () {
 				this.bitField0_ |= 0x00000001;
 				this.onChanged ();
 				return this.getTokenFieldBuilder ().getBuilder ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 				if (this.tokenBuilder_ != null) {
 					return this.tokenBuilder_.getMessageOrBuilder ();
 				} else {
@@ -4471,44 +4014,37 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public boolean hasAutoAck ()
-			{
+			public boolean hasAutoAck () {
 				return ((this.bitField0_ & 0x00000010) == 0x00000010);
 			}
 			
 			@Override
-			public boolean hasConsumer ()
-			{
+			public boolean hasConsumer () {
 				return ((this.bitField0_ & 0x00000004) == 0x00000004);
 			}
 			
 			@Override
-			public boolean hasExclusive ()
-			{
+			public boolean hasExclusive () {
 				return ((this.bitField0_ & 0x00000008) == 0x00000008);
 			}
 			
 			@Override
-			public boolean hasExtra ()
-			{
+			public boolean hasExtra () {
 				return ((this.bitField0_ & 0x00000020) == 0x00000020);
 			}
 			
 			@Override
-			public boolean hasQueue ()
-			{
+			public boolean hasQueue () {
 				return ((this.bitField0_ & 0x00000002) == 0x00000002);
 			}
 			
 			@Override
-			public boolean hasToken ()
-			{
+			public boolean hasToken () {
 				return ((this.bitField0_ & 0x00000001) == 0x00000001);
 			}
 			
 			@Override
-			public final boolean isInitialized ()
-			{
+			public final boolean isInitialized () {
 				if (!this.hasToken ()) {
 					return false;
 				}
@@ -4529,8 +4065,7 @@ public final class AmqpPayloads
 			
 			@Override
 			public Builder mergeFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException
-			{
+						throws java.io.IOException {
 				final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder (this.getUnknownFields ());
 				while (true) {
 					final int tag = input.readTag ();
@@ -4539,7 +4074,7 @@ public final class AmqpPayloads
 							this.setUnknownFields (unknownFields.build ());
 							this.onChanged ();
 							return this;
-						default: {
+						default : {
 							if (!this.parseUnknownField (input, unknownFields, extensionRegistry, tag)) {
 								this.setUnknownFields (unknownFields.build ());
 								this.onChanged ();
@@ -4586,8 +4121,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder mergeFrom (final com.google.protobuf.Message other)
-			{
+			public Builder mergeFrom (final com.google.protobuf.Message other) {
 				if (other instanceof eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest) {
 					return this.mergeFrom ((eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest) other);
 				} else {
@@ -4596,8 +4130,7 @@ public final class AmqpPayloads
 				}
 			}
 			
-			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest other)
-			{
+			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest other) {
 				if (other == eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest.getDefaultInstance ())
 					return this;
 				if (other.hasToken ()) {
@@ -4622,8 +4155,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (((this.bitField0_ & 0x00000001) == 0x00000001) && (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ())) {
 						this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.newBuilder (this.token_).mergeFrom (value).buildPartial ();
@@ -4638,16 +4170,14 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setAutoAck (final boolean value)
-			{
+			public Builder setAutoAck (final boolean value) {
 				this.bitField0_ |= 0x00000010;
 				this.autoAck_ = value;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder setConsumer (final String value)
-			{
+			public Builder setConsumer (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -4657,16 +4187,14 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setExclusive (final boolean value)
-			{
+			public Builder setExclusive (final boolean value) {
 				this.bitField0_ |= 0x00000008;
 				this.exclusive_ = value;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder setExtra (final com.google.protobuf.ByteString value)
-			{
+			public Builder setExtra (final com.google.protobuf.ByteString value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -4676,8 +4204,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setQueue (final String value)
-			{
+			public Builder setQueue (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -4687,8 +4214,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (value == null) {
 						throw new NullPointerException ();
@@ -4702,8 +4228,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = builderForValue.build ();
 					this.onChanged ();
@@ -4715,28 +4240,24 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-			{
+			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeRequest_fieldAccessorTable;
 			}
 			
-			void setConsumer (final com.google.protobuf.ByteString value)
-			{
+			void setConsumer (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000004;
 				this.consumer_ = value;
 				this.onChanged ();
 			}
 			
-			void setQueue (final com.google.protobuf.ByteString value)
-			{
+			void setQueue (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000002;
 				this.queue_ = value;
 				this.onChanged ();
 			}
 			
 			private eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest buildParsed ()
-					throws com.google.protobuf.InvalidProtocolBufferException
-			{
+						throws com.google.protobuf.InvalidProtocolBufferException {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ConsumeRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
@@ -4744,8 +4265,7 @@ public final class AmqpPayloads
 				return result;
 			}
 			
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder ()
-			{
+			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder () {
 				if (this.tokenBuilder_ == null) {
 					this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> (this.token_, this.getParentForChildren (), this.isClean ());
 					this.token_ = null;
@@ -4753,21 +4273,10 @@ public final class AmqpPayloads
 				return this.tokenBuilder_;
 			}
 			
-			private void maybeForceBuilderInitialization ()
-			{
+			private void maybeForceBuilderInitialization () {
 				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
 					this.getTokenFieldBuilder ();
 				}
-			}
-			
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-			{
-				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeRequest_descriptor;
-			}
-			
-			private static Builder create ()
-			{
-				return new Builder ();
 			}
 			
 			// optional bool auto_ack = 5 [default = true];
@@ -4784,14 +4293,22 @@ public final class AmqpPayloads
 			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
+			
 			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.amqp.ConsumeRequest)
+			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ConsumeRequest_descriptor;
+			}
+			
+			private static Builder create () {
+				return new Builder ();
+			}
 		}
 		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.amqp.ConsumeRequest)
 	}
 	
 	public interface ConsumeRequestOrBuilder
-			extends
-				com.google.protobuf.MessageOrBuilder
+				extends
+					com.google.protobuf.MessageOrBuilder
 	{
 		boolean getAutoAck ();
 		
@@ -4827,40 +4344,34 @@ public final class AmqpPayloads
 	}
 	
 	public static final class DeclareExchangeRequest
-			extends com.google.protobuf.GeneratedMessage
-			implements
-				DeclareExchangeRequestOrBuilder
+				extends com.google.protobuf.GeneratedMessage
+				implements
+					DeclareExchangeRequestOrBuilder
 	{
-		private DeclareExchangeRequest (final boolean noInit)
-		{}
+		private DeclareExchangeRequest (final boolean noInit) {}
 		
 		// Use DeclareExchangeRequest.newBuilder() to construct.
-		private DeclareExchangeRequest (final Builder builder)
-		{
+		private DeclareExchangeRequest (final Builder builder) {
 			super (builder);
 		}
 		
 		@Override
-		public boolean getAutoDelete ()
-		{
+		public boolean getAutoDelete () {
 			return this.autoDelete_;
 		}
 		
 		@Override
-		public DeclareExchangeRequest getDefaultInstanceForType ()
-		{
+		public DeclareExchangeRequest getDefaultInstanceForType () {
 			return DeclareExchangeRequest.defaultInstance;
 		}
 		
 		@Override
-		public boolean getDurable ()
-		{
+		public boolean getDurable () {
 			return this.durable_;
 		}
 		
 		@Override
-		public String getExchange ()
-		{
+		public String getExchange () {
 			final java.lang.Object ref = this.exchange_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -4875,14 +4386,12 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public boolean getPassive ()
-		{
+		public boolean getPassive () {
 			return this.passive_;
 		}
 		
 		@Override
-		public int getSerializedSize ()
-		{
+		public int getSerializedSize () {
 			int size = this.memoizedSerializedSize;
 			if (size != -1)
 				return size;
@@ -4911,62 +4420,52 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 			return this.token_;
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 			return this.token_;
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType getType ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType getType () {
 			return this.type_;
 		}
 		
 		@Override
-		public boolean hasAutoDelete ()
-		{
+		public boolean hasAutoDelete () {
 			return ((this.bitField0_ & 0x00000010) == 0x00000010);
 		}
 		
 		@Override
-		public boolean hasDurable ()
-		{
+		public boolean hasDurable () {
 			return ((this.bitField0_ & 0x00000008) == 0x00000008);
 		}
 		
 		@Override
-		public boolean hasExchange ()
-		{
+		public boolean hasExchange () {
 			return ((this.bitField0_ & 0x00000002) == 0x00000002);
 		}
 		
 		@Override
-		public boolean hasPassive ()
-		{
+		public boolean hasPassive () {
 			return ((this.bitField0_ & 0x00000020) == 0x00000020);
 		}
 		
 		@Override
-		public boolean hasToken ()
-		{
+		public boolean hasToken () {
 			return ((this.bitField0_ & 0x00000001) == 0x00000001);
 		}
 		
 		@Override
-		public boolean hasType ()
-		{
+		public boolean hasType () {
 			return ((this.bitField0_ & 0x00000004) == 0x00000004);
 		}
 		
 		@Override
-		public final boolean isInitialized ()
-		{
+		public final boolean isInitialized () {
 			final byte isInitialized = this.memoizedIsInitialized;
 			if (isInitialized != -1)
 				return isInitialized == 1;
@@ -4991,21 +4490,18 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public Builder newBuilderForType ()
-		{
+		public Builder newBuilderForType () {
 			return DeclareExchangeRequest.newBuilder ();
 		}
 		
 		@Override
-		public Builder toBuilder ()
-		{
+		public Builder toBuilder () {
 			return DeclareExchangeRequest.newBuilder (this);
 		}
 		
 		@Override
 		public void writeTo (final com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			this.getSerializedSize ();
 			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
 				output.writeMessage (1, this.token_);
@@ -5029,27 +4525,23 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-		{
+		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareExchangeRequest_fieldAccessorTable;
 		}
 		
 		@java.lang.Override
-		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent)
-		{
+		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent) {
 			final Builder builder = new Builder (parent);
 			return builder;
 		}
 		
 		@java.lang.Override
 		protected java.lang.Object writeReplace ()
-				throws java.io.ObjectStreamException
-		{
+					throws java.io.ObjectStreamException {
 			return super.writeReplace ();
 		}
 		
-		private com.google.protobuf.ByteString getExchangeBytes ()
-		{
+		private com.google.protobuf.ByteString getExchangeBytes () {
 			final java.lang.Object ref = this.exchange_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -5060,109 +4552,13 @@ public final class AmqpPayloads
 			}
 		}
 		
-		private void initFields ()
-		{
+		private void initFields () {
 			this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			this.exchange_ = "";
 			this.type_ = eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType.DIRECT;
 			this.durable_ = false;
 			this.autoDelete_ = true;
 			this.passive_ = true;
-		}
-		
-		static {
-			defaultInstance = new DeclareExchangeRequest (true);
-			DeclareExchangeRequest.defaultInstance.initFields ();
-		}
-		
-		public static DeclareExchangeRequest getDefaultInstance ()
-		{
-			return DeclareExchangeRequest.defaultInstance;
-		}
-		
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-		{
-			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareExchangeRequest_descriptor;
-		}
-		
-		public static Builder newBuilder ()
-		{
-			return Builder.create ();
-		}
-		
-		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest prototype)
-		{
-			return DeclareExchangeRequest.newBuilder ().mergeFrom (prototype);
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseDelimitedFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
-			final Builder builder = DeclareExchangeRequest.newBuilder ();
-			if (builder.mergeDelimitedFrom (input)) {
-				return builder.buildParsed ();
-			} else {
-				return null;
-			}
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
-			final Builder builder = DeclareExchangeRequest.newBuilder ();
-			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
-				return builder.buildParsed ();
-			} else {
-				return null;
-			}
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseFrom (final byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
-			return DeclareExchangeRequest.newBuilder ().mergeFrom (data).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
-			return DeclareExchangeRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseFrom (final com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
-			return DeclareExchangeRequest.newBuilder ().mergeFrom (data).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
-			return DeclareExchangeRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseFrom (final com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException
-		{
-			return DeclareExchangeRequest.newBuilder ().mergeFrom (input).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
-			return DeclareExchangeRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
-			return DeclareExchangeRequest.newBuilder ().mergeFrom (input).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
-			return DeclareExchangeRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
 		private boolean autoDelete_;
@@ -5174,6 +4570,87 @@ public final class AmqpPayloads
 		private boolean passive_;
 		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
 		private eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType type_;
+		
+		public static DeclareExchangeRequest getDefaultInstance () {
+			return DeclareExchangeRequest.defaultInstance;
+		}
+		
+		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareExchangeRequest_descriptor;
+		}
+		
+		public static Builder newBuilder () {
+			return Builder.create ();
+		}
+		
+		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest prototype) {
+			return DeclareExchangeRequest.newBuilder ().mergeFrom (prototype);
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseDelimitedFrom (final java.io.InputStream input)
+					throws java.io.IOException {
+			final Builder builder = DeclareExchangeRequest.newBuilder ();
+			if (builder.mergeDelimitedFrom (input)) {
+				return builder.buildParsed ();
+			} else {
+				return null;
+			}
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws java.io.IOException {
+			final Builder builder = DeclareExchangeRequest.newBuilder ();
+			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
+				return builder.buildParsed ();
+			} else {
+				return null;
+			}
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseFrom (final byte[] data)
+					throws com.google.protobuf.InvalidProtocolBufferException {
+			return DeclareExchangeRequest.newBuilder ().mergeFrom (data).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws com.google.protobuf.InvalidProtocolBufferException {
+			return DeclareExchangeRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseFrom (final com.google.protobuf.ByteString data)
+					throws com.google.protobuf.InvalidProtocolBufferException {
+			return DeclareExchangeRequest.newBuilder ().mergeFrom (data).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws com.google.protobuf.InvalidProtocolBufferException {
+			return DeclareExchangeRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseFrom (final com.google.protobuf.CodedInputStream input)
+					throws java.io.IOException {
+			return DeclareExchangeRequest.newBuilder ().mergeFrom (input).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws java.io.IOException {
+			return DeclareExchangeRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseFrom (final java.io.InputStream input)
+					throws java.io.IOException {
+			return DeclareExchangeRequest.newBuilder ().mergeFrom (input).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws java.io.IOException {
+			return DeclareExchangeRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
+		}
+		
+		static {
+			defaultInstance = new DeclareExchangeRequest (true);
+			DeclareExchangeRequest.defaultInstance.initFields ();
+		}
 		// optional bool auto_delete = 5 [default = true];
 		public static final int AUTO_DELETE_FIELD_NUMBER = 5;
 		// optional bool durable = 4 [default = false];
@@ -5190,25 +4667,22 @@ public final class AmqpPayloads
 		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
-				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-					eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequestOrBuilder
+					extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+					implements
+						eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequestOrBuilder
 		{
 			// Construct using eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.newBuilder()
-			private Builder ()
-			{
+			private Builder () {
 				this.maybeForceBuilderInitialization ();
 			}
 			
-			private Builder (final BuilderParent parent)
-			{
+			private Builder (final BuilderParent parent) {
 				super (parent);
 				this.maybeForceBuilderInitialization ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest build ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest build () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
@@ -5217,8 +4691,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest buildPartial ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest buildPartial () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest result = new eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest (this);
 				final int from_bitField0_ = this.bitField0_;
 				int to_bitField0_ = 0;
@@ -5256,8 +4729,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clear ()
-			{
+			public Builder clear () {
 				super.clear ();
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
@@ -5278,40 +4750,35 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder clearAutoDelete ()
-			{
+			public Builder clearAutoDelete () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000010);
 				this.autoDelete_ = true;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearDurable ()
-			{
+			public Builder clearDurable () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000008);
 				this.durable_ = false;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearExchange ()
-			{
+			public Builder clearExchange () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000002);
 				this.exchange_ = DeclareExchangeRequest.getDefaultInstance ().getExchange ();
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearPassive ()
-			{
+			public Builder clearPassive () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000020);
 				this.passive_ = true;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearToken ()
-			{
+			public Builder clearToken () {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 					this.onChanged ();
@@ -5322,8 +4789,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder clearType ()
-			{
+			public Builder clearType () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000004);
 				this.type_ = eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType.DIRECT;
 				this.onChanged ();
@@ -5331,38 +4797,32 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clone ()
-			{
+			public Builder clone () {
 				return Builder.create ().mergeFrom (this.buildPartial ());
 			}
 			
 			@Override
-			public boolean getAutoDelete ()
-			{
+			public boolean getAutoDelete () {
 				return this.autoDelete_;
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest getDefaultInstanceForType ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest getDefaultInstanceForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.getDefaultInstance ();
 			}
 			
 			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType ()
-			{
+			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.getDescriptor ();
 			}
 			
 			@Override
-			public boolean getDurable ()
-			{
+			public boolean getDurable () {
 				return this.durable_;
 			}
 			
 			@Override
-			public String getExchange ()
-			{
+			public String getExchange () {
 				final java.lang.Object ref = this.exchange_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -5374,14 +4834,12 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public boolean getPassive ()
-			{
+			public boolean getPassive () {
 				return this.passive_;
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 				if (this.tokenBuilder_ == null) {
 					return this.token_;
 				} else {
@@ -5389,16 +4847,14 @@ public final class AmqpPayloads
 				}
 			}
 			
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder () {
 				this.bitField0_ |= 0x00000001;
 				this.onChanged ();
 				return this.getTokenFieldBuilder ().getBuilder ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 				if (this.tokenBuilder_ != null) {
 					return this.tokenBuilder_.getMessageOrBuilder ();
 				} else {
@@ -5407,50 +4863,42 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType getType ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType getType () {
 				return this.type_;
 			}
 			
 			@Override
-			public boolean hasAutoDelete ()
-			{
+			public boolean hasAutoDelete () {
 				return ((this.bitField0_ & 0x00000010) == 0x00000010);
 			}
 			
 			@Override
-			public boolean hasDurable ()
-			{
+			public boolean hasDurable () {
 				return ((this.bitField0_ & 0x00000008) == 0x00000008);
 			}
 			
 			@Override
-			public boolean hasExchange ()
-			{
+			public boolean hasExchange () {
 				return ((this.bitField0_ & 0x00000002) == 0x00000002);
 			}
 			
 			@Override
-			public boolean hasPassive ()
-			{
+			public boolean hasPassive () {
 				return ((this.bitField0_ & 0x00000020) == 0x00000020);
 			}
 			
 			@Override
-			public boolean hasToken ()
-			{
+			public boolean hasToken () {
 				return ((this.bitField0_ & 0x00000001) == 0x00000001);
 			}
 			
 			@Override
-			public boolean hasType ()
-			{
+			public boolean hasType () {
 				return ((this.bitField0_ & 0x00000004) == 0x00000004);
 			}
 			
 			@Override
-			public final boolean isInitialized ()
-			{
+			public final boolean isInitialized () {
 				if (!this.hasToken ()) {
 					return false;
 				}
@@ -5468,8 +4916,7 @@ public final class AmqpPayloads
 			
 			@Override
 			public Builder mergeFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException
-			{
+						throws java.io.IOException {
 				final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder (this.getUnknownFields ());
 				while (true) {
 					final int tag = input.readTag ();
@@ -5478,7 +4925,7 @@ public final class AmqpPayloads
 							this.setUnknownFields (unknownFields.build ());
 							this.onChanged ();
 							return this;
-						default: {
+						default : {
 							if (!this.parseUnknownField (input, unknownFields, extensionRegistry, tag)) {
 								this.setUnknownFields (unknownFields.build ());
 								this.onChanged ();
@@ -5531,8 +4978,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder mergeFrom (final com.google.protobuf.Message other)
-			{
+			public Builder mergeFrom (final com.google.protobuf.Message other) {
 				if (other instanceof eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest) {
 					return this.mergeFrom ((eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest) other);
 				} else {
@@ -5541,8 +4987,7 @@ public final class AmqpPayloads
 				}
 			}
 			
-			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest other)
-			{
+			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest other) {
 				if (other == eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.getDefaultInstance ())
 					return this;
 				if (other.hasToken ()) {
@@ -5567,8 +5012,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (((this.bitField0_ & 0x00000001) == 0x00000001) && (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ())) {
 						this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.newBuilder (this.token_).mergeFrom (value).buildPartial ();
@@ -5583,24 +5027,21 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setAutoDelete (final boolean value)
-			{
+			public Builder setAutoDelete (final boolean value) {
 				this.bitField0_ |= 0x00000010;
 				this.autoDelete_ = value;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder setDurable (final boolean value)
-			{
+			public Builder setDurable (final boolean value) {
 				this.bitField0_ |= 0x00000008;
 				this.durable_ = value;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder setExchange (final String value)
-			{
+			public Builder setExchange (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -5610,16 +5051,14 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setPassive (final boolean value)
-			{
+			public Builder setPassive (final boolean value) {
 				this.bitField0_ |= 0x00000020;
 				this.passive_ = value;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (value == null) {
 						throw new NullPointerException ();
@@ -5633,8 +5072,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = builderForValue.build ();
 					this.onChanged ();
@@ -5645,8 +5083,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setType (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType value)
-			{
+			public Builder setType (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -5657,21 +5094,18 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-			{
+			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareExchangeRequest_fieldAccessorTable;
 			}
 			
-			void setExchange (final com.google.protobuf.ByteString value)
-			{
+			void setExchange (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000002;
 				this.exchange_ = value;
 				this.onChanged ();
 			}
 			
 			private eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest buildParsed ()
-					throws com.google.protobuf.InvalidProtocolBufferException
-			{
+						throws com.google.protobuf.InvalidProtocolBufferException {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
@@ -5679,8 +5113,7 @@ public final class AmqpPayloads
 				return result;
 			}
 			
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder ()
-			{
+			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder () {
 				if (this.tokenBuilder_ == null) {
 					this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> (this.token_, this.getParentForChildren (), this.isClean ());
 					this.token_ = null;
@@ -5688,21 +5121,10 @@ public final class AmqpPayloads
 				return this.tokenBuilder_;
 			}
 			
-			private void maybeForceBuilderInitialization ()
-			{
+			private void maybeForceBuilderInitialization () {
 				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
 					this.getTokenFieldBuilder ();
 				}
-			}
-			
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-			{
-				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareExchangeRequest_descriptor;
-			}
-			
-			private static Builder create ()
-			{
-				return new Builder ();
 			}
 			
 			// optional bool auto_delete = 5 [default = true];
@@ -5719,60 +5141,63 @@ public final class AmqpPayloads
 			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
 			// required .mosaic_cloud.idl.amqp.DeclareExchangeRequest.ExchangeType type = 3;
 			private eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType type_ = eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.ExchangeType.DIRECT;
+			
 			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.amqp.DeclareExchangeRequest)
+			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareExchangeRequest_descriptor;
+			}
+			
+			private static Builder create () {
+				return new Builder ();
+			}
 		}
 		
 		public enum ExchangeType
-				implements
-					com.google.protobuf.ProtocolMessageEnum
+					implements
+						com.google.protobuf.ProtocolMessageEnum
 		{
 			DIRECT (0, 0),
 			FANOUT (1, 1),
 			TOPIC (2, 2), ;
-			private ExchangeType (final int index, final int value)
-			{
+			private ExchangeType (final int index, final int value) {
 				this.index = index;
 				this.value = value;
 			}
 			
 			@Override
-			public final com.google.protobuf.Descriptors.EnumDescriptor getDescriptorForType ()
-			{
+			public final com.google.protobuf.Descriptors.EnumDescriptor getDescriptorForType () {
 				return ExchangeType.getDescriptor ();
 			}
 			
 			@Override
-			public final int getNumber ()
-			{
+			public final int getNumber () {
 				return this.value;
 			}
 			
 			@Override
-			public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor ()
-			{
+			public final com.google.protobuf.Descriptors.EnumValueDescriptor getValueDescriptor () {
 				return ExchangeType.getDescriptor ().getValues ().get (this.index);
 			}
 			
-			public static final com.google.protobuf.Descriptors.EnumDescriptor getDescriptor ()
-			{
+			private final int index;
+			private final int value;
+			
+			public static final com.google.protobuf.Descriptors.EnumDescriptor getDescriptor () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareExchangeRequest.getDescriptor ().getEnumTypes ().get (0);
 			}
 			
-			public static com.google.protobuf.Internal.EnumLiteMap<ExchangeType> internalGetValueMap ()
-			{
+			public static com.google.protobuf.Internal.EnumLiteMap<ExchangeType> internalGetValueMap () {
 				return ExchangeType.internalValueMap;
 			}
 			
-			public static ExchangeType valueOf (final com.google.protobuf.Descriptors.EnumValueDescriptor desc)
-			{
+			public static ExchangeType valueOf (final com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
 				if (desc.getType () != ExchangeType.getDescriptor ()) {
 					throw new java.lang.IllegalArgumentException ("EnumValueDescriptor is not for this type.");
 				}
 				return ExchangeType.VALUES[desc.getIndex ()];
 			}
 			
-			public static ExchangeType valueOf (final int value)
-			{
+			public static ExchangeType valueOf (final int value) {
 				switch (value) {
 					case 0 :
 						return DIRECT;
@@ -5780,20 +5205,17 @@ public final class AmqpPayloads
 						return FANOUT;
 					case 2 :
 						return TOPIC;
-					default:
+					default :
 						return null;
 				}
 			}
 			
-			private final int index;
-			private final int value;
 			public static final int DIRECT_VALUE = 0;
 			public static final int FANOUT_VALUE = 1;
 			public static final int TOPIC_VALUE = 2;
 			private static com.google.protobuf.Internal.EnumLiteMap<ExchangeType> internalValueMap = new com.google.protobuf.Internal.EnumLiteMap<ExchangeType> () {
 				@Override
-				public ExchangeType findValueByNumber (final int number)
-				{
+				public ExchangeType findValueByNumber (final int number) {
 					return ExchangeType.valueOf (number);
 				}
 			};
@@ -5804,8 +5226,8 @@ public final class AmqpPayloads
 	}
 	
 	public interface DeclareExchangeRequestOrBuilder
-			extends
-				com.google.protobuf.MessageOrBuilder
+				extends
+					com.google.protobuf.MessageOrBuilder
 	{
 		boolean getAutoDelete ();
 		
@@ -5841,52 +5263,44 @@ public final class AmqpPayloads
 	}
 	
 	public static final class DeclareQueueRequest
-			extends com.google.protobuf.GeneratedMessage
-			implements
-				DeclareQueueRequestOrBuilder
+				extends com.google.protobuf.GeneratedMessage
+				implements
+					DeclareQueueRequestOrBuilder
 	{
-		private DeclareQueueRequest (final boolean noInit)
-		{}
+		private DeclareQueueRequest (final boolean noInit) {}
 		
 		// Use DeclareQueueRequest.newBuilder() to construct.
-		private DeclareQueueRequest (final Builder builder)
-		{
+		private DeclareQueueRequest (final Builder builder) {
 			super (builder);
 		}
 		
 		@Override
-		public boolean getAutoDelete ()
-		{
+		public boolean getAutoDelete () {
 			return this.autoDelete_;
 		}
 		
 		@Override
-		public DeclareQueueRequest getDefaultInstanceForType ()
-		{
+		public DeclareQueueRequest getDefaultInstanceForType () {
 			return DeclareQueueRequest.defaultInstance;
 		}
 		
 		@Override
-		public boolean getDurable ()
-		{
+		public boolean getDurable () {
 			return this.durable_;
 		}
 		
 		@Override
-		public boolean getExclusive ()
-		{
+		public boolean getExclusive () {
 			return this.exclusive_;
 		}
 		
 		@Override
-		public boolean getPassive ()
-		{
+		public boolean getPassive () {
 			return this.passive_;
 		}
 		
 		@Override
-		public String getQueue ()
-		{
+		public String getQueue () {
 			final java.lang.Object ref = this.queue_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -5901,8 +5315,7 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public int getSerializedSize ()
-		{
+		public int getSerializedSize () {
 			int size = this.memoizedSerializedSize;
 			if (size != -1)
 				return size;
@@ -5931,56 +5344,47 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 			return this.token_;
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 			return this.token_;
 		}
 		
 		@Override
-		public boolean hasAutoDelete ()
-		{
+		public boolean hasAutoDelete () {
 			return ((this.bitField0_ & 0x00000010) == 0x00000010);
 		}
 		
 		@Override
-		public boolean hasDurable ()
-		{
+		public boolean hasDurable () {
 			return ((this.bitField0_ & 0x00000008) == 0x00000008);
 		}
 		
 		@Override
-		public boolean hasExclusive ()
-		{
+		public boolean hasExclusive () {
 			return ((this.bitField0_ & 0x00000004) == 0x00000004);
 		}
 		
 		@Override
-		public boolean hasPassive ()
-		{
+		public boolean hasPassive () {
 			return ((this.bitField0_ & 0x00000020) == 0x00000020);
 		}
 		
 		@Override
-		public boolean hasQueue ()
-		{
+		public boolean hasQueue () {
 			return ((this.bitField0_ & 0x00000002) == 0x00000002);
 		}
 		
 		@Override
-		public boolean hasToken ()
-		{
+		public boolean hasToken () {
 			return ((this.bitField0_ & 0x00000001) == 0x00000001);
 		}
 		
 		@Override
-		public final boolean isInitialized ()
-		{
+		public final boolean isInitialized () {
 			final byte isInitialized = this.memoizedIsInitialized;
 			if (isInitialized != -1)
 				return isInitialized == 1;
@@ -6001,21 +5405,18 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public Builder newBuilderForType ()
-		{
+		public Builder newBuilderForType () {
 			return DeclareQueueRequest.newBuilder ();
 		}
 		
 		@Override
-		public Builder toBuilder ()
-		{
+		public Builder toBuilder () {
 			return DeclareQueueRequest.newBuilder (this);
 		}
 		
 		@Override
 		public void writeTo (final com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			this.getSerializedSize ();
 			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
 				output.writeMessage (1, this.token_);
@@ -6039,27 +5440,23 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-		{
+		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareQueueRequest_fieldAccessorTable;
 		}
 		
 		@java.lang.Override
-		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent)
-		{
+		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent) {
 			final Builder builder = new Builder (parent);
 			return builder;
 		}
 		
 		@java.lang.Override
 		protected java.lang.Object writeReplace ()
-				throws java.io.ObjectStreamException
-		{
+					throws java.io.ObjectStreamException {
 			return super.writeReplace ();
 		}
 		
-		private com.google.protobuf.ByteString getQueueBytes ()
-		{
+		private com.google.protobuf.ByteString getQueueBytes () {
 			final java.lang.Object ref = this.queue_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -6070,109 +5467,13 @@ public final class AmqpPayloads
 			}
 		}
 		
-		private void initFields ()
-		{
+		private void initFields () {
 			this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			this.queue_ = "";
 			this.exclusive_ = true;
 			this.durable_ = false;
 			this.autoDelete_ = true;
 			this.passive_ = true;
-		}
-		
-		static {
-			defaultInstance = new DeclareQueueRequest (true);
-			DeclareQueueRequest.defaultInstance.initFields ();
-		}
-		
-		public static DeclareQueueRequest getDefaultInstance ()
-		{
-			return DeclareQueueRequest.defaultInstance;
-		}
-		
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-		{
-			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareQueueRequest_descriptor;
-		}
-		
-		public static Builder newBuilder ()
-		{
-			return Builder.create ();
-		}
-		
-		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest prototype)
-		{
-			return DeclareQueueRequest.newBuilder ().mergeFrom (prototype);
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseDelimitedFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
-			final Builder builder = DeclareQueueRequest.newBuilder ();
-			if (builder.mergeDelimitedFrom (input)) {
-				return builder.buildParsed ();
-			} else {
-				return null;
-			}
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
-			final Builder builder = DeclareQueueRequest.newBuilder ();
-			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
-				return builder.buildParsed ();
-			} else {
-				return null;
-			}
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseFrom (final byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
-			return DeclareQueueRequest.newBuilder ().mergeFrom (data).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
-			return DeclareQueueRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseFrom (final com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
-			return DeclareQueueRequest.newBuilder ().mergeFrom (data).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
-			return DeclareQueueRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseFrom (final com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException
-		{
-			return DeclareQueueRequest.newBuilder ().mergeFrom (input).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
-			return DeclareQueueRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
-			return DeclareQueueRequest.newBuilder ().mergeFrom (input).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
-			return DeclareQueueRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
 		private boolean autoDelete_;
@@ -6184,6 +5485,87 @@ public final class AmqpPayloads
 		private boolean passive_;
 		private java.lang.Object queue_;
 		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
+		
+		public static DeclareQueueRequest getDefaultInstance () {
+			return DeclareQueueRequest.defaultInstance;
+		}
+		
+		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareQueueRequest_descriptor;
+		}
+		
+		public static Builder newBuilder () {
+			return Builder.create ();
+		}
+		
+		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest prototype) {
+			return DeclareQueueRequest.newBuilder ().mergeFrom (prototype);
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseDelimitedFrom (final java.io.InputStream input)
+					throws java.io.IOException {
+			final Builder builder = DeclareQueueRequest.newBuilder ();
+			if (builder.mergeDelimitedFrom (input)) {
+				return builder.buildParsed ();
+			} else {
+				return null;
+			}
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws java.io.IOException {
+			final Builder builder = DeclareQueueRequest.newBuilder ();
+			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
+				return builder.buildParsed ();
+			} else {
+				return null;
+			}
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseFrom (final byte[] data)
+					throws com.google.protobuf.InvalidProtocolBufferException {
+			return DeclareQueueRequest.newBuilder ().mergeFrom (data).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws com.google.protobuf.InvalidProtocolBufferException {
+			return DeclareQueueRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseFrom (final com.google.protobuf.ByteString data)
+					throws com.google.protobuf.InvalidProtocolBufferException {
+			return DeclareQueueRequest.newBuilder ().mergeFrom (data).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws com.google.protobuf.InvalidProtocolBufferException {
+			return DeclareQueueRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseFrom (final com.google.protobuf.CodedInputStream input)
+					throws java.io.IOException {
+			return DeclareQueueRequest.newBuilder ().mergeFrom (input).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws java.io.IOException {
+			return DeclareQueueRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseFrom (final java.io.InputStream input)
+					throws java.io.IOException {
+			return DeclareQueueRequest.newBuilder ().mergeFrom (input).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws java.io.IOException {
+			return DeclareQueueRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
+		}
+		
+		static {
+			defaultInstance = new DeclareQueueRequest (true);
+			DeclareQueueRequest.defaultInstance.initFields ();
+		}
 		// optional bool auto_delete = 5 [default = true];
 		public static final int AUTO_DELETE_FIELD_NUMBER = 5;
 		// optional bool durable = 4 [default = false];
@@ -6200,25 +5582,22 @@ public final class AmqpPayloads
 		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
-				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-					eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequestOrBuilder
+					extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+					implements
+						eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequestOrBuilder
 		{
 			// Construct using eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest.newBuilder()
-			private Builder ()
-			{
+			private Builder () {
 				this.maybeForceBuilderInitialization ();
 			}
 			
-			private Builder (final BuilderParent parent)
-			{
+			private Builder (final BuilderParent parent) {
 				super (parent);
 				this.maybeForceBuilderInitialization ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest build ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest build () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
@@ -6227,8 +5606,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest buildPartial ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest buildPartial () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest result = new eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest (this);
 				final int from_bitField0_ = this.bitField0_;
 				int to_bitField0_ = 0;
@@ -6266,8 +5644,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clear ()
-			{
+			public Builder clear () {
 				super.clear ();
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
@@ -6288,48 +5665,42 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder clearAutoDelete ()
-			{
+			public Builder clearAutoDelete () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000010);
 				this.autoDelete_ = true;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearDurable ()
-			{
+			public Builder clearDurable () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000008);
 				this.durable_ = false;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearExclusive ()
-			{
+			public Builder clearExclusive () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000004);
 				this.exclusive_ = true;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearPassive ()
-			{
+			public Builder clearPassive () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000020);
 				this.passive_ = true;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearQueue ()
-			{
+			public Builder clearQueue () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000002);
 				this.queue_ = DeclareQueueRequest.getDefaultInstance ().getQueue ();
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearToken ()
-			{
+			public Builder clearToken () {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 					this.onChanged ();
@@ -6341,50 +5712,42 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clone ()
-			{
+			public Builder clone () {
 				return Builder.create ().mergeFrom (this.buildPartial ());
 			}
 			
 			@Override
-			public boolean getAutoDelete ()
-			{
+			public boolean getAutoDelete () {
 				return this.autoDelete_;
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest getDefaultInstanceForType ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest getDefaultInstanceForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest.getDefaultInstance ();
 			}
 			
 			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType ()
-			{
+			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest.getDescriptor ();
 			}
 			
 			@Override
-			public boolean getDurable ()
-			{
+			public boolean getDurable () {
 				return this.durable_;
 			}
 			
 			@Override
-			public boolean getExclusive ()
-			{
+			public boolean getExclusive () {
 				return this.exclusive_;
 			}
 			
 			@Override
-			public boolean getPassive ()
-			{
+			public boolean getPassive () {
 				return this.passive_;
 			}
 			
 			@Override
-			public String getQueue ()
-			{
+			public String getQueue () {
 				final java.lang.Object ref = this.queue_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -6396,8 +5759,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 				if (this.tokenBuilder_ == null) {
 					return this.token_;
 				} else {
@@ -6405,16 +5767,14 @@ public final class AmqpPayloads
 				}
 			}
 			
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder () {
 				this.bitField0_ |= 0x00000001;
 				this.onChanged ();
 				return this.getTokenFieldBuilder ().getBuilder ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 				if (this.tokenBuilder_ != null) {
 					return this.tokenBuilder_.getMessageOrBuilder ();
 				} else {
@@ -6423,44 +5783,37 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public boolean hasAutoDelete ()
-			{
+			public boolean hasAutoDelete () {
 				return ((this.bitField0_ & 0x00000010) == 0x00000010);
 			}
 			
 			@Override
-			public boolean hasDurable ()
-			{
+			public boolean hasDurable () {
 				return ((this.bitField0_ & 0x00000008) == 0x00000008);
 			}
 			
 			@Override
-			public boolean hasExclusive ()
-			{
+			public boolean hasExclusive () {
 				return ((this.bitField0_ & 0x00000004) == 0x00000004);
 			}
 			
 			@Override
-			public boolean hasPassive ()
-			{
+			public boolean hasPassive () {
 				return ((this.bitField0_ & 0x00000020) == 0x00000020);
 			}
 			
 			@Override
-			public boolean hasQueue ()
-			{
+			public boolean hasQueue () {
 				return ((this.bitField0_ & 0x00000002) == 0x00000002);
 			}
 			
 			@Override
-			public boolean hasToken ()
-			{
+			public boolean hasToken () {
 				return ((this.bitField0_ & 0x00000001) == 0x00000001);
 			}
 			
 			@Override
-			public final boolean isInitialized ()
-			{
+			public final boolean isInitialized () {
 				if (!this.hasToken ()) {
 					return false;
 				}
@@ -6475,8 +5828,7 @@ public final class AmqpPayloads
 			
 			@Override
 			public Builder mergeFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException
-			{
+						throws java.io.IOException {
 				final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder (this.getUnknownFields ());
 				while (true) {
 					final int tag = input.readTag ();
@@ -6485,7 +5837,7 @@ public final class AmqpPayloads
 							this.setUnknownFields (unknownFields.build ());
 							this.onChanged ();
 							return this;
-						default: {
+						default : {
 							if (!this.parseUnknownField (input, unknownFields, extensionRegistry, tag)) {
 								this.setUnknownFields (unknownFields.build ());
 								this.onChanged ();
@@ -6532,8 +5884,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder mergeFrom (final com.google.protobuf.Message other)
-			{
+			public Builder mergeFrom (final com.google.protobuf.Message other) {
 				if (other instanceof eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest) {
 					return this.mergeFrom ((eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest) other);
 				} else {
@@ -6542,8 +5893,7 @@ public final class AmqpPayloads
 				}
 			}
 			
-			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest other)
-			{
+			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest other) {
 				if (other == eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest.getDefaultInstance ())
 					return this;
 				if (other.hasToken ()) {
@@ -6568,8 +5918,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (((this.bitField0_ & 0x00000001) == 0x00000001) && (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ())) {
 						this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.newBuilder (this.token_).mergeFrom (value).buildPartial ();
@@ -6584,40 +5933,35 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setAutoDelete (final boolean value)
-			{
+			public Builder setAutoDelete (final boolean value) {
 				this.bitField0_ |= 0x00000010;
 				this.autoDelete_ = value;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder setDurable (final boolean value)
-			{
+			public Builder setDurable (final boolean value) {
 				this.bitField0_ |= 0x00000008;
 				this.durable_ = value;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder setExclusive (final boolean value)
-			{
+			public Builder setExclusive (final boolean value) {
 				this.bitField0_ |= 0x00000004;
 				this.exclusive_ = value;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder setPassive (final boolean value)
-			{
+			public Builder setPassive (final boolean value) {
 				this.bitField0_ |= 0x00000020;
 				this.passive_ = value;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder setQueue (final String value)
-			{
+			public Builder setQueue (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -6627,8 +5971,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (value == null) {
 						throw new NullPointerException ();
@@ -6642,8 +5985,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = builderForValue.build ();
 					this.onChanged ();
@@ -6655,21 +5997,18 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-			{
+			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareQueueRequest_fieldAccessorTable;
 			}
 			
-			void setQueue (final com.google.protobuf.ByteString value)
-			{
+			void setQueue (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000002;
 				this.queue_ = value;
 				this.onChanged ();
 			}
 			
 			private eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest buildParsed ()
-					throws com.google.protobuf.InvalidProtocolBufferException
-			{
+						throws com.google.protobuf.InvalidProtocolBufferException {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeclareQueueRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
@@ -6677,8 +6016,7 @@ public final class AmqpPayloads
 				return result;
 			}
 			
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder ()
-			{
+			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder () {
 				if (this.tokenBuilder_ == null) {
 					this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> (this.token_, this.getParentForChildren (), this.isClean ());
 					this.token_ = null;
@@ -6686,21 +6024,10 @@ public final class AmqpPayloads
 				return this.tokenBuilder_;
 			}
 			
-			private void maybeForceBuilderInitialization ()
-			{
+			private void maybeForceBuilderInitialization () {
 				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
 					this.getTokenFieldBuilder ();
 				}
-			}
-			
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-			{
-				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareQueueRequest_descriptor;
-			}
-			
-			private static Builder create ()
-			{
-				return new Builder ();
 			}
 			
 			// optional bool auto_delete = 5 [default = true];
@@ -6717,14 +6044,22 @@ public final class AmqpPayloads
 			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
+			
 			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.amqp.DeclareQueueRequest)
+			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeclareQueueRequest_descriptor;
+			}
+			
+			private static Builder create () {
+				return new Builder ();
+			}
 		}
 		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.amqp.DeclareQueueRequest)
 	}
 	
 	public interface DeclareQueueRequestOrBuilder
-			extends
-				com.google.protobuf.MessageOrBuilder
+				extends
+					com.google.protobuf.MessageOrBuilder
 	{
 		boolean getAutoDelete ();
 		
@@ -6760,22 +6095,19 @@ public final class AmqpPayloads
 	}
 	
 	public static final class DeliveryMessage
-			extends com.google.protobuf.GeneratedMessage
-			implements
-				DeliveryMessageOrBuilder
+				extends com.google.protobuf.GeneratedMessage
+				implements
+					DeliveryMessageOrBuilder
 	{
-		private DeliveryMessage (final boolean noInit)
-		{}
+		private DeliveryMessage (final boolean noInit) {}
 		
 		// Use DeliveryMessage.newBuilder() to construct.
-		private DeliveryMessage (final Builder builder)
-		{
+		private DeliveryMessage (final Builder builder) {
 			super (builder);
 		}
 		
 		@Override
-		public String getConsumerTag ()
-		{
+		public String getConsumerTag () {
 			final java.lang.Object ref = this.consumerTag_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -6790,8 +6122,7 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public String getCorrelationId ()
-		{
+		public String getCorrelationId () {
 			final java.lang.Object ref = this.correlationId_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -6806,44 +6137,37 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public com.google.protobuf.ByteString getData ()
-		{
+		public com.google.protobuf.ByteString getData () {
 			return this.data_;
 		}
 		
 		@Override
-		public DeliveryMessage getDefaultInstanceForType ()
-		{
+		public DeliveryMessage getDefaultInstanceForType () {
 			return DeliveryMessage.defaultInstance;
 		}
 		
 		@Override
-		public int getDeliveryMode ()
-		{
+		public int getDeliveryMode () {
 			return this.deliveryMode_;
 		}
 		
 		@Override
-		public long getDeliveryTag ()
-		{
+		public long getDeliveryTag () {
 			return this.deliveryTag_;
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope getEnvelope ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope getEnvelope () {
 			return this.envelope_;
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder getEnvelopeOrBuilder ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder getEnvelopeOrBuilder () {
 			return this.envelope_;
 		}
 		
 		@Override
-		public String getExchange ()
-		{
+		public String getExchange () {
 			final java.lang.Object ref = this.exchange_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -6858,8 +6182,7 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public String getReplyTo ()
-		{
+		public String getReplyTo () {
 			final java.lang.Object ref = this.replyTo_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -6874,8 +6197,7 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public String getRoutingKey ()
-		{
+		public String getRoutingKey () {
 			final java.lang.Object ref = this.routingKey_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -6890,8 +6212,7 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public int getSerializedSize ()
-		{
+		public int getSerializedSize () {
 			int size = this.memoizedSerializedSize;
 			if (size != -1)
 				return size;
@@ -6929,62 +6250,52 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public boolean hasConsumerTag ()
-		{
+		public boolean hasConsumerTag () {
 			return ((this.bitField0_ & 0x00000001) == 0x00000001);
 		}
 		
 		@Override
-		public boolean hasCorrelationId ()
-		{
+		public boolean hasCorrelationId () {
 			return ((this.bitField0_ & 0x00000080) == 0x00000080);
 		}
 		
 		@Override
-		public boolean hasData ()
-		{
+		public boolean hasData () {
 			return ((this.bitField0_ & 0x00000020) == 0x00000020);
 		}
 		
 		@Override
-		public boolean hasDeliveryMode ()
-		{
+		public boolean hasDeliveryMode () {
 			return ((this.bitField0_ & 0x00000010) == 0x00000010);
 		}
 		
 		@Override
-		public boolean hasDeliveryTag ()
-		{
+		public boolean hasDeliveryTag () {
 			return ((this.bitField0_ & 0x00000002) == 0x00000002);
 		}
 		
 		@Override
-		public boolean hasEnvelope ()
-		{
+		public boolean hasEnvelope () {
 			return ((this.bitField0_ & 0x00000040) == 0x00000040);
 		}
 		
 		@Override
-		public boolean hasExchange ()
-		{
+		public boolean hasExchange () {
 			return ((this.bitField0_ & 0x00000004) == 0x00000004);
 		}
 		
 		@Override
-		public boolean hasReplyTo ()
-		{
+		public boolean hasReplyTo () {
 			return ((this.bitField0_ & 0x00000100) == 0x00000100);
 		}
 		
 		@Override
-		public boolean hasRoutingKey ()
-		{
+		public boolean hasRoutingKey () {
 			return ((this.bitField0_ & 0x00000008) == 0x00000008);
 		}
 		
 		@Override
-		public final boolean isInitialized ()
-		{
+		public final boolean isInitialized () {
 			final byte isInitialized = this.memoizedIsInitialized;
 			if (isInitialized != -1)
 				return isInitialized == 1;
@@ -7025,21 +6336,18 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public Builder newBuilderForType ()
-		{
+		public Builder newBuilderForType () {
 			return DeliveryMessage.newBuilder ();
 		}
 		
 		@Override
-		public Builder toBuilder ()
-		{
+		public Builder toBuilder () {
 			return DeliveryMessage.newBuilder (this);
 		}
 		
 		@Override
 		public void writeTo (final com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			this.getSerializedSize ();
 			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
 				output.writeBytes (1, this.getConsumerTagBytes ());
@@ -7072,27 +6380,23 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-		{
+		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeliveryMessage_fieldAccessorTable;
 		}
 		
 		@java.lang.Override
-		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent)
-		{
+		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent) {
 			final Builder builder = new Builder (parent);
 			return builder;
 		}
 		
 		@java.lang.Override
 		protected java.lang.Object writeReplace ()
-				throws java.io.ObjectStreamException
-		{
+					throws java.io.ObjectStreamException {
 			return super.writeReplace ();
 		}
 		
-		private com.google.protobuf.ByteString getConsumerTagBytes ()
-		{
+		private com.google.protobuf.ByteString getConsumerTagBytes () {
 			final java.lang.Object ref = this.consumerTag_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -7103,8 +6407,7 @@ public final class AmqpPayloads
 			}
 		}
 		
-		private com.google.protobuf.ByteString getCorrelationIdBytes ()
-		{
+		private com.google.protobuf.ByteString getCorrelationIdBytes () {
 			final java.lang.Object ref = this.correlationId_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -7115,8 +6418,7 @@ public final class AmqpPayloads
 			}
 		}
 		
-		private com.google.protobuf.ByteString getExchangeBytes ()
-		{
+		private com.google.protobuf.ByteString getExchangeBytes () {
 			final java.lang.Object ref = this.exchange_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -7127,8 +6429,7 @@ public final class AmqpPayloads
 			}
 		}
 		
-		private com.google.protobuf.ByteString getReplyToBytes ()
-		{
+		private com.google.protobuf.ByteString getReplyToBytes () {
 			final java.lang.Object ref = this.replyTo_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -7139,8 +6440,7 @@ public final class AmqpPayloads
 			}
 		}
 		
-		private com.google.protobuf.ByteString getRoutingKeyBytes ()
-		{
+		private com.google.protobuf.ByteString getRoutingKeyBytes () {
 			final java.lang.Object ref = this.routingKey_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -7151,8 +6451,7 @@ public final class AmqpPayloads
 			}
 		}
 		
-		private void initFields ()
-		{
+		private void initFields () {
 			this.consumerTag_ = "";
 			this.deliveryTag_ = 0L;
 			this.exchange_ = "";
@@ -7162,101 +6461,6 @@ public final class AmqpPayloads
 			this.envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ();
 			this.correlationId_ = "";
 			this.replyTo_ = "";
-		}
-		
-		static {
-			defaultInstance = new DeliveryMessage (true);
-			DeliveryMessage.defaultInstance.initFields ();
-		}
-		
-		public static DeliveryMessage getDefaultInstance ()
-		{
-			return DeliveryMessage.defaultInstance;
-		}
-		
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-		{
-			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeliveryMessage_descriptor;
-		}
-		
-		public static Builder newBuilder ()
-		{
-			return Builder.create ();
-		}
-		
-		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage prototype)
-		{
-			return DeliveryMessage.newBuilder ().mergeFrom (prototype);
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage parseDelimitedFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
-			final Builder builder = DeliveryMessage.newBuilder ();
-			if (builder.mergeDelimitedFrom (input)) {
-				return builder.buildParsed ();
-			} else {
-				return null;
-			}
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
-			final Builder builder = DeliveryMessage.newBuilder ();
-			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
-				return builder.buildParsed ();
-			} else {
-				return null;
-			}
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage parseFrom (final byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
-			return DeliveryMessage.newBuilder ().mergeFrom (data).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
-			return DeliveryMessage.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage parseFrom (final com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
-			return DeliveryMessage.newBuilder ().mergeFrom (data).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
-			return DeliveryMessage.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage parseFrom (final com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException
-		{
-			return DeliveryMessage.newBuilder ().mergeFrom (input).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
-			return DeliveryMessage.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage parseFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
-			return DeliveryMessage.newBuilder ().mergeFrom (input).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
-			return DeliveryMessage.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
 		private int bitField0_;
@@ -7271,6 +6475,87 @@ public final class AmqpPayloads
 		private int memoizedSerializedSize = -1;
 		private java.lang.Object replyTo_;
 		private java.lang.Object routingKey_;
+		
+		public static DeliveryMessage getDefaultInstance () {
+			return DeliveryMessage.defaultInstance;
+		}
+		
+		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeliveryMessage_descriptor;
+		}
+		
+		public static Builder newBuilder () {
+			return Builder.create ();
+		}
+		
+		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage prototype) {
+			return DeliveryMessage.newBuilder ().mergeFrom (prototype);
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage parseDelimitedFrom (final java.io.InputStream input)
+					throws java.io.IOException {
+			final Builder builder = DeliveryMessage.newBuilder ();
+			if (builder.mergeDelimitedFrom (input)) {
+				return builder.buildParsed ();
+			} else {
+				return null;
+			}
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws java.io.IOException {
+			final Builder builder = DeliveryMessage.newBuilder ();
+			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
+				return builder.buildParsed ();
+			} else {
+				return null;
+			}
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage parseFrom (final byte[] data)
+					throws com.google.protobuf.InvalidProtocolBufferException {
+			return DeliveryMessage.newBuilder ().mergeFrom (data).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws com.google.protobuf.InvalidProtocolBufferException {
+			return DeliveryMessage.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage parseFrom (final com.google.protobuf.ByteString data)
+					throws com.google.protobuf.InvalidProtocolBufferException {
+			return DeliveryMessage.newBuilder ().mergeFrom (data).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws com.google.protobuf.InvalidProtocolBufferException {
+			return DeliveryMessage.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage parseFrom (final com.google.protobuf.CodedInputStream input)
+					throws java.io.IOException {
+			return DeliveryMessage.newBuilder ().mergeFrom (input).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws java.io.IOException {
+			return DeliveryMessage.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage parseFrom (final java.io.InputStream input)
+					throws java.io.IOException {
+			return DeliveryMessage.newBuilder ().mergeFrom (input).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws java.io.IOException {
+			return DeliveryMessage.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
+		}
+		
+		static {
+			defaultInstance = new DeliveryMessage (true);
+			DeliveryMessage.defaultInstance.initFields ();
+		}
 		// required string consumer_tag = 1;
 		public static final int CONSUMER_TAG_FIELD_NUMBER = 1;
 		// optional string correlation_id = 8;
@@ -7293,25 +6578,22 @@ public final class AmqpPayloads
 		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
-				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-					eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessageOrBuilder
+					extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+					implements
+						eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessageOrBuilder
 		{
 			// Construct using eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage.newBuilder()
-			private Builder ()
-			{
+			private Builder () {
 				this.maybeForceBuilderInitialization ();
 			}
 			
-			private Builder (final BuilderParent parent)
-			{
+			private Builder (final BuilderParent parent) {
 				super (parent);
 				this.maybeForceBuilderInitialization ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage build ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage build () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
@@ -7320,8 +6602,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage buildPartial ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage buildPartial () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage result = new eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage (this);
 				final int from_bitField0_ = this.bitField0_;
 				int to_bitField0_ = 0;
@@ -7371,8 +6652,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clear ()
-			{
+			public Builder clear () {
 				super.clear ();
 				this.consumerTag_ = "";
 				this.bitField0_ = (this.bitField0_ & ~0x00000001);
@@ -7399,48 +6679,42 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder clearConsumerTag ()
-			{
+			public Builder clearConsumerTag () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000001);
 				this.consumerTag_ = DeliveryMessage.getDefaultInstance ().getConsumerTag ();
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearCorrelationId ()
-			{
+			public Builder clearCorrelationId () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000080);
 				this.correlationId_ = DeliveryMessage.getDefaultInstance ().getCorrelationId ();
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearData ()
-			{
+			public Builder clearData () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000020);
 				this.data_ = DeliveryMessage.getDefaultInstance ().getData ();
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearDeliveryMode ()
-			{
+			public Builder clearDeliveryMode () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000010);
 				this.deliveryMode_ = 0;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearDeliveryTag ()
-			{
+			public Builder clearDeliveryTag () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000002);
 				this.deliveryTag_ = 0L;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearEnvelope ()
-			{
+			public Builder clearEnvelope () {
 				if (this.envelopeBuilder_ == null) {
 					this.envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ();
 					this.onChanged ();
@@ -7451,24 +6725,21 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder clearExchange ()
-			{
+			public Builder clearExchange () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000004);
 				this.exchange_ = DeliveryMessage.getDefaultInstance ().getExchange ();
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearReplyTo ()
-			{
+			public Builder clearReplyTo () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000100);
 				this.replyTo_ = DeliveryMessage.getDefaultInstance ().getReplyTo ();
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearRoutingKey ()
-			{
+			public Builder clearRoutingKey () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000008);
 				this.routingKey_ = DeliveryMessage.getDefaultInstance ().getRoutingKey ();
 				this.onChanged ();
@@ -7476,14 +6747,12 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clone ()
-			{
+			public Builder clone () {
 				return Builder.create ().mergeFrom (this.buildPartial ());
 			}
 			
 			@Override
-			public String getConsumerTag ()
-			{
+			public String getConsumerTag () {
 				final java.lang.Object ref = this.consumerTag_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -7495,8 +6764,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public String getCorrelationId ()
-			{
+			public String getCorrelationId () {
 				final java.lang.Object ref = this.correlationId_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -7508,38 +6776,32 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public com.google.protobuf.ByteString getData ()
-			{
+			public com.google.protobuf.ByteString getData () {
 				return this.data_;
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage getDefaultInstanceForType ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage getDefaultInstanceForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage.getDefaultInstance ();
 			}
 			
 			@Override
-			public int getDeliveryMode ()
-			{
+			public int getDeliveryMode () {
 				return this.deliveryMode_;
 			}
 			
 			@Override
-			public long getDeliveryTag ()
-			{
+			public long getDeliveryTag () {
 				return this.deliveryTag_;
 			}
 			
 			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType ()
-			{
+			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage.getDescriptor ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope getEnvelope ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope getEnvelope () {
 				if (this.envelopeBuilder_ == null) {
 					return this.envelope_;
 				} else {
@@ -7547,16 +6809,14 @@ public final class AmqpPayloads
 				}
 			}
 			
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder getEnvelopeBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder getEnvelopeBuilder () {
 				this.bitField0_ |= 0x00000040;
 				this.onChanged ();
 				return this.getEnvelopeFieldBuilder ().getBuilder ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder getEnvelopeOrBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder getEnvelopeOrBuilder () {
 				if (this.envelopeBuilder_ != null) {
 					return this.envelopeBuilder_.getMessageOrBuilder ();
 				} else {
@@ -7565,8 +6825,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public String getExchange ()
-			{
+			public String getExchange () {
 				final java.lang.Object ref = this.exchange_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -7578,8 +6837,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public String getReplyTo ()
-			{
+			public String getReplyTo () {
 				final java.lang.Object ref = this.replyTo_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -7591,8 +6849,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public String getRoutingKey ()
-			{
+			public String getRoutingKey () {
 				final java.lang.Object ref = this.routingKey_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -7604,62 +6861,52 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public boolean hasConsumerTag ()
-			{
+			public boolean hasConsumerTag () {
 				return ((this.bitField0_ & 0x00000001) == 0x00000001);
 			}
 			
 			@Override
-			public boolean hasCorrelationId ()
-			{
+			public boolean hasCorrelationId () {
 				return ((this.bitField0_ & 0x00000080) == 0x00000080);
 			}
 			
 			@Override
-			public boolean hasData ()
-			{
+			public boolean hasData () {
 				return ((this.bitField0_ & 0x00000020) == 0x00000020);
 			}
 			
 			@Override
-			public boolean hasDeliveryMode ()
-			{
+			public boolean hasDeliveryMode () {
 				return ((this.bitField0_ & 0x00000010) == 0x00000010);
 			}
 			
 			@Override
-			public boolean hasDeliveryTag ()
-			{
+			public boolean hasDeliveryTag () {
 				return ((this.bitField0_ & 0x00000002) == 0x00000002);
 			}
 			
 			@Override
-			public boolean hasEnvelope ()
-			{
+			public boolean hasEnvelope () {
 				return ((this.bitField0_ & 0x00000040) == 0x00000040);
 			}
 			
 			@Override
-			public boolean hasExchange ()
-			{
+			public boolean hasExchange () {
 				return ((this.bitField0_ & 0x00000004) == 0x00000004);
 			}
 			
 			@Override
-			public boolean hasReplyTo ()
-			{
+			public boolean hasReplyTo () {
 				return ((this.bitField0_ & 0x00000100) == 0x00000100);
 			}
 			
 			@Override
-			public boolean hasRoutingKey ()
-			{
+			public boolean hasRoutingKey () {
 				return ((this.bitField0_ & 0x00000008) == 0x00000008);
 			}
 			
 			@Override
-			public final boolean isInitialized ()
-			{
+			public final boolean isInitialized () {
 				if (!this.hasConsumerTag ()) {
 					return false;
 				}
@@ -7687,8 +6934,7 @@ public final class AmqpPayloads
 				return true;
 			}
 			
-			public Builder mergeEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope value)
-			{
+			public Builder mergeEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope value) {
 				if (this.envelopeBuilder_ == null) {
 					if (((this.bitField0_ & 0x00000040) == 0x00000040) && (this.envelope_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ())) {
 						this.envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.newBuilder (this.envelope_).mergeFrom (value).buildPartial ();
@@ -7705,8 +6951,7 @@ public final class AmqpPayloads
 			
 			@Override
 			public Builder mergeFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException
-			{
+						throws java.io.IOException {
 				final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder (this.getUnknownFields ());
 				while (true) {
 					final int tag = input.readTag ();
@@ -7715,7 +6960,7 @@ public final class AmqpPayloads
 							this.setUnknownFields (unknownFields.build ());
 							this.onChanged ();
 							return this;
-						default: {
+						default : {
 							if (!this.parseUnknownField (input, unknownFields, extensionRegistry, tag)) {
 								this.setUnknownFields (unknownFields.build ());
 								this.onChanged ();
@@ -7777,8 +7022,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder mergeFrom (final com.google.protobuf.Message other)
-			{
+			public Builder mergeFrom (final com.google.protobuf.Message other) {
 				if (other instanceof eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage) {
 					return this.mergeFrom ((eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage) other);
 				} else {
@@ -7787,8 +7031,7 @@ public final class AmqpPayloads
 				}
 			}
 			
-			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage other)
-			{
+			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage other) {
 				if (other == eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage.getDefaultInstance ())
 					return this;
 				if (other.hasConsumerTag ()) {
@@ -7822,8 +7065,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setConsumerTag (final String value)
-			{
+			public Builder setConsumerTag (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -7833,8 +7075,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setCorrelationId (final String value)
-			{
+			public Builder setCorrelationId (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -7844,8 +7085,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setData (final com.google.protobuf.ByteString value)
-			{
+			public Builder setData (final com.google.protobuf.ByteString value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -7855,24 +7095,21 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setDeliveryMode (final int value)
-			{
+			public Builder setDeliveryMode (final int value) {
 				this.bitField0_ |= 0x00000010;
 				this.deliveryMode_ = value;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder setDeliveryTag (final long value)
-			{
+			public Builder setDeliveryTag (final long value) {
 				this.bitField0_ |= 0x00000002;
 				this.deliveryTag_ = value;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder setEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope value)
-			{
+			public Builder setEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope value) {
 				if (this.envelopeBuilder_ == null) {
 					if (value == null) {
 						throw new NullPointerException ();
@@ -7886,8 +7123,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder builderForValue)
-			{
+			public Builder setEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder builderForValue) {
 				if (this.envelopeBuilder_ == null) {
 					this.envelope_ = builderForValue.build ();
 					this.onChanged ();
@@ -7898,8 +7134,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setExchange (final String value)
-			{
+			public Builder setExchange (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -7909,8 +7144,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setReplyTo (final String value)
-			{
+			public Builder setReplyTo (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -7920,8 +7154,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setRoutingKey (final String value)
-			{
+			public Builder setRoutingKey (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -7932,49 +7165,42 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-			{
+			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeliveryMessage_fieldAccessorTable;
 			}
 			
-			void setConsumerTag (final com.google.protobuf.ByteString value)
-			{
+			void setConsumerTag (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000001;
 				this.consumerTag_ = value;
 				this.onChanged ();
 			}
 			
-			void setCorrelationId (final com.google.protobuf.ByteString value)
-			{
+			void setCorrelationId (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000080;
 				this.correlationId_ = value;
 				this.onChanged ();
 			}
 			
-			void setExchange (final com.google.protobuf.ByteString value)
-			{
+			void setExchange (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000004;
 				this.exchange_ = value;
 				this.onChanged ();
 			}
 			
-			void setReplyTo (final com.google.protobuf.ByteString value)
-			{
+			void setReplyTo (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000100;
 				this.replyTo_ = value;
 				this.onChanged ();
 			}
 			
-			void setRoutingKey (final com.google.protobuf.ByteString value)
-			{
+			void setRoutingKey (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000008;
 				this.routingKey_ = value;
 				this.onChanged ();
 			}
 			
 			private eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage buildParsed ()
-					throws com.google.protobuf.InvalidProtocolBufferException
-			{
+						throws com.google.protobuf.InvalidProtocolBufferException {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.DeliveryMessage result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
@@ -7982,8 +7208,7 @@ public final class AmqpPayloads
 				return result;
 			}
 			
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope, eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder> getEnvelopeFieldBuilder ()
-			{
+			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope, eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder> getEnvelopeFieldBuilder () {
 				if (this.envelopeBuilder_ == null) {
 					this.envelopeBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope, eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder> (this.envelope_, this.getParentForChildren (), this.isClean ());
 					this.envelope_ = null;
@@ -7991,21 +7216,10 @@ public final class AmqpPayloads
 				return this.envelopeBuilder_;
 			}
 			
-			private void maybeForceBuilderInitialization ()
-			{
+			private void maybeForceBuilderInitialization () {
 				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
 					this.getEnvelopeFieldBuilder ();
 				}
-			}
-			
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-			{
-				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeliveryMessage_descriptor;
-			}
-			
-			private static Builder create ()
-			{
-				return new Builder ();
 			}
 			
 			private int bitField0_;
@@ -8028,14 +7242,22 @@ public final class AmqpPayloads
 			private java.lang.Object replyTo_ = "";
 			// required string routing_key = 4;
 			private java.lang.Object routingKey_ = "";
+			
 			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.amqp.DeliveryMessage)
+			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_DeliveryMessage_descriptor;
+			}
+			
+			private static Builder create () {
+				return new Builder ();
+			}
 		}
 		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.amqp.DeliveryMessage)
 	}
 	
 	public interface DeliveryMessageOrBuilder
-			extends
-				com.google.protobuf.MessageOrBuilder
+				extends
+					com.google.protobuf.MessageOrBuilder
 	{
 		String getConsumerTag ();
 		
@@ -8086,34 +7308,29 @@ public final class AmqpPayloads
 	}
 	
 	public static final class GetRequest
-			extends com.google.protobuf.GeneratedMessage
-			implements
-				GetRequestOrBuilder
+				extends com.google.protobuf.GeneratedMessage
+				implements
+					GetRequestOrBuilder
 	{
-		private GetRequest (final boolean noInit)
-		{}
+		private GetRequest (final boolean noInit) {}
 		
 		// Use GetRequest.newBuilder() to construct.
-		private GetRequest (final Builder builder)
-		{
+		private GetRequest (final Builder builder) {
 			super (builder);
 		}
 		
 		@Override
-		public boolean getAutoAck ()
-		{
+		public boolean getAutoAck () {
 			return this.autoAck_;
 		}
 		
 		@Override
-		public GetRequest getDefaultInstanceForType ()
-		{
+		public GetRequest getDefaultInstanceForType () {
 			return GetRequest.defaultInstance;
 		}
 		
 		@Override
-		public String getQueue ()
-		{
+		public String getQueue () {
 			final java.lang.Object ref = this.queue_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -8128,8 +7345,7 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public int getSerializedSize ()
-		{
+		public int getSerializedSize () {
 			int size = this.memoizedSerializedSize;
 			if (size != -1)
 				return size;
@@ -8149,38 +7365,32 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 			return this.token_;
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 			return this.token_;
 		}
 		
 		@Override
-		public boolean hasAutoAck ()
-		{
+		public boolean hasAutoAck () {
 			return ((this.bitField0_ & 0x00000004) == 0x00000004);
 		}
 		
 		@Override
-		public boolean hasQueue ()
-		{
+		public boolean hasQueue () {
 			return ((this.bitField0_ & 0x00000002) == 0x00000002);
 		}
 		
 		@Override
-		public boolean hasToken ()
-		{
+		public boolean hasToken () {
 			return ((this.bitField0_ & 0x00000001) == 0x00000001);
 		}
 		
 		@Override
-		public final boolean isInitialized ()
-		{
+		public final boolean isInitialized () {
 			final byte isInitialized = this.memoizedIsInitialized;
 			if (isInitialized != -1)
 				return isInitialized == 1;
@@ -8201,21 +7411,18 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public Builder newBuilderForType ()
-		{
+		public Builder newBuilderForType () {
 			return GetRequest.newBuilder ();
 		}
 		
 		@Override
-		public Builder toBuilder ()
-		{
+		public Builder toBuilder () {
 			return GetRequest.newBuilder (this);
 		}
 		
 		@Override
 		public void writeTo (final com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			this.getSerializedSize ();
 			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
 				output.writeMessage (1, this.token_);
@@ -8230,27 +7437,23 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-		{
+		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_GetRequest_fieldAccessorTable;
 		}
 		
 		@java.lang.Override
-		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent)
-		{
+		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent) {
 			final Builder builder = new Builder (parent);
 			return builder;
 		}
 		
 		@java.lang.Override
 		protected java.lang.Object writeReplace ()
-				throws java.io.ObjectStreamException
-		{
+					throws java.io.ObjectStreamException {
 			return super.writeReplace ();
 		}
 		
-		private com.google.protobuf.ByteString getQueueBytes ()
-		{
+		private com.google.protobuf.ByteString getQueueBytes () {
 			final java.lang.Object ref = this.queue_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -8261,41 +7464,37 @@ public final class AmqpPayloads
 			}
 		}
 		
-		private void initFields ()
-		{
+		private void initFields () {
 			this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			this.queue_ = "";
 			this.autoAck_ = true;
 		}
 		
-		static {
-			defaultInstance = new GetRequest (true);
-			GetRequest.defaultInstance.initFields ();
-		}
+		private boolean autoAck_;
+		private int bitField0_;
+		private byte memoizedIsInitialized = -1;
+		private int memoizedSerializedSize = -1;
+		private java.lang.Object queue_;
+		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
 		
-		public static GetRequest getDefaultInstance ()
-		{
+		public static GetRequest getDefaultInstance () {
 			return GetRequest.defaultInstance;
 		}
 		
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-		{
+		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
 			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_GetRequest_descriptor;
 		}
 		
-		public static Builder newBuilder ()
-		{
+		public static Builder newBuilder () {
 			return Builder.create ();
 		}
 		
-		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest prototype)
-		{
+		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest prototype) {
 			return GetRequest.newBuilder ().mergeFrom (prototype);
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest parseDelimitedFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = GetRequest.newBuilder ();
 			if (builder.mergeDelimitedFrom (input)) {
 				return builder.buildParsed ();
@@ -8305,8 +7504,7 @@ public final class AmqpPayloads
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = GetRequest.newBuilder ();
 			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
 				return builder.buildParsed ();
@@ -8316,59 +7514,49 @@ public final class AmqpPayloads
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest parseFrom (final byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return GetRequest.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return GetRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest parseFrom (final com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return GetRequest.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return GetRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest parseFrom (final com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return GetRequest.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return GetRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest parseFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return GetRequest.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return GetRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
-		private boolean autoAck_;
-		private int bitField0_;
-		private byte memoizedIsInitialized = -1;
-		private int memoizedSerializedSize = -1;
-		private java.lang.Object queue_;
-		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
+		static {
+			defaultInstance = new GetRequest (true);
+			GetRequest.defaultInstance.initFields ();
+		}
 		// optional bool auto_ack = 3 [default = true];
 		public static final int AUTO_ACK_FIELD_NUMBER = 3;
 		// required string queue = 2;
@@ -8379,25 +7567,22 @@ public final class AmqpPayloads
 		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
-				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-					eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequestOrBuilder
+					extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+					implements
+						eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequestOrBuilder
 		{
 			// Construct using eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest.newBuilder()
-			private Builder ()
-			{
+			private Builder () {
 				this.maybeForceBuilderInitialization ();
 			}
 			
-			private Builder (final BuilderParent parent)
-			{
+			private Builder (final BuilderParent parent) {
 				super (parent);
 				this.maybeForceBuilderInitialization ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest build ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest build () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
@@ -8406,8 +7591,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest buildPartial ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest buildPartial () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest result = new eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest (this);
 				final int from_bitField0_ = this.bitField0_;
 				int to_bitField0_ = 0;
@@ -8433,8 +7617,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clear ()
-			{
+			public Builder clear () {
 				super.clear ();
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
@@ -8449,24 +7632,21 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder clearAutoAck ()
-			{
+			public Builder clearAutoAck () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000004);
 				this.autoAck_ = true;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearQueue ()
-			{
+			public Builder clearQueue () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000002);
 				this.queue_ = GetRequest.getDefaultInstance ().getQueue ();
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearToken ()
-			{
+			public Builder clearToken () {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 					this.onChanged ();
@@ -8478,32 +7658,27 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clone ()
-			{
+			public Builder clone () {
 				return Builder.create ().mergeFrom (this.buildPartial ());
 			}
 			
 			@Override
-			public boolean getAutoAck ()
-			{
+			public boolean getAutoAck () {
 				return this.autoAck_;
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest getDefaultInstanceForType ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest getDefaultInstanceForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest.getDefaultInstance ();
 			}
 			
 			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType ()
-			{
+			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest.getDescriptor ();
 			}
 			
 			@Override
-			public String getQueue ()
-			{
+			public String getQueue () {
 				final java.lang.Object ref = this.queue_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -8515,8 +7690,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 				if (this.tokenBuilder_ == null) {
 					return this.token_;
 				} else {
@@ -8524,16 +7698,14 @@ public final class AmqpPayloads
 				}
 			}
 			
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder () {
 				this.bitField0_ |= 0x00000001;
 				this.onChanged ();
 				return this.getTokenFieldBuilder ().getBuilder ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 				if (this.tokenBuilder_ != null) {
 					return this.tokenBuilder_.getMessageOrBuilder ();
 				} else {
@@ -8542,26 +7714,22 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public boolean hasAutoAck ()
-			{
+			public boolean hasAutoAck () {
 				return ((this.bitField0_ & 0x00000004) == 0x00000004);
 			}
 			
 			@Override
-			public boolean hasQueue ()
-			{
+			public boolean hasQueue () {
 				return ((this.bitField0_ & 0x00000002) == 0x00000002);
 			}
 			
 			@Override
-			public boolean hasToken ()
-			{
+			public boolean hasToken () {
 				return ((this.bitField0_ & 0x00000001) == 0x00000001);
 			}
 			
 			@Override
-			public final boolean isInitialized ()
-			{
+			public final boolean isInitialized () {
 				if (!this.hasToken ()) {
 					return false;
 				}
@@ -8576,8 +7744,7 @@ public final class AmqpPayloads
 			
 			@Override
 			public Builder mergeFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException
-			{
+						throws java.io.IOException {
 				final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder (this.getUnknownFields ());
 				while (true) {
 					final int tag = input.readTag ();
@@ -8586,7 +7753,7 @@ public final class AmqpPayloads
 							this.setUnknownFields (unknownFields.build ());
 							this.onChanged ();
 							return this;
-						default: {
+						default : {
 							if (!this.parseUnknownField (input, unknownFields, extensionRegistry, tag)) {
 								this.setUnknownFields (unknownFields.build ());
 								this.onChanged ();
@@ -8618,8 +7785,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder mergeFrom (final com.google.protobuf.Message other)
-			{
+			public Builder mergeFrom (final com.google.protobuf.Message other) {
 				if (other instanceof eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest) {
 					return this.mergeFrom ((eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest) other);
 				} else {
@@ -8628,8 +7794,7 @@ public final class AmqpPayloads
 				}
 			}
 			
-			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest other)
-			{
+			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest other) {
 				if (other == eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest.getDefaultInstance ())
 					return this;
 				if (other.hasToken ()) {
@@ -8645,8 +7810,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (((this.bitField0_ & 0x00000001) == 0x00000001) && (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ())) {
 						this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.newBuilder (this.token_).mergeFrom (value).buildPartial ();
@@ -8661,16 +7825,14 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setAutoAck (final boolean value)
-			{
+			public Builder setAutoAck (final boolean value) {
 				this.bitField0_ |= 0x00000004;
 				this.autoAck_ = value;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder setQueue (final String value)
-			{
+			public Builder setQueue (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -8680,8 +7842,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (value == null) {
 						throw new NullPointerException ();
@@ -8695,8 +7856,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = builderForValue.build ();
 					this.onChanged ();
@@ -8708,21 +7868,18 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-			{
+			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_GetRequest_fieldAccessorTable;
 			}
 			
-			void setQueue (final com.google.protobuf.ByteString value)
-			{
+			void setQueue (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000002;
 				this.queue_ = value;
 				this.onChanged ();
 			}
 			
 			private eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest buildParsed ()
-					throws com.google.protobuf.InvalidProtocolBufferException
-			{
+						throws com.google.protobuf.InvalidProtocolBufferException {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
@@ -8730,8 +7887,7 @@ public final class AmqpPayloads
 				return result;
 			}
 			
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder ()
-			{
+			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder () {
 				if (this.tokenBuilder_ == null) {
 					this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> (this.token_, this.getParentForChildren (), this.isClean ());
 					this.token_ = null;
@@ -8739,21 +7895,10 @@ public final class AmqpPayloads
 				return this.tokenBuilder_;
 			}
 			
-			private void maybeForceBuilderInitialization ()
-			{
+			private void maybeForceBuilderInitialization () {
 				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
 					this.getTokenFieldBuilder ();
 				}
-			}
-			
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-			{
-				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_GetRequest_descriptor;
-			}
-			
-			private static Builder create ()
-			{
-				return new Builder ();
 			}
 			
 			// optional bool auto_ack = 3 [default = true];
@@ -8764,14 +7909,22 @@ public final class AmqpPayloads
 			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
+			
 			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.amqp.GetRequest)
+			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_GetRequest_descriptor;
+			}
+			
+			private static Builder create () {
+				return new Builder ();
+			}
 		}
 		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.amqp.GetRequest)
 	}
 	
 	public interface GetRequestOrBuilder
-			extends
-				com.google.protobuf.MessageOrBuilder
+				extends
+					com.google.protobuf.MessageOrBuilder
 	{
 		boolean getAutoAck ();
 		
@@ -8792,22 +7945,19 @@ public final class AmqpPayloads
 	}
 	
 	public static final class PublishRequest
-			extends com.google.protobuf.GeneratedMessage
-			implements
-				PublishRequestOrBuilder
+				extends com.google.protobuf.GeneratedMessage
+				implements
+					PublishRequestOrBuilder
 	{
-		private PublishRequest (final boolean noInit)
-		{}
+		private PublishRequest (final boolean noInit) {}
 		
 		// Use PublishRequest.newBuilder() to construct.
-		private PublishRequest (final Builder builder)
-		{
+		private PublishRequest (final Builder builder) {
 			super (builder);
 		}
 		
 		@Override
-		public String getCorrelationId ()
-		{
+		public String getCorrelationId () {
 			final java.lang.Object ref = this.correlationId_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -8822,38 +7972,32 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public com.google.protobuf.ByteString getData ()
-		{
+		public com.google.protobuf.ByteString getData () {
 			return this.data_;
 		}
 		
 		@Override
-		public PublishRequest getDefaultInstanceForType ()
-		{
+		public PublishRequest getDefaultInstanceForType () {
 			return PublishRequest.defaultInstance;
 		}
 		
 		@Override
-		public boolean getDurable ()
-		{
+		public boolean getDurable () {
 			return this.durable_;
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope getEnvelope ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope getEnvelope () {
 			return this.envelope_;
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder getEnvelopeOrBuilder ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder getEnvelopeOrBuilder () {
 			return this.envelope_;
 		}
 		
 		@Override
-		public String getExchange ()
-		{
+		public String getExchange () {
 			final java.lang.Object ref = this.exchange_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -8868,20 +8012,17 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public boolean getImmediate ()
-		{
+		public boolean getImmediate () {
 			return this.immediate_;
 		}
 		
 		@Override
-		public boolean getMandatory ()
-		{
+		public boolean getMandatory () {
 			return this.mandatory_;
 		}
 		
 		@Override
-		public String getReplyTo ()
-		{
+		public String getReplyTo () {
 			final java.lang.Object ref = this.replyTo_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -8896,8 +8037,7 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public String getRoutingKey ()
-		{
+		public String getRoutingKey () {
 			final java.lang.Object ref = this.routingKey_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -8912,8 +8052,7 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public int getSerializedSize ()
-		{
+		public int getSerializedSize () {
 			int size = this.memoizedSerializedSize;
 			if (size != -1)
 				return size;
@@ -8954,80 +8093,67 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 			return this.token_;
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 			return this.token_;
 		}
 		
 		@Override
-		public boolean hasCorrelationId ()
-		{
+		public boolean hasCorrelationId () {
 			return ((this.bitField0_ & 0x00000100) == 0x00000100);
 		}
 		
 		@Override
-		public boolean hasData ()
-		{
+		public boolean hasData () {
 			return ((this.bitField0_ & 0x00000002) == 0x00000002);
 		}
 		
 		@Override
-		public boolean hasDurable ()
-		{
+		public boolean hasDurable () {
 			return ((this.bitField0_ & 0x00000004) == 0x00000004);
 		}
 		
 		@Override
-		public boolean hasEnvelope ()
-		{
+		public boolean hasEnvelope () {
 			return ((this.bitField0_ & 0x00000080) == 0x00000080);
 		}
 		
 		@Override
-		public boolean hasExchange ()
-		{
+		public boolean hasExchange () {
 			return ((this.bitField0_ & 0x00000008) == 0x00000008);
 		}
 		
 		@Override
-		public boolean hasImmediate ()
-		{
+		public boolean hasImmediate () {
 			return ((this.bitField0_ & 0x00000010) == 0x00000010);
 		}
 		
 		@Override
-		public boolean hasMandatory ()
-		{
+		public boolean hasMandatory () {
 			return ((this.bitField0_ & 0x00000020) == 0x00000020);
 		}
 		
 		@Override
-		public boolean hasReplyTo ()
-		{
+		public boolean hasReplyTo () {
 			return ((this.bitField0_ & 0x00000200) == 0x00000200);
 		}
 		
 		@Override
-		public boolean hasRoutingKey ()
-		{
+		public boolean hasRoutingKey () {
 			return ((this.bitField0_ & 0x00000040) == 0x00000040);
 		}
 		
 		@Override
-		public boolean hasToken ()
-		{
+		public boolean hasToken () {
 			return ((this.bitField0_ & 0x00000001) == 0x00000001);
 		}
 		
 		@Override
-		public final boolean isInitialized ()
-		{
+		public final boolean isInitialized () {
 			final byte isInitialized = this.memoizedIsInitialized;
 			if (isInitialized != -1)
 				return isInitialized == 1;
@@ -9064,21 +8190,18 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public Builder newBuilderForType ()
-		{
+		public Builder newBuilderForType () {
 			return PublishRequest.newBuilder ();
 		}
 		
 		@Override
-		public Builder toBuilder ()
-		{
+		public Builder toBuilder () {
 			return PublishRequest.newBuilder (this);
 		}
 		
 		@Override
 		public void writeTo (final com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			this.getSerializedSize ();
 			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
 				output.writeMessage (1, this.token_);
@@ -9114,27 +8237,23 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-		{
+		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_PublishRequest_fieldAccessorTable;
 		}
 		
 		@java.lang.Override
-		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent)
-		{
+		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent) {
 			final Builder builder = new Builder (parent);
 			return builder;
 		}
 		
 		@java.lang.Override
 		protected java.lang.Object writeReplace ()
-				throws java.io.ObjectStreamException
-		{
+					throws java.io.ObjectStreamException {
 			return super.writeReplace ();
 		}
 		
-		private com.google.protobuf.ByteString getCorrelationIdBytes ()
-		{
+		private com.google.protobuf.ByteString getCorrelationIdBytes () {
 			final java.lang.Object ref = this.correlationId_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -9145,8 +8264,7 @@ public final class AmqpPayloads
 			}
 		}
 		
-		private com.google.protobuf.ByteString getExchangeBytes ()
-		{
+		private com.google.protobuf.ByteString getExchangeBytes () {
 			final java.lang.Object ref = this.exchange_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -9157,8 +8275,7 @@ public final class AmqpPayloads
 			}
 		}
 		
-		private com.google.protobuf.ByteString getReplyToBytes ()
-		{
+		private com.google.protobuf.ByteString getReplyToBytes () {
 			final java.lang.Object ref = this.replyTo_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -9169,8 +8286,7 @@ public final class AmqpPayloads
 			}
 		}
 		
-		private com.google.protobuf.ByteString getRoutingKeyBytes ()
-		{
+		private com.google.protobuf.ByteString getRoutingKeyBytes () {
 			final java.lang.Object ref = this.routingKey_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -9181,8 +8297,7 @@ public final class AmqpPayloads
 			}
 		}
 		
-		private void initFields ()
-		{
+		private void initFields () {
 			this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			this.data_ = com.google.protobuf.ByteString.EMPTY;
 			this.durable_ = false;
@@ -9193,101 +8308,6 @@ public final class AmqpPayloads
 			this.envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ();
 			this.correlationId_ = "";
 			this.replyTo_ = "";
-		}
-		
-		static {
-			defaultInstance = new PublishRequest (true);
-			PublishRequest.defaultInstance.initFields ();
-		}
-		
-		public static PublishRequest getDefaultInstance ()
-		{
-			return PublishRequest.defaultInstance;
-		}
-		
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-		{
-			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_PublishRequest_descriptor;
-		}
-		
-		public static Builder newBuilder ()
-		{
-			return Builder.create ();
-		}
-		
-		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest prototype)
-		{
-			return PublishRequest.newBuilder ().mergeFrom (prototype);
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest parseDelimitedFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
-			final Builder builder = PublishRequest.newBuilder ();
-			if (builder.mergeDelimitedFrom (input)) {
-				return builder.buildParsed ();
-			} else {
-				return null;
-			}
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
-			final Builder builder = PublishRequest.newBuilder ();
-			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
-				return builder.buildParsed ();
-			} else {
-				return null;
-			}
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest parseFrom (final byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
-			return PublishRequest.newBuilder ().mergeFrom (data).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
-			return PublishRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest parseFrom (final com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
-			return PublishRequest.newBuilder ().mergeFrom (data).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
-			return PublishRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest parseFrom (final com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException
-		{
-			return PublishRequest.newBuilder ().mergeFrom (input).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
-			return PublishRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest parseFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
-			return PublishRequest.newBuilder ().mergeFrom (input).buildParsed ();
-		}
-		
-		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
-			return PublishRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
 		private int bitField0_;
@@ -9303,6 +8323,87 @@ public final class AmqpPayloads
 		private java.lang.Object replyTo_;
 		private java.lang.Object routingKey_;
 		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
+		
+		public static PublishRequest getDefaultInstance () {
+			return PublishRequest.defaultInstance;
+		}
+		
+		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_PublishRequest_descriptor;
+		}
+		
+		public static Builder newBuilder () {
+			return Builder.create ();
+		}
+		
+		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest prototype) {
+			return PublishRequest.newBuilder ().mergeFrom (prototype);
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest parseDelimitedFrom (final java.io.InputStream input)
+					throws java.io.IOException {
+			final Builder builder = PublishRequest.newBuilder ();
+			if (builder.mergeDelimitedFrom (input)) {
+				return builder.buildParsed ();
+			} else {
+				return null;
+			}
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws java.io.IOException {
+			final Builder builder = PublishRequest.newBuilder ();
+			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
+				return builder.buildParsed ();
+			} else {
+				return null;
+			}
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest parseFrom (final byte[] data)
+					throws com.google.protobuf.InvalidProtocolBufferException {
+			return PublishRequest.newBuilder ().mergeFrom (data).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws com.google.protobuf.InvalidProtocolBufferException {
+			return PublishRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest parseFrom (final com.google.protobuf.ByteString data)
+					throws com.google.protobuf.InvalidProtocolBufferException {
+			return PublishRequest.newBuilder ().mergeFrom (data).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws com.google.protobuf.InvalidProtocolBufferException {
+			return PublishRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest parseFrom (final com.google.protobuf.CodedInputStream input)
+					throws java.io.IOException {
+			return PublishRequest.newBuilder ().mergeFrom (input).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws java.io.IOException {
+			return PublishRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest parseFrom (final java.io.InputStream input)
+					throws java.io.IOException {
+			return PublishRequest.newBuilder ().mergeFrom (input).buildParsed ();
+		}
+		
+		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+					throws java.io.IOException {
+			return PublishRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
+		}
+		
+		static {
+			defaultInstance = new PublishRequest (true);
+			PublishRequest.defaultInstance.initFields ();
+		}
 		// optional string correlation_id = 9;
 		public static final int CORRELATION_ID_FIELD_NUMBER = 9;
 		// required bytes data = 2;
@@ -9327,25 +8428,22 @@ public final class AmqpPayloads
 		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
-				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-					eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequestOrBuilder
+					extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+					implements
+						eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequestOrBuilder
 		{
 			// Construct using eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest.newBuilder()
-			private Builder ()
-			{
+			private Builder () {
 				this.maybeForceBuilderInitialization ();
 			}
 			
-			private Builder (final BuilderParent parent)
-			{
+			private Builder (final BuilderParent parent) {
 				super (parent);
 				this.maybeForceBuilderInitialization ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest build ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest build () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
@@ -9354,8 +8452,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest buildPartial ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest buildPartial () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest result = new eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest (this);
 				final int from_bitField0_ = this.bitField0_;
 				int to_bitField0_ = 0;
@@ -9413,8 +8510,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clear ()
-			{
+			public Builder clear () {
 				super.clear ();
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
@@ -9447,32 +8543,28 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder clearCorrelationId ()
-			{
+			public Builder clearCorrelationId () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000100);
 				this.correlationId_ = PublishRequest.getDefaultInstance ().getCorrelationId ();
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearData ()
-			{
+			public Builder clearData () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000002);
 				this.data_ = PublishRequest.getDefaultInstance ().getData ();
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearDurable ()
-			{
+			public Builder clearDurable () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000004);
 				this.durable_ = false;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearEnvelope ()
-			{
+			public Builder clearEnvelope () {
 				if (this.envelopeBuilder_ == null) {
 					this.envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ();
 					this.onChanged ();
@@ -9483,48 +8575,42 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder clearExchange ()
-			{
+			public Builder clearExchange () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000008);
 				this.exchange_ = PublishRequest.getDefaultInstance ().getExchange ();
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearImmediate ()
-			{
+			public Builder clearImmediate () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000010);
 				this.immediate_ = true;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearMandatory ()
-			{
+			public Builder clearMandatory () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000020);
 				this.mandatory_ = true;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearReplyTo ()
-			{
+			public Builder clearReplyTo () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000200);
 				this.replyTo_ = PublishRequest.getDefaultInstance ().getReplyTo ();
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearRoutingKey ()
-			{
+			public Builder clearRoutingKey () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000040);
 				this.routingKey_ = PublishRequest.getDefaultInstance ().getRoutingKey ();
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearToken ()
-			{
+			public Builder clearToken () {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 					this.onChanged ();
@@ -9536,14 +8622,12 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clone ()
-			{
+			public Builder clone () {
 				return Builder.create ().mergeFrom (this.buildPartial ());
 			}
 			
 			@Override
-			public String getCorrelationId ()
-			{
+			public String getCorrelationId () {
 				final java.lang.Object ref = this.correlationId_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -9555,32 +8639,27 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public com.google.protobuf.ByteString getData ()
-			{
+			public com.google.protobuf.ByteString getData () {
 				return this.data_;
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest getDefaultInstanceForType ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest getDefaultInstanceForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest.getDefaultInstance ();
 			}
 			
 			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType ()
-			{
+			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest.getDescriptor ();
 			}
 			
 			@Override
-			public boolean getDurable ()
-			{
+			public boolean getDurable () {
 				return this.durable_;
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope getEnvelope ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope getEnvelope () {
 				if (this.envelopeBuilder_ == null) {
 					return this.envelope_;
 				} else {
@@ -9588,16 +8667,14 @@ public final class AmqpPayloads
 				}
 			}
 			
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder getEnvelopeBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder getEnvelopeBuilder () {
 				this.bitField0_ |= 0x00000080;
 				this.onChanged ();
 				return this.getEnvelopeFieldBuilder ().getBuilder ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder getEnvelopeOrBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder getEnvelopeOrBuilder () {
 				if (this.envelopeBuilder_ != null) {
 					return this.envelopeBuilder_.getMessageOrBuilder ();
 				} else {
@@ -9606,8 +8683,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public String getExchange ()
-			{
+			public String getExchange () {
 				final java.lang.Object ref = this.exchange_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -9619,20 +8695,17 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public boolean getImmediate ()
-			{
+			public boolean getImmediate () {
 				return this.immediate_;
 			}
 			
 			@Override
-			public boolean getMandatory ()
-			{
+			public boolean getMandatory () {
 				return this.mandatory_;
 			}
 			
 			@Override
-			public String getReplyTo ()
-			{
+			public String getReplyTo () {
 				final java.lang.Object ref = this.replyTo_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -9644,8 +8717,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public String getRoutingKey ()
-			{
+			public String getRoutingKey () {
 				final java.lang.Object ref = this.routingKey_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -9657,8 +8729,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 				if (this.tokenBuilder_ == null) {
 					return this.token_;
 				} else {
@@ -9666,16 +8737,14 @@ public final class AmqpPayloads
 				}
 			}
 			
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder () {
 				this.bitField0_ |= 0x00000001;
 				this.onChanged ();
 				return this.getTokenFieldBuilder ().getBuilder ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 				if (this.tokenBuilder_ != null) {
 					return this.tokenBuilder_.getMessageOrBuilder ();
 				} else {
@@ -9684,68 +8753,57 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public boolean hasCorrelationId ()
-			{
+			public boolean hasCorrelationId () {
 				return ((this.bitField0_ & 0x00000100) == 0x00000100);
 			}
 			
 			@Override
-			public boolean hasData ()
-			{
+			public boolean hasData () {
 				return ((this.bitField0_ & 0x00000002) == 0x00000002);
 			}
 			
 			@Override
-			public boolean hasDurable ()
-			{
+			public boolean hasDurable () {
 				return ((this.bitField0_ & 0x00000004) == 0x00000004);
 			}
 			
 			@Override
-			public boolean hasEnvelope ()
-			{
+			public boolean hasEnvelope () {
 				return ((this.bitField0_ & 0x00000080) == 0x00000080);
 			}
 			
 			@Override
-			public boolean hasExchange ()
-			{
+			public boolean hasExchange () {
 				return ((this.bitField0_ & 0x00000008) == 0x00000008);
 			}
 			
 			@Override
-			public boolean hasImmediate ()
-			{
+			public boolean hasImmediate () {
 				return ((this.bitField0_ & 0x00000010) == 0x00000010);
 			}
 			
 			@Override
-			public boolean hasMandatory ()
-			{
+			public boolean hasMandatory () {
 				return ((this.bitField0_ & 0x00000020) == 0x00000020);
 			}
 			
 			@Override
-			public boolean hasReplyTo ()
-			{
+			public boolean hasReplyTo () {
 				return ((this.bitField0_ & 0x00000200) == 0x00000200);
 			}
 			
 			@Override
-			public boolean hasRoutingKey ()
-			{
+			public boolean hasRoutingKey () {
 				return ((this.bitField0_ & 0x00000040) == 0x00000040);
 			}
 			
 			@Override
-			public boolean hasToken ()
-			{
+			public boolean hasToken () {
 				return ((this.bitField0_ & 0x00000001) == 0x00000001);
 			}
 			
 			@Override
-			public final boolean isInitialized ()
-			{
+			public final boolean isInitialized () {
 				if (!this.hasToken ()) {
 					return false;
 				}
@@ -9770,8 +8828,7 @@ public final class AmqpPayloads
 				return true;
 			}
 			
-			public Builder mergeEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope value)
-			{
+			public Builder mergeEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope value) {
 				if (this.envelopeBuilder_ == null) {
 					if (((this.bitField0_ & 0x00000080) == 0x00000080) && (this.envelope_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ())) {
 						this.envelope_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.newBuilder (this.envelope_).mergeFrom (value).buildPartial ();
@@ -9788,8 +8845,7 @@ public final class AmqpPayloads
 			
 			@Override
 			public Builder mergeFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException
-			{
+						throws java.io.IOException {
 				final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder (this.getUnknownFields ());
 				while (true) {
 					final int tag = input.readTag ();
@@ -9798,7 +8854,7 @@ public final class AmqpPayloads
 							this.setUnknownFields (unknownFields.build ());
 							this.onChanged ();
 							return this;
-						default: {
+						default : {
 							if (!this.parseUnknownField (input, unknownFields, extensionRegistry, tag)) {
 								this.setUnknownFields (unknownFields.build ());
 								this.onChanged ();
@@ -9869,8 +8925,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder mergeFrom (final com.google.protobuf.Message other)
-			{
+			public Builder mergeFrom (final com.google.protobuf.Message other) {
 				if (other instanceof eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest) {
 					return this.mergeFrom ((eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest) other);
 				} else {
@@ -9879,8 +8934,7 @@ public final class AmqpPayloads
 				}
 			}
 			
-			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest other)
-			{
+			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest other) {
 				if (other == eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest.getDefaultInstance ())
 					return this;
 				if (other.hasToken ()) {
@@ -9917,8 +8971,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (((this.bitField0_ & 0x00000001) == 0x00000001) && (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ())) {
 						this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.newBuilder (this.token_).mergeFrom (value).buildPartial ();
@@ -9933,8 +8986,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setCorrelationId (final String value)
-			{
+			public Builder setCorrelationId (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -9944,8 +8996,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setData (final com.google.protobuf.ByteString value)
-			{
+			public Builder setData (final com.google.protobuf.ByteString value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -9955,16 +9006,14 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setDurable (final boolean value)
-			{
+			public Builder setDurable (final boolean value) {
 				this.bitField0_ |= 0x00000004;
 				this.durable_ = value;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder setEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope value)
-			{
+			public Builder setEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope value) {
 				if (this.envelopeBuilder_ == null) {
 					if (value == null) {
 						throw new NullPointerException ();
@@ -9978,8 +9027,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder builderForValue)
-			{
+			public Builder setEnvelope (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder builderForValue) {
 				if (this.envelopeBuilder_ == null) {
 					this.envelope_ = builderForValue.build ();
 					this.onChanged ();
@@ -9990,8 +9038,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setExchange (final String value)
-			{
+			public Builder setExchange (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -10001,24 +9048,21 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setImmediate (final boolean value)
-			{
+			public Builder setImmediate (final boolean value) {
 				this.bitField0_ |= 0x00000010;
 				this.immediate_ = value;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder setMandatory (final boolean value)
-			{
+			public Builder setMandatory (final boolean value) {
 				this.bitField0_ |= 0x00000020;
 				this.mandatory_ = value;
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder setReplyTo (final String value)
-			{
+			public Builder setReplyTo (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -10028,8 +9072,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setRoutingKey (final String value)
-			{
+			public Builder setRoutingKey (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -10039,8 +9082,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (value == null) {
 						throw new NullPointerException ();
@@ -10054,8 +9096,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = builderForValue.build ();
 					this.onChanged ();
@@ -10067,42 +9108,36 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-			{
+			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_PublishRequest_fieldAccessorTable;
 			}
 			
-			void setCorrelationId (final com.google.protobuf.ByteString value)
-			{
+			void setCorrelationId (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000100;
 				this.correlationId_ = value;
 				this.onChanged ();
 			}
 			
-			void setExchange (final com.google.protobuf.ByteString value)
-			{
+			void setExchange (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000008;
 				this.exchange_ = value;
 				this.onChanged ();
 			}
 			
-			void setReplyTo (final com.google.protobuf.ByteString value)
-			{
+			void setReplyTo (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000200;
 				this.replyTo_ = value;
 				this.onChanged ();
 			}
 			
-			void setRoutingKey (final com.google.protobuf.ByteString value)
-			{
+			void setRoutingKey (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000040;
 				this.routingKey_ = value;
 				this.onChanged ();
 			}
 			
 			private eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest buildParsed ()
-					throws com.google.protobuf.InvalidProtocolBufferException
-			{
+						throws com.google.protobuf.InvalidProtocolBufferException {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
@@ -10110,8 +9145,7 @@ public final class AmqpPayloads
 				return result;
 			}
 			
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope, eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder> getEnvelopeFieldBuilder ()
-			{
+			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope, eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder> getEnvelopeFieldBuilder () {
 				if (this.envelopeBuilder_ == null) {
 					this.envelopeBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope, eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder> (this.envelope_, this.getParentForChildren (), this.isClean ());
 					this.envelope_ = null;
@@ -10119,8 +9153,7 @@ public final class AmqpPayloads
 				return this.envelopeBuilder_;
 			}
 			
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder ()
-			{
+			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder () {
 				if (this.tokenBuilder_ == null) {
 					this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> (this.token_, this.getParentForChildren (), this.isClean ());
 					this.token_ = null;
@@ -10128,22 +9161,11 @@ public final class AmqpPayloads
 				return this.tokenBuilder_;
 			}
 			
-			private void maybeForceBuilderInitialization ()
-			{
+			private void maybeForceBuilderInitialization () {
 				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
 					this.getTokenFieldBuilder ();
 					this.getEnvelopeFieldBuilder ();
 				}
-			}
-			
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-			{
-				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_PublishRequest_descriptor;
-			}
-			
-			private static Builder create ()
-			{
-				return new Builder ();
 			}
 			
 			private int bitField0_;
@@ -10169,14 +9191,22 @@ public final class AmqpPayloads
 			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
+			
 			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.amqp.PublishRequest)
+			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_PublishRequest_descriptor;
+			}
+			
+			private static Builder create () {
+				return new Builder ();
+			}
 		}
 		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.amqp.PublishRequest)
 	}
 	
 	public interface PublishRequestOrBuilder
-			extends
-				com.google.protobuf.MessageOrBuilder
+				extends
+					com.google.protobuf.MessageOrBuilder
 	{
 		String getCorrelationId ();
 		
@@ -10234,22 +9264,19 @@ public final class AmqpPayloads
 	}
 	
 	public static final class ServerCancelRequest
-			extends com.google.protobuf.GeneratedMessage
-			implements
-				ServerCancelRequestOrBuilder
+				extends com.google.protobuf.GeneratedMessage
+				implements
+					ServerCancelRequestOrBuilder
 	{
-		private ServerCancelRequest (final boolean noInit)
-		{}
+		private ServerCancelRequest (final boolean noInit) {}
 		
 		// Use ServerCancelRequest.newBuilder() to construct.
-		private ServerCancelRequest (final Builder builder)
-		{
+		private ServerCancelRequest (final Builder builder) {
 			super (builder);
 		}
 		
 		@Override
-		public String getConsumerTag ()
-		{
+		public String getConsumerTag () {
 			final java.lang.Object ref = this.consumerTag_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -10264,14 +9291,12 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public ServerCancelRequest getDefaultInstanceForType ()
-		{
+		public ServerCancelRequest getDefaultInstanceForType () {
 			return ServerCancelRequest.defaultInstance;
 		}
 		
 		@Override
-		public int getSerializedSize ()
-		{
+		public int getSerializedSize () {
 			int size = this.memoizedSerializedSize;
 			if (size != -1)
 				return size;
@@ -10285,14 +9310,12 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public boolean hasConsumerTag ()
-		{
+		public boolean hasConsumerTag () {
 			return ((this.bitField0_ & 0x00000001) == 0x00000001);
 		}
 		
 		@Override
-		public final boolean isInitialized ()
-		{
+		public final boolean isInitialized () {
 			final byte isInitialized = this.memoizedIsInitialized;
 			if (isInitialized != -1)
 				return isInitialized == 1;
@@ -10305,21 +9328,18 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public Builder newBuilderForType ()
-		{
+		public Builder newBuilderForType () {
 			return ServerCancelRequest.newBuilder ();
 		}
 		
 		@Override
-		public Builder toBuilder ()
-		{
+		public Builder toBuilder () {
 			return ServerCancelRequest.newBuilder (this);
 		}
 		
 		@Override
 		public void writeTo (final com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			this.getSerializedSize ();
 			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
 				output.writeBytes (1, this.getConsumerTagBytes ());
@@ -10328,27 +9348,23 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-		{
+		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ServerCancelRequest_fieldAccessorTable;
 		}
 		
 		@java.lang.Override
-		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent)
-		{
+		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent) {
 			final Builder builder = new Builder (parent);
 			return builder;
 		}
 		
 		@java.lang.Override
 		protected java.lang.Object writeReplace ()
-				throws java.io.ObjectStreamException
-		{
+					throws java.io.ObjectStreamException {
 			return super.writeReplace ();
 		}
 		
-		private com.google.protobuf.ByteString getConsumerTagBytes ()
-		{
+		private com.google.protobuf.ByteString getConsumerTagBytes () {
 			final java.lang.Object ref = this.consumerTag_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -10359,39 +9375,33 @@ public final class AmqpPayloads
 			}
 		}
 		
-		private void initFields ()
-		{
+		private void initFields () {
 			this.consumerTag_ = "";
 		}
 		
-		static {
-			defaultInstance = new ServerCancelRequest (true);
-			ServerCancelRequest.defaultInstance.initFields ();
-		}
+		private int bitField0_;
+		private java.lang.Object consumerTag_;
+		private byte memoizedIsInitialized = -1;
+		private int memoizedSerializedSize = -1;
 		
-		public static ServerCancelRequest getDefaultInstance ()
-		{
+		public static ServerCancelRequest getDefaultInstance () {
 			return ServerCancelRequest.defaultInstance;
 		}
 		
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-		{
+		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
 			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ServerCancelRequest_descriptor;
 		}
 		
-		public static Builder newBuilder ()
-		{
+		public static Builder newBuilder () {
 			return Builder.create ();
 		}
 		
-		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest prototype)
-		{
+		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest prototype) {
 			return ServerCancelRequest.newBuilder ().mergeFrom (prototype);
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest parseDelimitedFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = ServerCancelRequest.newBuilder ();
 			if (builder.mergeDelimitedFrom (input)) {
 				return builder.buildParsed ();
@@ -10401,8 +9411,7 @@ public final class AmqpPayloads
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = ServerCancelRequest.newBuilder ();
 			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
 				return builder.buildParsed ();
@@ -10412,82 +9421,71 @@ public final class AmqpPayloads
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest parseFrom (final byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return ServerCancelRequest.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return ServerCancelRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest parseFrom (final com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return ServerCancelRequest.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return ServerCancelRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest parseFrom (final com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return ServerCancelRequest.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return ServerCancelRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest parseFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return ServerCancelRequest.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return ServerCancelRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
-		private int bitField0_;
-		private java.lang.Object consumerTag_;
-		private byte memoizedIsInitialized = -1;
-		private int memoizedSerializedSize = -1;
+		static {
+			defaultInstance = new ServerCancelRequest (true);
+			ServerCancelRequest.defaultInstance.initFields ();
+		}
 		// required string consumer_tag = 1;
 		public static final int CONSUMER_TAG_FIELD_NUMBER = 1;
 		private static final ServerCancelRequest defaultInstance;
 		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
-				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-					eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequestOrBuilder
+					extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+					implements
+						eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequestOrBuilder
 		{
 			// Construct using eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest.newBuilder()
-			private Builder ()
-			{
+			private Builder () {
 				this.maybeForceBuilderInitialization ();
 			}
 			
-			private Builder (final BuilderParent parent)
-			{
+			private Builder (final BuilderParent parent) {
 				super (parent);
 				this.maybeForceBuilderInitialization ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest build ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest build () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
@@ -10496,8 +9494,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest buildPartial ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest buildPartial () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest result = new eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest (this);
 				final int from_bitField0_ = this.bitField0_;
 				int to_bitField0_ = 0;
@@ -10511,16 +9508,14 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clear ()
-			{
+			public Builder clear () {
 				super.clear ();
 				this.consumerTag_ = "";
 				this.bitField0_ = (this.bitField0_ & ~0x00000001);
 				return this;
 			}
 			
-			public Builder clearConsumerTag ()
-			{
+			public Builder clearConsumerTag () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000001);
 				this.consumerTag_ = ServerCancelRequest.getDefaultInstance ().getConsumerTag ();
 				this.onChanged ();
@@ -10528,14 +9523,12 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clone ()
-			{
+			public Builder clone () {
 				return Builder.create ().mergeFrom (this.buildPartial ());
 			}
 			
 			@Override
-			public String getConsumerTag ()
-			{
+			public String getConsumerTag () {
 				final java.lang.Object ref = this.consumerTag_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -10547,26 +9540,22 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest getDefaultInstanceForType ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest getDefaultInstanceForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest.getDefaultInstance ();
 			}
 			
 			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType ()
-			{
+			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest.getDescriptor ();
 			}
 			
 			@Override
-			public boolean hasConsumerTag ()
-			{
+			public boolean hasConsumerTag () {
 				return ((this.bitField0_ & 0x00000001) == 0x00000001);
 			}
 			
 			@Override
-			public final boolean isInitialized ()
-			{
+			public final boolean isInitialized () {
 				if (!this.hasConsumerTag ()) {
 					return false;
 				}
@@ -10575,8 +9564,7 @@ public final class AmqpPayloads
 			
 			@Override
 			public Builder mergeFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException
-			{
+						throws java.io.IOException {
 				final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder (this.getUnknownFields ());
 				while (true) {
 					final int tag = input.readTag ();
@@ -10585,7 +9573,7 @@ public final class AmqpPayloads
 							this.setUnknownFields (unknownFields.build ());
 							this.onChanged ();
 							return this;
-						default: {
+						default : {
 							if (!this.parseUnknownField (input, unknownFields, extensionRegistry, tag)) {
 								this.setUnknownFields (unknownFields.build ());
 								this.onChanged ();
@@ -10603,8 +9591,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder mergeFrom (final com.google.protobuf.Message other)
-			{
+			public Builder mergeFrom (final com.google.protobuf.Message other) {
 				if (other instanceof eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest) {
 					return this.mergeFrom ((eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest) other);
 				} else {
@@ -10613,8 +9600,7 @@ public final class AmqpPayloads
 				}
 			}
 			
-			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest other)
-			{
+			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest other) {
 				if (other == eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest.getDefaultInstance ())
 					return this;
 				if (other.hasConsumerTag ()) {
@@ -10624,8 +9610,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setConsumerTag (final String value)
-			{
+			public Builder setConsumerTag (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -10636,21 +9621,18 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-			{
+			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ServerCancelRequest_fieldAccessorTable;
 			}
 			
-			void setConsumerTag (final com.google.protobuf.ByteString value)
-			{
+			void setConsumerTag (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000001;
 				this.consumerTag_ = value;
 				this.onChanged ();
 			}
 			
 			private eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest buildParsed ()
-					throws com.google.protobuf.InvalidProtocolBufferException
-			{
+						throws com.google.protobuf.InvalidProtocolBufferException {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ServerCancelRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
@@ -10658,32 +9640,29 @@ public final class AmqpPayloads
 				return result;
 			}
 			
-			private void maybeForceBuilderInitialization ()
-			{
+			private void maybeForceBuilderInitialization () {
 				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {}
-			}
-			
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-			{
-				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ServerCancelRequest_descriptor;
-			}
-			
-			private static Builder create ()
-			{
-				return new Builder ();
 			}
 			
 			private int bitField0_;
 			// required string consumer_tag = 1;
 			private java.lang.Object consumerTag_ = "";
+			
 			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.amqp.ServerCancelRequest)
+			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ServerCancelRequest_descriptor;
+			}
+			
+			private static Builder create () {
+				return new Builder ();
+			}
 		}
 		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.amqp.ServerCancelRequest)
 	}
 	
 	public interface ServerCancelRequestOrBuilder
-			extends
-				com.google.protobuf.MessageOrBuilder
+				extends
+					com.google.protobuf.MessageOrBuilder
 	{
 		String getConsumerTag ();
 		
@@ -10692,22 +9671,19 @@ public final class AmqpPayloads
 	}
 	
 	public static final class ShutdownMessage
-			extends com.google.protobuf.GeneratedMessage
-			implements
-				ShutdownMessageOrBuilder
+				extends com.google.protobuf.GeneratedMessage
+				implements
+					ShutdownMessageOrBuilder
 	{
-		private ShutdownMessage (final boolean noInit)
-		{}
+		private ShutdownMessage (final boolean noInit) {}
 		
 		// Use ShutdownMessage.newBuilder() to construct.
-		private ShutdownMessage (final Builder builder)
-		{
+		private ShutdownMessage (final Builder builder) {
 			super (builder);
 		}
 		
 		@Override
-		public String getConsumerTag ()
-		{
+		public String getConsumerTag () {
 			final java.lang.Object ref = this.consumerTag_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -10722,14 +9698,12 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public ShutdownMessage getDefaultInstanceForType ()
-		{
+		public ShutdownMessage getDefaultInstanceForType () {
 			return ShutdownMessage.defaultInstance;
 		}
 		
 		@Override
-		public String getMessage ()
-		{
+		public String getMessage () {
 			final java.lang.Object ref = this.message_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -10744,8 +9718,7 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public int getSerializedSize ()
-		{
+		public int getSerializedSize () {
 			int size = this.memoizedSerializedSize;
 			if (size != -1)
 				return size;
@@ -10762,20 +9735,17 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public boolean hasConsumerTag ()
-		{
+		public boolean hasConsumerTag () {
 			return ((this.bitField0_ & 0x00000001) == 0x00000001);
 		}
 		
 		@Override
-		public boolean hasMessage ()
-		{
+		public boolean hasMessage () {
 			return ((this.bitField0_ & 0x00000002) == 0x00000002);
 		}
 		
 		@Override
-		public final boolean isInitialized ()
-		{
+		public final boolean isInitialized () {
 			final byte isInitialized = this.memoizedIsInitialized;
 			if (isInitialized != -1)
 				return isInitialized == 1;
@@ -10792,21 +9762,18 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		public Builder newBuilderForType ()
-		{
+		public Builder newBuilderForType () {
 			return ShutdownMessage.newBuilder ();
 		}
 		
 		@Override
-		public Builder toBuilder ()
-		{
+		public Builder toBuilder () {
 			return ShutdownMessage.newBuilder (this);
 		}
 		
 		@Override
 		public void writeTo (final com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			this.getSerializedSize ();
 			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
 				output.writeBytes (1, this.getConsumerTagBytes ());
@@ -10818,27 +9785,23 @@ public final class AmqpPayloads
 		}
 		
 		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-		{
+		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ShutdownMessage_fieldAccessorTable;
 		}
 		
 		@java.lang.Override
-		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent)
-		{
+		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent) {
 			final Builder builder = new Builder (parent);
 			return builder;
 		}
 		
 		@java.lang.Override
 		protected java.lang.Object writeReplace ()
-				throws java.io.ObjectStreamException
-		{
+					throws java.io.ObjectStreamException {
 			return super.writeReplace ();
 		}
 		
-		private com.google.protobuf.ByteString getConsumerTagBytes ()
-		{
+		private com.google.protobuf.ByteString getConsumerTagBytes () {
 			final java.lang.Object ref = this.consumerTag_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -10849,8 +9812,7 @@ public final class AmqpPayloads
 			}
 		}
 		
-		private com.google.protobuf.ByteString getMessageBytes ()
-		{
+		private com.google.protobuf.ByteString getMessageBytes () {
 			final java.lang.Object ref = this.message_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -10861,40 +9823,35 @@ public final class AmqpPayloads
 			}
 		}
 		
-		private void initFields ()
-		{
+		private void initFields () {
 			this.consumerTag_ = "";
 			this.message_ = "";
 		}
 		
-		static {
-			defaultInstance = new ShutdownMessage (true);
-			ShutdownMessage.defaultInstance.initFields ();
-		}
+		private int bitField0_;
+		private java.lang.Object consumerTag_;
+		private byte memoizedIsInitialized = -1;
+		private int memoizedSerializedSize = -1;
+		private java.lang.Object message_;
 		
-		public static ShutdownMessage getDefaultInstance ()
-		{
+		public static ShutdownMessage getDefaultInstance () {
 			return ShutdownMessage.defaultInstance;
 		}
 		
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-		{
+		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
 			return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ShutdownMessage_descriptor;
 		}
 		
-		public static Builder newBuilder ()
-		{
+		public static Builder newBuilder () {
 			return Builder.create ();
 		}
 		
-		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage prototype)
-		{
+		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage prototype) {
 			return ShutdownMessage.newBuilder ().mergeFrom (prototype);
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage parseDelimitedFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = ShutdownMessage.newBuilder ();
 			if (builder.mergeDelimitedFrom (input)) {
 				return builder.buildParsed ();
@@ -10904,8 +9861,7 @@ public final class AmqpPayloads
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = ShutdownMessage.newBuilder ();
 			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
 				return builder.buildParsed ();
@@ -10915,58 +9871,49 @@ public final class AmqpPayloads
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage parseFrom (final byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return ShutdownMessage.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return ShutdownMessage.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage parseFrom (final com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return ShutdownMessage.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return ShutdownMessage.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage parseFrom (final com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return ShutdownMessage.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return ShutdownMessage.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage parseFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return ShutdownMessage.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return ShutdownMessage.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
-		private int bitField0_;
-		private java.lang.Object consumerTag_;
-		private byte memoizedIsInitialized = -1;
-		private int memoizedSerializedSize = -1;
-		private java.lang.Object message_;
+		static {
+			defaultInstance = new ShutdownMessage (true);
+			ShutdownMessage.defaultInstance.initFields ();
+		}
 		// required string consumer_tag = 1;
 		public static final int CONSUMER_TAG_FIELD_NUMBER = 1;
 		// required string message = 2;
@@ -10975,25 +9922,22 @@ public final class AmqpPayloads
 		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
-				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-					eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessageOrBuilder
+					extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+					implements
+						eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessageOrBuilder
 		{
 			// Construct using eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage.newBuilder()
-			private Builder ()
-			{
+			private Builder () {
 				this.maybeForceBuilderInitialization ();
 			}
 			
-			private Builder (final BuilderParent parent)
-			{
+			private Builder (final BuilderParent parent) {
 				super (parent);
 				this.maybeForceBuilderInitialization ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage build ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage build () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
@@ -11002,8 +9946,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage buildPartial ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage buildPartial () {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage result = new eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage (this);
 				final int from_bitField0_ = this.bitField0_;
 				int to_bitField0_ = 0;
@@ -11021,8 +9964,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clear ()
-			{
+			public Builder clear () {
 				super.clear ();
 				this.consumerTag_ = "";
 				this.bitField0_ = (this.bitField0_ & ~0x00000001);
@@ -11031,16 +9973,14 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder clearConsumerTag ()
-			{
+			public Builder clearConsumerTag () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000001);
 				this.consumerTag_ = ShutdownMessage.getDefaultInstance ().getConsumerTag ();
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearMessage ()
-			{
+			public Builder clearMessage () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000002);
 				this.message_ = ShutdownMessage.getDefaultInstance ().getMessage ();
 				this.onChanged ();
@@ -11048,14 +9988,12 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder clone ()
-			{
+			public Builder clone () {
 				return Builder.create ().mergeFrom (this.buildPartial ());
 			}
 			
 			@Override
-			public String getConsumerTag ()
-			{
+			public String getConsumerTag () {
 				final java.lang.Object ref = this.consumerTag_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -11067,20 +10005,17 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage getDefaultInstanceForType ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage getDefaultInstanceForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage.getDefaultInstance ();
 			}
 			
 			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType ()
-			{
+			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage.getDescriptor ();
 			}
 			
 			@Override
-			public String getMessage ()
-			{
+			public String getMessage () {
 				final java.lang.Object ref = this.message_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -11092,20 +10027,17 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public boolean hasConsumerTag ()
-			{
+			public boolean hasConsumerTag () {
 				return ((this.bitField0_ & 0x00000001) == 0x00000001);
 			}
 			
 			@Override
-			public boolean hasMessage ()
-			{
+			public boolean hasMessage () {
 				return ((this.bitField0_ & 0x00000002) == 0x00000002);
 			}
 			
 			@Override
-			public final boolean isInitialized ()
-			{
+			public final boolean isInitialized () {
 				if (!this.hasConsumerTag ()) {
 					return false;
 				}
@@ -11117,8 +10049,7 @@ public final class AmqpPayloads
 			
 			@Override
 			public Builder mergeFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException
-			{
+						throws java.io.IOException {
 				final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder (this.getUnknownFields ());
 				while (true) {
 					final int tag = input.readTag ();
@@ -11127,7 +10058,7 @@ public final class AmqpPayloads
 							this.setUnknownFields (unknownFields.build ());
 							this.onChanged ();
 							return this;
-						default: {
+						default : {
 							if (!this.parseUnknownField (input, unknownFields, extensionRegistry, tag)) {
 								this.setUnknownFields (unknownFields.build ());
 								this.onChanged ();
@@ -11150,8 +10081,7 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			public Builder mergeFrom (final com.google.protobuf.Message other)
-			{
+			public Builder mergeFrom (final com.google.protobuf.Message other) {
 				if (other instanceof eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage) {
 					return this.mergeFrom ((eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage) other);
 				} else {
@@ -11160,8 +10090,7 @@ public final class AmqpPayloads
 				}
 			}
 			
-			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage other)
-			{
+			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage other) {
 				if (other == eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage.getDefaultInstance ())
 					return this;
 				if (other.hasConsumerTag ()) {
@@ -11174,8 +10103,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setConsumerTag (final String value)
-			{
+			public Builder setConsumerTag (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -11185,8 +10113,7 @@ public final class AmqpPayloads
 				return this;
 			}
 			
-			public Builder setMessage (final String value)
-			{
+			public Builder setMessage (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -11197,28 +10124,24 @@ public final class AmqpPayloads
 			}
 			
 			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-			{
+			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ShutdownMessage_fieldAccessorTable;
 			}
 			
-			void setConsumerTag (final com.google.protobuf.ByteString value)
-			{
+			void setConsumerTag (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000001;
 				this.consumerTag_ = value;
 				this.onChanged ();
 			}
 			
-			void setMessage (final com.google.protobuf.ByteString value)
-			{
+			void setMessage (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000002;
 				this.message_ = value;
 				this.onChanged ();
 			}
 			
 			private eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage buildParsed ()
-					throws com.google.protobuf.InvalidProtocolBufferException
-			{
+						throws com.google.protobuf.InvalidProtocolBufferException {
 				final eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.ShutdownMessage result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
@@ -11226,19 +10149,8 @@ public final class AmqpPayloads
 				return result;
 			}
 			
-			private void maybeForceBuilderInitialization ()
-			{
+			private void maybeForceBuilderInitialization () {
 				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {}
-			}
-			
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-			{
-				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ShutdownMessage_descriptor;
-			}
-			
-			private static Builder create ()
-			{
-				return new Builder ();
 			}
 			
 			private int bitField0_;
@@ -11246,14 +10158,22 @@ public final class AmqpPayloads
 			private java.lang.Object consumerTag_ = "";
 			// required string message = 2;
 			private java.lang.Object message_ = "";
+			
 			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.amqp.ShutdownMessage)
+			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+				return eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.internal_static_mosaic_cloud_idl_amqp_ShutdownMessage_descriptor;
+			}
+			
+			private static Builder create () {
+				return new Builder ();
+			}
 		}
 		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.amqp.ShutdownMessage)
 	}
 	
 	public interface ShutdownMessageOrBuilder
-			extends
-				com.google.protobuf.MessageOrBuilder
+				extends
+					com.google.protobuf.MessageOrBuilder
 	{
 		String getConsumerTag ();
 		

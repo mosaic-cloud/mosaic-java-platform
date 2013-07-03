@@ -49,12 +49,11 @@ import com.google.common.base.Preconditions;
  * Base class for connector proxys.
  * 
  * @author Georgiana Macariu
- * 
  */
 public abstract class BaseConnectorProxy
-		implements
-			SessionCallbacks,
-			IConnector
+			implements
+				SessionCallbacks,
+				IConnector
 {
 	/**
 	 * Creates a proxy for a resource.
@@ -62,8 +61,7 @@ public abstract class BaseConnectorProxy
 	 * @param channel
 	 *            the channel on which to communicate with the driver
 	 */
-	protected BaseConnectorProxy (final ConnectorConfiguration configuration)
-	{
+	protected BaseConnectorProxy (final ConnectorConfiguration configuration) {
 		super ();
 		Preconditions.checkNotNull (configuration);
 		this.configuration = configuration;
@@ -83,8 +81,7 @@ public abstract class BaseConnectorProxy
 	 *            the session
 	 */
 	@Override
-	public CallbackCompletion<Void> created (final Session session)
-	{
+	public CallbackCompletion<Void> created (final Session session) {
 		Preconditions.checkState (this.session == null);
 		this.session = session;
 		this.transcript.traceDebugging ("created the interoperability session `%{object:identity}`...", this.session);
@@ -98,8 +95,7 @@ public abstract class BaseConnectorProxy
 	 *            the session
 	 */
 	@Override
-	public CallbackCompletion<Void> destroyed (final Session session)
-	{
+	public CallbackCompletion<Void> destroyed (final Session session) {
 		Preconditions.checkState (this.session == session);
 		this.transcript.traceDebugging ("destroyed the interoperability session `%{object:identity}`...", this.session);
 		this.pendingRequests.cancelAll ();
@@ -115,29 +111,25 @@ public abstract class BaseConnectorProxy
 	 *            the exception
 	 */
 	@Override
-	public CallbackCompletion<Void> failed (final Session session, final Throwable exception)
-	{
+	public CallbackCompletion<Void> failed (final Session session, final Throwable exception) {
 		Preconditions.checkState (this.session == session);
 		this.transcript.traceWarning ("failed the interoperability session `%{object:identity}`...", this.session);
 		return (CallbackCompletion.createOutcome ());
 	}
 	
-	public String getIdentifier ()
-	{
+	public String getIdentifier () {
 		return (this.identifier);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> received (final Session session, final Message message)
-	{
+	public CallbackCompletion<Void> received (final Session session, final Message message) {
 		Preconditions.checkState (this.session == session);
 		this.transcript.traceDebugging ("received the interoperability message of type `%s`...", message.specification);
 		this.processResponse (message);
 		return (CallbackCompletion.createOutcome ());
 	}
 	
-	protected Envelope buildEnvelope (final EncodingMetadata metadata)
-	{
+	protected Envelope buildEnvelope (final EncodingMetadata metadata) {
 		final Envelope.Builder builder = Envelope.newBuilder ();
 		if (metadata.hasContentEncoding () && !EncodingMetadata.ANY.hasSameContentEncoding (metadata)) {
 			builder.setContentEncoding (metadata.getContentEncoding ());
@@ -152,8 +144,7 @@ public abstract class BaseConnectorProxy
 		return (builder.build ());
 	}
 	
-	protected CallbackCompletion<Void> connect (final SessionSpecification session, final Message initMessage)
-	{
+	protected CallbackCompletion<Void> connect (final SessionSpecification session, final Message initMessage) {
 		Preconditions.checkNotNull (session);
 		this.transcript.traceDebugging ("creating and connecting the interoperability session of type `%s`...", session);
 		final String driverEndpoint = this.configuration.getConfigParameter (ConfigProperties.GenericConnector_0, String.class, null);
@@ -175,8 +166,7 @@ public abstract class BaseConnectorProxy
 			final ResolverCallbacks resolverCallbacks = new ResolverCallbacks () {
 				@SuppressWarnings ("synthetic-access")
 				@Override
-				public CallbackCompletion<Void> resolved (final ChannelResolver resolver, final String target, final String peer, final String endpoint)
-				{
+				public CallbackCompletion<Void> resolved (final ChannelResolver resolver, final String target, final String peer, final String endpoint) {
 					Preconditions.checkState (driverTarget.equals (target));
 					Preconditions.checkState (peer != null);
 					Preconditions.checkState (endpoint != null);
@@ -202,8 +192,7 @@ public abstract class BaseConnectorProxy
 		return (result);
 	}
 	
-	protected CallbackCompletion<Void> disconnect (final Message finalMessage)
-	{
+	protected CallbackCompletion<Void> disconnect (final Message finalMessage) {
 		// FIXME: The disconnection should push the termination also to the
 		//-- interoperability layer.
 		//-- Currently the driver side has no idea that the connector was
@@ -217,8 +206,7 @@ public abstract class BaseConnectorProxy
 		return (CallbackCompletion.createOutcome ());
 	}
 	
-	protected CompletionToken generateToken ()
-	{
+	protected CompletionToken generateToken () {
 		final CompletionToken.Builder tokenBuilder = CompletionToken.newBuilder ();
 		tokenBuilder.setMessageId (UUID.randomUUID ().toString ());
 		tokenBuilder.setClientId (this.identifier);
@@ -243,8 +231,7 @@ public abstract class BaseConnectorProxy
 	 * @param request
 	 *            the request
 	 */
-	protected void sendMessage (final Message message)
-	{
+	protected void sendMessage (final Message message) {
 		// FIXME: Currently this is a hack to avoid a race condition introduced
 		//-- by the `connect` code above.
 		//-- For now we just busy-wait until the session object is available
@@ -258,14 +245,12 @@ public abstract class BaseConnectorProxy
 		this.session.send (message);
 	}
 	
-	protected void sendRequest (final Message message)
-	{
+	protected void sendRequest (final Message message) {
 		this.transcript.traceDebugging ("sending the asynchronous request with specification `%s`...", message.specification);
 		this.sendMessage (message);
 	}
 	
-	protected <TOutcome extends Object> CallbackCompletion<TOutcome> sendRequest (final Message message, final CompletionToken token, final Class<TOutcome> outcomeClass)
-	{
+	protected <TOutcome extends Object> CallbackCompletion<TOutcome> sendRequest (final Message message, final CompletionToken token, final Class<TOutcome> outcomeClass) {
 		this.transcript.traceDebugging ("registering and sending the pending request with specification `%s` and token `%s`...", message.specification, token.getMessageId ());
 		final CallbackCompletionDeferredFuture<TOutcome> future = CallbackCompletionDeferredFuture.create (outcomeClass);
 		this.pendingRequests.register (token.getMessageId (), future);

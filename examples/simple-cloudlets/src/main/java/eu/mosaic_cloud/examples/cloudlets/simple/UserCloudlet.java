@@ -45,18 +45,16 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public class UserCloudlet
 {
 	public static final class AmqpConsumerCallback
-			extends DefaultAmqpQueueConsumerConnectorCallback<UserCloudletContext, AuthenticationToken, Void>
+				extends DefaultAmqpQueueConsumerConnectorCallback<UserCloudletContext, AuthenticationToken, Void>
 	{
 		@Override
-		public CallbackCompletion<Void> acknowledgeSucceeded (final UserCloudletContext context, final GenericCallbackCompletionArguments<Void> arguments)
-		{
+		public CallbackCompletion<Void> acknowledgeSucceeded (final UserCloudletContext context, final GenericCallbackCompletionArguments<Void> arguments) {
 			context.cloudlet.destroy ();
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
-		public CallbackCompletion<Void> consume (final UserCloudletContext context, final AmqpQueueConsumeCallbackArguments<AuthenticationToken> arguments)
-		{
+		public CallbackCompletion<Void> consume (final UserCloudletContext context, final AmqpQueueConsumeCallbackArguments<AuthenticationToken> arguments) {
 			final AuthenticationToken data = arguments.getMessage ();
 			final String token = data.getToken ();
 			if (token != null) {
@@ -69,58 +67,51 @@ public class UserCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final UserCloudletContext context, final CallbackArguments arguments)
-		{
+		public CallbackCompletion<Void> destroySucceeded (final UserCloudletContext context, final CallbackArguments arguments) {
 			this.logger.info ("UserCloudlet consumer destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final UserCloudletContext context, final CallbackArguments arguments)
-		{
+		public CallbackCompletion<Void> initializeSucceeded (final UserCloudletContext context, final CallbackArguments arguments) {
 			this.logger.info ("UserCloudlet consumer initialized successfully.");
 			return ICallback.SUCCESS;
 		}
 	}
 	
 	public static final class AmqpPublisherCallback
-			extends DefaultAmqpPublisherConnectorCallback<UserCloudletContext, LoggingData, Void>
+				extends DefaultAmqpPublisherConnectorCallback<UserCloudletContext, LoggingData, Void>
 	{
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final UserCloudletContext context, final CallbackArguments arguments)
-		{
+		public CallbackCompletion<Void> destroySucceeded (final UserCloudletContext context, final CallbackArguments arguments) {
 			this.logger.info ("UserCloudlet publisher destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final UserCloudletContext context, final CallbackArguments arguments)
-		{
+		public CallbackCompletion<Void> initializeSucceeded (final UserCloudletContext context, final CallbackArguments arguments) {
 			this.logger.info ("UserCloudlet publisher initialized successfully.");
 			return ICallback.SUCCESS;
 		}
 	}
 	
 	public static final class LifeCycleHandler
-			extends DefaultCloudletCallback<UserCloudletContext>
+				extends DefaultCloudletCallback<UserCloudletContext>
 	{
 		@Override
-		public CallbackCompletion<Void> destroy (final UserCloudletContext context, final CloudletCallbackArguments<UserCloudletContext> arguments)
-		{
+		public CallbackCompletion<Void> destroy (final UserCloudletContext context, final CloudletCallbackArguments<UserCloudletContext> arguments) {
 			this.logger.info ("UserCloudlet destroying...");
 			return CallbackCompletion.createAndChained (context.consumer.destroy (), context.publisher.destroy ());
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final UserCloudletContext context, final CloudletCallbackCompletionArguments<UserCloudletContext> arguments)
-		{
+		public CallbackCompletion<Void> destroySucceeded (final UserCloudletContext context, final CloudletCallbackCompletionArguments<UserCloudletContext> arguments) {
 			this.logger.info ("UserCloudlet destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initialize (final UserCloudletContext context, final CloudletCallbackArguments<UserCloudletContext> arguments)
-		{
+		public CallbackCompletion<Void> initialize (final UserCloudletContext context, final CloudletCallbackArguments<UserCloudletContext> arguments) {
 			this.logger.info ("UserCloudlet initializing...");
 			context.cloudlet = arguments.getCloudlet ();
 			final IConfiguration configuration = context.cloudlet.getConfiguration ();
@@ -132,8 +123,7 @@ public class UserCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final UserCloudletContext context, final CloudletCallbackCompletionArguments<UserCloudletContext> arguments)
-		{
+		public CallbackCompletion<Void> initializeSucceeded (final UserCloudletContext context, final CloudletCallbackCompletionArguments<UserCloudletContext> arguments) {
 			this.logger.info ("UserCloudlet initialized successfully.");
 			final String user = ConfigUtils.resolveParameter (arguments.getCloudlet ().getConfiguration (), "test.user", String.class, "error");
 			final String pass = ConfigUtils.resolveParameter (arguments.getCloudlet ().getConfiguration (), "test.password", String.class, "");

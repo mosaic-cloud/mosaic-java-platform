@@ -31,12 +31,11 @@ import com.google.common.base.Preconditions;
 
 
 public abstract class BaseConnectorsFactory
-		extends Object
-		implements
-			IConnectorsFactory
+			extends Object
+			implements
+				IConnectorsFactory
 {
-	protected BaseConnectorsFactory (final ConnectorEnvironment environment, final IConnectorsFactory delegate)
-	{
+	protected BaseConnectorsFactory (final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
 		super ();
 		Preconditions.checkNotNull (environment);
 		this.monitor = Monitor.create (this);
@@ -46,8 +45,7 @@ public abstract class BaseConnectorsFactory
 	}
 	
 	@Override
-	public <Factory extends IConnectorFactory<?>> Factory getConnectorFactory (final Class<Factory> factoryClass)
-	{
+	public <Factory extends IConnectorFactory<?>> Factory getConnectorFactory (final Class<Factory> factoryClass) {
 		Factory factory = factoryClass.cast (this.factories.get (factoryClass));
 		if ((factory == null) && (this.delegate != null)) {
 			factory = this.delegate.getConnectorFactory (factoryClass);
@@ -55,8 +53,7 @@ public abstract class BaseConnectorsFactory
 		return factory;
 	}
 	
-	protected final <Factory extends IConnectorFactory<?>> void registerFactory (final Class<Factory> factoryClass, final Factory factory)
-	{
+	protected final <Factory extends IConnectorFactory<?>> void registerFactory (final Class<Factory> factoryClass, final Factory factory) {
 		Preconditions.checkNotNull (factoryClass);
 		Preconditions.checkArgument (factoryClass.isInterface ());
 		Preconditions.checkArgument (IConnectorFactory.class.isAssignableFrom (factoryClass));

@@ -25,17 +25,15 @@ import eu.mosaic_cloud.components.implementations.basic.BasicComponentHarnessPre
 
 
 public final class AbacusComponentPreMain
-		extends Object
+			extends Object
 {
-	private AbacusComponentPreMain ()
-	{
+	private AbacusComponentPreMain () {
 		super ();
 		throw (new UnsupportedOperationException ());
 	}
 	
 	public static final void main (final String[] arguments)
-			throws Throwable
-	{
+				throws Throwable {
 		BasicComponentHarnessPreMain.main (AbacusComponentPreMain.class.getName ().replace ("PreMain", "Callbacks"), arguments);
 	}
 }

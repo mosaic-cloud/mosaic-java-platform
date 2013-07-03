@@ -34,17 +34,15 @@ import com.google.common.base.Preconditions;
 
 
 public final class ExtendedFormatter
-		extends Object
+			extends Object
 {
-	private ExtendedFormatter (final Locale locale)
-	{
+	private ExtendedFormatter (final Locale locale) {
 		super ();
 		Preconditions.checkNotNull (locale);
 		this.locale = locale;
 	}
 	
-	public final String format (final String format, final Object ... tokens)
-	{
+	public final String format (final String format, final Object ... tokens) {
 		Preconditions.checkNotNull (format);
 		Preconditions.checkNotNull (tokens);
 		final String finalFormat;
@@ -141,17 +139,16 @@ public final class ExtendedFormatter
 		return (builder.toString ());
 	}
 	
-	public static final ExtendedFormatter create ()
-	{
+	private final Locale locale;
+	
+	public static final ExtendedFormatter create () {
 		return (new ExtendedFormatter (Locale.getDefault ()));
 	}
 	
-	public static final ExtendedFormatter create (final Locale locale)
-	{
+	public static final ExtendedFormatter create (final Locale locale) {
 		return (new ExtendedFormatter (locale));
 	}
 	
-	private final Locale locale;
 	public static final ExtendedFormatter defaultInstance = ExtendedFormatter.create ();
 	private static final Pattern extendedFormatPattern = Pattern.compile (ExtendedFormatter.extendedFormatPatternSpecification);
 	private static final String extendedFormatPatternSpecification = "(%(\\d+\\$)?([-#+ 0,(\\<]*)?(\\d+)?(\\.\\d+)?([tT])?([a-zA-Z%]))|(%\\{[a-z:-]+\\})";

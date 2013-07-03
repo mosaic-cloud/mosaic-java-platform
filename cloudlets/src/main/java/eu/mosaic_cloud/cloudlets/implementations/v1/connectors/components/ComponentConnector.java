@@ -37,32 +37,28 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 
 
 public class ComponentConnector<TContext, TExtra>
-		extends BaseConnector<eu.mosaic_cloud.connectors.v1.components.IComponentConnector, IComponentConnectorCallbacks<TContext, TExtra>, TContext>
-		implements
-			IComponentConnector<TExtra>
+			extends BaseConnector<eu.mosaic_cloud.connectors.v1.components.IComponentConnector, IComponentConnectorCallbacks<TContext, TExtra>, TContext>
+			implements
+				IComponentConnector<TExtra>
 {
-	public ComponentConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.components.IComponentConnector connector, final IConfiguration configuration, final IComponentConnectorCallbacks<TContext, TExtra> callback, final TContext context)
-	{
+	public ComponentConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.components.IComponentConnector connector, final IConfiguration configuration, final IComponentConnectorCallbacks<TContext, TExtra> callback, final TContext context) {
 		super (cloudlet, connector, configuration, callback, context);
 	}
 	
 	@Override
-	public final CallbackCompletion<ComponentResourceDescriptor> acquire (final ComponentResourceSpecification resource)
-	{
+	public final CallbackCompletion<ComponentResourceDescriptor> acquire (final ComponentResourceSpecification resource) {
 		return (this.connector.acquire (resource));
 	}
 	
 	@Override
-	public final CallbackCompletion<ComponentResourceDescriptor> acquire (final ComponentResourceSpecification resource, final TExtra extra)
-	{
+	public final CallbackCompletion<ComponentResourceDescriptor> acquire (final ComponentResourceSpecification resource, final TExtra extra) {
 		this.transcript.traceDebugging ("acquiring the resource `%s`...", resource.identifier);
 		final CallbackCompletion<ComponentResourceDescriptor> completion = this.connector.acquire (resource);
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
 				@SuppressWarnings ("synthetic-access")
 				@Override
-				public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_)
-				{
+				public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_) {
 					assert (completion_ == completion);
 					if (completion.getException () != null) {
 						ComponentConnector.this.transcript.traceDebugging ("triggering the callback for acquire failure for resource `%s` and extra `%{object}`...", resource.identifier, extra);
@@ -77,22 +73,19 @@ public class ComponentConnector<TContext, TExtra>
 	}
 	
 	@Override
-	public final <TInputs, TOutputs> CallbackCompletion<TOutputs> call (final ComponentIdentifier component, final String operation, final TInputs inputs, final Class<TOutputs> outputs)
-	{
+	public final <TInputs, TOutputs> CallbackCompletion<TOutputs> call (final ComponentIdentifier component, final String operation, final TInputs inputs, final Class<TOutputs> outputs) {
 		return (this.connector.call (component, operation, inputs, outputs));
 	}
 	
 	@Override
-	public final <TInputs, TOutputs> CallbackCompletion<TOutputs> call (final ComponentIdentifier component, final String operation, final TInputs inputs, final Class<TOutputs> outputs, final TExtra extra)
-	{
+	public final <TInputs, TOutputs> CallbackCompletion<TOutputs> call (final ComponentIdentifier component, final String operation, final TInputs inputs, final Class<TOutputs> outputs, final TExtra extra) {
 		this.transcript.traceDebugging ("calling to the resource `%s` with the operation `%s`...", component.string, operation);
 		final CallbackCompletion<TOutputs> completion = this.connector.call (component, operation, inputs, outputs);
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
 				@SuppressWarnings ("synthetic-access")
 				@Override
-				public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_)
-				{
+				public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_) {
 					assert (completion_ == completion);
 					if (completion.getException () != null) {
 						ComponentConnector.this.transcript.traceDebugging ("triggering the callback for call failure to the component `%s` with the operation `%s` and extra `%{object}`...", component.string, operation, extra);
@@ -107,22 +100,19 @@ public class ComponentConnector<TContext, TExtra>
 	}
 	
 	@Override
-	public final <TInputs> CallbackCompletion<Void> cast (final ComponentIdentifier component, final String operation, final TInputs inputs)
-	{
+	public final <TInputs> CallbackCompletion<Void> cast (final ComponentIdentifier component, final String operation, final TInputs inputs) {
 		this.transcript.traceDebugging ("casting to the component `%s` with the operation `%s`...", component.string, operation);
 		final CallbackCompletion<Void> completion = this.connector.cast (component, operation, inputs);
 		return completion;
 	}
 	
 	@Override
-	public CallbackCompletion<Void> destroy ()
-	{
+	public CallbackCompletion<Void> destroy () {
 		return this.destroy (false);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> initialize ()
-	{
+	public CallbackCompletion<Void> initialize () {
 		return this.initialize (false);
 	}
 }

@@ -25,9 +25,8 @@ package eu.mosaic_cloud.cloudlets.v1.connectors.core;
  * Interface for all resource connectors used by cloudlets.
  * 
  * @author Georgiana Macariu
- * 
  */
 public interface IConnector
-		extends
-			eu.mosaic_cloud.connectors.v1.core.IConnector
+			extends
+				eu.mosaic_cloud.connectors.v1.core.IConnector
 {}

@@ -29,31 +29,27 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 public class DefaultComponentConnectorCallback<TContext, TExtra>
-		extends DefaultConnectorCallback<TContext>
-		implements
-			IComponentConnectorCallbacks<TContext, TExtra>
+			extends DefaultConnectorCallback<TContext>
+			implements
+				IComponentConnectorCallbacks<TContext, TExtra>
 {
 	@Override
-	public CallbackCompletion<Void> acquireFailed (final TContext context, final ComponentRequestFailedCallbackArguments<TExtra> arguments)
-	{
+	public CallbackCompletion<Void> acquireFailed (final TContext context, final ComponentRequestFailedCallbackArguments<TExtra> arguments) {
 		return this.handleUnhandledCallback (arguments, "Resources Failed", false, false);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> acquireSucceeded (final TContext context, final ComponentAcquireSucceededCallbackArguments<TExtra> arguments)
-	{
+	public CallbackCompletion<Void> acquireSucceeded (final TContext context, final ComponentAcquireSucceededCallbackArguments<TExtra> arguments) {
 		return this.handleUnhandledCallback (arguments, "Resources Succeeded", true, false);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> callFailed (final TContext context, final ComponentRequestFailedCallbackArguments<TExtra> arguments)
-	{
+	public CallbackCompletion<Void> callFailed (final TContext context, final ComponentRequestFailedCallbackArguments<TExtra> arguments) {
 		return this.handleUnhandledCallback (arguments, "Call Failed", false, false);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> callSucceeded (final TContext context, final ComponentCallSucceededCallbackArguments<?, TExtra> arguments)
-	{
+	public CallbackCompletion<Void> callSucceeded (final TContext context, final ComponentCallSucceededCallbackArguments<?, TExtra> arguments) {
 		return this.handleUnhandledCallback (arguments, "Call Succeeded", true, false);
 	}
 }

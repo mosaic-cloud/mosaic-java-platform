@@ -35,26 +35,23 @@ import com.google.common.base.Preconditions;
 
 
 /**
- * Implements the life-cycle operations required by the cloudlet-level
- * connector. All cloudlet-level connnectors should extend this class.
+ * Implements the life-cycle operations required by the cloudlet-level connector. All cloudlet-level connnectors should extend
+ * this class.
  * 
  * @author Ciprian Craciun, Georgiana Macariu
- * 
  * @param <TConnector>
  *            lower level resource-specific connector
  * @param <TCallback>
- *            resource life-cycle callback class defined by the developer of the
- *            cloudlet
+ *            resource life-cycle callback class defined by the developer of the cloudlet
  * @param <TContext>
  *            cloudlet callback context
  */
 public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connectors.v1.core.IConnector, TCallback extends IConnectorCallback<TContext>, TContext extends Object>
-		implements
-			IConnector,
-			CallbackProxy
+			implements
+				IConnector,
+				CallbackProxy
 {
-	protected BaseConnector (final ICloudletController<?> cloudlet, final TConnector connector, final IConfiguration configuration, final TCallback callback, final TContext context)
-	{
+	protected BaseConnector (final ICloudletController<?> cloudlet, final TConnector connector, final IConfiguration configuration, final TCallback callback, final TContext context) {
 		super ();
 		Preconditions.checkNotNull (cloudlet);
 		Preconditions.checkNotNull (connector);
@@ -72,19 +69,16 @@ public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connector
 	}
 	
 	@Override
-	public CallbackCompletion<Void> destroy ()
-	{
+	public CallbackCompletion<Void> destroy () {
 		return this.destroy (true);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> initialize ()
-	{
+	public CallbackCompletion<Void> initialize () {
 		return this.initialize (true);
 	}
 	
-	protected CallbackCompletion<Void> destroy (final boolean propagate)
-	{
+	protected CallbackCompletion<Void> destroy (final boolean propagate) {
 		this.transcript.traceDebugging ("destroying the connector adapter...");
 		final CallbackCompletion<Void> completion;
 		if (propagate) {
@@ -95,8 +89,7 @@ public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connector
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
 				@Override
-				public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_)
-				{
+				public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_) {
 					assert (completion_ == completion);
 					if (completion.getException () != null) {
 						BaseConnector.this.transcript.traceDebugging ("triggering the callback for destroy failure...");
@@ -110,8 +103,7 @@ public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connector
 		return completion;
 	}
 	
-	protected CallbackCompletion<Void> initialize (final boolean propagate)
-	{
+	protected CallbackCompletion<Void> initialize (final boolean propagate) {
 		this.transcript.traceDebugging ("initializing the connector adapter...");
 		final CallbackCompletion<Void> completion;
 		if (propagate) {
@@ -122,8 +114,7 @@ public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connector
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
 				@Override
-				public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_)
-				{
+				public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_) {
 					assert (completion_ == completion);
 					if (completion.getException () != null) {
 						BaseConnector.this.transcript.traceDebugging ("triggering the callback for initialize failure...");

@@ -26,8 +26,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 public interface IExecutorCallback<TContext, TOutcome, TExtra>
-		extends
-			IConnectorCallback<TContext>
+			extends
+				IConnectorCallback<TContext>
 {
 	CallbackCompletion<Void> executionFailed (TContext context, ExecutionFailedCallbackArguments<TExtra> arguments);
 	

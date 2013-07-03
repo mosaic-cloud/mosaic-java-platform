@@ -29,28 +29,24 @@ import eu.mosaic_cloud.interoperability.tools.Identifiers;
  * Enum of the possible role of the participants in an Key-Value session.
  * 
  * @author Georgiana Macariu
- * 
  */
 public enum KeyValueRole
-		implements
-			RoleSpecification
+			implements
+				RoleSpecification
 {
 	CONNECTOR (),
 	DRIVER ();
-	private KeyValueRole ()
-	{
+	private KeyValueRole () {
 		this.identifier = Identifiers.generate (this);
 	}
 	
 	@Override
-	public String getIdentifier ()
-	{
+	public String getIdentifier () {
 		return this.identifier;
 	}
 	
 	@Override
-	public String getQualifiedName ()
-	{
+	public String getQualifiedName () {
 		return (Identifiers.generateName (this));
 	}
 	

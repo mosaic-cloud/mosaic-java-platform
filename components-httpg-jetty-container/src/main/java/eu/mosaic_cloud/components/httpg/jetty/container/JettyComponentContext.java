@@ -27,10 +27,9 @@ import eu.mosaic_cloud.components.core.ComponentIdentifier;
 
 
 final class JettyComponentContext
-		extends Object
+			extends Object
 {
-	private JettyComponentContext ()
-	{
+	private JettyComponentContext () {
 		super ();
 		throw (new UnsupportedOperationException ());
 	}

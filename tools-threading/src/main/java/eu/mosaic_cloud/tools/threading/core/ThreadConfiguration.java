@@ -31,10 +31,9 @@ import com.google.common.base.Preconditions;
 
 
 public final class ThreadConfiguration
-		extends Object
+			extends Object
 {
-	private ThreadConfiguration (final Reference<Object> owner, final String name, final boolean daemon, final int priority, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher, final ClassLoader classLoader)
-	{
+	private ThreadConfiguration (final Reference<Object> owner, final String name, final boolean daemon, final int priority, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher, final ClassLoader classLoader) {
 		super ();
 		Preconditions.checkNotNull (owner);
 		Preconditions.checkArgument ((name == null) || ThreadConfiguration.namePattern.matcher (name).matches ());
@@ -48,99 +47,56 @@ public final class ThreadConfiguration
 		this.classLoader = classLoader;
 	}
 	
-	public final ThreadConfiguration override (final Object owner, final String name, final boolean daemon)
-	{
+	public final ThreadConfiguration override (final Object owner, final String name, final boolean daemon) {
 		return (ThreadConfiguration.create (owner, name, daemon, this.priority, this.exceptions, this.catcher, this.classLoader));
 	}
 	
-	public final ThreadConfiguration override (final Object owner, final String name, final boolean daemon, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher)
-	{
+	public final ThreadConfiguration override (final Object owner, final String name, final boolean daemon, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher) {
 		return (ThreadConfiguration.create (owner, name, daemon, this.priority, exceptions, catcher, this.classLoader));
 	}
 	
-	public final ThreadConfiguration override (final Object owner, final String name, final boolean daemon, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher, final ClassLoader classLoader)
-	{
+	public final ThreadConfiguration override (final Object owner, final String name, final boolean daemon, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher, final ClassLoader classLoader) {
 		return (ThreadConfiguration.create (owner, name, daemon, this.priority, exceptions, catcher, classLoader));
 	}
 	
-	public final ThreadConfiguration override (final Object owner, final String name, final boolean daemon, final int priority)
-	{
+	public final ThreadConfiguration override (final Object owner, final String name, final boolean daemon, final int priority) {
 		return (ThreadConfiguration.create (owner, name, daemon, priority, this.exceptions, this.catcher, this.classLoader));
 	}
 	
-	public final ThreadConfiguration override (final Object owner, final String name, final boolean daemon, final int priority, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher)
-	{
+	public final ThreadConfiguration override (final Object owner, final String name, final boolean daemon, final int priority, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher) {
 		return (ThreadConfiguration.create (owner, name, daemon, priority, exceptions, catcher, this.classLoader));
 	}
 	
-	public final ThreadConfiguration override (final Object owner, final String name, final boolean daemon, final int priority, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher, final ClassLoader classLoader)
-	{
+	public final ThreadConfiguration override (final Object owner, final String name, final boolean daemon, final int priority, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher, final ClassLoader classLoader) {
 		return (ThreadConfiguration.create (owner, name, daemon, priority, exceptions, catcher, classLoader));
 	}
 	
-	public final ThreadConfiguration overrideCatcher (final Thread.UncaughtExceptionHandler catcher)
-	{
+	public final ThreadConfiguration overrideCatcher (final Thread.UncaughtExceptionHandler catcher) {
 		return (ThreadConfiguration.create (this.owner, this.name, this.daemon, this.priority, this.exceptions, catcher, this.classLoader));
 	}
 	
-	public final ThreadConfiguration overrideClassLoader (final ClassLoader classLoader)
-	{
+	public final ThreadConfiguration overrideClassLoader (final ClassLoader classLoader) {
 		return (ThreadConfiguration.create (this.owner, this.name, this.daemon, this.priority, this.exceptions, this.catcher, classLoader));
 	}
 	
-	public final ThreadConfiguration overrideDaemon (final boolean daemon)
-	{
+	public final ThreadConfiguration overrideDaemon (final boolean daemon) {
 		return (ThreadConfiguration.create (this.owner, this.name, daemon, this.priority, this.exceptions, this.catcher, this.classLoader));
 	}
 	
-	public final ThreadConfiguration overrideExceptions (final ExceptionTracer exceptions)
-	{
+	public final ThreadConfiguration overrideExceptions (final ExceptionTracer exceptions) {
 		return (ThreadConfiguration.create (this.owner, this.name, this.daemon, this.priority, exceptions, this.catcher, this.classLoader));
 	}
 	
-	public final ThreadConfiguration overrideName (final String name)
-	{
+	public final ThreadConfiguration overrideName (final String name) {
 		return (ThreadConfiguration.create (this.owner, name, this.daemon, this.priority, this.exceptions, this.catcher, this.classLoader));
 	}
 	
-	public final ThreadConfiguration overrideOwner (final Object owner)
-	{
+	public final ThreadConfiguration overrideOwner (final Object owner) {
 		return (ThreadConfiguration.create (owner, this.name, this.daemon, this.priority, this.exceptions, this.catcher, this.classLoader));
 	}
 	
-	public final ThreadConfiguration overridePriority (final int priority)
-	{
+	public final ThreadConfiguration overridePriority (final int priority) {
 		return (ThreadConfiguration.create (this.owner, this.name, this.daemon, priority, this.exceptions, this.catcher, this.classLoader));
-	}
-	
-	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon)
-	{
-		return (ThreadConfiguration.create (owner, name, daemon, -1, null, null, null));
-	}
-	
-	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher)
-	{
-		return (ThreadConfiguration.create (owner, name, daemon, -1, exceptions, catcher, null));
-	}
-	
-	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher, final ClassLoader classLoader)
-	{
-		return (ThreadConfiguration.create (owner, name, daemon, -1, exceptions, catcher, classLoader));
-	}
-	
-	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon, final int priority)
-	{
-		return (ThreadConfiguration.create (owner, name, daemon, priority, null, null, null));
-	}
-	
-	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon, final int priority, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher)
-	{
-		return (ThreadConfiguration.create (new WeakReference<Object> (owner), name, daemon, priority, exceptions, catcher, null));
-	}
-	
-	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon, final int priority, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher, final ClassLoader classLoader)
-	{
-		return (new ThreadConfiguration (new WeakReference<Object> (owner), name, daemon, priority, exceptions, catcher, classLoader));
 	}
 	
 	public final Thread.UncaughtExceptionHandler catcher;
@@ -150,5 +106,30 @@ public final class ThreadConfiguration
 	public final String name;
 	public final Reference<Object> owner;
 	public final int priority;
+	
+	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon) {
+		return (ThreadConfiguration.create (owner, name, daemon, -1, null, null, null));
+	}
+	
+	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher) {
+		return (ThreadConfiguration.create (owner, name, daemon, -1, exceptions, catcher, null));
+	}
+	
+	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher, final ClassLoader classLoader) {
+		return (ThreadConfiguration.create (owner, name, daemon, -1, exceptions, catcher, classLoader));
+	}
+	
+	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon, final int priority) {
+		return (ThreadConfiguration.create (owner, name, daemon, priority, null, null, null));
+	}
+	
+	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon, final int priority, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher) {
+		return (ThreadConfiguration.create (new WeakReference<Object> (owner), name, daemon, priority, exceptions, catcher, null));
+	}
+	
+	public static final ThreadConfiguration create (final Object owner, final String name, final boolean daemon, final int priority, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher, final ClassLoader classLoader) {
+		return (new ThreadConfiguration (new WeakReference<Object> (owner), name, daemon, priority, exceptions, catcher, classLoader));
+	}
+	
 	public static final Pattern namePattern = Pattern.compile ("^[a-z0-9]([a-z0-9-]*[a-z0-9])?$");
 }

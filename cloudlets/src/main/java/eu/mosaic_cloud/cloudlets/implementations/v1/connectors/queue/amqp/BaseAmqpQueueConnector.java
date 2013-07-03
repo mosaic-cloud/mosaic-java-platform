@@ -32,22 +32,19 @@ import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
  * Base connector class for AMQP queuing systems.
  * 
  * @author Georgiana Macariu
- * 
  * @param <TConnector>
- *            the type of the base connector used by this cloudlet-level
- *            connector
+ *            the type of the base connector used by this cloudlet-level connector
  * @param <TCallback>
  *            the type of the callback class
  * @param <TContext>
  *            the type of the context of the cloudlet using the connector
  */
 public abstract class BaseAmqpQueueConnector<TConnector extends eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueConnector, TCallback extends IAmqpQueueConnectorCallback<TContext>, TContext>
-		extends BaseConnector<TConnector, TCallback, TContext>
-		implements
-			IAmqpQueueConnector
+			extends BaseConnector<TConnector, TCallback, TContext>
+			implements
+				IAmqpQueueConnector
 {
-	protected BaseAmqpQueueConnector (final ICloudletController<?> cloudlet, final TConnector connector, final IConfiguration configuration, final TCallback callback, final TContext context)
-	{
+	protected BaseAmqpQueueConnector (final ICloudletController<?> cloudlet, final TConnector connector, final IConfiguration configuration, final TCallback callback, final TContext context) {
 		super (cloudlet, connector, configuration, callback, context);
 	}
 }

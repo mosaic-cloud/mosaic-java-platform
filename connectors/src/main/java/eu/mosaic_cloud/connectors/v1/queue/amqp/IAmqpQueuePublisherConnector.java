@@ -28,15 +28,14 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * Interface for registering and using for an AMQP resource as a publisher.
  * 
  * @author Georgiana Macariu
- * 
  * @param <Context>
  *            the type of the context of the cloudlet using this accessor
  * @param <Message>
  *            the type of the published data
  */
 public interface IAmqpQueuePublisherConnector<Message>
-		extends
-			IAmqpQueueConnector
+			extends
+				IAmqpQueueConnector
 {
 	/**
 	 * Publishes a message to a queue.

@@ -56,12 +56,11 @@ import com.google.common.util.concurrent.Atomics;
 
 
 public final class ZeroMqChannel
-		extends Object
-		implements
-			Channel
+			extends Object
+			implements
+				Channel
 {
-	private ZeroMqChannel (final String self, final ThreadingContext threading, final ExceptionTracer exceptions)
-	{
+	private ZeroMqChannel (final String self, final ThreadingContext threading, final ExceptionTracer exceptions) {
 		super ();
 		Preconditions.checkNotNull (self);
 		Preconditions.checkNotNull (threading);
@@ -77,8 +76,7 @@ public final class ZeroMqChannel
 	}
 	
 	@Override
-	public final void accept (final SessionSpecification specification, final SessionCallbacks callbacks)
-	{
+	public final void accept (final SessionSpecification specification, final SessionCallbacks callbacks) {
 		Preconditions.checkNotNull (specification);
 		Preconditions.checkNotNull (callbacks);
 		final RoleSpecification selfRole = specification.getSelfRole ();
@@ -99,16 +97,14 @@ public final class ZeroMqChannel
 		}
 	}
 	
-	public final void accept (final String endpoint)
-	{
+	public final void accept (final String endpoint) {
 		Preconditions.checkNotNull (endpoint);
 		synchronized (this.state.monitor) {
 			this.socket.accept (endpoint);
 		}
 	}
 	
-	public final void connect (final String endpoint)
-	{
+	public final void connect (final String endpoint) {
 		Preconditions.checkNotNull (endpoint);
 		synchronized (this.state.monitor) {
 			this.socket.connect (endpoint);
@@ -116,8 +112,7 @@ public final class ZeroMqChannel
 	}
 	
 	@Override
-	public final void connect (final String peer, final SessionSpecification specification, final Message message, final SessionCallbacks callbacks)
-	{
+	public final void connect (final String peer, final SessionSpecification specification, final Message message, final SessionCallbacks callbacks) {
 		Preconditions.checkNotNull (peer);
 		Preconditions.checkNotNull (specification);
 		Preconditions.checkNotNull (callbacks);
@@ -138,8 +133,7 @@ public final class ZeroMqChannel
 	}
 	
 	@Override
-	public final void register (final SessionSpecification specification)
-	{
+	public final void register (final SessionSpecification specification) {
 		// FIXME: We shouldn't allow the same specification to be registered twice.
 		Preconditions.checkNotNull (specification);
 		final RoleSpecification selfRole = specification.getSelfRole ();
@@ -176,13 +170,11 @@ public final class ZeroMqChannel
 		}
 	}
 	
-	public final void terminate ()
-	{
+	public final void terminate () {
 		this.terminate (0);
 	}
 	
-	public final boolean terminate (final long timeout)
-	{
+	public final boolean terminate (final long timeout) {
 		synchronized (this.state.monitor) {
 			this.socket.terminate ();
 			this.executor.shutdown ();
@@ -190,23 +182,19 @@ public final class ZeroMqChannel
 		}
 	}
 	
-	final void dispatchSessionCreated (final Session session)
-	{
+	final void dispatchSessionCreated (final Session session) {
 		session.callbacks.get ().created (session);
 	}
 	
-	final void dispatchSessionDestroyed (final Session session)
-	{
+	final void dispatchSessionDestroyed (final Session session) {
 		session.callbacks.get ().destroyed (session);
 	}
 	
-	final void dispatchSessionReceived (final Session session, final Message message)
-	{
+	final void dispatchSessionReceived (final Session session, final Message message) {
 		session.callbacks.get ().received (session, message);
 	}
 	
-	final void executeDispatcher (final Dispatcher dispatcher)
-	{
+	final void executeDispatcher (final Dispatcher dispatcher) {
 		final Session session = dispatcher.session;
 		session.dispatchContinued.set (Boolean.FALSE);
 		try {
@@ -221,8 +209,7 @@ public final class ZeroMqChannel
 		session.dispatchContinued.set (null);
 	}
 	
-	final void executeHandler (final Handler handler)
-	{
+	final void executeHandler (final Handler handler) {
 		try {
 			handler.handle ();
 		} catch (final Error exception) {
@@ -232,8 +219,7 @@ public final class ZeroMqChannel
 		this.scheduleHandler ();
 	}
 	
-	final void executeTrigger (final Trigger trigger)
-	{
+	final void executeTrigger (final Trigger trigger) {
 		try {
 			trigger.trigger ();
 		} catch (final Error exception) {
@@ -241,8 +227,7 @@ public final class ZeroMqChannel
 		}
 	}
 	
-	final void handlePacketDequeue ()
-	{
+	final void handlePacketDequeue () {
 		synchronized (this.state.monitor) {
 			final ZeroMqChannelPacket packet = this.socket.dequeue (0);
 			if (packet == null)
@@ -339,8 +324,7 @@ public final class ZeroMqChannel
 		}
 	}
 	
-	final void handlePacketEnqueue (final Session session, final Message message)
-	{
+	final void handlePacketEnqueue (final Session session, final Message message) {
 		synchronized (this.state.monitor) {
 			final String sessionIdentifier = session.sessionIdentifier;
 			final String messageIdentifier;
@@ -414,18 +398,15 @@ public final class ZeroMqChannel
 		}
 	}
 	
-	final void triggerPacketDequeue ()
-	{
+	final void triggerPacketDequeue () {
 		this.enqueueHandler (new PacketDequeueHandler ());
 	}
 	
-	final void triggerPacketEnqueue (final Session session, final Message message)
-	{
+	final void triggerPacketEnqueue (final Session session, final Message message) {
 		this.enqueueHandler (new PacketEnqueueHandler (session, message));
 	}
 	
-	final void triggerSessionContinueDispatch (final Session session)
-	{
+	final void triggerSessionContinueDispatch (final Session session) {
 		if (session.dispatchContinued.get () == Boolean.FALSE) {
 			session.dispatchContinued.set (Boolean.TRUE);
 			session.idle.release ();
@@ -433,21 +414,18 @@ public final class ZeroMqChannel
 		}
 	}
 	
-	private final void enqueueDispatcher (final Dispatcher dispatcher)
-	{
+	private final void enqueueDispatcher (final Dispatcher dispatcher) {
 		final Session session = dispatcher.session;
 		session.dispatchers.add (dispatcher);
 		this.scheduleDispatcher (session);
 	}
 	
-	private final void enqueueHandler (final Handler handler)
-	{
+	private final void enqueueHandler (final Handler handler) {
 		this.handlers.add (handler);
 		this.scheduleHandler ();
 	}
 	
-	private final void scheduleDispatcher (final Session session)
-	{
+	private final void scheduleDispatcher (final Session session) {
 		if (!session.dispatchers.isEmpty () && session.idle.tryAcquire ()) {
 			final Dispatcher dispatcher = session.dispatchers.poll ();
 			if (dispatcher != null)
@@ -463,8 +441,7 @@ public final class ZeroMqChannel
 		}
 	}
 	
-	private final void scheduleHandler ()
-	{
+	private final void scheduleHandler () {
 		if (!this.handlers.isEmpty () && this.idle.tryAcquire ()) {
 			final Handler handler = this.handlers.poll ();
 			if (handler != null)
@@ -480,11 +457,6 @@ public final class ZeroMqChannel
 		}
 	}
 	
-	public static final ZeroMqChannel create (final String self, final ThreadingContext threading, final ExceptionTracer exceptions)
-	{
-		return (new ZeroMqChannel (self, threading, exceptions));
-	}
-	
 	final TranscriptExceptionTracer exceptions;
 	final ExecutorService executor;
 	final ConcurrentLinkedQueue<Handler> handlers;
@@ -495,11 +467,14 @@ public final class ZeroMqChannel
 	final ThreadingContext threading;
 	final Transcript transcript;
 	
+	public static final ZeroMqChannel create (final String self, final ThreadingContext threading, final ExceptionTracer exceptions) {
+		return (new ZeroMqChannel (self, threading, exceptions));
+	}
+	
 	private static final class Acceptor
-			extends Object
+				extends Object
 	{
-		Acceptor (final String key, final String selfRoleIdentifier, final String peerRoleIdentifier, final SessionSpecification specification, final SessionCallbacks callbacks)
-		{
+		Acceptor (final String key, final String selfRoleIdentifier, final String peerRoleIdentifier, final SessionSpecification specification, final SessionCallbacks callbacks) {
 			super ();
 			this.key = key;
 			this.selfRoleIdentifier = selfRoleIdentifier;
@@ -516,10 +491,9 @@ public final class ZeroMqChannel
 	}
 	
 	private static final class Coder
-			extends Object
+				extends Object
 	{
-		Coder (final String key, final String selfRoleIdentifier, final String peerRoleIdentifier, final String messageIdentifier, final MessageType messageType, final MessageSpecification specification, final PayloadCoder coder)
-		{
+		Coder (final String key, final String selfRoleIdentifier, final String peerRoleIdentifier, final String messageIdentifier, final MessageType messageType, final MessageSpecification specification, final PayloadCoder coder) {
 			super ();
 			this.key = key;
 			this.selfRoleIdentifier = selfRoleIdentifier;
@@ -540,17 +514,15 @@ public final class ZeroMqChannel
 	}
 	
 	private abstract class Dispatcher
-			extends Runnable
+				extends Runnable
 	{
-		Dispatcher (final Session session)
-		{
+		Dispatcher (final Session session) {
 			super ();
 			this.session = session;
 		}
 		
 		@Override
-		public final void run ()
-		{
+		public final void run () {
 			ZeroMqChannel.this.executeDispatcher (this);
 		}
 		
@@ -560,16 +532,14 @@ public final class ZeroMqChannel
 	}
 	
 	private abstract class Handler
-			extends Runnable
+				extends Runnable
 	{
-		Handler ()
-		{
+		Handler () {
 			super ();
 		}
 		
 		@Override
-		public final void run ()
-		{
+		public final void run () {
 			ZeroMqChannel.this.executeHandler (this);
 		}
 		
@@ -577,48 +547,42 @@ public final class ZeroMqChannel
 	}
 	
 	private final class PacketDequeueHandler
-			extends Handler
+				extends Handler
 	{
-		PacketDequeueHandler ()
-		{
+		PacketDequeueHandler () {
 			super ();
 		}
 		
 		@Override
-		final void handle ()
-		{
+		final void handle () {
 			ZeroMqChannel.this.handlePacketDequeue ();
 		}
 	}
 	
 	private final class PacketDequeueTrigger
-			extends Trigger
+				extends Trigger
 	{
-		PacketDequeueTrigger ()
-		{
+		PacketDequeueTrigger () {
 			super ();
 		}
 		
 		@Override
-		final void trigger ()
-		{
+		final void trigger () {
 			ZeroMqChannel.this.triggerPacketDequeue ();
 		}
 	}
 	
 	private final class PacketEnqueueHandler
-			extends Handler
+				extends Handler
 	{
-		PacketEnqueueHandler (final Session session, final Message message)
-		{
+		PacketEnqueueHandler (final Session session, final Message message) {
 			super ();
 			this.session = session;
 			this.message = message;
 		}
 		
 		@Override
-		final void handle ()
-		{
+		final void handle () {
 			ZeroMqChannel.this.handlePacketEnqueue (this.session, this.message);
 		}
 		
@@ -627,23 +591,21 @@ public final class ZeroMqChannel
 	}
 	
 	private abstract class Runnable
-			extends Object
-			implements
-				java.lang.Runnable
+				extends Object
+				implements
+					java.lang.Runnable
 	{
-		Runnable ()
-		{
+		Runnable () {
 			super ();
 		}
 	}
 	
 	private final class Session
-			extends Object
-			implements
-				eu.mosaic_cloud.interoperability.core.Session
+				extends Object
+				implements
+					eu.mosaic_cloud.interoperability.core.Session
 	{
-		Session (final String sessionIdentifier, final String selfRoleIdentifier, final String peerRoleIdentifier, final String peerIdentifier, final SessionSpecification specification, final SessionCallbacks callbacks, final Executor executor)
-		{
+		Session (final String sessionIdentifier, final String selfRoleIdentifier, final String peerRoleIdentifier, final String peerIdentifier, final SessionSpecification specification, final SessionCallbacks callbacks, final Executor executor) {
 			super ();
 			this.sessionIdentifier = sessionIdentifier;
 			this.selfRoleIdentifier = selfRoleIdentifier;
@@ -658,28 +620,24 @@ public final class ZeroMqChannel
 		}
 		
 		@Override
-		public final void continueDispatch ()
-		{
+		public final void continueDispatch () {
 			ZeroMqChannel.this.triggerSessionContinueDispatch (this);
 		}
 		
 		@Override
-		public final void send (final Message message)
-		{
+		public final void send (final Message message) {
 			Preconditions.checkNotNull (message);
 			ZeroMqChannel.this.triggerPacketEnqueue (this, message);
 		}
 		
 		@Override
-		public final void setCallbacks (final SessionCallbacks callbacks)
-		{
+		public final void setCallbacks (final SessionCallbacks callbacks) {
 			Preconditions.checkNotNull (callbacks);
 			this.callbacks.set (callbacks);
 		}
 		
 		@Override
-		public final void setExecutor (final Executor executor)
-		{
+		public final void setExecutor (final Executor executor) {
 			Preconditions.checkNotNull (executor);
 			this.executor.set (executor);
 		}
@@ -697,47 +655,41 @@ public final class ZeroMqChannel
 	}
 	
 	private final class SessionCreatedHandler
-			extends Dispatcher
+				extends Dispatcher
 	{
-		SessionCreatedHandler (final Session session)
-		{
+		SessionCreatedHandler (final Session session) {
 			super (session);
 		}
 		
 		@Override
-		final void dispatch ()
-		{
+		final void dispatch () {
 			ZeroMqChannel.this.dispatchSessionCreated (this.session);
 		}
 	}
 	
 	private final class SessionDestroyedDispatcher
-			extends Dispatcher
+				extends Dispatcher
 	{
-		SessionDestroyedDispatcher (final Session session)
-		{
+		SessionDestroyedDispatcher (final Session session) {
 			super (session);
 		}
 		
 		@Override
-		final void dispatch ()
-		{
+		final void dispatch () {
 			ZeroMqChannel.this.dispatchSessionDestroyed (this.session);
 		}
 	}
 	
 	private final class SessionReceivedDispatcher
-			extends Dispatcher
+				extends Dispatcher
 	{
-		SessionReceivedDispatcher (final Session session, final Message message)
-		{
+		SessionReceivedDispatcher (final Session session, final Message message) {
 			super (session);
 			this.message = message;
 		}
 		
 		@Override
-		final void dispatch ()
-		{
+		final void dispatch () {
 			ZeroMqChannel.this.dispatchSessionReceived (this.session, this.message);
 		}
 		
@@ -745,10 +697,9 @@ public final class ZeroMqChannel
 	}
 	
 	private final class State
-			extends Object
+				extends Object
 	{
-		State ()
-		{
+		State () {
 			super ();
 			this.monitor = Monitor.create (this);
 			this.sessions = new HashMap<String, Session> ();
@@ -763,16 +714,14 @@ public final class ZeroMqChannel
 	}
 	
 	private abstract class Trigger
-			extends Runnable
+				extends Runnable
 	{
-		Trigger ()
-		{
+		Trigger () {
 			super ();
 		}
 		
 		@Override
-		public final void run ()
-		{
+		public final void run () {
 			ZeroMqChannel.this.executeTrigger (this);
 		}
 		

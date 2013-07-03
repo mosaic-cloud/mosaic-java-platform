@@ -30,23 +30,20 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 public class AmqpQueueConsumerConnector<TMessage>
-		extends AmqpQueueConnector<AmqpQueueConsumerConnectorProxy<TMessage>>
-		implements
-			IAmqpQueueConsumerConnector<TMessage>
+			extends AmqpQueueConnector<AmqpQueueConsumerConnectorProxy<TMessage>>
+			implements
+				IAmqpQueueConsumerConnector<TMessage>
 {
-	protected AmqpQueueConsumerConnector (final AmqpQueueConsumerConnectorProxy<TMessage> proxy)
-	{
+	protected AmqpQueueConsumerConnector (final AmqpQueueConsumerConnectorProxy<TMessage> proxy) {
 		super (proxy);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> acknowledge (final IAmqpMessageToken token)
-	{
+	public CallbackCompletion<Void> acknowledge (final IAmqpMessageToken token) {
 		return this.proxy.acknowledge (token);
 	}
 	
-	public static <TMessage> AmqpQueueConsumerConnector<TMessage> create (final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final IAmqpQueueConsumerCallback<TMessage> callback)
-	{
+	public static <TMessage> AmqpQueueConsumerConnector<TMessage> create (final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final IAmqpQueueConsumerCallback<TMessage> callback) {
 		final AmqpQueueConsumerConnectorProxy<TMessage> proxy = AmqpQueueConsumerConnectorProxy.create (configuration, messageClass, messageEncoder, callback);
 		return new AmqpQueueConsumerConnector<TMessage> (proxy);
 	}

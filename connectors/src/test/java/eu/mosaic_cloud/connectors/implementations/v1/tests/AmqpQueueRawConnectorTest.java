@@ -50,12 +50,11 @@ import org.junit.BeforeClass;
 
 
 public class AmqpQueueRawConnectorTest
-		extends BaseConnectorTest<AmqpQueueRawConnector, BaseScenario>
+			extends BaseConnectorTest<AmqpQueueRawConnector, BaseScenario>
 {
 	@Override
 	@Before
-	public void setUp ()
-	{
+	public void setUp () {
 		this.scenario = AmqpQueueRawConnectorTest.scenario_;
 		final ConnectorConfiguration configuration = ConnectorConfiguration.create (this.scenario.getConfiguration (), this.scenario.getEnvironment ());
 		this.connector = AmqpQueueRawConnector.create (configuration);
@@ -65,10 +64,7 @@ public class AmqpQueueRawConnectorTest
 	
 	@Override
 	public void test ()
-			throws InterruptedException,
-				ExecutionException,
-				EncodingException
-	{
+				throws InterruptedException, ExecutionException, EncodingException {
 		this.testConnector ();
 		this.testDeclareExchange ();
 		this.testDeclareQueue ();
@@ -79,9 +75,7 @@ public class AmqpQueueRawConnectorTest
 	}
 	
 	public void testConsume ()
-			throws InterruptedException,
-				ExecutionException
-	{
+				throws InterruptedException, ExecutionException {
 		final IConfiguration configuration = this.scenario.getConfiguration ();
 		final String queue = ConfigUtils.resolveParameter (configuration, "consumer.amqp.queue", String.class, "");
 		final boolean autoAck = ConfigUtils.resolveParameter (configuration, "consumer.amqp.auto_ack", Boolean.class, true);
@@ -90,8 +84,7 @@ public class AmqpQueueRawConnectorTest
 		Assert.assertTrue (this.awaitSuccess (this.connector.consume (queue, this.clientId, exclusive, autoAck, consumerCallback)));
 	}
 	
-	public void testConsumeCancel ()
-	{
+	public void testConsumeCancel () {
 		Threading.sleep (1000);
 		Assert.assertNotNull (this.consumerTag);
 		Assert.assertTrue (this.awaitSuccess (this.connector.cancel (this.consumerTag)));
@@ -99,10 +92,7 @@ public class AmqpQueueRawConnectorTest
 	}
 	
 	public void testPublish ()
-			throws EncodingException,
-				InterruptedException,
-				ExecutionException
-	{
+				throws EncodingException, InterruptedException, ExecutionException {
 		final IConfiguration configuration = this.scenario.getConfiguration ();
 		final String exchange = ConfigUtils.resolveParameter (configuration, "publisher.amqp.exchange", String.class, "");
 		final String routingKey = ConfigUtils.resolveParameter (configuration, "publisher.amqp.routing_key", String.class, "");
@@ -114,8 +104,7 @@ public class AmqpQueueRawConnectorTest
 		Assert.assertTrue (this.awaitSuccess (this.connector.publish (mssg)));
 	}
 	
-	protected void testBindQueue ()
-	{
+	protected void testBindQueue () {
 		final IConfiguration configuration = this.scenario.getConfiguration ();
 		final String exchange = ConfigUtils.resolveParameter (configuration, "publisher.amqp.exchange", String.class, "");
 		final String routingKey = ConfigUtils.resolveParameter (configuration, "publisher.amqp.routing_key", String.class, "");
@@ -123,21 +112,23 @@ public class AmqpQueueRawConnectorTest
 		Assert.assertTrue (this.awaitSuccess (this.connector.bindQueue (exchange, queue, routingKey)));
 	}
 	
-	protected void testDeclareExchange ()
-	{
+	protected void testDeclareExchange () {
 		final String exchange = ConfigUtils.resolveParameter (this.scenario.getConfiguration (), "publisher.amqp.exchange", String.class, "");
 		Assert.assertTrue (this.awaitSuccess (this.connector.declareExchange (exchange, AmqpExchangeType.DIRECT, false, false, false)));
 	}
 	
-	protected void testDeclareQueue ()
-	{
+	protected void testDeclareQueue () {
 		final String queue = ConfigUtils.resolveParameter (this.scenario.getConfiguration (), "consumer.amqp.queue", String.class, "");
 		Assert.assertTrue (this.awaitSuccess (this.connector.declareQueue (queue, true, false, true, false)));
 	}
 	
+	private final String clientId = UUID.randomUUID ().toString ();
+	private String consumerTag;
+	private DataEncoder<String> encoder;
+	private String sentMessage;
+	
 	@BeforeClass
-	public static void setUpBeforeClass ()
-	{
+	public static void setUpBeforeClass () {
 		final String host = System.getProperty (AmqpQueueRawConnectorTest.MOSAIC_AMQP_HOST, AmqpQueueRawConnectorTest.MOSAIC_AMQP_HOST_DEFAULT);
 		final Integer port = Integer.valueOf (System.getProperty (AmqpQueueRawConnectorTest.MOSAIC_AMQP_PORT, AmqpQueueRawConnectorTest.MOSAIC_AMQP_PORT_DEFAULT));
 		final IConfiguration configuration = PropertyTypeConfiguration.create ();
@@ -162,15 +153,10 @@ public class AmqpQueueRawConnectorTest
 	}
 	
 	@AfterClass
-	public static void tearDownAfterClass ()
-	{
+	public static void tearDownAfterClass () {
 		BaseConnectorTest.tearDownScenario (AmqpQueueRawConnectorTest.scenario_);
 	}
 	
-	private final String clientId = UUID.randomUUID ().toString ();
-	private String consumerTag;
-	private DataEncoder<String> encoder;
-	private String sentMessage;
 	private static final String MOSAIC_AMQP_HOST = "mosaic.tests.resources.amqp.host";
 	private static final String MOSAIC_AMQP_HOST_DEFAULT = "127.0.0.1";
 	private static final String MOSAIC_AMQP_PORT = "mosaic.tests.resources.amqp.port";
@@ -178,27 +164,24 @@ public class AmqpQueueRawConnectorTest
 	private static BaseScenario scenario_;
 	
 	final class ConsumerHandler
-			implements
-				IAmqpQueueRawConsumerCallback
+				implements
+					IAmqpQueueRawConsumerCallback
 	{
 		@Override
-		public CallbackCompletion<Void> handleCancelOk (final String consumerTag)
-		{
+		public CallbackCompletion<Void> handleCancelOk (final String consumerTag) {
 			Assert.assertTrue ("CancelOk - consumer tag compare", consumerTag.equals (AmqpQueueRawConnectorTest.this.consumerTag));
 			return CallbackCompletion.createOutcome ();
 		}
 		
 		@Override
-		public CallbackCompletion<Void> handleConsumeOk (final String consumerTag)
-		{
+		public CallbackCompletion<Void> handleConsumeOk (final String consumerTag) {
 			Assert.assertTrue ("ConsumeOk - consumer tag compare", AmqpQueueRawConnectorTest.this.consumerTag == null);
 			AmqpQueueRawConnectorTest.this.consumerTag = consumerTag;
 			return CallbackCompletion.createOutcome ();
 		}
 		
 		@Override
-		public CallbackCompletion<Void> handleDelivery (final AmqpInboundMessage message)
-		{
+		public CallbackCompletion<Void> handleDelivery (final AmqpInboundMessage message) {
 			String recvMessage;
 			final EncodingMetadata encoding = new EncodingMetadata (message.getContentType (), message.getContentEncoding ());
 			try {
@@ -211,8 +194,7 @@ public class AmqpQueueRawConnectorTest
 		}
 		
 		@Override
-		public CallbackCompletion<Void> handleShutdownSignal (final String consumerTag, final String message)
-		{
+		public CallbackCompletion<Void> handleShutdownSignal (final String consumerTag, final String message) {
 			Assert.assertTrue ("Shutdown - consumer tag compare", consumerTag.equals (AmqpQueueRawConnectorTest.this.consumerTag));
 			return CallbackCompletion.createOutcome ();
 		}

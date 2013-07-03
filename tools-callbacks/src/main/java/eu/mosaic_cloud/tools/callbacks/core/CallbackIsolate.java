@@ -28,27 +28,24 @@ import com.google.common.base.Preconditions;
 
 
 public final class CallbackIsolate
-		extends Object
-		implements
-			Joinable
+			extends Object
+			implements
+				Joinable
 {
 	// FIXME: See the `FIXME` notice at the top of the `CallbackCompletion` class.
-	private CallbackIsolate (final CallbackIsolateBackend backend)
-	{
+	private CallbackIsolate (final CallbackIsolateBackend backend) {
 		super ();
 		Preconditions.checkNotNull (backend);
 		this.backend = backend;
 	}
 	
 	@Override
-	public final boolean await ()
-	{
+	public final boolean await () {
 		return (this.await (-1));
 	}
 	
 	@Override
-	public final boolean await (final long timeout)
-	{
+	public final boolean await (final long timeout) {
 		try {
 			return (this.backend.awaitIsolate (this, timeout));
 		} catch (final Throwable exception) {
@@ -58,8 +55,7 @@ public final class CallbackIsolate
 		}
 	}
 	
-	public final CallbackCompletion<Void> destroy ()
-	{
+	public final CallbackCompletion<Void> destroy () {
 		try {
 			final CallbackCompletion<Void> completion = this.backend.destroyIsolate (this);
 			if (completion == null)
@@ -72,8 +68,7 @@ public final class CallbackIsolate
 		}
 	}
 	
-	public final CallbackCompletion<Void> enqueue (final Runnable runnable)
-	{
+	public final CallbackCompletion<Void> enqueue (final Runnable runnable) {
 		Preconditions.checkNotNull (runnable);
 		try {
 			return (this.backend.enqueueOnIsolate (this, runnable));
@@ -84,8 +79,7 @@ public final class CallbackIsolate
 		}
 	}
 	
-	public final CallbackReactor getReactor ()
-	{
+	public final CallbackReactor getReactor () {
 		try {
 			return (this.backend.getReactor ());
 		} catch (final Throwable exception) {
@@ -95,10 +89,9 @@ public final class CallbackIsolate
 		}
 	}
 	
-	public static final CallbackIsolate create (final CallbackIsolateBackend backend)
-	{
+	private final CallbackIsolateBackend backend;
+	
+	public static final CallbackIsolate create (final CallbackIsolateBackend backend) {
 		return (new CallbackIsolate (backend));
 	}
-	
-	private final CallbackIsolateBackend backend;
 }

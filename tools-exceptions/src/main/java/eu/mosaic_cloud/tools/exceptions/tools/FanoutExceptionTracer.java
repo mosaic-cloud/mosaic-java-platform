@@ -30,23 +30,20 @@ import com.google.common.base.Preconditions;
 
 
 public final class FanoutExceptionTracer
-		extends InterceptingExceptionTracer
+			extends InterceptingExceptionTracer
 {
-	private FanoutExceptionTracer (final ExceptionTracer[] delegates)
-	{
+	private FanoutExceptionTracer (final ExceptionTracer[] delegates) {
 		Preconditions.checkNotNull (delegates);
 		this.delegates = delegates;
 	}
 	
 	@Override
-	protected final ExceptionTracer getDelegate ()
-	{
+	protected final ExceptionTracer getDelegate () {
 		return (null);
 	}
 	
 	@Override
-	protected void trace_ (final ExceptionResolution resolution, final Throwable exception)
-	{
+	protected void trace_ (final ExceptionResolution resolution, final Throwable exception) {
 		for (final ExceptionTracer delegate : this.delegates)
 			try {
 				delegate.trace (resolution, exception);
@@ -56,8 +53,7 @@ public final class FanoutExceptionTracer
 	}
 	
 	@Override
-	protected void trace_ (final ExceptionResolution resolution, final Throwable exception, final String message)
-	{
+	protected void trace_ (final ExceptionResolution resolution, final Throwable exception, final String message) {
 		for (final ExceptionTracer delegate : this.delegates)
 			try {
 				delegate.trace (resolution, exception, message);
@@ -67,8 +63,7 @@ public final class FanoutExceptionTracer
 	}
 	
 	@Override
-	protected void trace_ (final ExceptionResolution resolution, final Throwable exception, final String format, final Object ... tokens)
-	{
+	protected void trace_ (final ExceptionResolution resolution, final Throwable exception, final String format, final Object ... tokens) {
 		for (final ExceptionTracer delegate : this.delegates)
 			try {
 				delegate.trace (resolution, exception, format, tokens);
@@ -77,10 +72,9 @@ public final class FanoutExceptionTracer
 			}
 	}
 	
-	public static final FanoutExceptionTracer create (final ExceptionTracer ... delegates)
-	{
+	private final ExceptionTracer[] delegates;
+	
+	public static final FanoutExceptionTracer create (final ExceptionTracer ... delegates) {
 		return (new FanoutExceptionTracer (delegates));
 	}
-	
-	private final ExceptionTracer[] delegates;
 }

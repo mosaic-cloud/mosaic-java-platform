@@ -50,12 +50,11 @@ import com.google.common.base.Preconditions;
 
 
 public abstract class BaseCloudletTest
-		extends eu.mosaic_cloud.cloudlets.implementations.v1.tests.BaseCloudletTest<BaseCloudletTest.Scenario<?>>
+			extends eu.mosaic_cloud.cloudlets.implementations.v1.tests.BaseCloudletTest<BaseCloudletTest.Scenario<?>>
 {
 	@Override
 	@After
-	public void tearDown ()
-	{
+	public void tearDown () {
 		if (!this.doRun) {
 			return;
 		}
@@ -81,8 +80,7 @@ public abstract class BaseCloudletTest
 	
 	@Override
 	@Test
-	public void test ()
-	{
+	public void test () {
 		if (!this.doRun) {
 			return;
 		}
@@ -91,8 +89,7 @@ public abstract class BaseCloudletTest
 		this.cloudlet = null;
 	}
 	
-	protected <Context> void setUp (final Class<? extends ICloudletCallback<Context>> callbacksClass, final Class<Context> contextClass, final String configuration)
-	{
+	protected <Context> void setUp (final Class<? extends ICloudletCallback<Context>> callbacksClass, final Class<Context> contextClass, final String configuration) {
 		if (!this.doRun) {
 			return;
 		}
@@ -100,8 +97,7 @@ public abstract class BaseCloudletTest
 		this.scenario = scenario;
 		final ChannelFactory connectorsChannelFactory = new ChannelFactory () {
 			@Override
-			public Channel create ()
-			{
+			public Channel create () {
 				Preconditions.checkState (scenario.connectorsChannel != null);
 				Preconditions.checkState (scenario.driversChannel != null);
 				return (scenario.connectorsChannel);
@@ -109,39 +105,33 @@ public abstract class BaseCloudletTest
 		};
 		final IComponentConnector componentConnector = new IComponentConnector () {
 			@Override
-			public CallbackCompletion<ComponentResourceDescriptor> acquire (final ComponentResourceSpecification resource)
-			{
+			public CallbackCompletion<ComponentResourceDescriptor> acquire (final ComponentResourceSpecification resource) {
 				throw (new UnsupportedOperationException ());
 			}
 			
 			@Override
-			public <TInputs, TOutputs> CallbackCompletion<TOutputs> call (final ComponentIdentifier component, final String operation, final TInputs inputs, final Class<TOutputs> outputs)
-			{
+			public <TInputs, TOutputs> CallbackCompletion<TOutputs> call (final ComponentIdentifier component, final String operation, final TInputs inputs, final Class<TOutputs> outputs) {
 				throw (new UnsupportedOperationException ());
 			}
 			
 			@Override
-			public <TInputs> CallbackCompletion<Void> cast (final ComponentIdentifier component, final String operation, final TInputs inputs)
-			{
+			public <TInputs> CallbackCompletion<Void> cast (final ComponentIdentifier component, final String operation, final TInputs inputs) {
 				throw (new UnsupportedOperationException ());
 			}
 			
 			@Override
-			public CallbackCompletion<Void> destroy ()
-			{
+			public CallbackCompletion<Void> destroy () {
 				throw (new UnsupportedOperationException ());
 			}
 			
 			@Override
-			public CallbackCompletion<Void> initialize ()
-			{
+			public CallbackCompletion<Void> initialize () {
 				throw (new UnsupportedOperationException ());
 			}
 		};
 		final ChannelResolver connectorsChannelResolver = new ChannelResolver () {
 			@Override
-			public void resolve (final String target, final ResolverCallbacks callbacks)
-			{
+			public void resolve (final String target, final ResolverCallbacks callbacks) {
 				Preconditions.checkNotNull (target);
 				Preconditions.checkNotNull (callbacks);
 				Preconditions.checkState (scenario.connectorsChannel != null);
@@ -215,7 +205,7 @@ public abstract class BaseCloudletTest
 	private static final String MOSAIC_RIAK_PORT_DEFAULT = "24637";
 	
 	public static class Scenario<Context extends Object>
-			extends eu.mosaic_cloud.cloudlets.implementations.v1.tests.BaseCloudletTest.BaseScenario<Context>
+				extends eu.mosaic_cloud.cloudlets.implementations.v1.tests.BaseCloudletTest.BaseScenario<Context>
 	{
 		public AbstractDriverStub amqpDriverStub;
 		public ZeroMqChannel connectorsChannel;

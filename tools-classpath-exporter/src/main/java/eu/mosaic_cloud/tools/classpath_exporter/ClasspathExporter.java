@@ -44,10 +44,9 @@ import com.google.common.io.ByteStreams;
 
 
 public final class ClasspathExporter
-		extends AbstractHandler
+			extends AbstractHandler
 {
-	private ClasspathExporter (final InetSocketAddress address, final ClassLoader loader, final ExceptionTracer exceptions)
-	{
+	private ClasspathExporter (final InetSocketAddress address, final ClassLoader loader, final ExceptionTracer exceptions) {
 		super ();
 		Preconditions.checkNotNull (address);
 		Preconditions.checkNotNull (loader);
@@ -58,8 +57,7 @@ public final class ClasspathExporter
 	}
 	
 	@Override
-	public void handle (final String path, final Request baseRequest, final HttpServletRequest request, final HttpServletResponse response)
-	{
+	public void handle (final String path, final Request baseRequest, final HttpServletRequest request, final HttpServletResponse response) {
 		try {
 			this.transcript.traceDebugging ("serving resource `%s`...", path);
 			final InputStream input = this.loader.getResourceAsStream (path.substring (1));
@@ -77,8 +75,7 @@ public final class ClasspathExporter
 		}
 	}
 	
-	public final void startServer ()
-	{
+	public final void startServer () {
 		try {
 			this.server = new Server (this.address.getPort ());
 			this.server.setHandler (this);
@@ -88,8 +85,7 @@ public final class ClasspathExporter
 		}
 	}
 	
-	public final void stopServer ()
-	{
+	public final void stopServer () {
 		try {
 			this.server.stop ();
 		} catch (final Exception exception) {
@@ -97,23 +93,25 @@ public final class ClasspathExporter
 		}
 	}
 	
-	public static final ClasspathExporter create (final InetSocketAddress address, final ClassLoader loader, final ExceptionTracer exceptions)
-	{
+	private final InetSocketAddress address;
+	private final TranscriptExceptionTracer exceptions;
+	private final ClassLoader loader;
+	private Server server;
+	private final Transcript transcript;
+	
+	public static final ClasspathExporter create (final InetSocketAddress address, final ClassLoader loader, final ExceptionTracer exceptions) {
 		return (new ClasspathExporter (address, loader, exceptions));
 	}
 	
-	public static final void main (final String[] arguments)
-	{
+	public static final void main (final String[] arguments) {
 		ClasspathExporter.main (arguments, null);
 	}
 	
-	public static final void main (final String[] arguments, final ClassLoader loader)
-	{
+	public static final void main (final String[] arguments, final ClassLoader loader) {
 		ClasspathExporter.main (arguments, loader, AbortingExceptionTracer.defaultInstance);
 	}
 	
-	public static final void main (final String[] arguments, final ClassLoader loader, final ExceptionTracer exceptions)
-	{
+	public static final void main (final String[] arguments, final ClassLoader loader, final ExceptionTracer exceptions) {
 		Preconditions.checkArgument ((arguments != null) && ((arguments.length == 0) || (arguments.length == 2)), "invalid arguments: expected <ip> <port>");
 		final InetSocketAddress address;
 		if (arguments.length == 0)
@@ -128,10 +126,4 @@ public final class ClasspathExporter
 		}
 		exporter.stopServer ();
 	}
-	
-	private final InetSocketAddress address;
-	private final TranscriptExceptionTracer exceptions;
-	private final ClassLoader loader;
-	private Server server;
-	private final Transcript transcript;
 }

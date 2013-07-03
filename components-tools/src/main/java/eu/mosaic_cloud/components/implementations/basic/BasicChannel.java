@@ -60,57 +60,50 @@ import com.google.common.util.concurrent.Futures;
 
 
 public final class BasicChannel
-		extends Object
+			extends Object
 {
-	private BasicChannel (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions)
-	{
+	private BasicChannel (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions) {
 		super ();
 		this.backend = new Backend (this, input, output, coder, reactor, threading, exceptions);
 	}
 	
-	public void destroy ()
-	{
+	public void destroy () {
 		Preconditions.checkState (this.destroy (-1));
 	}
 	
-	public final boolean destroy (final long timeout)
-	{
+	public final boolean destroy (final long timeout) {
 		return (this.backend.destroy (timeout));
 	}
 	
-	public final ChannelController getController ()
-	{
+	public final ChannelController getController () {
 		return (this.backend.controllerProxy);
 	}
 	
-	public final void initialize ()
-	{
+	public final void initialize () {
 		Preconditions.checkState (this.initialize (-1));
 	}
 	
-	public final boolean initialize (final long timeout)
-	{
+	public final boolean initialize (final long timeout) {
 		return (this.backend.initialize (timeout));
 	}
 	
-	public static final BasicChannel create (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions)
-	{
+	final Backend backend;
+	
+	public static final BasicChannel create (final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions) {
 		return (new BasicChannel (input, output, coder, reactor, threading, exceptions));
 	}
 	
-	final Backend backend;
 	static final int defaultBufferSize = 1024;
 	static final int defaultMaximumPacketSize = 1024 * 1024;
 	static final long defaultPollTimeout = 100;
 	
 	private static final class Backend
-			extends AbstractService
-			implements
-				ChannelController,
-				CallbackProxy
+				extends AbstractService
+				implements
+					ChannelController,
+					CallbackProxy
 	{
-		Backend (final BasicChannel facade, final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions)
-		{
+		Backend (final BasicChannel facade, final ReadableByteChannel input, final WritableByteChannel output, final ChannelMessageCoder coder, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions) {
 			super ();
 			Preconditions.checkNotNull (facade);
 			Preconditions.checkNotNull (input);
@@ -163,15 +156,13 @@ public final class BasicChannel
 		}
 		
 		@Override
-		public final CallbackCompletion<Void> bind (final ChannelCallbacks delegate)
-		{
+		public final CallbackCompletion<Void> bind (final ChannelCallbacks delegate) {
 			this.transcript.traceDebugging ("assigning callbacks...");
 			return (this.reactor.assignDelegate (this.callbacksProxy, delegate));
 		}
 		
 		@Override
-		public final CallbackCompletion<Void> close (final ChannelFlow flow)
-		{
+		public final CallbackCompletion<Void> close (final ChannelFlow flow) {
 			try {
 				Preconditions.checkNotNull (flow);
 				synchronized (this.monitor) {
@@ -192,7 +183,7 @@ public final class BasicChannel
 								this.exceptions.traceIgnoredException (exception);
 							}
 							break;
-						default:
+						default :
 							throw (new AssertionError ());
 					}
 				}
@@ -203,8 +194,7 @@ public final class BasicChannel
 		}
 		
 		@Override
-		public final CallbackCompletion<Void> send (final ChannelMessage message)
-		{
+		public final CallbackCompletion<Void> send (final ChannelMessage message) {
 			try {
 				this.transcript.traceDebugging ("sending message...");
 				Preconditions.checkNotNull (message);
@@ -219,8 +209,7 @@ public final class BasicChannel
 		}
 		
 		@Override
-		public final CallbackCompletion<Void> terminate ()
-		{
+		public final CallbackCompletion<Void> terminate () {
 			synchronized (this.monitor) {
 				this.transcript.traceDebugging ("terminating...");
 				return (CallbackCompletion.createDeferred (Futures.transform (this.stop (), Functions.constant ((Void) null))));
@@ -228,8 +217,7 @@ public final class BasicChannel
 		}
 		
 		@Override
-		protected final void doStart ()
-		{
+		protected final void doStart () {
 			synchronized (this.monitor) {
 				this.transcript.traceDebugging ("initializing...");
 				Preconditions.checkState (this.reactor.assignDelegate (this.controllerProxy, this).await ());
@@ -243,8 +231,7 @@ public final class BasicChannel
 		}
 		
 		@Override
-		protected final void doStop ()
-		{
+		protected final void doStop () {
 			synchronized (this.monitor) {
 				this.transcript.traceDebugging ("destroying...");
 				Preconditions.checkState (this.dispatcher.stopAndWait () == State.TERMINATED);
@@ -260,13 +247,11 @@ public final class BasicChannel
 			}
 		}
 		
-		final boolean destroy (final long timeout)
-		{
+		final boolean destroy (final long timeout) {
 			return (Threading.awaitOrCatch (this.stop (), timeout) == State.TERMINATED);
 		}
 		
-		final boolean initialize (final long timeout)
-		{
+		final boolean initialize (final long timeout) {
 			return (Threading.awaitOrCatch (this.start (), timeout) == State.RUNNING);
 		}
 		
@@ -295,10 +280,9 @@ public final class BasicChannel
 	}
 	
 	private static final class Decoder
-			extends Worker
+				extends Worker
 	{
-		Decoder (final Backend channel)
-		{
+		Decoder (final Backend channel) {
 			super (channel);
 			this.coder = this.channel.coder;
 			this.inboundMessages = this.channel.inboundMessages;
@@ -307,8 +291,7 @@ public final class BasicChannel
 		
 		@Override
 		protected void loop_1 ()
-				throws CaughtException
-		{
+					throws CaughtException {
 			this.transcript.traceDebugging ("executing decoder...");
 			final ByteBuffer packet = Threading.poll (this.inboundPackets, this.pollTimeout);
 			if (packet != null) {
@@ -327,15 +310,13 @@ public final class BasicChannel
 		}
 		
 		@Override
-		protected final void shutDown_1 ()
-		{
+		protected final void shutDown_1 () {
 			this.transcript.traceDebugging ("destroying decoder...");
 			this.transcript.traceDebugging ("destroyed decoder.");
 		}
 		
 		@Override
-		protected final void startUp_1 ()
-		{
+		protected final void startUp_1 () {
 			this.transcript.traceDebugging ("initializing decoder...");
 			this.transcript.traceDebugging ("initialized decoder.");
 		}
@@ -346,10 +327,9 @@ public final class BasicChannel
 	}
 	
 	private static final class Dispatcher
-			extends Worker
+				extends Worker
 	{
-		Dispatcher (final Backend channel)
-		{
+		Dispatcher (final Backend channel) {
 			super (channel);
 			this.channelCallbacks = this.channel.callbacksProxy;
 			this.inboundMessages = this.channel.inboundMessages;
@@ -359,8 +339,7 @@ public final class BasicChannel
 		
 		@Override
 		protected final void loop_1 ()
-				throws CaughtException
-		{
+					throws CaughtException {
 			this.transcript.traceDebugging ("executing dispatcher...");
 			final ChannelMessage message = Threading.poll (this.inboundMessages, this.pollTimeout);
 			if (message != null) {
@@ -400,8 +379,7 @@ public final class BasicChannel
 		
 		@Override
 		protected final void shutDown_1 ()
-				throws CaughtException
-		{
+					throws CaughtException {
 			this.transcript.traceDebugging ("destroying dispatcher...");
 			this.transcript.traceDebugging ("dispatching terminated callback...");
 			try {
@@ -414,8 +392,7 @@ public final class BasicChannel
 		
 		@Override
 		protected final void startUp_1 ()
-				throws CaughtException
-		{
+					throws CaughtException {
 			this.transcript.traceDebugging ("initializing dispatcher...");
 			this.transcript.traceDebugging ("dispatching initialized callback...");
 			try {
@@ -433,10 +410,9 @@ public final class BasicChannel
 	}
 	
 	private static final class Encoder
-			extends Worker
+				extends Worker
 	{
-		Encoder (final Backend channel)
-		{
+		Encoder (final Backend channel) {
 			super (channel);
 			this.coder = this.channel.coder;
 			this.outboundMessages = this.channel.outboundMessages;
@@ -445,8 +421,7 @@ public final class BasicChannel
 		
 		@Override
 		protected void loop_1 ()
-				throws CaughtException
-		{
+					throws CaughtException {
 			this.transcript.traceDebugging ("executing encoder...");
 			final ChannelMessage message = Threading.poll (this.outboundMessages, this.pollTimeout);
 			if (message != null) {
@@ -466,15 +441,13 @@ public final class BasicChannel
 		}
 		
 		@Override
-		protected final void shutDown_1 ()
-		{
+		protected final void shutDown_1 () {
 			this.transcript.traceDebugging ("destroying encoder...");
 			this.transcript.traceDebugging ("destroyed encoder.");
 		}
 		
 		@Override
-		protected final void startUp_1 ()
-		{
+		protected final void startUp_1 () {
 			this.transcript.traceDebugging ("initializing encoder...");
 			this.transcript.traceDebugging ("initialized encoder.");
 		}
@@ -485,10 +458,9 @@ public final class BasicChannel
 	}
 	
 	private static final class Ioputer
-			extends Worker
+				extends Worker
 	{
-		Ioputer (final Backend channel)
-		{
+		Ioputer (final Backend channel) {
 			super (channel);
 			this.input = this.channel.input;
 			this.output = this.channel.output;
@@ -506,8 +478,7 @@ public final class BasicChannel
 		
 		@Override
 		protected void loop_1 ()
-				throws CaughtException
-		{
+					throws CaughtException {
 			this.transcript.traceDebugging ("executing flows...");
 			if (this.input.isOpen ()) {
 				if (this.inputPending == null) {
@@ -655,8 +626,7 @@ public final class BasicChannel
 		}
 		
 		@Override
-		protected final void shutDown_1 ()
-		{
+		protected final void shutDown_1 () {
 			this.transcript.traceDebugging ("destroying flows...");
 			if (this.inputKey != null)
 				try {
@@ -685,8 +655,7 @@ public final class BasicChannel
 		
 		@Override
 		protected final void startUp_1 ()
-				throws CaughtException
-		{
+					throws CaughtException {
 			this.transcript.traceDebugging ("initializing flows...");
 			try {
 				((SelectableChannel) this.input).configureBlocking (false);
@@ -712,10 +681,9 @@ public final class BasicChannel
 	}
 	
 	private static abstract class Worker
-			extends AbstractExecutionThreadService
+				extends AbstractExecutionThreadService
 	{
-		protected Worker (final Backend channel)
-		{
+		protected Worker (final Backend channel) {
 			super ();
 			this.channel = channel;
 			this.transcript = this.channel.transcript;
@@ -725,17 +693,15 @@ public final class BasicChannel
 		}
 		
 		@Override
-		protected final Executor executor ()
-		{
+		protected final Executor executor () {
 			return (this.executor);
 		}
 		
 		protected abstract void loop_1 ()
-				throws CaughtException;
+					throws CaughtException;
 		
 		@Override
-		protected final void run ()
-		{
+		protected final void run () {
 			try {
 				while (true) {
 					if (!this.isRunning ())
@@ -748,8 +714,7 @@ public final class BasicChannel
 		}
 		
 		@Override
-		protected final void shutDown ()
-		{
+		protected final void shutDown () {
 			try {
 				this.shutDown_1 ();
 			} catch (final Throwable exception) {
@@ -758,11 +723,10 @@ public final class BasicChannel
 		}
 		
 		protected abstract void shutDown_1 ()
-				throws CaughtException;
+					throws CaughtException;
 		
 		@Override
-		protected final void startUp ()
-		{
+		protected final void startUp () {
 			try {
 				this.startUp_1 ();
 			} catch (final Throwable exception) {
@@ -771,7 +735,7 @@ public final class BasicChannel
 		}
 		
 		protected abstract void startUp_1 ()
-				throws CaughtException;
+					throws CaughtException;
 		
 		final Backend channel;
 		final TranscriptExceptionTracer exceptions;

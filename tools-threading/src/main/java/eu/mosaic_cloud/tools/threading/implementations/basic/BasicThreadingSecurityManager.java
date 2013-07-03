@@ -37,19 +37,17 @@ import sun.security.util.SecurityConstants;
 
 @SuppressWarnings ("restriction")
 public final class BasicThreadingSecurityManager
-		extends SecurityManager
-		implements
-			ThreadingSecurityManager
+			extends SecurityManager
+			implements
+				ThreadingSecurityManager
 {
-	private BasicThreadingSecurityManager ()
-	{
+	private BasicThreadingSecurityManager () {
 		super ();
 		this.logger = LoggerFactory.getLogger (this.getClass ());
 	}
 	
 	@Override
-	public final void checkAccess (final Thread thread)
-	{
+	public final void checkAccess (final Thread thread) {
 		Preconditions.checkNotNull (thread);
 		final ThreadingContext context = Threading.getCurrentContext ();
 		// FIXME: ??? (I don't remember what the problem was...)
@@ -64,8 +62,7 @@ public final class BasicThreadingSecurityManager
 	}
 	
 	@Override
-	public final void checkAccess (final ThreadGroup group)
-	{
+	public final void checkAccess (final ThreadGroup group) {
 		Preconditions.checkNotNull (group);
 		final ThreadingContext context = Threading.getCurrentContext ();
 		// FIXME: ??? (I don't remember what the problem was...)
@@ -80,8 +77,7 @@ public final class BasicThreadingSecurityManager
 	}
 	
 	@Override
-	public final void checkPermission (final Permission permission)
-	{
+	public final void checkPermission (final Permission permission) {
 		this.checkPermission_ (permission);
 		// FIXME: Shouldn't we delegate them? (We should investigate deeper the implications...)
 		//-- It seems that the default implementation is to "deny" everything, thus we "allow" everything.
@@ -89,8 +85,7 @@ public final class BasicThreadingSecurityManager
 	}
 	
 	@Override
-	public final void checkPermission (final Permission permission, final Object context)
-	{
+	public final void checkPermission (final Permission permission, final Object context) {
 		this.checkPermission_ (permission);
 		// FIXME: Should we delegate them? (We should investigate deeper the implications...)
 		//-- It seems that the default implementation is to "allow" everything with a context.
@@ -98,8 +93,7 @@ public final class BasicThreadingSecurityManager
 	}
 	
 	@Override
-	public final ThreadGroup getThreadGroup ()
-	{
+	public final ThreadGroup getThreadGroup () {
 		final ThreadingContext context = Threading.getCurrentContext ();
 		if (context != null) {
 			final ThreadGroup group = context.getDefaultThreadGroup ();
@@ -110,8 +104,7 @@ public final class BasicThreadingSecurityManager
 		return (super.getThreadGroup ());
 	}
 	
-	private final void checkPermission_ (final Permission permission)
-	{
+	private final void checkPermission_ (final Permission permission) {
 		if (BasicThreadingSecurityManager.permissionSetSecurityManager.equals (permission))
 			throw (new SecurityException ());
 		boolean checkRead = false;
@@ -137,8 +130,9 @@ public final class BasicThreadingSecurityManager
 		}
 	}
 	
-	public static final void initialize ()
-	{
+	private final Logger logger;
+	
+	public static final void initialize () {
 		/*
 		 * We apply the well known "singleton initialization pattern".
 		 * 
@@ -160,7 +154,6 @@ public final class BasicThreadingSecurityManager
 		}
 	}
 	
-	private final Logger logger;
 	private static final RuntimePermission permissionGetContextClassLoader = SecurityConstants.GET_CLASSLOADER_PERMISSION;
 	private static final RuntimePermission permissionGetStackTrace = SecurityConstants.GET_STACK_TRACE_PERMISSION;
 	private static final RuntimePermission permissionModifyThreadGroup = SecurityConstants.MODIFY_THREADGROUP_PERMISSION;

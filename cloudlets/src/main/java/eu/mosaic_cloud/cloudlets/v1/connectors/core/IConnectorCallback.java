@@ -30,13 +30,12 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * Basic interface for resource connector callback classes.
  * 
  * @author Georgiana Macariu
- * 
  * @param <TContext>
  *            the type of the cloudlet context
  */
 public interface IConnectorCallback<TContext>
-		extends
-			ICallback<TContext>
+			extends
+				ICallback<TContext>
 {
 	/**
 	 * Called when resource connector destruction failed.

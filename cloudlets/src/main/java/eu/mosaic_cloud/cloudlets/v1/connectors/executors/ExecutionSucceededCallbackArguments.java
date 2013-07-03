@@ -26,22 +26,19 @@ import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
 
 
 public class ExecutionSucceededCallbackArguments<TOutcome, TExtra>
-		extends CallbackArguments
+			extends CallbackArguments
 {
-	public ExecutionSucceededCallbackArguments (final ICloudletController<?> cloudlet, final TOutcome outcome, final TExtra extra)
-	{
+	public ExecutionSucceededCallbackArguments (final ICloudletController<?> cloudlet, final TOutcome outcome, final TExtra extra) {
 		super (cloudlet);
 		this.outcome = outcome;
 		this.extra = extra;
 	}
 	
-	public TExtra getExtra ()
-	{
+	public TExtra getExtra () {
 		return (this.extra);
 	}
 	
-	public TOutcome getOutcome ()
-	{
+	public TOutcome getOutcome () {
 		return (this.outcome);
 	}
 	

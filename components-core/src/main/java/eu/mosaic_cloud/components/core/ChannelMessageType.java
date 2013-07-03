@@ -28,8 +28,7 @@ public enum ChannelMessageType
 {
 	Exchange ("exchange"),
 	Resources ("resources");
-	private ChannelMessageType (final String identifier)
-	{
+	private ChannelMessageType (final String identifier) {
 		Preconditions.checkNotNull (identifier);
 		this.identifier = identifier;
 	}

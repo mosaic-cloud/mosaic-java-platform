@@ -37,15 +37,13 @@ import com.google.common.base.Preconditions;
 
 
 public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _Transition_ extends Enum<_Transition_> & StateMachine.Transition>
-		extends Object
+			extends Object
 {
-	protected StateMachine (final Class<_State_> stateClass, final Class<_Transition_> transitionClass)
-	{
+	protected StateMachine (final Class<_State_> stateClass, final Class<_Transition_> transitionClass) {
 		this (stateClass, transitionClass, null, null);
 	}
 	
-	protected StateMachine (final Class<_State_> stateClass, final Class<_Transition_> transitionClass, final Transcript transcript_, final ExceptionTracer exceptions_)
-	{
+	protected StateMachine (final Class<_State_> stateClass, final Class<_Transition_> transitionClass, final Transcript transcript_, final ExceptionTracer exceptions_) {
 		super ();
 		// FIXME: Refactor code to wrap the exception handler into a transcript exception handler.
 		final Transcript transcript = (transcript_ != null) ? transcript_ : Transcript.create (this, true);
@@ -57,78 +55,65 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 	}
 	
 	public final void execute (final _Transition_ transition, final _State_ finalState)
-			throws CaughtException.Wrapper
-	{
+				throws CaughtException.Wrapper {
 		new Transaction (transition).execute_ (new Callable<StateAndOutput<_State_, Void>> () {
 			@Override
-			public final StateAndOutput<_State_, Void> call ()
-			{
+			public final StateAndOutput<_State_, Void> call () {
 				return (StateAndOutput.create (finalState, null));
 			}
 		});
 	}
 	
 	public final <_Output_ extends Object> _Output_ execute (final _Transition_ transition, final _State_ finalState, final Callable<_Output_> operation)
-			throws CaughtException.Wrapper
-	{
+				throws CaughtException.Wrapper {
 		return (new Transaction (transition).execute (finalState, operation));
 	}
 	
 	public final void execute (final _Transition_ transition, final _State_ finalState, final Runnable operation)
-			throws CaughtException.Wrapper
-	{
+				throws CaughtException.Wrapper {
 		new Transaction (transition).execute (finalState, operation);
 	}
 	
 	public final void execute (final _Transition_ transition, final Callable<_State_> operation)
-			throws CaughtException.Wrapper
-	{
+				throws CaughtException.Wrapper {
 		new Transaction (transition).execute (operation);
 	}
 	
 	public final <_Input_ extends Object, _Output_ extends Object> _Output_ execute (final _Transition_ transition, final TransactionOperation<? super Transaction, _State_, _Input_, _Output_> operation, final _Input_ input)
-			throws CaughtException.Wrapper
-	{
+				throws CaughtException.Wrapper {
 		return (new Transaction (transition).execute (operation, input));
 	}
 	
 	public final <_Input_ extends Object, _Output_ extends Object> _Output_ execute (final AccessorOperation<? super Accessor, _Input_, _Output_> operation, final _Input_ input)
-			throws CaughtException.Wrapper
-	{
+				throws CaughtException.Wrapper {
 		return (new Accessor ().execute (operation, input));
 	}
 	
 	public final <_Output_ extends Object> _Output_ execute (final Callable<_Output_> operation)
-			throws CaughtException.Wrapper
-	{
+				throws CaughtException.Wrapper {
 		return (new Accessor ().execute (operation));
 	}
 	
 	public final void execute (final Runnable operation)
-			throws CaughtException.Wrapper
-	{
+				throws CaughtException.Wrapper {
 		new Accessor ().execute (operation);
 	}
 	
 	public final <_Output_ extends Object> _Output_ execute1 (final _Transition_ transition, final Callable<StateAndOutput<_State_, _Output_>> operation)
-			throws CaughtException.Wrapper
-	{
+				throws CaughtException.Wrapper {
 		return (new Transaction (transition).execute1 (operation));
 	}
 	
-	public final _State_ getState ()
-	{
+	public final _State_ getState () {
 		return (this.capsule.currentState.get ());
 	}
 	
-	public final boolean hasState (final _State_ state)
-	{
+	public final boolean hasState (final _State_ state) {
 		Preconditions.checkNotNull (state);
 		return (this.capsule.currentState.get () == state);
 	}
 	
-	protected final void defineState (final _State_ state)
-	{
+	protected final void defineState (final _State_ state) {
 		synchronized (this.capsule.monitor) {
 			Preconditions.checkState (this.capsule.currentState.get () == null);
 			final StateDefinition definition = new StateDefinition (state);
@@ -137,8 +122,7 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 		}
 	}
 	
-	protected final void defineStates (final Class<_State_> states)
-	{
+	protected final void defineStates (final Class<_State_> states) {
 		synchronized (this.capsule.monitor) {
 			Preconditions.checkState (this.capsule.currentState.get () == null);
 			for (final _State_ state : states.getEnumConstants ()) {
@@ -149,18 +133,15 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 		}
 	}
 	
-	protected final void defineTransition (final _Transition_ transition, final _State_ initialState, final _State_ finalState)
-	{
+	protected final void defineTransition (final _Transition_ transition, final _State_ initialState, final _State_ finalState) {
 		this.defineTransition (transition, (_State_[]) new Enum<?>[] {initialState}, (_State_[]) new Enum<?>[] {finalState});
 	}
 	
-	protected final void defineTransition (final _Transition_ transition, final _State_ initialState, final _State_[] finalStates)
-	{
+	protected final void defineTransition (final _Transition_ transition, final _State_ initialState, final _State_[] finalStates) {
 		this.defineTransition (transition, (_State_[]) new Enum<?>[] {initialState}, finalStates);
 	}
 	
-	protected final void defineTransition (final _Transition_ transition, final _State_[] initialStates, final _State_[] finalStates)
-	{
+	protected final void defineTransition (final _Transition_ transition, final _State_[] initialStates, final _State_[] finalStates) {
 		synchronized (this.capsule.monitor) {
 			Preconditions.checkState (this.capsule.currentState.get () == null);
 			final TransitionDefinition definition = new TransitionDefinition (transition, initialStates, finalStates);
@@ -169,8 +150,7 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 		}
 	}
 	
-	protected final void initialize (final _State_ state)
-	{
+	protected final void initialize (final _State_ state) {
 		synchronized (this.capsule.monitor) {
 			Preconditions.checkArgument (state != null);
 			Preconditions.checkState (this.capsule.currentState.get () == null);
@@ -188,15 +168,13 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 	final Capsule capsule;
 	
 	public class Accessor
-			extends Isolate
+				extends Isolate
 	{
-		public Accessor ()
-		{
+		public Accessor () {
 			super ();
 		}
 		
-		public final Accessor begin ()
-		{
+		public final Accessor begin () {
 			synchronized (this.capsule.monitor) {
 				Preconditions.checkState (this.capsule.currentState.get () != null);
 				final Isolate previousIsolate = this.capsule.currentIsolate.get ();
@@ -216,8 +194,7 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 		
 		@Override
 		@Deprecated
-		public final void close ()
-		{
+		public final void close () {
 			synchronized (this.capsule.monitor) {
 				if (this.capsule.currentIsolate.get () != null)
 					this.release ();
@@ -225,14 +202,12 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 		}
 		
 		public final <_Input_ extends Object, _Output_ extends Object> _Output_ execute (final AccessorOperation<? super Accessor, _Input_, _Output_> operation, final _Input_ input)
-				throws CaughtException.Wrapper
-		{
+					throws CaughtException.Wrapper {
 			Preconditions.checkNotNull (operation);
 			this.capsule.transcript.traceDebugging ("executing machine `%{object}` access `%{object}` operation `%{object}` in state `%s`...", StateMachine.this, this, operation, this.capsule.currentState.get ().name ());
 			final _Output_ output = this.execute_ (new Callable<_Output_> () {
 				@Override
-				public final _Output_ call ()
-				{
+				public final _Output_ call () {
 					try {
 						return (operation.execute (Accessor.this, input));
 					} catch (final CaughtException.Wrapper wrapper) {
@@ -246,8 +221,7 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 		}
 		
 		public final <_Output_ extends Object> _Output_ execute (final Callable<_Output_> operation)
-				throws CaughtException.Wrapper
-		{
+					throws CaughtException.Wrapper {
 			Preconditions.checkNotNull (operation);
 			this.capsule.transcript.traceDebugging ("executing machine `%{object}` access `%{object}` operation `%{object}` in state `%s`...", StateMachine.this, this, operation, this.capsule.currentState.get ().name ());
 			final _Output_ output = this.execute_ (operation);
@@ -255,22 +229,19 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 		}
 		
 		public final void execute (final Runnable operation)
-				throws CaughtException.Wrapper
-		{
+					throws CaughtException.Wrapper {
 			Preconditions.checkNotNull (operation);
 			this.capsule.transcript.traceDebugging ("executing machine `%{object}` access `%{object}` operation `%{object}` in state `%s`...", StateMachine.this, this, operation, this.capsule.currentState.get ().name ());
 			this.execute_ (new Callable<Void> () {
 				@Override
-				public final Void call ()
-				{
+				public final Void call () {
 					operation.run ();
 					return (null);
 				}
 			});
 		}
 		
-		public final void release ()
-		{
+		public final void release () {
 			synchronized (this.capsule.monitor) {
 				if (!this.capsule.currentIsolateStack.isEmpty ()) {
 					this.capsule.currentIsolate.compareAndSet (this, this.capsule.currentIsolateStack.remove (this.capsule.currentIsolateStack.size () - 1));
@@ -283,8 +254,7 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 		}
 		
 		private final <_Output_ extends Object> _Output_ execute_ (final Callable<_Output_> operation)
-				throws CaughtException.Wrapper
-		{
+					throws CaughtException.Wrapper {
 			try {
 				this.begin ();
 				final _Output_ output;
@@ -305,43 +275,37 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 	public interface AccessorOperation<_Accessor_ extends StateMachine<?, ?>.Accessor, _Input_ extends Object, _Output_ extends Object>
 	{
 		public abstract _Output_ execute (final _Accessor_ accessor, _Input_ input)
-				throws Throwable;
+					throws Throwable;
 	}
 	
 	public abstract class Isolate
-			extends Object
-			implements
-				AutoCloseable
+				extends Object
+				implements
+					AutoCloseable
 	{
-		Isolate ()
-		{
+		Isolate () {
 			super ();
 			this.capsule = StateMachine.this.capsule;
 		}
 		
-		public final void enforceAnyState (final _State_ state1, final _State_ state2)
-		{
+		public final void enforceAnyState (final _State_ state1, final _State_ state2) {
 			this.enforceAnyStates (state1, state2);
 		}
 		
-		public final void enforceAnyState (final _State_ state1, final _State_ state2, final _State_ state3)
-		{
+		public final void enforceAnyState (final _State_ state1, final _State_ state2, final _State_ state3) {
 			this.enforceAnyStates (state1, state2, state3);
 		}
 		
 		@SafeVarargs
-		public final void enforceAnyStates (final _State_ ... states)
-		{
+		public final void enforceAnyStates (final _State_ ... states) {
 			Preconditions.checkState (this.hasAnyStates (states));
 		}
 		
-		public final void enforceState (final _State_ state)
-		{
+		public final void enforceState (final _State_ state) {
 			this.enforceAnyStates (state);
 		}
 		
-		public final _State_ getState ()
-		{
+		public final _State_ getState () {
 			synchronized (this.capsule.monitor) {
 				final _State_ currentState = this.capsule.currentState.get ();
 				Preconditions.checkState (currentState != null);
@@ -349,19 +313,16 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 			}
 		}
 		
-		public final boolean hasAnyState (final _State_ state1, final _State_ state2)
-		{
+		public final boolean hasAnyState (final _State_ state1, final _State_ state2) {
 			return (this.hasAnyStates (state1, state2));
 		}
 		
-		public final boolean hasAnyState (final _State_ state1, final _State_ state2, final _State_ state3)
-		{
+		public final boolean hasAnyState (final _State_ state1, final _State_ state2, final _State_ state3) {
 			return (this.hasAnyStates (state1, state2, state3));
 		}
 		
 		@SafeVarargs
-		public final boolean hasAnyStates (final _State_ ... states)
-		{
+		public final boolean hasAnyStates (final _State_ ... states) {
 			synchronized (this.capsule.monitor) {
 				Preconditions.checkNotNull (states);
 				final _State_ currentState = this.capsule.currentState.get ();
@@ -375,8 +336,7 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 			}
 		}
 		
-		public final boolean hasState (final _State_ state)
-		{
+		public final boolean hasState (final _State_ state) {
 			return (this.hasAnyStates (state));
 		}
 		
@@ -393,29 +353,26 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 	{}
 	
 	public static final class StateAndOutput<_State_ extends Enum<_State_> & State, _Output_ extends Object>
-			extends Object
+				extends Object
 	{
-		private StateAndOutput (final _State_ state, final _Output_ output)
-		{
+		private StateAndOutput (final _State_ state, final _Output_ output) {
 			super ();
 			this.state = state;
 			this.output = output;
 		}
 		
-		public static final <_State_ extends Enum<_State_> & State, _Output_ extends Object> StateAndOutput<_State_, _Output_> create (final _State_ state, final _Output_ output)
-		{
-			return (new StateAndOutput<_State_, _Output_> (state, output));
-		}
-		
 		public final _Output_ output;
 		public final _State_ state;
+		
+		public static final <_State_ extends Enum<_State_> & State, _Output_ extends Object> StateAndOutput<_State_, _Output_> create (final _State_ state, final _Output_ output) {
+			return (new StateAndOutput<_State_, _Output_> (state, output));
+		}
 	}
 	
 	public class Transaction
-			extends Isolate
+				extends Isolate
 	{
-		public Transaction (final _Transition_ transition)
-		{
+		public Transaction (final _Transition_ transition) {
 			super ();
 			Preconditions.checkNotNull (transition);
 			Preconditions.checkArgument (this.capsule.transitionClass.isInstance (transition));
@@ -425,8 +382,7 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 			this.initialState = null;
 		}
 		
-		public final Transaction begin ()
-		{
+		public final Transaction begin () {
 			synchronized (this.capsule.monitor) {
 				Preconditions.checkState (this.capsule.currentState.get () != null);
 				final Isolate previousIsolate = this.capsule.currentIsolate.get ();
@@ -452,16 +408,14 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 		
 		@Override
 		@Deprecated
-		public final void close ()
-		{
+		public final void close () {
 			synchronized (this.capsule.monitor) {
 				if (this.capsule.currentIsolate.get () != null)
 					this.rollback ();
 			}
 		}
 		
-		public final void commit (final _State_ finalState)
-		{
+		public final void commit (final _State_ finalState) {
 			synchronized (this.capsule.monitor) {
 				finalStateValid : while (true) {
 					for (final _State_ state : this.transitionDefinition.finalStates)
@@ -480,15 +434,13 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 		}
 		
 		public final <_Output_ extends Object> _Output_ execute (final _State_ finalState, final Callable<_Output_> operation)
-				throws CaughtException.Wrapper
-		{
+					throws CaughtException.Wrapper {
 			Preconditions.checkNotNull (finalState);
 			Preconditions.checkNotNull (operation);
 			this.capsule.transcript.traceDebugging ("executing machine `%{object}` transaction `%{object}` operation `%{object}` with transition `%s` in state `%s`...", StateMachine.this, this, operation, this.transitionDefinition.transition.name (), this.capsule.currentState.get ().name ());
 			final _Output_ output = this.execute_ (new Callable<StateAndOutput<_State_, _Output_>> () {
 				@Override
-				public final StateAndOutput<_State_, _Output_> call ()
-				{
+				public final StateAndOutput<_State_, _Output_> call () {
 					final _Output_ output;
 					try {
 						output = operation.call ();
@@ -504,15 +456,13 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 		}
 		
 		public final void execute (final _State_ finalState, final Runnable operation)
-				throws CaughtException.Wrapper
-		{
+					throws CaughtException.Wrapper {
 			Preconditions.checkNotNull (finalState);
 			Preconditions.checkNotNull (operation);
 			this.capsule.transcript.traceDebugging ("executing machine `%{object}` transaction `%{object}` operation `%{object}` with transition `%s` in state `%s`...", StateMachine.this, this, operation, this.transitionDefinition.transition.name (), this.capsule.currentState.get ().name ());
 			this.execute_ (new Callable<StateAndOutput<_State_, Void>> () {
 				@Override
-				public final StateAndOutput<_State_, Void> call ()
-				{
+				public final StateAndOutput<_State_, Void> call () {
 					try {
 						operation.run ();
 					} catch (final CaughtException.Wrapper wrapper) {
@@ -526,14 +476,12 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 		}
 		
 		public final void execute (final Callable<_State_> operation)
-				throws CaughtException.Wrapper
-		{
+					throws CaughtException.Wrapper {
 			Preconditions.checkNotNull (operation);
 			this.capsule.transcript.traceDebugging ("executing machine `%{object}` transaction `%{object}` operation `%{object}` with transition `%s` in state `%s`...", StateMachine.this, this, operation, this.transitionDefinition.transition.name (), this.capsule.currentState.get ().name ());
 			this.execute_ (new Callable<StateAndOutput<_State_, Void>> () {
 				@Override
-				public final StateAndOutput<_State_, Void> call ()
-				{
+				public final StateAndOutput<_State_, Void> call () {
 					final _State_ finalState;
 					try {
 						finalState = operation.call ();
@@ -548,14 +496,12 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 		}
 		
 		public final <_Input_ extends Object, _Output_ extends Object> _Output_ execute (final TransactionOperation<? super Transaction, _State_, _Input_, _Output_> operation, final _Input_ input)
-				throws CaughtException.Wrapper
-		{
+					throws CaughtException.Wrapper {
 			Preconditions.checkNotNull (operation);
 			this.capsule.transcript.traceDebugging ("executing machine `%{object}` transaction `%{object}` operation `%{object}` with transaction `%s` in state `%s`...", StateMachine.this, this, operation, this.transitionDefinition.transition.name (), this.capsule.currentState.get ().name ());
 			final _Output_ output = this.execute_ (new Callable<StateAndOutput<_State_, _Output_>> () {
 				@Override
-				public final StateAndOutput<_State_, _Output_> call ()
-				{
+				public final StateAndOutput<_State_, _Output_> call () {
 					try {
 						return (operation.execute (Transaction.this, input));
 					} catch (final CaughtException.Wrapper wrapper) {
@@ -569,21 +515,18 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 		}
 		
 		public final <_Output_ extends Object> _Output_ execute1 (final Callable<StateAndOutput<_State_, _Output_>> operation)
-				throws CaughtException.Wrapper
-		{
+					throws CaughtException.Wrapper {
 			Preconditions.checkNotNull (operation);
 			this.capsule.transcript.traceDebugging ("executing machine `%{object}` transaction `%{object}` operation `%{object}` with transition `%s` in state `%s`...", StateMachine.this, this, operation, this.transitionDefinition.transition.name (), this.capsule.currentState.get ().name ());
 			final _Output_ output = this.execute_ (operation);
 			return (output);
 		}
 		
-		public final _Transition_ getTransition ()
-		{
+		public final _Transition_ getTransition () {
 			return (this.transition);
 		}
 		
-		public final void rollback ()
-		{
+		public final void rollback () {
 			synchronized (this.capsule.monitor) {
 				if (this.capsule.currentIsolateStack.isEmpty ()) {
 					this.capsule.currentIsolate.compareAndSet (this, null);
@@ -595,8 +538,7 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 		}
 		
 		private final <_Output_ extends Object> _Output_ execute_ (final Callable<StateAndOutput<_State_, _Output_>> operation)
-				throws CaughtException.Wrapper
-		{
+					throws CaughtException.Wrapper {
 			try {
 				this.begin ();
 				final StateAndOutput<_State_, _Output_> stateAndOutput;
@@ -634,17 +576,16 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 	public interface TransactionOperation<_Transaction_ extends StateMachine<_State_, ?>.Transaction, _State_ extends Enum<_State_> & State, _Input_ extends Object, _Output_ extends Object>
 	{
 		public abstract StateAndOutput<_State_, _Output_> execute (final _Transaction_ transaction, _Input_ input)
-				throws Throwable;
+					throws Throwable;
 	}
 	
 	public interface Transition
 	{}
 	
 	final class Capsule
-			extends Object
+				extends Object
 	{
-		Capsule (final Class<_State_> stateClass, final Class<_Transition_> transitionClass, final Transcript transcript, final ExceptionTracer exceptions)
-		{
+		Capsule (final Class<_State_> stateClass, final Class<_Transition_> transitionClass, final Transcript transcript, final ExceptionTracer exceptions) {
 			Preconditions.checkNotNull (stateClass);
 			Preconditions.checkArgument (stateClass.isEnum ());
 			Preconditions.checkNotNull (transitionClass);
@@ -678,12 +619,11 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 	}
 	
 	final class StateDefinition
-			extends Object
-			implements
-				State
+				extends Object
+				implements
+					State
 	{
-		StateDefinition (final _State_ state)
-		{
+		StateDefinition (final _State_ state) {
 			super ();
 			Preconditions.checkNotNull (state);
 			Preconditions.checkArgument (StateMachine.this.capsule.stateClass.isInstance (state));
@@ -696,12 +636,11 @@ public class StateMachine<_State_ extends Enum<_State_> & StateMachine.State, _T
 	}
 	
 	final class TransitionDefinition
-			extends Object
-			implements
-				Transition
+				extends Object
+				implements
+					Transition
 	{
-		TransitionDefinition (final _Transition_ transition, final _State_[] initialStates_, final _State_[] finalStates_)
-		{
+		TransitionDefinition (final _Transition_ transition, final _State_[] initialStates_, final _State_[] finalStates_) {
 			super ();
 			Preconditions.checkNotNull (transition);
 			Preconditions.checkArgument (StateMachine.this.capsule.transitionClass.isInstance (transition));

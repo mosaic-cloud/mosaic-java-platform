@@ -31,17 +31,15 @@ import com.google.common.util.concurrent.Atomics;
 
 
 public final class FallbackExceptionTracer
-		extends InterceptingExceptionTracer
+			extends InterceptingExceptionTracer
 {
-	private FallbackExceptionTracer ()
-	{
+	private FallbackExceptionTracer () {
 		super ();
 		this.globalDelegate = Atomics.newReference (null);
 		this.threadDelegate = new InheritableThreadLocal<ExceptionTracer> ();
 	}
 	
-	public final ExceptionTracer resolveDelegate ()
-	{
+	public final ExceptionTracer resolveDelegate () {
 		{
 			final ExceptionTracer delegate = this.globalDelegate.get ();
 			if (delegate == this)
@@ -59,41 +57,35 @@ public final class FallbackExceptionTracer
 		return (AbortingExceptionTracer.defaultInstance);
 	}
 	
-	public final void setGlobalTracer (final ExceptionTracer tracer)
-	{
+	public final void setGlobalTracer (final ExceptionTracer tracer) {
 		Preconditions.checkNotNull (tracer);
 		Preconditions.checkArgument (tracer != this);
 		this.globalDelegate.set (tracer);
 	}
 	
-	public final void setThreadTracer (final ExceptionTracer tracer)
-	{
+	public final void setThreadTracer (final ExceptionTracer tracer) {
 		Preconditions.checkNotNull (tracer);
 		Preconditions.checkArgument (tracer != this);
 		this.threadDelegate.set (tracer);
 	}
 	
 	@Override
-	protected final ExceptionTracer getDelegate ()
-	{
+	protected final ExceptionTracer getDelegate () {
 		return (this.resolveDelegate ());
 	}
 	
 	@Override
-	protected final void trace_ (final ExceptionResolution resolution, final Throwable exception)
-	{
+	protected final void trace_ (final ExceptionResolution resolution, final Throwable exception) {
 		// NOTE: intentional
 	}
 	
 	@Override
-	protected final void trace_ (final ExceptionResolution resolution, final Throwable exception, final String message)
-	{
+	protected final void trace_ (final ExceptionResolution resolution, final Throwable exception, final String message) {
 		// NOTE: intentional
 	}
 	
 	@Override
-	protected final void trace_ (final ExceptionResolution resolution, final Throwable exception, final String format, final Object ... tokens)
-	{
+	protected final void trace_ (final ExceptionResolution resolution, final Throwable exception, final String format, final Object ... tokens) {
 		// NOTE: intentional
 	}
 	

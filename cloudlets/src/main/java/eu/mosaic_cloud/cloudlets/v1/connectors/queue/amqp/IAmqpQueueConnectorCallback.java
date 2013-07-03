@@ -28,11 +28,10 @@ import eu.mosaic_cloud.cloudlets.v1.connectors.queue.IQueueConnectorCallback;
  * Basic interface for AMQP connector callbacks.
  * 
  * @author Georgiana Macariu
- * 
  * @param <TContext>
  *            the type of the cloudlet context
  */
 public interface IAmqpQueueConnectorCallback<TContext>
-		extends
-			IQueueConnectorCallback<TContext>
+			extends
+				IQueueConnectorCallback<TContext>
 {}

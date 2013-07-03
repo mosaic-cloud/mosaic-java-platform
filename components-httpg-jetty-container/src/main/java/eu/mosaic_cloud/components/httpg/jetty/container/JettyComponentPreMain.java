@@ -27,24 +27,21 @@ import com.google.common.base.Preconditions;
 
 
 public final class JettyComponentPreMain
-		extends Object
+			extends Object
 {
-	private JettyComponentPreMain ()
-	{
+	private JettyComponentPreMain () {
 		super ();
 		throw (new UnsupportedOperationException ());
 	}
 	
 	public static final void main (final String war, final String[] arguments)
-			throws Throwable
-	{
+				throws Throwable {
 		final String configuration = String.format ("{\"%s\":\"%s\"}", "war", war);
 		BasicComponentHarnessPreMain.main (JettyComponentPreMain.class.getName ().replace ("PreMain", "Callbacks"), configuration, arguments);
 	}
 	
 	public static final void main (final String[] arguments)
-			throws Throwable
-	{
+				throws Throwable {
 		Preconditions.checkArgument ((arguments != null) && (arguments.length >= 1), "invalid arguments: expected `<application-war> ...`");
 		final String configuration = String.format ("{\"%s\":\"%s\"}", "war", arguments[0]);
 		BasicComponentHarnessPreMain.main (JettyComponentPreMain.class.getName ().replace ("PreMain", "Callbacks"), configuration, arguments, 1);

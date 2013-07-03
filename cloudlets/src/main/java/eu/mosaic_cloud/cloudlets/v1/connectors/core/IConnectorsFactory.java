@@ -25,9 +25,8 @@ package eu.mosaic_cloud.cloudlets.v1.connectors.core;
  * Interface for the factory of connector factories class.
  * 
  * @author Ciprian Craciun
- * 
  */
 public interface IConnectorsFactory
-		extends
-			eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory
+			extends
+				eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory
 {}

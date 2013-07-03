@@ -23,13 +23,11 @@ package eu.mosaic_cloud.platform.interop.common.kv;
 
 public class KeyValueMessage
 {
-	public KeyValueMessage (final String key, final byte[] data, final String contentType)
-	{
+	public KeyValueMessage (final String key, final byte[] data, final String contentType) {
 		this (key, data, null, contentType);
 	}
 	
-	public KeyValueMessage (final String key, final byte[] data, final String contentEncoding, final String contentType)
-	{
+	public KeyValueMessage (final String key, final byte[] data, final String contentEncoding, final String contentType) {
 		super ();
 		this.key = key;
 		this.data = data;
@@ -37,29 +35,24 @@ public class KeyValueMessage
 		this.contentType = contentType;
 	}
 	
-	public String getContentEncoding ()
-	{
+	public String getContentEncoding () {
 		return this.contentEncoding;
 	}
 	
-	public String getContentType ()
-	{
+	public String getContentType () {
 		return this.contentType;
 	}
 	
-	public byte[] getData ()
-	{
+	public byte[] getData () {
 		return this.data;
 	}
 	
-	public String getKey ()
-	{
+	public String getKey () {
 		return this.key;
 	}
 	
 	@Override
-	public String toString ()
-	{
+	public String toString () {
 		return this.key + " " + this.contentType + "(" + this.contentEncoding + ")";
 	}
 	

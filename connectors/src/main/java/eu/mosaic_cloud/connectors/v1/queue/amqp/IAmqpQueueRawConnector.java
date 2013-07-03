@@ -28,8 +28,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 public interface IAmqpQueueRawConnector
-		extends
-			IQueueConnector
+			extends
+				IQueueConnector
 {
 	/**
 	 * Acknowledge one or several received messages.
@@ -37,11 +37,9 @@ public interface IAmqpQueueRawConnector
 	 * @param delivery
 	 *            the tag received with the messages
 	 * @param multiple
-	 *            <code>true</code> to acknowledge all messages up to and
-	 *            including the supplied delivery tag; <code>false</code> to
-	 *            acknowledge just the supplied delivery tag.
-	 * @return a handle to be used in order to know when and how the operation
-	 *         completes
+	 *            <code>true</code> to acknowledge all messages up to and including the supplied delivery tag;
+	 *            <code>false</code> to acknowledge just the supplied delivery tag.
+	 * @return a handle to be used in order to know when and how the operation completes
 	 */
 	CallbackCompletion<Void> ack (final long delivery, final boolean multiple);
 	
@@ -54,8 +52,7 @@ public interface IAmqpQueueRawConnector
 	 *            the name of the exchange
 	 * @param routingKey
 	 *            the routing key to use for the binding
-	 * @return a handle to be used in order to know when and how the operation
-	 *         completes
+	 * @return a handle to be used in order to know when and how the operation completes
 	 */
 	CallbackCompletion<Void> bindQueue (final String exchange, final String queue, final String routingKey);
 	
@@ -63,10 +60,8 @@ public interface IAmqpQueueRawConnector
 	 * Cancels a consumer.
 	 * 
 	 * @param consumer
-	 *            a client- or server-generated consumer tag to establish
-	 *            context
-	 * @return a handle to be used in order to know when and how the operation
-	 *         completes
+	 *            a client- or server-generated consumer tag to establish context
+	 * @return a handle to be used in order to know when and how the operation completes
 	 */
 	CallbackCompletion<Void> cancel (final String consumer);
 	
@@ -80,14 +75,11 @@ public interface IAmqpQueueRawConnector
 	 * @param exclusive
 	 *            <code>true</code> if this is an exclusive consumer
 	 * @param autoAck
-	 *            <code>true</code> if the server should consider messages
-	 *            acknowledged once delivered; false if the server should expect
-	 *            explicit acknowledgments
+	 *            <code>true</code> if the server should consider messages acknowledged once delivered; false if the server
+	 *            should expect explicit acknowledgments
 	 * @param consumerCallback
-	 *            the consumer callback (this will called when the queuing
-	 *            system will send Consume messages)
-	 * @return a handle to be used in order to know when and how the operation
-	 *         completes
+	 *            the consumer callback (this will called when the queuing system will send Consume messages)
+	 * @return a handle to be used in order to know when and how the operation completes
 	 */
 	CallbackCompletion<Void> consume (final String queue, final String consumer, final boolean exclusive, final boolean autoAck, final IAmqpQueueRawConsumerCallback consumerCallback);
 	
@@ -99,16 +91,12 @@ public interface IAmqpQueueRawConnector
 	 * @param type
 	 *            the exchange type
 	 * @param durable
-	 *            <code>true</code> if we are declaring a durable exchange (the
-	 *            exchange will survive a server restart)
+	 *            <code>true</code> if we are declaring a durable exchange (the exchange will survive a server restart)
 	 * @param autoDelete
-	 *            <code>true</code> if the server should delete the exchange
-	 *            when it is no longer in use
+	 *            <code>true</code> if the server should delete the exchange when it is no longer in use
 	 * @param passive
-	 *            <code>true</code> if we declare an exchange passively; that
-	 *            is, check if the named exchange exists
-	 * @return a handle to be used in order to know when and how the operation
-	 *         completes
+	 *            <code>true</code> if we declare an exchange passively; that is, check if the named exchange exists
+	 * @return a handle to be used in order to know when and how the operation completes
 	 */
 	CallbackCompletion<Void> declareExchange (final String name, final AmqpExchangeType type, final boolean durable, final boolean autoDelete, final boolean passive);
 	
@@ -118,19 +106,14 @@ public interface IAmqpQueueRawConnector
 	 * @param queue
 	 *            the name of the queue
 	 * @param exclusive
-	 *            <code>true</code> if we are declaring an exclusive queue
-	 *            (restricted to this connection)
+	 *            <code>true</code> if we are declaring an exclusive queue (restricted to this connection)
 	 * @param durable
-	 *            <code>true</code> if we are declaring a durable queue (the
-	 *            queue will survive a server restart)
+	 *            <code>true</code> if we are declaring a durable queue (the queue will survive a server restart)
 	 * @param autoDelete
-	 *            <code>true</code> if we are declaring an autodelete queue
-	 *            (server will delete it when no longer in use)
+	 *            <code>true</code> if we are declaring an autodelete queue (server will delete it when no longer in use)
 	 * @param passive
-	 *            <code>true</code> if we declare a queue passively; i.e., check
-	 *            if it exists
-	 * @return a handle to be used in order to know when and how the operation
-	 *         completes
+	 *            <code>true</code> if we declare a queue passively; i.e., check if it exists
+	 * @return a handle to be used in order to know when and how the operation completes
 	 */
 	CallbackCompletion<Void> declareQueue (final String queue, final boolean exclusive, final boolean durable, final boolean autoDelete, final boolean passive);
 	
@@ -140,11 +123,9 @@ public interface IAmqpQueueRawConnector
 	 * @param queue
 	 *            the name of the queue
 	 * @param autoAck
-	 *            <code>true</code> if the server should consider messages
-	 *            acknowledged once delivered; <code>false</code> if the server
-	 *            should expect explicit acknowledgments
-	 * @return a handle to be used in order to know when and how the operation
-	 *         completes
+	 *            <code>true</code> if the server should consider messages acknowledged once delivered; <code>false</code> if
+	 *            the server should expect explicit acknowledgments
+	 * @return a handle to be used in order to know when and how the operation completes
 	 */
 	CallbackCompletion<Void> get (final String queue, final boolean autoAck);
 	
@@ -153,8 +134,7 @@ public interface IAmqpQueueRawConnector
 	 * 
 	 * @param message
 	 *            the message, message properties and destination data
-	 * @return a handle to be used in order to know when and how the operation
-	 *         completes
+	 * @return a handle to be used in order to know when and how the operation completes
 	 */
 	CallbackCompletion<Void> publish (final AmqpOutboundMessage message);
 }

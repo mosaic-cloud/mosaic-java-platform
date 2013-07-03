@@ -30,22 +30,21 @@ import com.google.common.net.InetAddresses;
 
 
 public final class ComponentTcpSocketResourceDescriptor
-		extends ComponentResourceDescriptor
+			extends ComponentResourceDescriptor
 {
-	private ComponentTcpSocketResourceDescriptor (final String identifier, final InetSocketAddress address)
-	{
+	private ComponentTcpSocketResourceDescriptor (final String identifier, final InetSocketAddress address) {
 		super (identifier);
 		Preconditions.checkNotNull (address);
 		this.address = address;
 	}
 	
-	public static final ComponentTcpSocketResourceDescriptor create (final String identifier, final InetSocketAddress address)
-	{
+	public final InetSocketAddress address;
+	
+	public static final ComponentTcpSocketResourceDescriptor create (final String identifier, final InetSocketAddress address) {
 		return (new ComponentTcpSocketResourceDescriptor (identifier, address));
 	}
 	
-	public static final ComponentTcpSocketResourceDescriptor create (final String identifier, final String ip, final int port, final String fqdn)
-	{
+	public static final ComponentTcpSocketResourceDescriptor create (final String identifier, final String ip, final int port, final String fqdn) {
 		Preconditions.checkNotNull (ip);
 		Preconditions.checkArgument ((port > 0) && (port < 65536));
 		final InetAddress addressIp;
@@ -58,6 +57,4 @@ public final class ComponentTcpSocketResourceDescriptor
 		final InetSocketAddress address = new InetSocketAddress (addressIp, port);
 		return (ComponentTcpSocketResourceDescriptor.create (identifier, address));
 	}
-	
-	public final InetSocketAddress address;
 }

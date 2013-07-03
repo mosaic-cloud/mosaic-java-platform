@@ -30,21 +30,19 @@ import com.google.common.base.Preconditions;
 
 
 /**
- * Base class for all connectors. Any connector will have an associated proxy.
- * This proxy will handle all communication between the connector and the proxy.
+ * Base class for all connectors. Any connector will have an associated proxy. This proxy will handle all communication between
+ * the connector and the proxy.
  * 
  * @author Georgiana Macariu
- * 
  * @param <TProxy>
  *            the type of the associated proxy
  */
 public abstract class BaseConnector<TProxy extends BaseConnectorProxy>
-		implements
-			IConnector,
-			CallbackProxy
+			implements
+				IConnector,
+				CallbackProxy
 {
-	protected BaseConnector (final TProxy proxy)
-	{
+	protected BaseConnector (final TProxy proxy) {
 		super ();
 		Preconditions.checkNotNull (proxy);
 		this.proxy = proxy;
@@ -54,14 +52,12 @@ public abstract class BaseConnector<TProxy extends BaseConnectorProxy>
 	}
 	
 	@Override
-	public CallbackCompletion<Void> destroy ()
-	{
+	public CallbackCompletion<Void> destroy () {
 		return this.proxy.destroy ();
 	}
 	
 	@Override
-	public CallbackCompletion<Void> initialize ()
-	{
+	public CallbackCompletion<Void> initialize () {
 		return this.proxy.initialize ();
 	}
 	

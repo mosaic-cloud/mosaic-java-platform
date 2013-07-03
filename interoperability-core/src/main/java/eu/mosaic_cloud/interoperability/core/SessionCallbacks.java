@@ -26,8 +26,8 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
 
 public interface SessionCallbacks
-		extends
-			Callbacks
+			extends
+				Callbacks
 {
 	public abstract CallbackCompletion<Void> created (final Session session);
 	

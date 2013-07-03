@@ -22,20 +22,17 @@ package eu.mosaic_cloud.tools.exceptions.core;
 
 
 public final class DeferredException
-		extends CaughtException
+			extends CaughtException
 {
-	public DeferredException (final Throwable exception)
-	{
+	public DeferredException (final Throwable exception) {
 		super (ExceptionResolution.Deferred, exception);
 	}
 	
-	public DeferredException (final Throwable exception, final String message)
-	{
+	public DeferredException (final Throwable exception, final String message) {
 		super (ExceptionResolution.Deferred, exception, message);
 	}
 	
-	public DeferredException (final Throwable exception, final String messageFormat, final Object ... messageArguments)
-	{
+	public DeferredException (final Throwable exception, final String messageFormat, final Object ... messageArguments) {
 		super (ExceptionResolution.Deferred, exception, messageFormat, messageArguments);
 	}
 	

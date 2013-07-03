@@ -22,8 +22,8 @@ package eu.mosaic_cloud.interoperability.core;
 
 
 public interface MessageSpecification
-		extends
-			Specification
+			extends
+				Specification
 {
 	public abstract String getIdentifier ();
 	

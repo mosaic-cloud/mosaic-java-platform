@@ -22,10 +22,9 @@ package eu.mosaic_cloud.drivers.kvstore.tests;
 
 
 public class RiakRestDriverTest
-		extends RiakDriverTest
+			extends RiakDriverTest
 {
-	public RiakRestDriverTest ()
-	{
+	public RiakRestDriverTest () {
 		super (RiakDriverTest.MOSAIC_RIAK_PORT_REST_DEFAULT);
 		this.configuration.addParameter ("kvstore.driver_name", "RIAKREST");
 	}

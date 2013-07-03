@@ -36,8 +36,7 @@ import org.junit.Test;
 public class PropertyTypeConfigurationTest
 {
 	@Test
-	public void testConfigurationIdentifierResolve ()
-	{
+	public void testConfigurationIdentifierResolve () {
 		final ConfigurationIdentifier id0 = ConfigurationIdentifier.resolveAbsolute ("mosaic");
 		Assert.assertNotNull (id0);
 		Assert.assertEquals ("Absolute for root resolve absolute failed", "/mosaic", id0.getIdentifier ());
@@ -59,14 +58,12 @@ public class PropertyTypeConfigurationTest
 	}
 	
 	@Test
-	public void testEquals ()
-	{
+	public void testEquals () {
 		Assert.assertTrue (PropertyTypeConfigurationTest.configuration.equals (PropertyTypeConfigurationTest.fileConfiguration));
 	}
 	
 	@Test
-	public void testGetParameter ()
-	{
+	public void testGetParameter () {
 		ConfigurationIdentifier id;
 		id = ConfigurationIdentifier.resolveAbsolute ("mosaic/int");
 		final Integer value = PropertyTypeConfigurationTest.configuration.getParameter (id, Integer.class).getValue (0);
@@ -83,16 +80,14 @@ public class PropertyTypeConfigurationTest
 	}
 	
 	@Test
-	public void testPropertyTypeConfiguration ()
-	{
+	public void testPropertyTypeConfiguration () {
 		Assert.assertNotNull (PropertyTypeConfigurationTest.configuration);
 		Assert.assertNotNull (PropertyTypeConfigurationTest.fileConfiguration);
 		Assert.assertNotNull (PropertyTypeConfigurationTest.systemConfiguration);
 	}
 	
 	@Test
-	public void testSpliceConfiguration ()
-	{
+	public void testSpliceConfiguration () {
 		final IConfiguration mConfiguration = PropertyTypeConfigurationTest.configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("mosaic"));
 		final int intValue = ConfigUtils.resolveParameter (mConfiguration, "int", Integer.class, 0);
 		Assert.assertEquals (1, intValue);
@@ -106,8 +101,7 @@ public class PropertyTypeConfigurationTest
 	
 	@BeforeClass
 	public static void setUpBeforeClass ()
-			throws Exception
-	{
+				throws Exception {
 		PropertyTypeConfigurationTest.configuration = PropertyTypeConfiguration.create (PropertyTypeConfigurationTest.class.getClassLoader (), "configuration-test.properties");
 		PropertyTypeConfigurationTest.fileConfiguration = PropertyTypeConfiguration.create (new FileInputStream ("src/test/resources/configuration-test.properties"));
 		PropertyTypeConfigurationTest.systemConfiguration = PropertyTypeConfiguration.create ();

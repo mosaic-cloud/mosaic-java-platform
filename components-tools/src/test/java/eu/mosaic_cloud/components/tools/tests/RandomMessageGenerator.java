@@ -39,52 +39,43 @@ import net.minidev.json.JSONObject;
 
 public final class RandomMessageGenerator
 {
-	private RandomMessageGenerator ()
-	{
+	private RandomMessageGenerator () {
 		super ();
 		this.random = new Random ();
 	}
 	
-	public final JSONArray generateArray ()
-	{
+	public final JSONArray generateArray () {
 		return (this.generateArray (1.0f));
 	}
 	
-	public final ChannelMessage generateChannelMessage ()
-	{
+	public final ChannelMessage generateChannelMessage () {
 		return (ChannelMessage.create (ChannelMessageType.Exchange, this.generateObject (), this.generateData ()));
 	}
 	
-	public final ComponentCallReply generateComponentCallReply (final ComponentCallRequest request)
-	{
+	public final ComponentCallReply generateComponentCallReply (final ComponentCallRequest request) {
 		Preconditions.checkNotNull (request);
 		return (ComponentCallReply.create (true, request.inputs, request.data, request.reference));
 	}
 	
-	public final ComponentCallRequest generateComponentCallRequest ()
-	{
+	public final ComponentCallRequest generateComponentCallRequest () {
 		return (ComponentCallRequest.create (Long.toString (this.random.nextLong ()), this.generateObject (), this.generateData (), ComponentCallReference.create ()));
 	}
 	
-	public final ComponentCastRequest generateComponentCastRequest ()
-	{
+	public final ComponentCastRequest generateComponentCastRequest () {
 		return (ComponentCastRequest.create (Long.toString (this.random.nextLong ()), this.generateObject (), this.generateData ()));
 	}
 	
-	public final ByteBuffer generateData ()
-	{
+	public final ByteBuffer generateData () {
 		final byte[] data = new byte[1024];
 		this.random.nextBytes (data);
 		return (ByteBuffer.wrap (data).asReadOnlyBuffer ());
 	}
 	
-	public final JSONObject generateObject ()
-	{
+	public final JSONObject generateObject () {
 		return (this.generateObject (1.0f));
 	}
 	
-	protected final JSONArray generateArray (final float chance)
-	{
+	protected final JSONArray generateArray (final float chance) {
 		final JSONArray array;
 		if (this.random.nextFloat () <= chance) {
 			array = new JSONArray ();
@@ -98,8 +89,7 @@ public final class RandomMessageGenerator
 		return (array);
 	}
 	
-	protected final JSONObject generateObject (final float chance)
-	{
+	protected final JSONObject generateObject (final float chance) {
 		final JSONObject object;
 		if (this.random.nextFloat () <= chance) {
 			object = new JSONObject ();
@@ -114,11 +104,11 @@ public final class RandomMessageGenerator
 		return (object);
 	}
 	
-	public static final RandomMessageGenerator create ()
-	{
+	protected final Random random;
+	
+	public static final RandomMessageGenerator create () {
 		return (new RandomMessageGenerator ());
 	}
 	
-	protected final Random random;
 	public static final RandomMessageGenerator defaultInstance = RandomMessageGenerator.create ();
 }

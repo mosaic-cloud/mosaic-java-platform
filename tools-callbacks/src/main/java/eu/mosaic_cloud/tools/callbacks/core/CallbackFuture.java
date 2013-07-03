@@ -33,42 +33,37 @@ import com.google.common.base.Preconditions;
 
 
 public final class CallbackFuture<_Outcome_ extends Object>
-		extends Object
-		implements
-			Future<_Outcome_>,
-			Joinable
+			extends Object
+			implements
+				Future<_Outcome_>,
+				Joinable
 {
-	private CallbackFuture (final CallbackCompletion<_Outcome_> completion)
-	{
+	private CallbackFuture (final CallbackCompletion<_Outcome_> completion) {
 		super ();
 		Preconditions.checkArgument (completion != null);
 		this.completion = completion;
 	}
 	
 	@Override
-	public final boolean await ()
-	{
+	public final boolean await () {
 		return (this.await (-1));
 	}
 	
 	@Override
-	public final boolean await (final long timeout)
-	{
+	public final boolean await (final long timeout) {
 		if (this.completion.backend == null)
 			return (true);
 		return (this.completion.backend.awaitCompletion (this.completion, timeout));
 	}
 	
 	@Override
-	public final boolean cancel (final boolean interrupt)
-	{
+	public final boolean cancel (final boolean interrupt) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
 	public final _Outcome_ get ()
-			throws InterruptedException
-	{
+				throws InterruptedException {
 		while (true)
 			try {
 				return (this.get (Long.MAX_VALUE, TimeUnit.DAYS));
@@ -79,9 +74,7 @@ public final class CallbackFuture<_Outcome_ extends Object>
 	
 	@Override
 	public _Outcome_ get (final long timeout, final TimeUnit unit)
-			throws InterruptedException,
-				TimeoutException
-	{
+				throws InterruptedException, TimeoutException {
 		if (!this.await (unit.toMillis (timeout))) {
 			if (Thread.interrupted ())
 				throw (new InterruptedException ());
@@ -91,21 +84,18 @@ public final class CallbackFuture<_Outcome_ extends Object>
 	}
 	
 	@Override
-	public final boolean isCancelled ()
-	{
+	public final boolean isCancelled () {
 		return (false);
 	}
 	
 	@Override
-	public final boolean isDone ()
-	{
+	public final boolean isDone () {
 		return (this.completion.isCompleted ());
 	}
 	
-	public static final <_Outcome_ extends Object> CallbackFuture<_Outcome_> create (final CallbackCompletion<_Outcome_> completion)
-	{
+	public final CallbackCompletion<_Outcome_> completion;
+	
+	public static final <_Outcome_ extends Object> CallbackFuture<_Outcome_> create (final CallbackCompletion<_Outcome_> completion) {
 		return (new CallbackFuture<_Outcome_> (completion));
 	}
-	
-	public final CallbackCompletion<_Outcome_> completion;
 }

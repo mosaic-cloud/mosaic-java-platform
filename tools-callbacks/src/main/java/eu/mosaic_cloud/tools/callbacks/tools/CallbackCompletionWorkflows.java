@@ -32,8 +32,7 @@ import com.google.common.base.Preconditions;
 
 public class CallbackCompletionWorkflows
 {
-	public static final CallbackCompletion<Void> executeSequence (final Callable<CallbackCompletion<Void>> ... operations_)
-	{
+	public static final CallbackCompletion<Void> executeSequence (final Callable<CallbackCompletion<Void>> ... operations_) {
 		Preconditions.checkNotNull (operations_);
 		final ArrayDeque<Callable<CallbackCompletion<Void>>> operations = new ArrayDeque<Callable<CallbackCompletion<Void>>> (operations_.length);
 		for (final Callable<CallbackCompletion<Void>> operation : operations_) {
@@ -43,8 +42,7 @@ public class CallbackCompletionWorkflows
 		final CallbackCompletionDeferredFuture<Void> future = CallbackCompletionDeferredFuture.create (Void.class);
 		final Runnable chainer = new Runnable () {
 			@Override
-			public void run ()
-			{
+			public void run () {
 				final Runnable chainer = this;
 				if (operations.isEmpty ()) {
 					future.trigger.triggerSucceeded (null);
@@ -69,8 +67,7 @@ public class CallbackCompletionWorkflows
 				}
 				completion.observe (new CallbackCompletionObserver () {
 					@Override
-					public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_)
-					{
+					public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_) {
 						Preconditions.checkArgument (completion_ == completion);
 						final Throwable exception = completion.getException ();
 						if (exception != null)

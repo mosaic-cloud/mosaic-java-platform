@@ -56,8 +56,7 @@ import org.junit.Test;
 
 public abstract class RiakDriverTest
 {
-	public RiakDriverTest (final String portDefault)
-	{
+	public RiakDriverTest (final String portDefault) {
 		final Transcript transcript = Transcript.create (this);
 		final QueueingExceptionTracer exceptionsQueue = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		final TranscriptExceptionTracer exceptions = TranscriptExceptionTracer.create (transcript, exceptionsQueue);
@@ -76,28 +75,24 @@ public abstract class RiakDriverTest
 	
 	@Before
 	public void setUp ()
-			throws Exception
-	{
+				throws Exception {
 		this.wrapper = RiakDriver.create (this.configuration, this.threadingContext);
 		this.wrapper.registerClient (RiakDriverTest.keyPrefix, "test");
 		this.encoder = PlainTextDataEncoder.DEFAULT_INSTANCE;
 	}
 	
 	@After
-	public void tearDown ()
-	{
+	public void tearDown () {
 		this.wrapper.unregisterClient (RiakDriverTest.keyPrefix);
 		this.wrapper.destroy ();
 		this.threadingContext.destroy ();
 	}
 	
-	public void testConnection ()
-	{
+	public void testConnection () {
 		Assert.assertNotNull (this.wrapper);
 	}
 	
-	public void testDelete ()
-	{
+	public void testDelete () {
 		final String k1 = RiakDriverTest.keyPrefix + "_key_fantastic";
 		final IOperationCompletionHandler<Boolean> handler1 = new TestLoggingHandler<Boolean> ("delete 1");
 		final IResult<Boolean> r1 = this.wrapper.invokeDeleteOperation (RiakDriverTest.keyPrefix, k1, handler1);
@@ -126,10 +121,7 @@ public abstract class RiakDriverTest
 	
 	@Test
 	public void testDriver ()
-			throws IOException,
-				ClassNotFoundException,
-				EncodingException
-	{
+				throws IOException, ClassNotFoundException, EncodingException {
 		this.testDriverName ();
 		this.testConnection ();
 		this.testSet ();
@@ -139,17 +131,13 @@ public abstract class RiakDriverTest
 		this.testDelete ();
 	}
 	
-	public void testDriverName ()
-	{
+	public void testDriverName () {
 		final String driverName = ConfigUtils.resolveParameter (this.configuration, "kvstore.driver_name", String.class, "");
 		Assert.assertFalse (driverName.isEmpty ());
 	}
 	
 	public void testGet ()
-			throws IOException,
-				ClassNotFoundException,
-				EncodingException
-	{
+				throws IOException, ClassNotFoundException, EncodingException {
 		final String k1 = RiakDriverTest.keyPrefix + "_key_famous";
 		final IOperationCompletionHandler<KeyValueMessage> handler = new TestLoggingHandler<KeyValueMessage> ("get");
 		final IResult<KeyValueMessage> r1 = this.wrapper.invokeGetOperation (RiakDriverTest.keyPrefix, k1, new EncodingMetadata ("text/plain", "identity"), handler);
@@ -165,8 +153,7 @@ public abstract class RiakDriverTest
 		}
 	}
 	
-	public void testList ()
-	{
+	public void testList () {
 		final String k1 = RiakDriverTest.keyPrefix + "_key_fantastic";
 		final String k2 = RiakDriverTest.keyPrefix + "_key_famous";
 		final IOperationCompletionHandler<List<String>> handler = new TestLoggingHandler<List<String>> ("list");
@@ -186,9 +173,7 @@ public abstract class RiakDriverTest
 	}
 	
 	public void testSet ()
-			throws IOException,
-				EncodingException
-	{
+				throws IOException, EncodingException {
 		final String k1 = RiakDriverTest.keyPrefix + "_key_fantastic";
 		final byte[] b1 = this.encoder.encode ("fantastic", new EncodingMetadata ("text/plain", "identity")).data;
 		KeyValueMessage mssg = new KeyValueMessage (k1, b1, "identity", "text/plain");
@@ -213,17 +198,17 @@ public abstract class RiakDriverTest
 		}
 	}
 	
-	@BeforeClass
-	public static void setUpBeforeClass ()
-	{
-		RiakDriverTest.keyPrefix = UUID.randomUUID ().toString ();
-	}
-	
 	protected final IConfiguration configuration;
 	private DataEncoder<String> encoder;
 	private final BaseExceptionTracer exceptions;
 	private final BasicThreadingContext threadingContext;
 	private RiakDriver wrapper;
+	
+	@BeforeClass
+	public static void setUpBeforeClass () {
+		RiakDriverTest.keyPrefix = UUID.randomUUID ().toString ();
+	}
+	
 	public static final String MOSAIC_RIAK_PORT_PB_DEFAULT = "22652";
 	public static final String MOSAIC_RIAK_PORT_REST_DEFAULT = "24637";
 	private static String keyPrefix;

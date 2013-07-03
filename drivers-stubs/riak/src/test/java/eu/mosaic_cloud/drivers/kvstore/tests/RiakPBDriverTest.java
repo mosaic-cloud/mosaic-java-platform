@@ -22,10 +22,9 @@ package eu.mosaic_cloud.drivers.kvstore.tests;
 
 
 public class RiakPBDriverTest
-		extends RiakDriverTest
+			extends RiakDriverTest
 {
-	public RiakPBDriverTest ()
-	{
+	public RiakPBDriverTest () {
 		super (RiakDriverTest.MOSAIC_RIAK_PORT_PB_DEFAULT);
 		this.configuration.addParameter ("kvstore.driver_name", "RIAKPB");
 	}

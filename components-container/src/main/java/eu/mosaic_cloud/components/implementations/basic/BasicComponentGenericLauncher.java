@@ -47,15 +47,13 @@ import ch.qos.logback.classic.Logger;
 
 public final class BasicComponentGenericLauncher
 {
-	private BasicComponentGenericLauncher ()
-	{
+	private BasicComponentGenericLauncher () {
 		super ();
 		throw (new UnsupportedOperationException ());
 	}
 	
 	public static final void launch (final Runnable run, final URL controllerBaseUrl, final String[] controllerCreateUrlArguments, final AtomicReference<String> componentIdentifier, final ThreadingContext threading, final ExceptionTracer exceptions)
-			throws Throwable
-	{
+				throws Throwable {
 		Preconditions.checkNotNull (run);
 		Preconditions.checkNotNull (controllerBaseUrl);
 		Preconditions.checkNotNull (controllerCreateUrlArguments);
@@ -65,8 +63,7 @@ public final class BasicComponentGenericLauncher
 		final Logger logger = (Logger) LoggerFactory.getLogger (BasicComponentGenericLauncher.class);
 		Threading.registerExitCallback (threading, BasicComponentGenericLauncher.class, "exit-hook", new Runnable () {
 			@Override
-			public final void run ()
-			{
+			public final void run () {
 				logger.debug ("starting safety hook...");
 				Threading.sleep (AbortingExceptionTracer.defaulExitTimeout);
 				Threading.halt ();
@@ -74,8 +71,7 @@ public final class BasicComponentGenericLauncher
 		});
 		Threading.registerExitCallback (threading, BasicComponentGenericLauncher.class, "exit-hook-3", new Runnable () {
 			@Override
-			public final void run ()
-			{
+			public final void run () {
 				logger.debug ("stopping component...");
 				final String identifier = componentIdentifier.get ();
 				if (identifier != null)

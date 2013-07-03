@@ -32,40 +32,34 @@ import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 
 
 /**
- * This class implements a configuration handler for project configurations
- * based on property files.
+ * This class implements a configuration handler for project configurations based on property files.
  * 
  * @author CiprianCraciun, Georgiana Macariu
- * 
  */
 public final class PropertyTypeConfiguration
-		implements
-			IConfiguration
+			implements
+				IConfiguration
 {
-	private PropertyTypeConfiguration (final Properties properties)
-	{
+	private PropertyTypeConfiguration (final Properties properties) {
 		super ();
 		this.properties = properties;
 		this.root = ConfigurationIdentifier.ROOT;
 	}
 	
-	private PropertyTypeConfiguration (final Properties properties, final ConfigurationIdentifier root)
-	{
+	private PropertyTypeConfiguration (final Properties properties, final ConfigurationIdentifier root) {
 		super ();
 		this.properties = properties;
 		this.root = root;
 	}
 	
 	@Override
-	public <T> void addParameter (final ConfigurationIdentifier identifier, final T value)
-	{
+	public <T> void addParameter (final ConfigurationIdentifier identifier, final T value) {
 		final String property = identifier.getIdentifier ();
 		this.properties.put (property, value.toString ());
 	}
 	
 	@Override
-	public <T> void addParameter (final String property, final T value)
-	{
+	public <T> void addParameter (final String property, final T value) {
 		this.properties.put (property, value.toString ());
 	}
 	
@@ -75,8 +69,7 @@ public final class PropertyTypeConfiguration
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals (final Object config)
-	{
+	public boolean equals (final Object config) {
 		boolean isEqual;
 		if (config == null) {
 			isEqual = false;
@@ -91,14 +84,12 @@ public final class PropertyTypeConfiguration
 	}
 	
 	@Override
-	public <T extends Object> PropertyTypeParameter<T> getParameter (final ConfigurationIdentifier identifier, final Class<T> valueClass)
-	{
+	public <T extends Object> PropertyTypeParameter<T> getParameter (final ConfigurationIdentifier identifier, final Class<T> valueClass) {
 		return new PropertyTypeParameter<T> (identifier, valueClass);
 	}
 	
 	@Override
-	public ConfigurationIdentifier getRootIdentifier ()
-	{
+	public ConfigurationIdentifier getRootIdentifier () {
 		return this.root;
 	}
 	
@@ -108,8 +99,7 @@ public final class PropertyTypeConfiguration
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
-	public int hashCode ()
-	{
+	public int hashCode () {
 		final int prime = 31;
 		int result = 1;
 		result = (prime * result) + ((this.properties == null) ? 0 : this.properties.hashCode ());
@@ -118,8 +108,7 @@ public final class PropertyTypeConfiguration
 	}
 	
 	@Override
-	public PropertyTypeConfiguration spliceConfiguration (final ConfigurationIdentifier relative)
-	{
+	public PropertyTypeConfiguration spliceConfiguration (final ConfigurationIdentifier relative) {
 		ConfigurationIdentifier root;
 		if (relative.isAbsolute ()) {
 			root = relative;
@@ -130,8 +119,7 @@ public final class PropertyTypeConfiguration
 	}
 	
 	@Override
-	public String toString ()
-	{
+	public String toString () {
 		final StringBuilder builder = new StringBuilder ();
 		for (final Object key : this.properties.keySet ()) {
 			builder.append (key.toString () + ": " + this.properties.getProperty (key.toString ()) + "\n");
@@ -139,8 +127,7 @@ public final class PropertyTypeConfiguration
 		return builder.toString ();
 	}
 	
-	private <T extends Object> T decodeValue (final Class<T> valueClass, final String encodedValue)
-	{
+	private <T extends Object> T decodeValue (final Class<T> valueClass, final String encodedValue) {
 		T value;
 		if (valueClass == String.class) {
 			value = valueClass.cast (encodedValue);
@@ -165,8 +152,7 @@ public final class PropertyTypeConfiguration
 		return value;
 	}
 	
-	private String selectEncodedValue (final ConfigurationIdentifier identifier)
-	{
+	private String selectEncodedValue (final ConfigurationIdentifier identifier) {
 		String key_;
 		if (identifier.isAbsolute ()) {
 			if (identifier == ConfigurationIdentifier.ROOT) {
@@ -181,17 +167,19 @@ public final class PropertyTypeConfiguration
 		return this.properties.getProperty (key, null);
 	}
 	
+	private final Properties properties;
+	private final ConfigurationIdentifier root;
+	
 	// FIXME: Maybe it should be called `createFromSystem`...
-	public static PropertyTypeConfiguration create ()
-	{
+	public static PropertyTypeConfiguration create () {
 		final Properties properties = new Properties (System.getProperties ());
 		final PropertyTypeConfiguration configuration = new PropertyTypeConfiguration (properties);
 		return configuration;
 	}
 	
 	/**
-	 * Creates a configuration object and loads the configuration parameters
-	 * from the specified resource file using a specific class loader.
+	 * Creates a configuration object and loads the configuration parameters from the specified resource file using a specific
+	 * class loader.
 	 * 
 	 * @param classLoader
 	 *            the class loader used for loading the configuration file
@@ -199,8 +187,7 @@ public final class PropertyTypeConfiguration
 	 *            the name of the configuration file
 	 * @return the configuration object
 	 */
-	public static PropertyTypeConfiguration create (final ClassLoader classLoader, final String resource)
-	{
+	public static PropertyTypeConfiguration create (final ClassLoader classLoader, final String resource) {
 		final InputStream stream = classLoader.getResourceAsStream (resource);
 		PropertyTypeConfiguration configuration = null;
 		if (stream != null) {
@@ -221,8 +208,7 @@ public final class PropertyTypeConfiguration
 	}
 	
 	/**
-	 * Creates a configuration object and loads the configuration parameters
-	 * from the specified input stream.
+	 * Creates a configuration object and loads the configuration parameters from the specified input stream.
 	 * 
 	 * @param stream
 	 *            the input stream from where to load configuration parameters
@@ -231,8 +217,7 @@ public final class PropertyTypeConfiguration
 	 *             if an error occurred when reading from the input stream
 	 */
 	public static PropertyTypeConfiguration create (final InputStream stream)
-			throws IOException
-	{
+				throws IOException {
 		final Properties properties = new Properties (System.getProperties ());
 		if (stream != null) {
 			properties.load (stream);
@@ -245,51 +230,41 @@ public final class PropertyTypeConfiguration
 	}
 	
 	@Deprecated
-	public static PropertyTypeConfiguration create (final Properties properties)
-	{
+	public static PropertyTypeConfiguration create (final Properties properties) {
 		final PropertyTypeConfiguration configuration = new PropertyTypeConfiguration (properties);
 		return configuration;
 	}
 	
-	public static PropertyTypeConfiguration createEmpty ()
-	{
+	public static PropertyTypeConfiguration createEmpty () {
 		final Properties properties = new Properties ();
 		final PropertyTypeConfiguration configuration = new PropertyTypeConfiguration (properties);
 		return configuration;
 	}
 	
-	private final Properties properties;
-	private final ConfigurationIdentifier root;
-	
 	/**
-	 * Implements the configuration parameter in property style configuration
-	 * object.
+	 * Implements the configuration parameter in property style configuration object.
 	 * 
 	 * @author Ciprian Craciun, Georgiana Macariu
-	 * 
 	 * @param <T>
 	 *            the type of the value of the parameter
 	 */
 	public final class PropertyTypeParameter<T>
-			implements
-				IConfigurationParameter<T>
+				implements
+					IConfigurationParameter<T>
 	{
-		public PropertyTypeParameter (final ConfigurationIdentifier identifier, final Class<T> valueClass)
-		{
+		public PropertyTypeParameter (final ConfigurationIdentifier identifier, final Class<T> valueClass) {
 			super ();
 			this.identifier = identifier;
 			this.valueClass = valueClass;
 		}
 		
 		@Override
-		public ConfigurationIdentifier getIdentifier ()
-		{
+		public ConfigurationIdentifier getIdentifier () {
 			return this.identifier;
 		}
 		
 		@Override
-		public T getValue (final T defaultValue)
-		{
+		public T getValue (final T defaultValue) {
 			T value;
 			if (this.value == null) {
 				if (this.valueClass == IConfiguration.class) {
@@ -310,8 +285,7 @@ public final class PropertyTypeConfiguration
 		}
 		
 		@Override
-		public Class<T> getValueClass ()
-		{
+		public Class<T> getValueClass () {
 			return this.valueClass;
 		}
 		

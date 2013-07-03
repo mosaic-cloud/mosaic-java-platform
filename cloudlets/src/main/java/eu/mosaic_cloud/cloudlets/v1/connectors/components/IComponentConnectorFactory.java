@@ -25,8 +25,8 @@ import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorFactory;
 
 
 public interface IComponentConnectorFactory
-		extends
-			IConnectorFactory<IComponentConnector<?>>
+			extends
+				IConnectorFactory<IComponentConnector<?>>
 {
 	<TContext, TExtra> IComponentConnector<TExtra> create (IComponentConnectorCallbacks<TContext, TExtra> callbacks, TContext callbacksContext);
 }

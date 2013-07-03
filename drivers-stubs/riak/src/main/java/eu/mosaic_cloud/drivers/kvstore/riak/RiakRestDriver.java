@@ -32,16 +32,14 @@ import org.slf4j.Logger;
 
 
 /**
- * Driver class for the Riak key-value database management systems.
- * 
- * Rest Interface
+ * Driver class for the Riak key-value database management systems. Rest Interface
  * 
  * @author Carmine Di Biase
  * @deprecated
  */
 @Deprecated
 public final class RiakRestDriver
-		extends AbstractKeyValueDriver
+			extends AbstractKeyValueDriver
 {
 	/**
 	 * Creates a new Riak driver.
@@ -53,20 +51,17 @@ public final class RiakRestDriver
 	 * @param riakPort
 	 *            the port for the Riak server
 	 */
-	private RiakRestDriver (final ThreadingContext threading, final int noThreads, final String riakHost, final int riakPort)
-	{
+	private RiakRestDriver (final ThreadingContext threading, final int noThreads, final String riakHost, final int riakPort) {
 		super (threading, noThreads);
 		this.riakHost = riakHost;
 		this.riakPort = riakPort;
 	}
 	
 	/**
-	 * Destroys the driver. After this call no other method should be invoked on
-	 * the driver object.
+	 * Destroys the driver. After this call no other method should be invoked on the driver object.
 	 */
 	@Override
-	public synchronized void destroy ()
-	{
+	public synchronized void destroy () {
 		super.destroy ();
 		RiakRestDriver.logger.trace ("RiakDriver destroyed.");
 	}
@@ -76,13 +71,15 @@ public final class RiakRestDriver
 	 * value store engine
 	 */
 	@Override
-	protected IOperationFactory createOperationFactory (final Object ... params)
-	{
+	protected IOperationFactory createOperationFactory (final Object ... params) {
 		final String bucket = (String) params[0];
 		final String clientId = (String) params[1];
 		final IOperationFactory opFactory = RiakRestOperationFactory.getFactory (this.riakHost, this.riakPort, bucket, clientId);
 		return opFactory;
 	}
+	
+	private final String riakHost;
+	private final int riakPort;
 	
 	/**
 	 * Returns a Riak driver.
@@ -90,19 +87,15 @@ public final class RiakRestDriver
 	 * @param config
 	 *            the configuration parameters required by the driver:
 	 *            <ol>
-	 *            <il>for each server to which the driver should connect there
-	 *            should be two parameters: <i>host_&lt;server_number&gt;</i>
-	 *            and <i>port_&lt;server_number&gt;</i> indicating the hostnames
-	 *            and the ports where the servers are installed </il>
-	 *            <il><i>memcached.driver_threads</i> specifies the maximum
-	 *            number of threads that shall be created by the driver for
-	 *            serving requests </il>
+	 *            <il>for each server to which the driver should connect there should be two parameters:
+	 *            <i>host_&lt;server_number&gt;</i> and <i>port_&lt;server_number&gt;</i> indicating the hostnames and the ports
+	 *            where the servers are installed </il> <il><i>memcached.driver_threads</i> specifies the maximum number of
+	 *            threads that shall be created by the driver for serving requests </il>
 	 *            </ol>
 	 * @return the driver
 	 * @throws IOException
 	 */
-	public static RiakRestDriver create (final IConfiguration config, final ThreadingContext threading)
-	{
+	public static RiakRestDriver create (final IConfiguration config, final ThreadingContext threading) {
 		int port, noThreads;
 		final String host = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_0, String.class, "");
 		port = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_1, Integer.class, 0);
@@ -111,7 +104,5 @@ public final class RiakRestDriver
 		return new RiakRestDriver (threading, noThreads, host, port);
 	}
 	
-	private final String riakHost;
-	private final int riakPort;
 	private static final Logger logger = Transcript.create (RiakRestDriver.class).adaptAs (Logger.class);
 }

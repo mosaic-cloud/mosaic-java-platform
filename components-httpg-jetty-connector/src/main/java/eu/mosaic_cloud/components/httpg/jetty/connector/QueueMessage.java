@@ -30,92 +30,75 @@ import com.rabbitmq.client.QueueingConsumer.Delivery;
 
 
 public class QueueMessage
-		implements
-			Serializable
+			implements
+				Serializable
 {
-	public QueueMessage (final JSONObject headers, final byte[] body)
-	{
+	public QueueMessage (final JSONObject headers, final byte[] body) {
 		this._headers = headers;
 		this.set_body (body);
 	}
 	
-	public byte[] get_body ()
-	{
+	public byte[] get_body () {
 		return this._body;
 	}
 	
-	public String get_callback_exchange ()
-	{
+	public String get_callback_exchange () {
 		return this._callback_exchange;
 	}
 	
-	public String get_callback_identifier ()
-	{
+	public String get_callback_identifier () {
 		return this._callback_identifier;
 	}
 	
-	public String get_callback_routing_key ()
-	{
+	public String get_callback_routing_key () {
 		return this._callback_routing_key;
 	}
 	
-	public Channel get_channel ()
-	{
+	public Channel get_channel () {
 		return this._channel;
 	}
 	
-	public Delivery get_delivery ()
-	{
+	public Delivery get_delivery () {
 		return this._delivery;
 	}
 	
-	public JSONObject get_headers ()
-	{
+	public JSONObject get_headers () {
 		return this._headers;
 	}
 	
-	public byte[] get_http_request ()
-	{
+	public byte[] get_http_request () {
 		return this._http_request;
 	}
 	
-	public void set_body (final byte[] _body)
-	{
+	public void set_body (final byte[] _body) {
 		this._body = _body;
 	}
 	
-	public void set_callback_exchange (final String _callback_exchange)
-	{
+	public void set_callback_exchange (final String _callback_exchange) {
 		this._callback_exchange = _callback_exchange;
 	}
 	
-	public void set_callback_identifier (final String _callback_identifier)
-	{
+	public void set_callback_identifier (final String _callback_identifier) {
 		this._callback_identifier = _callback_identifier;
 	}
 	
-	public void set_callback_routing_key (final String _callback_routing_key)
-	{
+	public void set_callback_routing_key (final String _callback_routing_key) {
 		this._callback_routing_key = _callback_routing_key;
 	}
 	
-	public void set_channel (final Channel _channel)
-	{
+	public void set_channel (final Channel _channel) {
 		this._channel = _channel;
 	}
 	
-	public void set_delivery (final Delivery _delivery)
-	{
+	public void set_delivery (final Delivery _delivery) {
 		this._delivery = _delivery;
 	}
 	
-	public void set_headers (final JSONObject _headers)
-	{
+	public void set_headers (final JSONObject _headers) {
 		this._headers = _headers;
 	}
 	
-	public void set_http_request (final byte[] _http_request)
-	{
+	public void set_http_request (final byte[] _http_request) {
 		this._http_request = _http_request;
 	}
 	

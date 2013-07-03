@@ -25,7 +25,7 @@ import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnector;
 
 
 public interface IQueueConnector
-		extends
-			IConnector,
-			eu.mosaic_cloud.connectors.v1.queue.IQueueConnector
+			extends
+				IConnector,
+				eu.mosaic_cloud.connectors.v1.queue.IQueueConnector
 {}

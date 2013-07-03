@@ -32,18 +32,16 @@ import com.google.common.base.Preconditions;
 
 
 public final class ComponentConnectorFactoryInitializer
-		extends BaseConnectorsFactoryInitializer
+			extends BaseConnectorsFactoryInitializer
 {
-	public ComponentConnectorFactoryInitializer (final eu.mosaic_cloud.connectors.v1.components.IComponentConnector backingConnector)
-	{
+	public ComponentConnectorFactoryInitializer (final eu.mosaic_cloud.connectors.v1.components.IComponentConnector backingConnector) {
 		super ();
 		Preconditions.checkNotNull (backingConnector);
 		this.backingConnector = backingConnector;
 	}
 	
 	@Override
-	protected void initialize_1 (final IConnectorsFactoryBuilder builder, final ICloudletController<?> cloudlet, final ConnectorEnvironment environment, final IConnectorsFactory delegate)
-	{
+	protected void initialize_1 (final IConnectorsFactoryBuilder builder, final ICloudletController<?> cloudlet, final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
 		builder.register (IComponentConnectorFactory.class, new ComponentConnectorFactory (cloudlet, this.backingConnector, environment, delegate));
 	}
 	

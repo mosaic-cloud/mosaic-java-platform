@@ -25,18 +25,19 @@ package eu.mosaic_cloud.platform.interop.idl;
 
 public final class IdlCommon
 {
-	private IdlCommon ()
-	{}
+	private IdlCommon () {}
+	
+	public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor () {
+		return IdlCommon.descriptor;
+	}
+	
+	public static void registerAllExtensions (final com.google.protobuf.ExtensionRegistry registry) {}
 	
 	static {
-		final java.lang.String[] descriptorData =
-				{
-						"\n\014common.proto\022\027mosaic_cloud.idl.common\"" + "8\n\017CompletionToken\022\022\n\nmessage_id\030\001 \002(\t\022\021" + "\n\tclient_id\030\002 \001(\t\"=\n\002Ok\0227\n\005token\030\001 \002(\0132(" + ".mosaic_cloud.idl.common.CompletionToken" + "\"@\n\005NotOk\0227\n\005token\030\001 \002(\0132(.mosaic_cloud." + "idl.common.CompletionToken\"W\n\005Error\0227\n\005t" + "oken\030\001 \002(\0132(.mosaic_cloud.idl.common.Com"
-								+ "pletionToken\022\025\n\rerror_message\030\002 \002(\t\"H\n\rA" + "ccessRequest\0227\n\005token\030\001 \002(\0132(.mosaic_clo" + "ud.idl.common.CompletionToken\"G\n\014AbortRe", "quest\0227\n\005token\030\001 \002(\0132(.mosaic_cloud.idl." + "common.CompletionToken\":\n\010Envelope\022\024\n\014co" + "ntent_type\030\001 \002(\t\022\030\n\020content_encoding\030\002 \001" + "(\tB3\n$eu.mosaic_cloud.platform.interop.i" + "dlB\tIdlCommonH\001"};
+		final java.lang.String[] descriptorData = {"\n\014common.proto\022\027mosaic_cloud.idl.common\"" + "8\n\017CompletionToken\022\022\n\nmessage_id\030\001 \002(\t\022\021" + "\n\tclient_id\030\002 \001(\t\"=\n\002Ok\0227\n\005token\030\001 \002(\0132(" + ".mosaic_cloud.idl.common.CompletionToken" + "\"@\n\005NotOk\0227\n\005token\030\001 \002(\0132(.mosaic_cloud." + "idl.common.CompletionToken\"W\n\005Error\0227\n\005t" + "oken\030\001 \002(\0132(.mosaic_cloud.idl.common.Com" + "pletionToken\022\025\n\rerror_message\030\002 \002(\t\"H\n\rA" + "ccessRequest\0227\n\005token\030\001 \002(\0132(.mosaic_clo" + "ud.idl.common.CompletionToken\"G\n\014AbortRe", "quest\0227\n\005token\030\001 \002(\0132(.mosaic_cloud.idl." + "common.CompletionToken\":\n\010Envelope\022\024\n\014co" + "ntent_type\030\001 \002(\t\022\030\n\020content_encoding\030\002 \001" + "(\tB3\n$eu.mosaic_cloud.platform.interop.i" + "dlB\tIdlCommonH\001"};
 		final com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner = new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner () {
 			@Override
-			public com.google.protobuf.ExtensionRegistry assignDescriptors (final com.google.protobuf.Descriptors.FileDescriptor root)
-			{
+			public com.google.protobuf.ExtensionRegistry assignDescriptors (final com.google.protobuf.Descriptors.FileDescriptor root) {
 				IdlCommon.descriptor = root;
 				IdlCommon.internal_static_mosaic_cloud_idl_common_CompletionToken_descriptor = IdlCommon.getDescriptor ().getMessageTypes ().get (0);
 				IdlCommon.internal_static_mosaic_cloud_idl_common_CompletionToken_fieldAccessorTable = new com.google.protobuf.GeneratedMessage.FieldAccessorTable (IdlCommon.internal_static_mosaic_cloud_idl_common_CompletionToken_descriptor, new java.lang.String[] {"MessageId", "ClientId",}, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.class, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder.class);
@@ -57,15 +58,6 @@ public final class IdlCommon
 		};
 		com.google.protobuf.Descriptors.FileDescriptor.internalBuildGeneratedFileFrom (descriptorData, new com.google.protobuf.Descriptors.FileDescriptor[] {}, assigner);
 	}
-	
-	public static com.google.protobuf.Descriptors.FileDescriptor getDescriptor ()
-	{
-		return IdlCommon.descriptor;
-	}
-	
-	public static void registerAllExtensions (final com.google.protobuf.ExtensionRegistry registry)
-	{}
-	
 	private static com.google.protobuf.Descriptors.FileDescriptor descriptor;
 	private static com.google.protobuf.Descriptors.Descriptor internal_static_mosaic_cloud_idl_common_AbortRequest_descriptor;
 	private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_common_AbortRequest_fieldAccessorTable;
@@ -83,28 +75,24 @@ public final class IdlCommon
 	private static com.google.protobuf.GeneratedMessage.FieldAccessorTable internal_static_mosaic_cloud_idl_common_Ok_fieldAccessorTable;
 	
 	public static final class AbortRequest
-			extends com.google.protobuf.GeneratedMessage
-			implements
-				AbortRequestOrBuilder
+				extends com.google.protobuf.GeneratedMessage
+				implements
+					AbortRequestOrBuilder
 	{
-		private AbortRequest (final boolean noInit)
-		{}
+		private AbortRequest (final boolean noInit) {}
 		
 		// Use AbortRequest.newBuilder() to construct.
-		private AbortRequest (final Builder builder)
-		{
+		private AbortRequest (final Builder builder) {
 			super (builder);
 		}
 		
 		@Override
-		public AbortRequest getDefaultInstanceForType ()
-		{
+		public AbortRequest getDefaultInstanceForType () {
 			return AbortRequest.defaultInstance;
 		}
 		
 		@Override
-		public int getSerializedSize ()
-		{
+		public int getSerializedSize () {
 			int size = this.memoizedSerializedSize;
 			if (size != -1)
 				return size;
@@ -118,26 +106,22 @@ public final class IdlCommon
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 			return this.token_;
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 			return this.token_;
 		}
 		
 		@Override
-		public boolean hasToken ()
-		{
+		public boolean hasToken () {
 			return ((this.bitField0_ & 0x00000001) == 0x00000001);
 		}
 		
 		@Override
-		public final boolean isInitialized ()
-		{
+		public final boolean isInitialized () {
 			final byte isInitialized = this.memoizedIsInitialized;
 			if (isInitialized != -1)
 				return isInitialized == 1;
@@ -154,21 +138,18 @@ public final class IdlCommon
 		}
 		
 		@Override
-		public Builder newBuilderForType ()
-		{
+		public Builder newBuilderForType () {
 			return AbortRequest.newBuilder ();
 		}
 		
 		@Override
-		public Builder toBuilder ()
-		{
+		public Builder toBuilder () {
 			return AbortRequest.newBuilder (this);
 		}
 		
 		@Override
 		public void writeTo (final com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			this.getSerializedSize ();
 			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
 				output.writeMessage (1, this.token_);
@@ -177,58 +158,49 @@ public final class IdlCommon
 		}
 		
 		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-		{
+		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 			return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_AbortRequest_fieldAccessorTable;
 		}
 		
 		@java.lang.Override
-		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent)
-		{
+		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent) {
 			final Builder builder = new Builder (parent);
 			return builder;
 		}
 		
 		@java.lang.Override
 		protected java.lang.Object writeReplace ()
-				throws java.io.ObjectStreamException
-		{
+					throws java.io.ObjectStreamException {
 			return super.writeReplace ();
 		}
 		
-		private void initFields ()
-		{
+		private void initFields () {
 			this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 		}
 		
-		static {
-			defaultInstance = new AbortRequest (true);
-			AbortRequest.defaultInstance.initFields ();
-		}
+		private int bitField0_;
+		private byte memoizedIsInitialized = -1;
+		private int memoizedSerializedSize = -1;
+		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
 		
-		public static AbortRequest getDefaultInstance ()
-		{
+		public static AbortRequest getDefaultInstance () {
 			return AbortRequest.defaultInstance;
 		}
 		
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-		{
+		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
 			return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_AbortRequest_descriptor;
 		}
 		
-		public static Builder newBuilder ()
-		{
+		public static Builder newBuilder () {
 			return Builder.create ();
 		}
 		
-		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest prototype)
-		{
+		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest prototype) {
 			return AbortRequest.newBuilder ().mergeFrom (prototype);
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest parseDelimitedFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = AbortRequest.newBuilder ();
 			if (builder.mergeDelimitedFrom (input)) {
 				return builder.buildParsed ();
@@ -238,8 +210,7 @@ public final class IdlCommon
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = AbortRequest.newBuilder ();
 			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
 				return builder.buildParsed ();
@@ -249,82 +220,71 @@ public final class IdlCommon
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest parseFrom (final byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return AbortRequest.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return AbortRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest parseFrom (final com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return AbortRequest.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return AbortRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest parseFrom (final com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return AbortRequest.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return AbortRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest parseFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return AbortRequest.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return AbortRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
-		private int bitField0_;
-		private byte memoizedIsInitialized = -1;
-		private int memoizedSerializedSize = -1;
-		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
+		static {
+			defaultInstance = new AbortRequest (true);
+			AbortRequest.defaultInstance.initFields ();
+		}
 		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 		public static final int TOKEN_FIELD_NUMBER = 1;
 		private static final AbortRequest defaultInstance;
 		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
-				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequestOrBuilder
+					extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+					implements
+						eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequestOrBuilder
 		{
 			// Construct using eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest.newBuilder()
-			private Builder ()
-			{
+			private Builder () {
 				this.maybeForceBuilderInitialization ();
 			}
 			
-			private Builder (final BuilderParent parent)
-			{
+			private Builder (final BuilderParent parent) {
 				super (parent);
 				this.maybeForceBuilderInitialization ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest build ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest build () {
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
@@ -333,8 +293,7 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest buildPartial ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest buildPartial () {
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest result = new eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest (this);
 				final int from_bitField0_ = this.bitField0_;
 				int to_bitField0_ = 0;
@@ -352,8 +311,7 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public Builder clear ()
-			{
+			public Builder clear () {
 				super.clear ();
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
@@ -364,8 +322,7 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder clearToken ()
-			{
+			public Builder clearToken () {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 					this.onChanged ();
@@ -377,26 +334,22 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public Builder clone ()
-			{
+			public Builder clone () {
 				return Builder.create ().mergeFrom (this.buildPartial ());
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest getDefaultInstanceForType ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest getDefaultInstanceForType () {
 				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest.getDefaultInstance ();
 			}
 			
 			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType ()
-			{
+			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType () {
 				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest.getDescriptor ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 				if (this.tokenBuilder_ == null) {
 					return this.token_;
 				} else {
@@ -404,16 +357,14 @@ public final class IdlCommon
 				}
 			}
 			
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder () {
 				this.bitField0_ |= 0x00000001;
 				this.onChanged ();
 				return this.getTokenFieldBuilder ().getBuilder ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 				if (this.tokenBuilder_ != null) {
 					return this.tokenBuilder_.getMessageOrBuilder ();
 				} else {
@@ -422,14 +373,12 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public boolean hasToken ()
-			{
+			public boolean hasToken () {
 				return ((this.bitField0_ & 0x00000001) == 0x00000001);
 			}
 			
 			@Override
-			public final boolean isInitialized ()
-			{
+			public final boolean isInitialized () {
 				if (!this.hasToken ()) {
 					return false;
 				}
@@ -441,8 +390,7 @@ public final class IdlCommon
 			
 			@Override
 			public Builder mergeFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException
-			{
+						throws java.io.IOException {
 				final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder (this.getUnknownFields ());
 				while (true) {
 					final int tag = input.readTag ();
@@ -451,7 +399,7 @@ public final class IdlCommon
 							this.setUnknownFields (unknownFields.build ());
 							this.onChanged ();
 							return this;
-						default: {
+						default : {
 							if (!this.parseUnknownField (input, unknownFields, extensionRegistry, tag)) {
 								this.setUnknownFields (unknownFields.build ());
 								this.onChanged ();
@@ -473,8 +421,7 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public Builder mergeFrom (final com.google.protobuf.Message other)
-			{
+			public Builder mergeFrom (final com.google.protobuf.Message other) {
 				if (other instanceof eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest) {
 					return this.mergeFrom ((eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest) other);
 				} else {
@@ -483,8 +430,7 @@ public final class IdlCommon
 				}
 			}
 			
-			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest other)
-			{
+			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest other) {
 				if (other == eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest.getDefaultInstance ())
 					return this;
 				if (other.hasToken ()) {
@@ -494,8 +440,7 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (((this.bitField0_ & 0x00000001) == 0x00000001) && (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ())) {
 						this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.newBuilder (this.token_).mergeFrom (value).buildPartial ();
@@ -510,8 +455,7 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (value == null) {
 						throw new NullPointerException ();
@@ -525,8 +469,7 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = builderForValue.build ();
 					this.onChanged ();
@@ -538,14 +481,12 @@ public final class IdlCommon
 			}
 			
 			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-			{
+			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_AbortRequest_fieldAccessorTable;
 			}
 			
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest buildParsed ()
-					throws com.google.protobuf.InvalidProtocolBufferException
-			{
+						throws com.google.protobuf.InvalidProtocolBufferException {
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
@@ -553,8 +494,7 @@ public final class IdlCommon
 				return result;
 			}
 			
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder ()
-			{
+			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder () {
 				if (this.tokenBuilder_ == null) {
 					this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> (this.token_, this.getParentForChildren (), this.isClean ());
 					this.token_ = null;
@@ -562,35 +502,32 @@ public final class IdlCommon
 				return this.tokenBuilder_;
 			}
 			
-			private void maybeForceBuilderInitialization ()
-			{
+			private void maybeForceBuilderInitialization () {
 				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
 					this.getTokenFieldBuilder ();
 				}
-			}
-			
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-			{
-				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_AbortRequest_descriptor;
-			}
-			
-			private static Builder create ()
-			{
-				return new Builder ();
 			}
 			
 			private int bitField0_;
 			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
+			
 			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.common.AbortRequest)
+			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_AbortRequest_descriptor;
+			}
+			
+			private static Builder create () {
+				return new Builder ();
+			}
 		}
 		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.common.AbortRequest)
 	}
 	
 	public interface AbortRequestOrBuilder
-			extends
-				com.google.protobuf.MessageOrBuilder
+				extends
+					com.google.protobuf.MessageOrBuilder
 	{
 		eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ();
 		
@@ -601,28 +538,24 @@ public final class IdlCommon
 	}
 	
 	public static final class AccessRequest
-			extends com.google.protobuf.GeneratedMessage
-			implements
-				AccessRequestOrBuilder
+				extends com.google.protobuf.GeneratedMessage
+				implements
+					AccessRequestOrBuilder
 	{
-		private AccessRequest (final boolean noInit)
-		{}
+		private AccessRequest (final boolean noInit) {}
 		
 		// Use AccessRequest.newBuilder() to construct.
-		private AccessRequest (final Builder builder)
-		{
+		private AccessRequest (final Builder builder) {
 			super (builder);
 		}
 		
 		@Override
-		public AccessRequest getDefaultInstanceForType ()
-		{
+		public AccessRequest getDefaultInstanceForType () {
 			return AccessRequest.defaultInstance;
 		}
 		
 		@Override
-		public int getSerializedSize ()
-		{
+		public int getSerializedSize () {
 			int size = this.memoizedSerializedSize;
 			if (size != -1)
 				return size;
@@ -636,26 +569,22 @@ public final class IdlCommon
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 			return this.token_;
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 			return this.token_;
 		}
 		
 		@Override
-		public boolean hasToken ()
-		{
+		public boolean hasToken () {
 			return ((this.bitField0_ & 0x00000001) == 0x00000001);
 		}
 		
 		@Override
-		public final boolean isInitialized ()
-		{
+		public final boolean isInitialized () {
 			final byte isInitialized = this.memoizedIsInitialized;
 			if (isInitialized != -1)
 				return isInitialized == 1;
@@ -672,21 +601,18 @@ public final class IdlCommon
 		}
 		
 		@Override
-		public Builder newBuilderForType ()
-		{
+		public Builder newBuilderForType () {
 			return AccessRequest.newBuilder ();
 		}
 		
 		@Override
-		public Builder toBuilder ()
-		{
+		public Builder toBuilder () {
 			return AccessRequest.newBuilder (this);
 		}
 		
 		@Override
 		public void writeTo (final com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			this.getSerializedSize ();
 			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
 				output.writeMessage (1, this.token_);
@@ -695,58 +621,49 @@ public final class IdlCommon
 		}
 		
 		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-		{
+		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 			return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_AccessRequest_fieldAccessorTable;
 		}
 		
 		@java.lang.Override
-		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent)
-		{
+		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent) {
 			final Builder builder = new Builder (parent);
 			return builder;
 		}
 		
 		@java.lang.Override
 		protected java.lang.Object writeReplace ()
-				throws java.io.ObjectStreamException
-		{
+					throws java.io.ObjectStreamException {
 			return super.writeReplace ();
 		}
 		
-		private void initFields ()
-		{
+		private void initFields () {
 			this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 		}
 		
-		static {
-			defaultInstance = new AccessRequest (true);
-			AccessRequest.defaultInstance.initFields ();
-		}
+		private int bitField0_;
+		private byte memoizedIsInitialized = -1;
+		private int memoizedSerializedSize = -1;
+		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
 		
-		public static AccessRequest getDefaultInstance ()
-		{
+		public static AccessRequest getDefaultInstance () {
 			return AccessRequest.defaultInstance;
 		}
 		
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-		{
+		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
 			return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_AccessRequest_descriptor;
 		}
 		
-		public static Builder newBuilder ()
-		{
+		public static Builder newBuilder () {
 			return Builder.create ();
 		}
 		
-		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest prototype)
-		{
+		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest prototype) {
 			return AccessRequest.newBuilder ().mergeFrom (prototype);
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest parseDelimitedFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = AccessRequest.newBuilder ();
 			if (builder.mergeDelimitedFrom (input)) {
 				return builder.buildParsed ();
@@ -756,8 +673,7 @@ public final class IdlCommon
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = AccessRequest.newBuilder ();
 			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
 				return builder.buildParsed ();
@@ -767,82 +683,71 @@ public final class IdlCommon
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest parseFrom (final byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return AccessRequest.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return AccessRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest parseFrom (final com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return AccessRequest.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return AccessRequest.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest parseFrom (final com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return AccessRequest.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return AccessRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest parseFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return AccessRequest.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return AccessRequest.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
-		private int bitField0_;
-		private byte memoizedIsInitialized = -1;
-		private int memoizedSerializedSize = -1;
-		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
+		static {
+			defaultInstance = new AccessRequest (true);
+			AccessRequest.defaultInstance.initFields ();
+		}
 		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 		public static final int TOKEN_FIELD_NUMBER = 1;
 		private static final AccessRequest defaultInstance;
 		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
-				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequestOrBuilder
+					extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+					implements
+						eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequestOrBuilder
 		{
 			// Construct using eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest.newBuilder()
-			private Builder ()
-			{
+			private Builder () {
 				this.maybeForceBuilderInitialization ();
 			}
 			
-			private Builder (final BuilderParent parent)
-			{
+			private Builder (final BuilderParent parent) {
 				super (parent);
 				this.maybeForceBuilderInitialization ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest build ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest build () {
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
@@ -851,8 +756,7 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest buildPartial ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest buildPartial () {
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest result = new eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest (this);
 				final int from_bitField0_ = this.bitField0_;
 				int to_bitField0_ = 0;
@@ -870,8 +774,7 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public Builder clear ()
-			{
+			public Builder clear () {
 				super.clear ();
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
@@ -882,8 +785,7 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder clearToken ()
-			{
+			public Builder clearToken () {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 					this.onChanged ();
@@ -895,26 +797,22 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public Builder clone ()
-			{
+			public Builder clone () {
 				return Builder.create ().mergeFrom (this.buildPartial ());
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest getDefaultInstanceForType ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest getDefaultInstanceForType () {
 				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest.getDefaultInstance ();
 			}
 			
 			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType ()
-			{
+			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType () {
 				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest.getDescriptor ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 				if (this.tokenBuilder_ == null) {
 					return this.token_;
 				} else {
@@ -922,16 +820,14 @@ public final class IdlCommon
 				}
 			}
 			
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder () {
 				this.bitField0_ |= 0x00000001;
 				this.onChanged ();
 				return this.getTokenFieldBuilder ().getBuilder ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 				if (this.tokenBuilder_ != null) {
 					return this.tokenBuilder_.getMessageOrBuilder ();
 				} else {
@@ -940,14 +836,12 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public boolean hasToken ()
-			{
+			public boolean hasToken () {
 				return ((this.bitField0_ & 0x00000001) == 0x00000001);
 			}
 			
 			@Override
-			public final boolean isInitialized ()
-			{
+			public final boolean isInitialized () {
 				if (!this.hasToken ()) {
 					return false;
 				}
@@ -959,8 +853,7 @@ public final class IdlCommon
 			
 			@Override
 			public Builder mergeFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException
-			{
+						throws java.io.IOException {
 				final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder (this.getUnknownFields ());
 				while (true) {
 					final int tag = input.readTag ();
@@ -969,7 +862,7 @@ public final class IdlCommon
 							this.setUnknownFields (unknownFields.build ());
 							this.onChanged ();
 							return this;
-						default: {
+						default : {
 							if (!this.parseUnknownField (input, unknownFields, extensionRegistry, tag)) {
 								this.setUnknownFields (unknownFields.build ());
 								this.onChanged ();
@@ -991,8 +884,7 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public Builder mergeFrom (final com.google.protobuf.Message other)
-			{
+			public Builder mergeFrom (final com.google.protobuf.Message other) {
 				if (other instanceof eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest) {
 					return this.mergeFrom ((eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest) other);
 				} else {
@@ -1001,8 +893,7 @@ public final class IdlCommon
 				}
 			}
 			
-			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest other)
-			{
+			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest other) {
 				if (other == eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest.getDefaultInstance ())
 					return this;
 				if (other.hasToken ()) {
@@ -1012,8 +903,7 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (((this.bitField0_ & 0x00000001) == 0x00000001) && (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ())) {
 						this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.newBuilder (this.token_).mergeFrom (value).buildPartial ();
@@ -1028,8 +918,7 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (value == null) {
 						throw new NullPointerException ();
@@ -1043,8 +932,7 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = builderForValue.build ();
 					this.onChanged ();
@@ -1056,14 +944,12 @@ public final class IdlCommon
 			}
 			
 			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-			{
+			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_AccessRequest_fieldAccessorTable;
 			}
 			
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest buildParsed ()
-					throws com.google.protobuf.InvalidProtocolBufferException
-			{
+						throws com.google.protobuf.InvalidProtocolBufferException {
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.AccessRequest result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
@@ -1071,8 +957,7 @@ public final class IdlCommon
 				return result;
 			}
 			
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder ()
-			{
+			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder () {
 				if (this.tokenBuilder_ == null) {
 					this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> (this.token_, this.getParentForChildren (), this.isClean ());
 					this.token_ = null;
@@ -1080,35 +965,32 @@ public final class IdlCommon
 				return this.tokenBuilder_;
 			}
 			
-			private void maybeForceBuilderInitialization ()
-			{
+			private void maybeForceBuilderInitialization () {
 				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
 					this.getTokenFieldBuilder ();
 				}
-			}
-			
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-			{
-				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_AccessRequest_descriptor;
-			}
-			
-			private static Builder create ()
-			{
-				return new Builder ();
 			}
 			
 			private int bitField0_;
 			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
+			
 			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.common.AccessRequest)
+			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_AccessRequest_descriptor;
+			}
+			
+			private static Builder create () {
+				return new Builder ();
+			}
 		}
 		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.common.AccessRequest)
 	}
 	
 	public interface AccessRequestOrBuilder
-			extends
-				com.google.protobuf.MessageOrBuilder
+				extends
+					com.google.protobuf.MessageOrBuilder
 	{
 		eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ();
 		
@@ -1119,22 +1001,19 @@ public final class IdlCommon
 	}
 	
 	public static final class CompletionToken
-			extends com.google.protobuf.GeneratedMessage
-			implements
-				CompletionTokenOrBuilder
+				extends com.google.protobuf.GeneratedMessage
+				implements
+					CompletionTokenOrBuilder
 	{
-		private CompletionToken (final boolean noInit)
-		{}
+		private CompletionToken (final boolean noInit) {}
 		
 		// Use CompletionToken.newBuilder() to construct.
-		private CompletionToken (final Builder builder)
-		{
+		private CompletionToken (final Builder builder) {
 			super (builder);
 		}
 		
 		@Override
-		public String getClientId ()
-		{
+		public String getClientId () {
 			final java.lang.Object ref = this.clientId_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -1149,14 +1028,12 @@ public final class IdlCommon
 		}
 		
 		@Override
-		public CompletionToken getDefaultInstanceForType ()
-		{
+		public CompletionToken getDefaultInstanceForType () {
 			return CompletionToken.defaultInstance;
 		}
 		
 		@Override
-		public String getMessageId ()
-		{
+		public String getMessageId () {
 			final java.lang.Object ref = this.messageId_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -1171,8 +1048,7 @@ public final class IdlCommon
 		}
 		
 		@Override
-		public int getSerializedSize ()
-		{
+		public int getSerializedSize () {
 			int size = this.memoizedSerializedSize;
 			if (size != -1)
 				return size;
@@ -1189,20 +1065,17 @@ public final class IdlCommon
 		}
 		
 		@Override
-		public boolean hasClientId ()
-		{
+		public boolean hasClientId () {
 			return ((this.bitField0_ & 0x00000002) == 0x00000002);
 		}
 		
 		@Override
-		public boolean hasMessageId ()
-		{
+		public boolean hasMessageId () {
 			return ((this.bitField0_ & 0x00000001) == 0x00000001);
 		}
 		
 		@Override
-		public final boolean isInitialized ()
-		{
+		public final boolean isInitialized () {
 			final byte isInitialized = this.memoizedIsInitialized;
 			if (isInitialized != -1)
 				return isInitialized == 1;
@@ -1215,21 +1088,18 @@ public final class IdlCommon
 		}
 		
 		@Override
-		public Builder newBuilderForType ()
-		{
+		public Builder newBuilderForType () {
 			return CompletionToken.newBuilder ();
 		}
 		
 		@Override
-		public Builder toBuilder ()
-		{
+		public Builder toBuilder () {
 			return CompletionToken.newBuilder (this);
 		}
 		
 		@Override
 		public void writeTo (final com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			this.getSerializedSize ();
 			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
 				output.writeBytes (1, this.getMessageIdBytes ());
@@ -1241,27 +1111,23 @@ public final class IdlCommon
 		}
 		
 		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-		{
+		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 			return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_CompletionToken_fieldAccessorTable;
 		}
 		
 		@java.lang.Override
-		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent)
-		{
+		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent) {
 			final Builder builder = new Builder (parent);
 			return builder;
 		}
 		
 		@java.lang.Override
 		protected java.lang.Object writeReplace ()
-				throws java.io.ObjectStreamException
-		{
+					throws java.io.ObjectStreamException {
 			return super.writeReplace ();
 		}
 		
-		private com.google.protobuf.ByteString getClientIdBytes ()
-		{
+		private com.google.protobuf.ByteString getClientIdBytes () {
 			final java.lang.Object ref = this.clientId_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -1272,8 +1138,7 @@ public final class IdlCommon
 			}
 		}
 		
-		private com.google.protobuf.ByteString getMessageIdBytes ()
-		{
+		private com.google.protobuf.ByteString getMessageIdBytes () {
 			final java.lang.Object ref = this.messageId_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -1284,40 +1149,35 @@ public final class IdlCommon
 			}
 		}
 		
-		private void initFields ()
-		{
+		private void initFields () {
 			this.messageId_ = "";
 			this.clientId_ = "";
 		}
 		
-		static {
-			defaultInstance = new CompletionToken (true);
-			CompletionToken.defaultInstance.initFields ();
-		}
+		private int bitField0_;
+		private java.lang.Object clientId_;
+		private byte memoizedIsInitialized = -1;
+		private int memoizedSerializedSize = -1;
+		private java.lang.Object messageId_;
 		
-		public static CompletionToken getDefaultInstance ()
-		{
+		public static CompletionToken getDefaultInstance () {
 			return CompletionToken.defaultInstance;
 		}
 		
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-		{
+		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
 			return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_CompletionToken_descriptor;
 		}
 		
-		public static Builder newBuilder ()
-		{
+		public static Builder newBuilder () {
 			return Builder.create ();
 		}
 		
-		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken prototype)
-		{
+		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken prototype) {
 			return CompletionToken.newBuilder ().mergeFrom (prototype);
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken parseDelimitedFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = CompletionToken.newBuilder ();
 			if (builder.mergeDelimitedFrom (input)) {
 				return builder.buildParsed ();
@@ -1327,8 +1187,7 @@ public final class IdlCommon
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = CompletionToken.newBuilder ();
 			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
 				return builder.buildParsed ();
@@ -1338,58 +1197,49 @@ public final class IdlCommon
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken parseFrom (final byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return CompletionToken.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return CompletionToken.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken parseFrom (final com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return CompletionToken.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return CompletionToken.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken parseFrom (final com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return CompletionToken.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return CompletionToken.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken parseFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return CompletionToken.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return CompletionToken.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
-		private int bitField0_;
-		private java.lang.Object clientId_;
-		private byte memoizedIsInitialized = -1;
-		private int memoizedSerializedSize = -1;
-		private java.lang.Object messageId_;
+		static {
+			defaultInstance = new CompletionToken (true);
+			CompletionToken.defaultInstance.initFields ();
+		}
 		// optional string client_id = 2;
 		public static final int CLIENT_ID_FIELD_NUMBER = 2;
 		// required string message_id = 1;
@@ -1398,25 +1248,22 @@ public final class IdlCommon
 		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
-				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder
+					extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+					implements
+						eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder
 		{
 			// Construct using eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.newBuilder()
-			private Builder ()
-			{
+			private Builder () {
 				this.maybeForceBuilderInitialization ();
 			}
 			
-			private Builder (final BuilderParent parent)
-			{
+			private Builder (final BuilderParent parent) {
 				super (parent);
 				this.maybeForceBuilderInitialization ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken build ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken build () {
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
@@ -1425,8 +1272,7 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken buildPartial ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken buildPartial () {
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken result = new eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken (this);
 				final int from_bitField0_ = this.bitField0_;
 				int to_bitField0_ = 0;
@@ -1444,8 +1290,7 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public Builder clear ()
-			{
+			public Builder clear () {
 				super.clear ();
 				this.messageId_ = "";
 				this.bitField0_ = (this.bitField0_ & ~0x00000001);
@@ -1454,16 +1299,14 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder clearClientId ()
-			{
+			public Builder clearClientId () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000002);
 				this.clientId_ = CompletionToken.getDefaultInstance ().getClientId ();
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearMessageId ()
-			{
+			public Builder clearMessageId () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000001);
 				this.messageId_ = CompletionToken.getDefaultInstance ().getMessageId ();
 				this.onChanged ();
@@ -1471,14 +1314,12 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public Builder clone ()
-			{
+			public Builder clone () {
 				return Builder.create ().mergeFrom (this.buildPartial ());
 			}
 			
 			@Override
-			public String getClientId ()
-			{
+			public String getClientId () {
 				final java.lang.Object ref = this.clientId_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -1490,20 +1331,17 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getDefaultInstanceForType ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getDefaultInstanceForType () {
 				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			}
 			
 			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType ()
-			{
+			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType () {
 				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDescriptor ();
 			}
 			
 			@Override
-			public String getMessageId ()
-			{
+			public String getMessageId () {
 				final java.lang.Object ref = this.messageId_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -1515,20 +1353,17 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public boolean hasClientId ()
-			{
+			public boolean hasClientId () {
 				return ((this.bitField0_ & 0x00000002) == 0x00000002);
 			}
 			
 			@Override
-			public boolean hasMessageId ()
-			{
+			public boolean hasMessageId () {
 				return ((this.bitField0_ & 0x00000001) == 0x00000001);
 			}
 			
 			@Override
-			public final boolean isInitialized ()
-			{
+			public final boolean isInitialized () {
 				if (!this.hasMessageId ()) {
 					return false;
 				}
@@ -1537,8 +1372,7 @@ public final class IdlCommon
 			
 			@Override
 			public Builder mergeFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException
-			{
+						throws java.io.IOException {
 				final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder (this.getUnknownFields ());
 				while (true) {
 					final int tag = input.readTag ();
@@ -1547,7 +1381,7 @@ public final class IdlCommon
 							this.setUnknownFields (unknownFields.build ());
 							this.onChanged ();
 							return this;
-						default: {
+						default : {
 							if (!this.parseUnknownField (input, unknownFields, extensionRegistry, tag)) {
 								this.setUnknownFields (unknownFields.build ());
 								this.onChanged ();
@@ -1570,8 +1404,7 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public Builder mergeFrom (final com.google.protobuf.Message other)
-			{
+			public Builder mergeFrom (final com.google.protobuf.Message other) {
 				if (other instanceof eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken) {
 					return this.mergeFrom ((eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken) other);
 				} else {
@@ -1580,8 +1413,7 @@ public final class IdlCommon
 				}
 			}
 			
-			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken other)
-			{
+			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken other) {
 				if (other == eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ())
 					return this;
 				if (other.hasMessageId ()) {
@@ -1594,8 +1426,7 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder setClientId (final String value)
-			{
+			public Builder setClientId (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -1605,8 +1436,7 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder setMessageId (final String value)
-			{
+			public Builder setMessageId (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -1617,28 +1447,24 @@ public final class IdlCommon
 			}
 			
 			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-			{
+			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_CompletionToken_fieldAccessorTable;
 			}
 			
-			void setClientId (final com.google.protobuf.ByteString value)
-			{
+			void setClientId (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000002;
 				this.clientId_ = value;
 				this.onChanged ();
 			}
 			
-			void setMessageId (final com.google.protobuf.ByteString value)
-			{
+			void setMessageId (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000001;
 				this.messageId_ = value;
 				this.onChanged ();
 			}
 			
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken buildParsed ()
-					throws com.google.protobuf.InvalidProtocolBufferException
-			{
+						throws com.google.protobuf.InvalidProtocolBufferException {
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
@@ -1646,19 +1472,8 @@ public final class IdlCommon
 				return result;
 			}
 			
-			private void maybeForceBuilderInitialization ()
-			{
+			private void maybeForceBuilderInitialization () {
 				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {}
-			}
-			
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-			{
-				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_CompletionToken_descriptor;
-			}
-			
-			private static Builder create ()
-			{
-				return new Builder ();
 			}
 			
 			private int bitField0_;
@@ -1666,14 +1481,22 @@ public final class IdlCommon
 			private java.lang.Object clientId_ = "";
 			// required string message_id = 1;
 			private java.lang.Object messageId_ = "";
+			
 			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.common.CompletionToken)
+			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_CompletionToken_descriptor;
+			}
+			
+			private static Builder create () {
+				return new Builder ();
+			}
 		}
 		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.common.CompletionToken)
 	}
 	
 	public interface CompletionTokenOrBuilder
-			extends
-				com.google.protobuf.MessageOrBuilder
+				extends
+					com.google.protobuf.MessageOrBuilder
 	{
 		String getClientId ();
 		
@@ -1687,22 +1510,19 @@ public final class IdlCommon
 	}
 	
 	public static final class Envelope
-			extends com.google.protobuf.GeneratedMessage
-			implements
-				EnvelopeOrBuilder
+				extends com.google.protobuf.GeneratedMessage
+				implements
+					EnvelopeOrBuilder
 	{
-		private Envelope (final boolean noInit)
-		{}
+		private Envelope (final boolean noInit) {}
 		
 		// Use Envelope.newBuilder() to construct.
-		private Envelope (final Builder builder)
-		{
+		private Envelope (final Builder builder) {
 			super (builder);
 		}
 		
 		@Override
-		public String getContentEncoding ()
-		{
+		public String getContentEncoding () {
 			final java.lang.Object ref = this.contentEncoding_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -1717,8 +1537,7 @@ public final class IdlCommon
 		}
 		
 		@Override
-		public String getContentType ()
-		{
+		public String getContentType () {
 			final java.lang.Object ref = this.contentType_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -1733,14 +1552,12 @@ public final class IdlCommon
 		}
 		
 		@Override
-		public Envelope getDefaultInstanceForType ()
-		{
+		public Envelope getDefaultInstanceForType () {
 			return Envelope.defaultInstance;
 		}
 		
 		@Override
-		public int getSerializedSize ()
-		{
+		public int getSerializedSize () {
 			int size = this.memoizedSerializedSize;
 			if (size != -1)
 				return size;
@@ -1757,20 +1574,17 @@ public final class IdlCommon
 		}
 		
 		@Override
-		public boolean hasContentEncoding ()
-		{
+		public boolean hasContentEncoding () {
 			return ((this.bitField0_ & 0x00000002) == 0x00000002);
 		}
 		
 		@Override
-		public boolean hasContentType ()
-		{
+		public boolean hasContentType () {
 			return ((this.bitField0_ & 0x00000001) == 0x00000001);
 		}
 		
 		@Override
-		public final boolean isInitialized ()
-		{
+		public final boolean isInitialized () {
 			final byte isInitialized = this.memoizedIsInitialized;
 			if (isInitialized != -1)
 				return isInitialized == 1;
@@ -1783,21 +1597,18 @@ public final class IdlCommon
 		}
 		
 		@Override
-		public Builder newBuilderForType ()
-		{
+		public Builder newBuilderForType () {
 			return Envelope.newBuilder ();
 		}
 		
 		@Override
-		public Builder toBuilder ()
-		{
+		public Builder toBuilder () {
 			return Envelope.newBuilder (this);
 		}
 		
 		@Override
 		public void writeTo (final com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			this.getSerializedSize ();
 			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
 				output.writeBytes (1, this.getContentTypeBytes ());
@@ -1809,27 +1620,23 @@ public final class IdlCommon
 		}
 		
 		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-		{
+		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 			return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_Envelope_fieldAccessorTable;
 		}
 		
 		@java.lang.Override
-		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent)
-		{
+		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent) {
 			final Builder builder = new Builder (parent);
 			return builder;
 		}
 		
 		@java.lang.Override
 		protected java.lang.Object writeReplace ()
-				throws java.io.ObjectStreamException
-		{
+					throws java.io.ObjectStreamException {
 			return super.writeReplace ();
 		}
 		
-		private com.google.protobuf.ByteString getContentEncodingBytes ()
-		{
+		private com.google.protobuf.ByteString getContentEncodingBytes () {
 			final java.lang.Object ref = this.contentEncoding_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -1840,8 +1647,7 @@ public final class IdlCommon
 			}
 		}
 		
-		private com.google.protobuf.ByteString getContentTypeBytes ()
-		{
+		private com.google.protobuf.ByteString getContentTypeBytes () {
 			final java.lang.Object ref = this.contentType_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -1852,40 +1658,35 @@ public final class IdlCommon
 			}
 		}
 		
-		private void initFields ()
-		{
+		private void initFields () {
 			this.contentType_ = "";
 			this.contentEncoding_ = "";
 		}
 		
-		static {
-			defaultInstance = new Envelope (true);
-			Envelope.defaultInstance.initFields ();
-		}
+		private int bitField0_;
+		private java.lang.Object contentEncoding_;
+		private java.lang.Object contentType_;
+		private byte memoizedIsInitialized = -1;
+		private int memoizedSerializedSize = -1;
 		
-		public static Envelope getDefaultInstance ()
-		{
+		public static Envelope getDefaultInstance () {
 			return Envelope.defaultInstance;
 		}
 		
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-		{
+		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
 			return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_Envelope_descriptor;
 		}
 		
-		public static Builder newBuilder ()
-		{
+		public static Builder newBuilder () {
 			return Builder.create ();
 		}
 		
-		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope prototype)
-		{
+		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope prototype) {
 			return Envelope.newBuilder ().mergeFrom (prototype);
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope parseDelimitedFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = Envelope.newBuilder ();
 			if (builder.mergeDelimitedFrom (input)) {
 				return builder.buildParsed ();
@@ -1895,8 +1696,7 @@ public final class IdlCommon
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = Envelope.newBuilder ();
 			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
 				return builder.buildParsed ();
@@ -1906,58 +1706,49 @@ public final class IdlCommon
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope parseFrom (final byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return Envelope.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return Envelope.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope parseFrom (final com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return Envelope.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return Envelope.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope parseFrom (final com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return Envelope.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return Envelope.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope parseFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return Envelope.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return Envelope.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
-		private int bitField0_;
-		private java.lang.Object contentEncoding_;
-		private java.lang.Object contentType_;
-		private byte memoizedIsInitialized = -1;
-		private int memoizedSerializedSize = -1;
+		static {
+			defaultInstance = new Envelope (true);
+			Envelope.defaultInstance.initFields ();
+		}
 		// optional string content_encoding = 2;
 		public static final int CONTENT_ENCODING_FIELD_NUMBER = 2;
 		// required string content_type = 1;
@@ -1966,25 +1757,22 @@ public final class IdlCommon
 		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
-				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder
+					extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+					implements
+						eu.mosaic_cloud.platform.interop.idl.IdlCommon.EnvelopeOrBuilder
 		{
 			// Construct using eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.newBuilder()
-			private Builder ()
-			{
+			private Builder () {
 				this.maybeForceBuilderInitialization ();
 			}
 			
-			private Builder (final BuilderParent parent)
-			{
+			private Builder (final BuilderParent parent) {
 				super (parent);
 				this.maybeForceBuilderInitialization ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope build ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope build () {
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
@@ -1993,8 +1781,7 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope buildPartial ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope buildPartial () {
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope result = new eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope (this);
 				final int from_bitField0_ = this.bitField0_;
 				int to_bitField0_ = 0;
@@ -2012,8 +1799,7 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public Builder clear ()
-			{
+			public Builder clear () {
 				super.clear ();
 				this.contentType_ = "";
 				this.bitField0_ = (this.bitField0_ & ~0x00000001);
@@ -2022,16 +1808,14 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder clearContentEncoding ()
-			{
+			public Builder clearContentEncoding () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000002);
 				this.contentEncoding_ = Envelope.getDefaultInstance ().getContentEncoding ();
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearContentType ()
-			{
+			public Builder clearContentType () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000001);
 				this.contentType_ = Envelope.getDefaultInstance ().getContentType ();
 				this.onChanged ();
@@ -2039,14 +1823,12 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public Builder clone ()
-			{
+			public Builder clone () {
 				return Builder.create ().mergeFrom (this.buildPartial ());
 			}
 			
 			@Override
-			public String getContentEncoding ()
-			{
+			public String getContentEncoding () {
 				final java.lang.Object ref = this.contentEncoding_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -2058,8 +1840,7 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public String getContentType ()
-			{
+			public String getContentType () {
 				final java.lang.Object ref = this.contentType_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -2071,32 +1852,27 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope getDefaultInstanceForType ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope getDefaultInstanceForType () {
 				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ();
 			}
 			
 			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType ()
-			{
+			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType () {
 				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDescriptor ();
 			}
 			
 			@Override
-			public boolean hasContentEncoding ()
-			{
+			public boolean hasContentEncoding () {
 				return ((this.bitField0_ & 0x00000002) == 0x00000002);
 			}
 			
 			@Override
-			public boolean hasContentType ()
-			{
+			public boolean hasContentType () {
 				return ((this.bitField0_ & 0x00000001) == 0x00000001);
 			}
 			
 			@Override
-			public final boolean isInitialized ()
-			{
+			public final boolean isInitialized () {
 				if (!this.hasContentType ()) {
 					return false;
 				}
@@ -2105,8 +1881,7 @@ public final class IdlCommon
 			
 			@Override
 			public Builder mergeFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException
-			{
+						throws java.io.IOException {
 				final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder (this.getUnknownFields ());
 				while (true) {
 					final int tag = input.readTag ();
@@ -2115,7 +1890,7 @@ public final class IdlCommon
 							this.setUnknownFields (unknownFields.build ());
 							this.onChanged ();
 							return this;
-						default: {
+						default : {
 							if (!this.parseUnknownField (input, unknownFields, extensionRegistry, tag)) {
 								this.setUnknownFields (unknownFields.build ());
 								this.onChanged ();
@@ -2138,8 +1913,7 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public Builder mergeFrom (final com.google.protobuf.Message other)
-			{
+			public Builder mergeFrom (final com.google.protobuf.Message other) {
 				if (other instanceof eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope) {
 					return this.mergeFrom ((eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope) other);
 				} else {
@@ -2148,8 +1922,7 @@ public final class IdlCommon
 				}
 			}
 			
-			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope other)
-			{
+			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope other) {
 				if (other == eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope.getDefaultInstance ())
 					return this;
 				if (other.hasContentType ()) {
@@ -2162,8 +1935,7 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder setContentEncoding (final String value)
-			{
+			public Builder setContentEncoding (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -2173,8 +1945,7 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder setContentType (final String value)
-			{
+			public Builder setContentType (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -2185,28 +1956,24 @@ public final class IdlCommon
 			}
 			
 			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-			{
+			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_Envelope_fieldAccessorTable;
 			}
 			
-			void setContentEncoding (final com.google.protobuf.ByteString value)
-			{
+			void setContentEncoding (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000002;
 				this.contentEncoding_ = value;
 				this.onChanged ();
 			}
 			
-			void setContentType (final com.google.protobuf.ByteString value)
-			{
+			void setContentType (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000001;
 				this.contentType_ = value;
 				this.onChanged ();
 			}
 			
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope buildParsed ()
-					throws com.google.protobuf.InvalidProtocolBufferException
-			{
+						throws com.google.protobuf.InvalidProtocolBufferException {
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
@@ -2214,19 +1981,8 @@ public final class IdlCommon
 				return result;
 			}
 			
-			private void maybeForceBuilderInitialization ()
-			{
+			private void maybeForceBuilderInitialization () {
 				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {}
-			}
-			
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-			{
-				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_Envelope_descriptor;
-			}
-			
-			private static Builder create ()
-			{
-				return new Builder ();
 			}
 			
 			private int bitField0_;
@@ -2234,14 +1990,22 @@ public final class IdlCommon
 			private java.lang.Object contentEncoding_ = "";
 			// required string content_type = 1;
 			private java.lang.Object contentType_ = "";
+			
 			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.common.Envelope)
+			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_Envelope_descriptor;
+			}
+			
+			private static Builder create () {
+				return new Builder ();
+			}
 		}
 		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.common.Envelope)
 	}
 	
 	public interface EnvelopeOrBuilder
-			extends
-				com.google.protobuf.MessageOrBuilder
+				extends
+					com.google.protobuf.MessageOrBuilder
 	{
 		String getContentEncoding ();
 		
@@ -2255,28 +2019,24 @@ public final class IdlCommon
 	}
 	
 	public static final class Error
-			extends com.google.protobuf.GeneratedMessage
-			implements
-				ErrorOrBuilder
+				extends com.google.protobuf.GeneratedMessage
+				implements
+					ErrorOrBuilder
 	{
-		private Error (final boolean noInit)
-		{}
+		private Error (final boolean noInit) {}
 		
 		// Use Error.newBuilder() to construct.
-		private Error (final Builder builder)
-		{
+		private Error (final Builder builder) {
 			super (builder);
 		}
 		
 		@Override
-		public Error getDefaultInstanceForType ()
-		{
+		public Error getDefaultInstanceForType () {
 			return Error.defaultInstance;
 		}
 		
 		@Override
-		public String getErrorMessage ()
-		{
+		public String getErrorMessage () {
 			final java.lang.Object ref = this.errorMessage_;
 			if (ref instanceof String) {
 				return (String) ref;
@@ -2291,8 +2051,7 @@ public final class IdlCommon
 		}
 		
 		@Override
-		public int getSerializedSize ()
-		{
+		public int getSerializedSize () {
 			int size = this.memoizedSerializedSize;
 			if (size != -1)
 				return size;
@@ -2309,32 +2068,27 @@ public final class IdlCommon
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 			return this.token_;
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 			return this.token_;
 		}
 		
 		@Override
-		public boolean hasErrorMessage ()
-		{
+		public boolean hasErrorMessage () {
 			return ((this.bitField0_ & 0x00000002) == 0x00000002);
 		}
 		
 		@Override
-		public boolean hasToken ()
-		{
+		public boolean hasToken () {
 			return ((this.bitField0_ & 0x00000001) == 0x00000001);
 		}
 		
 		@Override
-		public final boolean isInitialized ()
-		{
+		public final boolean isInitialized () {
 			final byte isInitialized = this.memoizedIsInitialized;
 			if (isInitialized != -1)
 				return isInitialized == 1;
@@ -2355,21 +2109,18 @@ public final class IdlCommon
 		}
 		
 		@Override
-		public Builder newBuilderForType ()
-		{
+		public Builder newBuilderForType () {
 			return Error.newBuilder ();
 		}
 		
 		@Override
-		public Builder toBuilder ()
-		{
+		public Builder toBuilder () {
 			return Error.newBuilder (this);
 		}
 		
 		@Override
 		public void writeTo (final com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			this.getSerializedSize ();
 			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
 				output.writeMessage (1, this.token_);
@@ -2381,27 +2132,23 @@ public final class IdlCommon
 		}
 		
 		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-		{
+		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 			return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_Error_fieldAccessorTable;
 		}
 		
 		@java.lang.Override
-		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent)
-		{
+		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent) {
 			final Builder builder = new Builder (parent);
 			return builder;
 		}
 		
 		@java.lang.Override
 		protected java.lang.Object writeReplace ()
-				throws java.io.ObjectStreamException
-		{
+					throws java.io.ObjectStreamException {
 			return super.writeReplace ();
 		}
 		
-		private com.google.protobuf.ByteString getErrorMessageBytes ()
-		{
+		private com.google.protobuf.ByteString getErrorMessageBytes () {
 			final java.lang.Object ref = this.errorMessage_;
 			if (ref instanceof String) {
 				final com.google.protobuf.ByteString b = com.google.protobuf.ByteString.copyFromUtf8 ((String) ref);
@@ -2412,40 +2159,35 @@ public final class IdlCommon
 			}
 		}
 		
-		private void initFields ()
-		{
+		private void initFields () {
 			this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			this.errorMessage_ = "";
 		}
 		
-		static {
-			defaultInstance = new Error (true);
-			Error.defaultInstance.initFields ();
-		}
+		private int bitField0_;
+		private java.lang.Object errorMessage_;
+		private byte memoizedIsInitialized = -1;
+		private int memoizedSerializedSize = -1;
+		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
 		
-		public static Error getDefaultInstance ()
-		{
+		public static Error getDefaultInstance () {
 			return Error.defaultInstance;
 		}
 		
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-		{
+		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
 			return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_Error_descriptor;
 		}
 		
-		public static Builder newBuilder ()
-		{
+		public static Builder newBuilder () {
 			return Builder.create ();
 		}
 		
-		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error prototype)
-		{
+		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error prototype) {
 			return Error.newBuilder ().mergeFrom (prototype);
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error parseDelimitedFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = Error.newBuilder ();
 			if (builder.mergeDelimitedFrom (input)) {
 				return builder.buildParsed ();
@@ -2455,8 +2197,7 @@ public final class IdlCommon
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = Error.newBuilder ();
 			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
 				return builder.buildParsed ();
@@ -2466,58 +2207,49 @@ public final class IdlCommon
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error parseFrom (final byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return Error.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return Error.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error parseFrom (final com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return Error.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return Error.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error parseFrom (final com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return Error.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return Error.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error parseFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return Error.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return Error.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
-		private int bitField0_;
-		private java.lang.Object errorMessage_;
-		private byte memoizedIsInitialized = -1;
-		private int memoizedSerializedSize = -1;
-		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
+		static {
+			defaultInstance = new Error (true);
+			Error.defaultInstance.initFields ();
+		}
 		// required string error_message = 2;
 		public static final int ERROR_MESSAGE_FIELD_NUMBER = 2;
 		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
@@ -2526,25 +2258,22 @@ public final class IdlCommon
 		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
-				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.ErrorOrBuilder
+					extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+					implements
+						eu.mosaic_cloud.platform.interop.idl.IdlCommon.ErrorOrBuilder
 		{
 			// Construct using eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error.newBuilder()
-			private Builder ()
-			{
+			private Builder () {
 				this.maybeForceBuilderInitialization ();
 			}
 			
-			private Builder (final BuilderParent parent)
-			{
+			private Builder (final BuilderParent parent) {
 				super (parent);
 				this.maybeForceBuilderInitialization ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error build ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error build () {
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
@@ -2553,8 +2282,7 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error buildPartial ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error buildPartial () {
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error result = new eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error (this);
 				final int from_bitField0_ = this.bitField0_;
 				int to_bitField0_ = 0;
@@ -2576,8 +2304,7 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public Builder clear ()
-			{
+			public Builder clear () {
 				super.clear ();
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
@@ -2590,16 +2317,14 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder clearErrorMessage ()
-			{
+			public Builder clearErrorMessage () {
 				this.bitField0_ = (this.bitField0_ & ~0x00000002);
 				this.errorMessage_ = Error.getDefaultInstance ().getErrorMessage ();
 				this.onChanged ();
 				return this;
 			}
 			
-			public Builder clearToken ()
-			{
+			public Builder clearToken () {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 					this.onChanged ();
@@ -2611,26 +2336,22 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public Builder clone ()
-			{
+			public Builder clone () {
 				return Builder.create ().mergeFrom (this.buildPartial ());
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error getDefaultInstanceForType ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error getDefaultInstanceForType () {
 				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error.getDefaultInstance ();
 			}
 			
 			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType ()
-			{
+			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType () {
 				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error.getDescriptor ();
 			}
 			
 			@Override
-			public String getErrorMessage ()
-			{
+			public String getErrorMessage () {
 				final java.lang.Object ref = this.errorMessage_;
 				if (!(ref instanceof String)) {
 					final String s = ((com.google.protobuf.ByteString) ref).toStringUtf8 ();
@@ -2642,8 +2363,7 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 				if (this.tokenBuilder_ == null) {
 					return this.token_;
 				} else {
@@ -2651,16 +2371,14 @@ public final class IdlCommon
 				}
 			}
 			
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder () {
 				this.bitField0_ |= 0x00000001;
 				this.onChanged ();
 				return this.getTokenFieldBuilder ().getBuilder ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 				if (this.tokenBuilder_ != null) {
 					return this.tokenBuilder_.getMessageOrBuilder ();
 				} else {
@@ -2669,20 +2387,17 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public boolean hasErrorMessage ()
-			{
+			public boolean hasErrorMessage () {
 				return ((this.bitField0_ & 0x00000002) == 0x00000002);
 			}
 			
 			@Override
-			public boolean hasToken ()
-			{
+			public boolean hasToken () {
 				return ((this.bitField0_ & 0x00000001) == 0x00000001);
 			}
 			
 			@Override
-			public final boolean isInitialized ()
-			{
+			public final boolean isInitialized () {
 				if (!this.hasToken ()) {
 					return false;
 				}
@@ -2697,8 +2412,7 @@ public final class IdlCommon
 			
 			@Override
 			public Builder mergeFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException
-			{
+						throws java.io.IOException {
 				final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder (this.getUnknownFields ());
 				while (true) {
 					final int tag = input.readTag ();
@@ -2707,7 +2421,7 @@ public final class IdlCommon
 							this.setUnknownFields (unknownFields.build ());
 							this.onChanged ();
 							return this;
-						default: {
+						default : {
 							if (!this.parseUnknownField (input, unknownFields, extensionRegistry, tag)) {
 								this.setUnknownFields (unknownFields.build ());
 								this.onChanged ();
@@ -2734,8 +2448,7 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public Builder mergeFrom (final com.google.protobuf.Message other)
-			{
+			public Builder mergeFrom (final com.google.protobuf.Message other) {
 				if (other instanceof eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error) {
 					return this.mergeFrom ((eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error) other);
 				} else {
@@ -2744,8 +2457,7 @@ public final class IdlCommon
 				}
 			}
 			
-			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error other)
-			{
+			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error other) {
 				if (other == eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error.getDefaultInstance ())
 					return this;
 				if (other.hasToken ()) {
@@ -2758,8 +2470,7 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (((this.bitField0_ & 0x00000001) == 0x00000001) && (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ())) {
 						this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.newBuilder (this.token_).mergeFrom (value).buildPartial ();
@@ -2774,8 +2485,7 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder setErrorMessage (final String value)
-			{
+			public Builder setErrorMessage (final String value) {
 				if (value == null) {
 					throw new NullPointerException ();
 				}
@@ -2785,8 +2495,7 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (value == null) {
 						throw new NullPointerException ();
@@ -2800,8 +2509,7 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = builderForValue.build ();
 					this.onChanged ();
@@ -2813,21 +2521,18 @@ public final class IdlCommon
 			}
 			
 			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-			{
+			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_Error_fieldAccessorTable;
 			}
 			
-			void setErrorMessage (final com.google.protobuf.ByteString value)
-			{
+			void setErrorMessage (final com.google.protobuf.ByteString value) {
 				this.bitField0_ |= 0x00000002;
 				this.errorMessage_ = value;
 				this.onChanged ();
 			}
 			
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error buildParsed ()
-					throws com.google.protobuf.InvalidProtocolBufferException
-			{
+						throws com.google.protobuf.InvalidProtocolBufferException {
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Error result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
@@ -2835,8 +2540,7 @@ public final class IdlCommon
 				return result;
 			}
 			
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder ()
-			{
+			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder () {
 				if (this.tokenBuilder_ == null) {
 					this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> (this.token_, this.getParentForChildren (), this.isClean ());
 					this.token_ = null;
@@ -2844,21 +2548,10 @@ public final class IdlCommon
 				return this.tokenBuilder_;
 			}
 			
-			private void maybeForceBuilderInitialization ()
-			{
+			private void maybeForceBuilderInitialization () {
 				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
 					this.getTokenFieldBuilder ();
 				}
-			}
-			
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-			{
-				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_Error_descriptor;
-			}
-			
-			private static Builder create ()
-			{
-				return new Builder ();
 			}
 			
 			private int bitField0_;
@@ -2867,14 +2560,22 @@ public final class IdlCommon
 			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
+			
 			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.common.Error)
+			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_Error_descriptor;
+			}
+			
+			private static Builder create () {
+				return new Builder ();
+			}
 		}
 		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.common.Error)
 	}
 	
 	public interface ErrorOrBuilder
-			extends
-				com.google.protobuf.MessageOrBuilder
+				extends
+					com.google.protobuf.MessageOrBuilder
 	{
 		String getErrorMessage ();
 		
@@ -2890,28 +2591,24 @@ public final class IdlCommon
 	}
 	
 	public static final class NotOk
-			extends com.google.protobuf.GeneratedMessage
-			implements
-				NotOkOrBuilder
+				extends com.google.protobuf.GeneratedMessage
+				implements
+					NotOkOrBuilder
 	{
-		private NotOk (final boolean noInit)
-		{}
+		private NotOk (final boolean noInit) {}
 		
 		// Use NotOk.newBuilder() to construct.
-		private NotOk (final Builder builder)
-		{
+		private NotOk (final Builder builder) {
 			super (builder);
 		}
 		
 		@Override
-		public NotOk getDefaultInstanceForType ()
-		{
+		public NotOk getDefaultInstanceForType () {
 			return NotOk.defaultInstance;
 		}
 		
 		@Override
-		public int getSerializedSize ()
-		{
+		public int getSerializedSize () {
 			int size = this.memoizedSerializedSize;
 			if (size != -1)
 				return size;
@@ -2925,26 +2622,22 @@ public final class IdlCommon
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 			return this.token_;
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 			return this.token_;
 		}
 		
 		@Override
-		public boolean hasToken ()
-		{
+		public boolean hasToken () {
 			return ((this.bitField0_ & 0x00000001) == 0x00000001);
 		}
 		
 		@Override
-		public final boolean isInitialized ()
-		{
+		public final boolean isInitialized () {
 			final byte isInitialized = this.memoizedIsInitialized;
 			if (isInitialized != -1)
 				return isInitialized == 1;
@@ -2961,21 +2654,18 @@ public final class IdlCommon
 		}
 		
 		@Override
-		public Builder newBuilderForType ()
-		{
+		public Builder newBuilderForType () {
 			return NotOk.newBuilder ();
 		}
 		
 		@Override
-		public Builder toBuilder ()
-		{
+		public Builder toBuilder () {
 			return NotOk.newBuilder (this);
 		}
 		
 		@Override
 		public void writeTo (final com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			this.getSerializedSize ();
 			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
 				output.writeMessage (1, this.token_);
@@ -2984,58 +2674,49 @@ public final class IdlCommon
 		}
 		
 		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-		{
+		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 			return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_NotOk_fieldAccessorTable;
 		}
 		
 		@java.lang.Override
-		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent)
-		{
+		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent) {
 			final Builder builder = new Builder (parent);
 			return builder;
 		}
 		
 		@java.lang.Override
 		protected java.lang.Object writeReplace ()
-				throws java.io.ObjectStreamException
-		{
+					throws java.io.ObjectStreamException {
 			return super.writeReplace ();
 		}
 		
-		private void initFields ()
-		{
+		private void initFields () {
 			this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 		}
 		
-		static {
-			defaultInstance = new NotOk (true);
-			NotOk.defaultInstance.initFields ();
-		}
+		private int bitField0_;
+		private byte memoizedIsInitialized = -1;
+		private int memoizedSerializedSize = -1;
+		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
 		
-		public static NotOk getDefaultInstance ()
-		{
+		public static NotOk getDefaultInstance () {
 			return NotOk.defaultInstance;
 		}
 		
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-		{
+		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
 			return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_NotOk_descriptor;
 		}
 		
-		public static Builder newBuilder ()
-		{
+		public static Builder newBuilder () {
 			return Builder.create ();
 		}
 		
-		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk prototype)
-		{
+		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk prototype) {
 			return NotOk.newBuilder ().mergeFrom (prototype);
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk parseDelimitedFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = NotOk.newBuilder ();
 			if (builder.mergeDelimitedFrom (input)) {
 				return builder.buildParsed ();
@@ -3045,8 +2726,7 @@ public final class IdlCommon
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = NotOk.newBuilder ();
 			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
 				return builder.buildParsed ();
@@ -3056,82 +2736,71 @@ public final class IdlCommon
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk parseFrom (final byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return NotOk.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return NotOk.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk parseFrom (final com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return NotOk.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return NotOk.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk parseFrom (final com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return NotOk.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return NotOk.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk parseFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return NotOk.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return NotOk.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
-		private int bitField0_;
-		private byte memoizedIsInitialized = -1;
-		private int memoizedSerializedSize = -1;
-		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
+		static {
+			defaultInstance = new NotOk (true);
+			NotOk.defaultInstance.initFields ();
+		}
 		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 		public static final int TOKEN_FIELD_NUMBER = 1;
 		private static final NotOk defaultInstance;
 		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
-				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOkOrBuilder
+					extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+					implements
+						eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOkOrBuilder
 		{
 			// Construct using eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk.newBuilder()
-			private Builder ()
-			{
+			private Builder () {
 				this.maybeForceBuilderInitialization ();
 			}
 			
-			private Builder (final BuilderParent parent)
-			{
+			private Builder (final BuilderParent parent) {
 				super (parent);
 				this.maybeForceBuilderInitialization ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk build ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk build () {
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
@@ -3140,8 +2809,7 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk buildPartial ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk buildPartial () {
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk result = new eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk (this);
 				final int from_bitField0_ = this.bitField0_;
 				int to_bitField0_ = 0;
@@ -3159,8 +2827,7 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public Builder clear ()
-			{
+			public Builder clear () {
 				super.clear ();
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
@@ -3171,8 +2838,7 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder clearToken ()
-			{
+			public Builder clearToken () {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 					this.onChanged ();
@@ -3184,26 +2850,22 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public Builder clone ()
-			{
+			public Builder clone () {
 				return Builder.create ().mergeFrom (this.buildPartial ());
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk getDefaultInstanceForType ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk getDefaultInstanceForType () {
 				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk.getDefaultInstance ();
 			}
 			
 			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType ()
-			{
+			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType () {
 				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk.getDescriptor ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 				if (this.tokenBuilder_ == null) {
 					return this.token_;
 				} else {
@@ -3211,16 +2873,14 @@ public final class IdlCommon
 				}
 			}
 			
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder () {
 				this.bitField0_ |= 0x00000001;
 				this.onChanged ();
 				return this.getTokenFieldBuilder ().getBuilder ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 				if (this.tokenBuilder_ != null) {
 					return this.tokenBuilder_.getMessageOrBuilder ();
 				} else {
@@ -3229,14 +2889,12 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public boolean hasToken ()
-			{
+			public boolean hasToken () {
 				return ((this.bitField0_ & 0x00000001) == 0x00000001);
 			}
 			
 			@Override
-			public final boolean isInitialized ()
-			{
+			public final boolean isInitialized () {
 				if (!this.hasToken ()) {
 					return false;
 				}
@@ -3248,8 +2906,7 @@ public final class IdlCommon
 			
 			@Override
 			public Builder mergeFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException
-			{
+						throws java.io.IOException {
 				final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder (this.getUnknownFields ());
 				while (true) {
 					final int tag = input.readTag ();
@@ -3258,7 +2915,7 @@ public final class IdlCommon
 							this.setUnknownFields (unknownFields.build ());
 							this.onChanged ();
 							return this;
-						default: {
+						default : {
 							if (!this.parseUnknownField (input, unknownFields, extensionRegistry, tag)) {
 								this.setUnknownFields (unknownFields.build ());
 								this.onChanged ();
@@ -3280,8 +2937,7 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public Builder mergeFrom (final com.google.protobuf.Message other)
-			{
+			public Builder mergeFrom (final com.google.protobuf.Message other) {
 				if (other instanceof eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk) {
 					return this.mergeFrom ((eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk) other);
 				} else {
@@ -3290,8 +2946,7 @@ public final class IdlCommon
 				}
 			}
 			
-			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk other)
-			{
+			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk other) {
 				if (other == eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk.getDefaultInstance ())
 					return this;
 				if (other.hasToken ()) {
@@ -3301,8 +2956,7 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (((this.bitField0_ & 0x00000001) == 0x00000001) && (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ())) {
 						this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.newBuilder (this.token_).mergeFrom (value).buildPartial ();
@@ -3317,8 +2971,7 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (value == null) {
 						throw new NullPointerException ();
@@ -3332,8 +2985,7 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = builderForValue.build ();
 					this.onChanged ();
@@ -3345,14 +2997,12 @@ public final class IdlCommon
 			}
 			
 			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-			{
+			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_NotOk_fieldAccessorTable;
 			}
 			
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk buildParsed ()
-					throws com.google.protobuf.InvalidProtocolBufferException
-			{
+						throws com.google.protobuf.InvalidProtocolBufferException {
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.NotOk result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
@@ -3360,8 +3010,7 @@ public final class IdlCommon
 				return result;
 			}
 			
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder ()
-			{
+			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder () {
 				if (this.tokenBuilder_ == null) {
 					this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> (this.token_, this.getParentForChildren (), this.isClean ());
 					this.token_ = null;
@@ -3369,35 +3018,32 @@ public final class IdlCommon
 				return this.tokenBuilder_;
 			}
 			
-			private void maybeForceBuilderInitialization ()
-			{
+			private void maybeForceBuilderInitialization () {
 				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
 					this.getTokenFieldBuilder ();
 				}
-			}
-			
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-			{
-				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_NotOk_descriptor;
-			}
-			
-			private static Builder create ()
-			{
-				return new Builder ();
 			}
 			
 			private int bitField0_;
 			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
+			
 			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.common.NotOk)
+			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_NotOk_descriptor;
+			}
+			
+			private static Builder create () {
+				return new Builder ();
+			}
 		}
 		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.common.NotOk)
 	}
 	
 	public interface NotOkOrBuilder
-			extends
-				com.google.protobuf.MessageOrBuilder
+				extends
+					com.google.protobuf.MessageOrBuilder
 	{
 		eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ();
 		
@@ -3408,28 +3054,24 @@ public final class IdlCommon
 	}
 	
 	public static final class Ok
-			extends com.google.protobuf.GeneratedMessage
-			implements
-				OkOrBuilder
+				extends com.google.protobuf.GeneratedMessage
+				implements
+					OkOrBuilder
 	{
-		private Ok (final boolean noInit)
-		{}
+		private Ok (final boolean noInit) {}
 		
 		// Use Ok.newBuilder() to construct.
-		private Ok (final Builder builder)
-		{
+		private Ok (final Builder builder) {
 			super (builder);
 		}
 		
 		@Override
-		public Ok getDefaultInstanceForType ()
-		{
+		public Ok getDefaultInstanceForType () {
 			return Ok.defaultInstance;
 		}
 		
 		@Override
-		public int getSerializedSize ()
-		{
+		public int getSerializedSize () {
 			int size = this.memoizedSerializedSize;
 			if (size != -1)
 				return size;
@@ -3443,26 +3085,22 @@ public final class IdlCommon
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 			return this.token_;
 		}
 		
 		@Override
-		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-		{
+		public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 			return this.token_;
 		}
 		
 		@Override
-		public boolean hasToken ()
-		{
+		public boolean hasToken () {
 			return ((this.bitField0_ & 0x00000001) == 0x00000001);
 		}
 		
 		@Override
-		public final boolean isInitialized ()
-		{
+		public final boolean isInitialized () {
 			final byte isInitialized = this.memoizedIsInitialized;
 			if (isInitialized != -1)
 				return isInitialized == 1;
@@ -3479,21 +3117,18 @@ public final class IdlCommon
 		}
 		
 		@Override
-		public Builder newBuilderForType ()
-		{
+		public Builder newBuilderForType () {
 			return Ok.newBuilder ();
 		}
 		
 		@Override
-		public Builder toBuilder ()
-		{
+		public Builder toBuilder () {
 			return Ok.newBuilder (this);
 		}
 		
 		@Override
 		public void writeTo (final com.google.protobuf.CodedOutputStream output)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			this.getSerializedSize ();
 			if (((this.bitField0_ & 0x00000001) == 0x00000001)) {
 				output.writeMessage (1, this.token_);
@@ -3502,58 +3137,49 @@ public final class IdlCommon
 		}
 		
 		@Override
-		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-		{
+		protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 			return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_Ok_fieldAccessorTable;
 		}
 		
 		@java.lang.Override
-		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent)
-		{
+		protected Builder newBuilderForType (final com.google.protobuf.GeneratedMessage.BuilderParent parent) {
 			final Builder builder = new Builder (parent);
 			return builder;
 		}
 		
 		@java.lang.Override
 		protected java.lang.Object writeReplace ()
-				throws java.io.ObjectStreamException
-		{
+					throws java.io.ObjectStreamException {
 			return super.writeReplace ();
 		}
 		
-		private void initFields ()
-		{
+		private void initFields () {
 			this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 		}
 		
-		static {
-			defaultInstance = new Ok (true);
-			Ok.defaultInstance.initFields ();
-		}
+		private int bitField0_;
+		private byte memoizedIsInitialized = -1;
+		private int memoizedSerializedSize = -1;
+		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
 		
-		public static Ok getDefaultInstance ()
-		{
+		public static Ok getDefaultInstance () {
 			return Ok.defaultInstance;
 		}
 		
-		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-		{
+		public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
 			return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_Ok_descriptor;
 		}
 		
-		public static Builder newBuilder ()
-		{
+		public static Builder newBuilder () {
 			return Builder.create ();
 		}
 		
-		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok prototype)
-		{
+		public static Builder newBuilder (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok prototype) {
 			return Ok.newBuilder ().mergeFrom (prototype);
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok parseDelimitedFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = Ok.newBuilder ();
 			if (builder.mergeDelimitedFrom (input)) {
 				return builder.buildParsed ();
@@ -3563,8 +3189,7 @@ public final class IdlCommon
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok parseDelimitedFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			final Builder builder = Ok.newBuilder ();
 			if (builder.mergeDelimitedFrom (input, extensionRegistry)) {
 				return builder.buildParsed ();
@@ -3574,82 +3199,71 @@ public final class IdlCommon
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok parseFrom (final byte[] data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return Ok.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok parseFrom (final byte[] data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return Ok.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok parseFrom (final com.google.protobuf.ByteString data)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return Ok.newBuilder ().mergeFrom (data).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok parseFrom (final com.google.protobuf.ByteString data, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws com.google.protobuf.InvalidProtocolBufferException
-		{
+					throws com.google.protobuf.InvalidProtocolBufferException {
 			return Ok.newBuilder ().mergeFrom (data, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok parseFrom (final com.google.protobuf.CodedInputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return Ok.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok parseFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return Ok.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok parseFrom (final java.io.InputStream input)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return Ok.newBuilder ().mergeFrom (input).buildParsed ();
 		}
 		
 		public static eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok parseFrom (final java.io.InputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-				throws java.io.IOException
-		{
+					throws java.io.IOException {
 			return Ok.newBuilder ().mergeFrom (input, extensionRegistry).buildParsed ();
 		}
 		
-		private int bitField0_;
-		private byte memoizedIsInitialized = -1;
-		private int memoizedSerializedSize = -1;
-		private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_;
+		static {
+			defaultInstance = new Ok (true);
+			Ok.defaultInstance.initFields ();
+		}
 		// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 		public static final int TOKEN_FIELD_NUMBER = 1;
 		private static final Ok defaultInstance;
 		private static final long serialVersionUID = 0L;
 		
 		public static final class Builder
-				extends com.google.protobuf.GeneratedMessage.Builder<Builder>
-				implements
-					eu.mosaic_cloud.platform.interop.idl.IdlCommon.OkOrBuilder
+					extends com.google.protobuf.GeneratedMessage.Builder<Builder>
+					implements
+						eu.mosaic_cloud.platform.interop.idl.IdlCommon.OkOrBuilder
 		{
 			// Construct using eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok.newBuilder()
-			private Builder ()
-			{
+			private Builder () {
 				this.maybeForceBuilderInitialization ();
 			}
 			
-			private Builder (final BuilderParent parent)
-			{
+			private Builder (final BuilderParent parent) {
 				super (parent);
 				this.maybeForceBuilderInitialization ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok build ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok build () {
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result);
@@ -3658,8 +3272,7 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok buildPartial ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok buildPartial () {
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok result = new eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok (this);
 				final int from_bitField0_ = this.bitField0_;
 				int to_bitField0_ = 0;
@@ -3677,8 +3290,7 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public Builder clear ()
-			{
+			public Builder clear () {
 				super.clear ();
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
@@ -3689,8 +3301,7 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder clearToken ()
-			{
+			public Builder clearToken () {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 					this.onChanged ();
@@ -3702,26 +3313,22 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public Builder clone ()
-			{
+			public Builder clone () {
 				return Builder.create ().mergeFrom (this.buildPartial ());
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok getDefaultInstanceForType ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok getDefaultInstanceForType () {
 				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok.getDefaultInstance ();
 			}
 			
 			@Override
-			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType ()
-			{
+			public com.google.protobuf.Descriptors.Descriptor getDescriptorForType () {
 				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok.getDescriptor ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken () {
 				if (this.tokenBuilder_ == null) {
 					return this.token_;
 				} else {
@@ -3729,16 +3336,14 @@ public final class IdlCommon
 				}
 			}
 			
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder getTokenBuilder () {
 				this.bitField0_ |= 0x00000001;
 				this.onChanged ();
 				return this.getTokenFieldBuilder ().getBuilder ();
 			}
 			
 			@Override
-			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder ()
-			{
+			public eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder getTokenOrBuilder () {
 				if (this.tokenBuilder_ != null) {
 					return this.tokenBuilder_.getMessageOrBuilder ();
 				} else {
@@ -3747,14 +3352,12 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public boolean hasToken ()
-			{
+			public boolean hasToken () {
 				return ((this.bitField0_ & 0x00000001) == 0x00000001);
 			}
 			
 			@Override
-			public final boolean isInitialized ()
-			{
+			public final boolean isInitialized () {
 				if (!this.hasToken ()) {
 					return false;
 				}
@@ -3766,8 +3369,7 @@ public final class IdlCommon
 			
 			@Override
 			public Builder mergeFrom (final com.google.protobuf.CodedInputStream input, final com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-					throws java.io.IOException
-			{
+						throws java.io.IOException {
 				final com.google.protobuf.UnknownFieldSet.Builder unknownFields = com.google.protobuf.UnknownFieldSet.newBuilder (this.getUnknownFields ());
 				while (true) {
 					final int tag = input.readTag ();
@@ -3776,7 +3378,7 @@ public final class IdlCommon
 							this.setUnknownFields (unknownFields.build ());
 							this.onChanged ();
 							return this;
-						default: {
+						default : {
 							if (!this.parseUnknownField (input, unknownFields, extensionRegistry, tag)) {
 								this.setUnknownFields (unknownFields.build ());
 								this.onChanged ();
@@ -3798,8 +3400,7 @@ public final class IdlCommon
 			}
 			
 			@Override
-			public Builder mergeFrom (final com.google.protobuf.Message other)
-			{
+			public Builder mergeFrom (final com.google.protobuf.Message other) {
 				if (other instanceof eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok) {
 					return this.mergeFrom ((eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok) other);
 				} else {
@@ -3808,8 +3409,7 @@ public final class IdlCommon
 				}
 			}
 			
-			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok other)
-			{
+			public Builder mergeFrom (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok other) {
 				if (other == eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok.getDefaultInstance ())
 					return this;
 				if (other.hasToken ()) {
@@ -3819,8 +3419,7 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder mergeToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (((this.bitField0_ & 0x00000001) == 0x00000001) && (this.token_ != eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ())) {
 						this.token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.newBuilder (this.token_).mergeFrom (value).buildPartial ();
@@ -3835,8 +3434,7 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken value) {
 				if (this.tokenBuilder_ == null) {
 					if (value == null) {
 						throw new NullPointerException ();
@@ -3850,8 +3448,7 @@ public final class IdlCommon
 				return this;
 			}
 			
-			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue)
-			{
+			public Builder setToken (final eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder builderForValue) {
 				if (this.tokenBuilder_ == null) {
 					this.token_ = builderForValue.build ();
 					this.onChanged ();
@@ -3863,14 +3460,12 @@ public final class IdlCommon
 			}
 			
 			@Override
-			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable ()
-			{
+			protected com.google.protobuf.GeneratedMessage.FieldAccessorTable internalGetFieldAccessorTable () {
 				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_Ok_fieldAccessorTable;
 			}
 			
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok buildParsed ()
-					throws com.google.protobuf.InvalidProtocolBufferException
-			{
+						throws com.google.protobuf.InvalidProtocolBufferException {
 				final eu.mosaic_cloud.platform.interop.idl.IdlCommon.Ok result = this.buildPartial ();
 				if (!result.isInitialized ()) {
 					throw com.google.protobuf.AbstractMessage.Builder.newUninitializedMessageException (result).asInvalidProtocolBufferException ();
@@ -3878,8 +3473,7 @@ public final class IdlCommon
 				return result;
 			}
 			
-			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder ()
-			{
+			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> getTokenFieldBuilder () {
 				if (this.tokenBuilder_ == null) {
 					this.tokenBuilder_ = new com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> (this.token_, this.getParentForChildren (), this.isClean ());
 					this.token_ = null;
@@ -3887,35 +3481,32 @@ public final class IdlCommon
 				return this.tokenBuilder_;
 			}
 			
-			private void maybeForceBuilderInitialization ()
-			{
+			private void maybeForceBuilderInitialization () {
 				if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
 					this.getTokenFieldBuilder ();
 				}
-			}
-			
-			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor ()
-			{
-				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_Ok_descriptor;
-			}
-			
-			private static Builder create ()
-			{
-				return new Builder ();
 			}
 			
 			private int bitField0_;
 			// required .mosaic_cloud.idl.common.CompletionToken token = 1;
 			private eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken token_ = eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.getDefaultInstance ();
 			private com.google.protobuf.SingleFieldBuilder<eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken.Builder, eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionTokenOrBuilder> tokenBuilder_;
+			
 			// @@protoc_insertion_point(builder_scope:mosaic_cloud.idl.common.Ok)
+			public static final com.google.protobuf.Descriptors.Descriptor getDescriptor () {
+				return eu.mosaic_cloud.platform.interop.idl.IdlCommon.internal_static_mosaic_cloud_idl_common_Ok_descriptor;
+			}
+			
+			private static Builder create () {
+				return new Builder ();
+			}
 		}
 		// @@protoc_insertion_point(class_scope:mosaic_cloud.idl.common.Ok)
 	}
 	
 	public interface OkOrBuilder
-			extends
-				com.google.protobuf.MessageOrBuilder
+				extends
+					com.google.protobuf.MessageOrBuilder
 	{
 		eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken getToken ();
 		

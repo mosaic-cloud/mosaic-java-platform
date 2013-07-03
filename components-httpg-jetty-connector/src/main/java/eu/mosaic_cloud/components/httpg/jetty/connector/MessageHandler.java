@@ -43,9 +43,7 @@ import com.rabbitmq.client.QueueingConsumer;
 public class MessageHandler
 {
 	public static QueueMessage decodeMessage (final QueueingConsumer.Delivery delivery)
-			throws MessageFormatException,
-				IOException
-	{
+				throws MessageFormatException, IOException {
 		final byte[] message_body = delivery.getBody ();
 		final ByteArrayInputStream is = new ByteArrayInputStream (message_body);
 		final DataInputStream dis = new DataInputStream (is);
@@ -105,10 +103,7 @@ public class MessageHandler
 	}
 	
 	public static byte[] encodeMessage (final byte[] in, final String callback_identifier)
-			throws IOException,
-				HttpFormatException,
-				JSONException
-	{
+				throws IOException, HttpFormatException, JSONException {
 		final HashMap<String, String> headers = new HashMap<String, String> ();
 		int startOfBody = 0;
 		final int end = in.length - 1;
@@ -185,10 +180,7 @@ public class MessageHandler
 	
 	@SuppressWarnings ("unchecked")
 	private static byte[] generate_full_http_request (final JSONObject headers, final byte[] body)
-			throws JSONException,
-				IOException,
-				MessageFormatException
-	{
+				throws JSONException, IOException, MessageFormatException {
 		final ByteArrayOutputStream outs = new ByteArrayOutputStream ();
 		String uri = null;
 		String method = null;
@@ -226,10 +218,9 @@ public class MessageHandler
 	private static HashSet<String> _ignored_http_headers = new HashSet<String> (Arrays.asList (MessageHandler._headers));
 	
 	public static class HttpFormatException
-			extends IOException
+				extends IOException
 	{
-		public HttpFormatException (final String msg)
-		{
+		public HttpFormatException (final String msg) {
 			super (msg);
 		}
 		
@@ -237,10 +228,9 @@ public class MessageHandler
 	};
 	
 	public static class MessageFormatException
-			extends Exception
+				extends Exception
 	{
-		public MessageFormatException (final String msg)
-		{
+		public MessageFormatException (final String msg) {
 			super (msg);
 		}
 		

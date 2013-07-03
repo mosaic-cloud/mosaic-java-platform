@@ -44,11 +44,10 @@ import org.slf4j.Logger;
 public class ConsumerCloudlet
 {
 	public static final class AmqpConsumerCallback
-			extends DefaultAmqpQueueConsumerConnectorCallback<ConsumerCloudletContext, String, Void>
+				extends DefaultAmqpQueueConsumerConnectorCallback<ConsumerCloudletContext, String, Void>
 	{
 		@Override
-		public CallbackCompletion<Void> acknowledgeSucceeded (final ConsumerCloudletContext context, final GenericCallbackCompletionArguments<Void> arguments)
-		{
+		public CallbackCompletion<Void> acknowledgeSucceeded (final ConsumerCloudletContext context, final GenericCallbackCompletionArguments<Void> arguments) {
 			{
 				// FIXME: DON'T DO THIS IN YOUR CODE... This is for throttling...
 				Threading.sleep (context.delay);
@@ -60,8 +59,7 @@ public class ConsumerCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> consume (final ConsumerCloudletContext context, final AmqpQueueConsumeCallbackArguments<String> arguments)
-		{
+		public CallbackCompletion<Void> consume (final ConsumerCloudletContext context, final AmqpQueueConsumeCallbackArguments<String> arguments) {
 			final String data = arguments.getMessage ();
 			context.logger.info ("ConsumerCloudlet received message `{}`.", data);
 			context.consumer.acknowledge (arguments.getToken ());
@@ -69,15 +67,13 @@ public class ConsumerCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final ConsumerCloudletContext context, final CallbackArguments arguments)
-		{
+		public CallbackCompletion<Void> destroySucceeded (final ConsumerCloudletContext context, final CallbackArguments arguments) {
 			context.logger.info ("ConsumerCloudlet consumer destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final ConsumerCloudletContext context, final CallbackArguments arguments)
-		{
+		public CallbackCompletion<Void> initializeSucceeded (final ConsumerCloudletContext context, final CallbackArguments arguments) {
 			context.logger.info ("ConsumerCloudlet consumer initialized successfully.");
 			return ICallback.SUCCESS;
 		}
@@ -94,25 +90,22 @@ public class ConsumerCloudlet
 	}
 	
 	public static final class LifeCycleHandler
-			extends DefaultCloudletCallback<ConsumerCloudletContext>
+				extends DefaultCloudletCallback<ConsumerCloudletContext>
 	{
 		@Override
-		public CallbackCompletion<Void> destroy (final ConsumerCloudletContext context, final CloudletCallbackArguments<ConsumerCloudletContext> arguments)
-		{
+		public CallbackCompletion<Void> destroy (final ConsumerCloudletContext context, final CloudletCallbackArguments<ConsumerCloudletContext> arguments) {
 			context.logger.info ("ConsumerCloudlet destroying...");
 			return context.consumer.destroy ();
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final ConsumerCloudletContext context, final CloudletCallbackCompletionArguments<ConsumerCloudletContext> arguments)
-		{
+		public CallbackCompletion<Void> destroySucceeded (final ConsumerCloudletContext context, final CloudletCallbackCompletionArguments<ConsumerCloudletContext> arguments) {
 			context.logger.info ("ConsumerCloudlet destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initialize (final ConsumerCloudletContext context, final CloudletCallbackArguments<ConsumerCloudletContext> arguments)
-		{
+		public CallbackCompletion<Void> initialize (final ConsumerCloudletContext context, final CloudletCallbackArguments<ConsumerCloudletContext> arguments) {
 			context.cloudlet = arguments.getCloudlet ();
 			context.logger = this.logger;
 			context.logger.info ("ConsumerCloudlet initializing...");
@@ -123,8 +116,7 @@ public class ConsumerCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final ConsumerCloudletContext context, final CloudletCallbackCompletionArguments<ConsumerCloudletContext> arguments)
-		{
+		public CallbackCompletion<Void> initializeSucceeded (final ConsumerCloudletContext context, final CloudletCallbackCompletionArguments<ConsumerCloudletContext> arguments) {
 			context.logger.info ("ConsumerCloudlet initialized successfully.");
 			return ICallback.SUCCESS;
 		}

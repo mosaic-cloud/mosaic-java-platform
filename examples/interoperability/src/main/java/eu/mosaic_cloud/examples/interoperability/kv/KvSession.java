@@ -30,13 +30,12 @@ import eu.mosaic_cloud.interoperability.tools.Identifiers;
 
 
 public enum KvSession
-		implements
-			SessionSpecification
+			implements
+				SessionSpecification
 {
 	Client (KvRole.Client, KvRole.Server),
 	Server (KvRole.Server, KvRole.Client);
-	private KvSession (final KvRole selfRole, final KvRole peerRole)
-	{
+	private KvSession (final KvRole selfRole, final KvRole peerRole) {
 		this.selfRole = selfRole;
 		this.peerRole = peerRole;
 		final LinkedList<KvMessage> messages = new LinkedList<KvMessage> ();
@@ -46,26 +45,22 @@ public enum KvSession
 	}
 	
 	@Override
-	public Iterable<KvMessage> getMessages ()
-	{
+	public Iterable<KvMessage> getMessages () {
 		return (this.messages);
 	}
 	
 	@Override
-	public RoleSpecification getPeerRole ()
-	{
+	public RoleSpecification getPeerRole () {
 		return (this.peerRole);
 	}
 	
 	@Override
-	public String getQualifiedName ()
-	{
+	public String getQualifiedName () {
 		return (Identifiers.generateName (this));
 	}
 	
 	@Override
-	public RoleSpecification getSelfRole ()
-	{
+	public RoleSpecification getSelfRole () {
 		return (this.selfRole);
 	}
 	

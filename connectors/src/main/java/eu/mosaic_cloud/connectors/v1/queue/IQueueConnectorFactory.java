@@ -25,6 +25,6 @@ import eu.mosaic_cloud.connectors.v1.core.IConnectorFactory;
 
 
 public interface IQueueConnectorFactory<TConnector extends IQueueConnector>
-		extends
-			IConnectorFactory<TConnector>
+			extends
+				IConnectorFactory<TConnector>
 {}

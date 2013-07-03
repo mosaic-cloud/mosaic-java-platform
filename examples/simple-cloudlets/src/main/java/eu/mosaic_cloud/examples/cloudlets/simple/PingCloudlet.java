@@ -46,19 +46,17 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public class PingCloudlet
 {
 	public static final class AmqpConsumerCallback
-			extends DefaultAmqpQueueConsumerConnectorCallback<PingCloudletContext, PongMessage, Void>
+				extends DefaultAmqpQueueConsumerConnectorCallback<PingCloudletContext, PongMessage, Void>
 	{
 		@Override
-		public CallbackCompletion<Void> acknowledgeSucceeded (final PingCloudletContext context, final GenericCallbackCompletionArguments<Void> arguments)
-		{
+		public CallbackCompletion<Void> acknowledgeSucceeded (final PingCloudletContext context, final GenericCallbackCompletionArguments<Void> arguments) {
 			this.logger.info ("ackowledge succeeded; exiting...");
 			context.cloudlet.destroy ();
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
-		public CallbackCompletion<Void> consume (final PingCloudletContext context, final AmqpQueueConsumeCallbackArguments<PongMessage> arguments)
-		{
+		public CallbackCompletion<Void> consume (final PingCloudletContext context, final AmqpQueueConsumeCallbackArguments<PongMessage> arguments) {
 			final PongMessage pong = arguments.getMessage ();
 			this.logger.info ("received pong message with key `{}`; acknowledging...", pong.getKey ());
 			context.consumer.acknowledge (arguments.getToken ());
@@ -66,59 +64,52 @@ public class PingCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final PingCloudletContext context, final CallbackArguments arguments)
-		{
+		public CallbackCompletion<Void> destroySucceeded (final PingCloudletContext context, final CallbackArguments arguments) {
 			this.logger.info ("queue consumer connector destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final PingCloudletContext context, final CallbackArguments arguments)
-		{
+		public CallbackCompletion<Void> initializeSucceeded (final PingCloudletContext context, final CallbackArguments arguments) {
 			this.logger.info ("queue consumer connector initialized successfully.");
 			return ICallback.SUCCESS;
 		}
 	}
 	
 	public static final class AmqpPublisherCallback
-			extends DefaultAmqpPublisherConnectorCallback<PingCloudletContext, PingMessage, Void>
+				extends DefaultAmqpPublisherConnectorCallback<PingCloudletContext, PingMessage, Void>
 	{
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final PingCloudletContext context, final CallbackArguments arguments)
-		{
+		public CallbackCompletion<Void> destroySucceeded (final PingCloudletContext context, final CallbackArguments arguments) {
 			this.logger.info ("queue publisher connector destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final PingCloudletContext context, final CallbackArguments arguments)
-		{
+		public CallbackCompletion<Void> initializeSucceeded (final PingCloudletContext context, final CallbackArguments arguments) {
 			this.logger.info ("queue publisher connector initialized successfully.");
 			return ICallback.SUCCESS;
 		}
 	}
 	
 	public static final class LifeCycleHandler
-			extends DefaultCloudletCallback<PingCloudletContext>
+				extends DefaultCloudletCallback<PingCloudletContext>
 	{
 		@Override
-		public CallbackCompletion<Void> destroy (final PingCloudletContext context, final CloudletCallbackArguments<PingCloudletContext> arguments)
-		{
+		public CallbackCompletion<Void> destroy (final PingCloudletContext context, final CloudletCallbackArguments<PingCloudletContext> arguments) {
 			this.logger.info ("destroying cloudlet...");
 			this.logger.info ("destroying queue connectors...");
 			return CallbackCompletion.createAndChained (context.consumer.destroy (), context.publisher.destroy ());
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final PingCloudletContext context, final CloudletCallbackCompletionArguments<PingCloudletContext> arguments)
-		{
+		public CallbackCompletion<Void> destroySucceeded (final PingCloudletContext context, final CloudletCallbackCompletionArguments<PingCloudletContext> arguments) {
 			this.logger.info ("cloudlet destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initialize (final PingCloudletContext context, final CloudletCallbackArguments<PingCloudletContext> arguments)
-		{
+		public CallbackCompletion<Void> initialize (final PingCloudletContext context, final CloudletCallbackArguments<PingCloudletContext> arguments) {
 			this.logger.info ("initializing cloudlet...");
 			context.cloudlet = arguments.getCloudlet ();
 			final IConfiguration configuration = context.cloudlet.getConfiguration ();
@@ -132,8 +123,7 @@ public class PingCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final PingCloudletContext context, final CloudletCallbackCompletionArguments<PingCloudletContext> arguments)
-		{
+		public CallbackCompletion<Void> initializeSucceeded (final PingCloudletContext context, final CloudletCallbackCompletionArguments<PingCloudletContext> arguments) {
 			this.logger.info ("cloudlet initialized successfully.");
 			final PingMessage ping = new PingMessage (context.pingPongKey);
 			this.logger.info ("sending ping message with key `{}`...", ping.getKey ());

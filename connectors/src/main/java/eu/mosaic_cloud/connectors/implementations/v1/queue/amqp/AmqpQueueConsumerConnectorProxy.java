@@ -41,12 +41,11 @@ import com.google.common.base.Preconditions;
 
 
 public final class AmqpQueueConsumerConnectorProxy<TMessage>
-		extends AmqpQueueConnectorProxy<TMessage>
-		implements
-			IAmqpQueueConsumerConnector<TMessage>
+			extends AmqpQueueConnectorProxy<TMessage>
+			implements
+				IAmqpQueueConsumerConnector<TMessage>
 {
-	private AmqpQueueConsumerConnectorProxy (final AmqpQueueRawConnectorProxy rawProxy, final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final IAmqpQueueConsumerCallback<TMessage> callback)
-	{
+	private AmqpQueueConsumerConnectorProxy (final AmqpQueueRawConnectorProxy rawProxy, final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final IAmqpQueueConsumerCallback<TMessage> callback) {
 		super (rawProxy, configuration, messageClass, messageEncoder);
 		final String identifier = this.raw.getIdentifier ();
 		this.exchange = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_0, String.class, identifier);
@@ -70,8 +69,7 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 	}
 	
 	@Override
-	public CallbackCompletion<Void> acknowledge (final IAmqpMessageToken token_)
-	{
+	public CallbackCompletion<Void> acknowledge (final IAmqpMessageToken token_) {
 		final DeliveryToken token = (DeliveryToken) token_;
 		Preconditions.checkNotNull (token);
 		Preconditions.checkArgument (token.proxy == this);
@@ -80,21 +78,18 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 	}
 	
 	@Override
-	public CallbackCompletion<Void> destroy ()
-	{
+	public CallbackCompletion<Void> destroy () {
 		this.transcript.traceDebugging ("destroying the proxy...");
 		final Callable<CallbackCompletion<Void>> cancelOperation = new Callable<CallbackCompletion<Void>> () {
 			@Override
-			public CallbackCompletion<Void> call ()
-			{
+			public CallbackCompletion<Void> call () {
 				AmqpQueueConsumerConnectorProxy.this.transcript.traceDebugging ("canceling the consumer `%s`...", AmqpQueueConsumerConnectorProxy.this.consumerIdentifier);
 				return (AmqpQueueConsumerConnectorProxy.this.raw.cancel (AmqpQueueConsumerConnectorProxy.this.consumerIdentifier));
 			}
 		};
 		final Callable<CallbackCompletion<Void>> destroyOperation = new Callable<CallbackCompletion<Void>> () {
 			@Override
-			public CallbackCompletion<Void> call ()
-			{
+			public CallbackCompletion<Void> call () {
 				AmqpQueueConsumerConnectorProxy.this.transcript.traceDebugging ("destroying the underlying raw proxy...");
 				return (AmqpQueueConsumerConnectorProxy.this.raw.destroy ());
 			}
@@ -103,60 +98,45 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 	}
 	
 	@Override
-	public CallbackCompletion<Void> initialize ()
-	{
+	public CallbackCompletion<Void> initialize () {
 		this.transcript.traceDebugging ("initializing the proxy...");
 		final Callable<CallbackCompletion<Void>> initializeOperation = new Callable<CallbackCompletion<Void>> () {
 			@Override
-			public CallbackCompletion<Void> call ()
-			{
+			public CallbackCompletion<Void> call () {
 				AmqpQueueConsumerConnectorProxy.this.transcript.traceDebugging ("initializing the underlying raw proxy...");
 				return (AmqpQueueConsumerConnectorProxy.this.raw.initialize ());
 			}
 		};
 		final Callable<CallbackCompletion<Void>> declareExchangeOperation = new Callable<CallbackCompletion<Void>> () {
 			@Override
-			public CallbackCompletion<Void> call ()
-			{
+			public CallbackCompletion<Void> call () {
 				AmqpQueueConsumerConnectorProxy.this.transcript.traceDebugging ("declaring the exchange `%s` of type `%s`...", AmqpQueueConsumerConnectorProxy.this.exchange, AmqpQueueConsumerConnectorProxy.this.exchangeType);
 				return (AmqpQueueConsumerConnectorProxy.this.raw.declareExchange (AmqpQueueConsumerConnectorProxy.this.exchange, AmqpQueueConsumerConnectorProxy.this.exchangeType, AmqpQueueConsumerConnectorProxy.this.exchangeDurable, AmqpQueueConsumerConnectorProxy.this.exchangeAutoDelete, AmqpQueueConsumerConnectorProxy.this.definePassive));
 			}
 		};
 		final Callable<CallbackCompletion<Void>> declareQueueOperation = new Callable<CallbackCompletion<Void>> () {
 			@Override
-			public CallbackCompletion<Void> call ()
-			{
+			public CallbackCompletion<Void> call () {
 				AmqpQueueConsumerConnectorProxy.this.transcript.traceDebugging ("declaring the queue `%s`...", AmqpQueueConsumerConnectorProxy.this.queue);
 				return (AmqpQueueConsumerConnectorProxy.this.raw.declareQueue (AmqpQueueConsumerConnectorProxy.this.queue, AmqpQueueConsumerConnectorProxy.this.queueExclusive, AmqpQueueConsumerConnectorProxy.this.queueDurable, AmqpQueueConsumerConnectorProxy.this.queueAutoDelete, AmqpQueueConsumerConnectorProxy.this.definePassive));
 			}
 		};
 		final Callable<CallbackCompletion<Void>> bindQueueOperation = new Callable<CallbackCompletion<Void>> () {
 			@Override
-			public CallbackCompletion<Void> call ()
-			{
+			public CallbackCompletion<Void> call () {
 				AmqpQueueConsumerConnectorProxy.this.transcript.traceDebugging ("binding the queue `%s` to exchange `%s` (of type `%s`) with routing key `%s`...", AmqpQueueConsumerConnectorProxy.this.queue, AmqpQueueConsumerConnectorProxy.this.exchange, AmqpQueueConsumerConnectorProxy.this.exchangeType, AmqpQueueConsumerConnectorProxy.this.bindingRoutingKey);
 				return (AmqpQueueConsumerConnectorProxy.this.raw.bindQueue (AmqpQueueConsumerConnectorProxy.this.exchange, AmqpQueueConsumerConnectorProxy.this.queue, AmqpQueueConsumerConnectorProxy.this.bindingRoutingKey));
 			}
 		};
 		final Callable<CallbackCompletion<Void>> consumeOperation = new Callable<CallbackCompletion<Void>> () {
 			@Override
-			public CallbackCompletion<Void> call ()
-			{
+			public CallbackCompletion<Void> call () {
 				AmqpQueueConsumerConnectorProxy.this.transcript.traceDebugging ("registering the consumer `%s` for queue `%s`...", AmqpQueueConsumerConnectorProxy.this.consumerIdentifier, AmqpQueueConsumerConnectorProxy.this.queue);
 				return (AmqpQueueConsumerConnectorProxy.this.raw.consume (AmqpQueueConsumerConnectorProxy.this.queue, AmqpQueueConsumerConnectorProxy.this.consumerIdentifier, AmqpQueueConsumerConnectorProxy.this.queueExclusive, AmqpQueueConsumerConnectorProxy.this.consumerAutoAck, AmqpQueueConsumerConnectorProxy.this.callback));
 			}
 		};
 		// FIXME: If these operations fail we should continue with `destroy`.
 		return (CallbackCompletionWorkflows.executeSequence (initializeOperation, declareExchangeOperation, declareQueueOperation, bindQueueOperation, consumeOperation));
-	}
-	
-	public static <TMessage> AmqpQueueConsumerConnectorProxy<TMessage> create (final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final IAmqpQueueConsumerCallback<TMessage> callback)
-	{
-		final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create (configuration);
-		// FIXME: the splice below will be done when creating the environment
-		//# final IConfiguration subConfiguration = configuration.spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
-		final AmqpQueueConsumerConnectorProxy<TMessage> proxy = new AmqpQueueConsumerConnectorProxy<TMessage> (rawProxy, configuration, messageClass, messageEncoder, callback);
-		return (proxy);
 	}
 	
 	private final String bindingRoutingKey;
@@ -173,33 +153,37 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 	private final boolean queueDurable;
 	private final boolean queueExclusive;
 	
+	public static <TMessage> AmqpQueueConsumerConnectorProxy<TMessage> create (final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final IAmqpQueueConsumerCallback<TMessage> callback) {
+		final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create (configuration);
+		// FIXME: the splice below will be done when creating the environment
+		//# final IConfiguration subConfiguration = configuration.spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
+		final AmqpQueueConsumerConnectorProxy<TMessage> proxy = new AmqpQueueConsumerConnectorProxy<TMessage> (rawProxy, configuration, messageClass, messageEncoder, callback);
+		return (proxy);
+	}
+	
 	private final class AmqpConsumerCallback
-			implements
-				IAmqpQueueRawConsumerCallback
+				implements
+					IAmqpQueueRawConsumerCallback
 	{
-		AmqpConsumerCallback (final IAmqpQueueConsumerCallback<TMessage> delegate)
-		{
+		AmqpConsumerCallback (final IAmqpQueueConsumerCallback<TMessage> delegate) {
 			super ();
 			this.delegate = delegate;
 		}
 		
 		@Override
-		public CallbackCompletion<Void> handleCancelOk (final String consumerTag)
-		{
+		public CallbackCompletion<Void> handleCancelOk (final String consumerTag) {
 			AmqpQueueConsumerConnectorProxy.this.transcript.traceDebugging ("canceled the consumer `%s` successfully.", AmqpQueueConsumerConnectorProxy.this.consumerIdentifier);
 			return (CallbackCompletion.createOutcome ());
 		}
 		
 		@Override
-		public CallbackCompletion<Void> handleConsumeOk (final String consumerTag)
-		{
+		public CallbackCompletion<Void> handleConsumeOk (final String consumerTag) {
 			AmqpQueueConsumerConnectorProxy.this.transcript.traceDebugging ("registered the consumer `%s` successfully.", AmqpQueueConsumerConnectorProxy.this.consumerIdentifier);
 			return (CallbackCompletion.createOutcome ());
 		}
 		
 		@Override
-		public CallbackCompletion<Void> handleDelivery (final AmqpInboundMessage inbound)
-		{
+		public CallbackCompletion<Void> handleDelivery (final AmqpInboundMessage inbound) {
 			final DeliveryToken token = new DeliveryToken (AmqpQueueConsumerConnectorProxy.this, inbound.getDelivery ());
 			final byte[] data = inbound.getData ();
 			AmqpQueueConsumerConnectorProxy.this.transcript.traceDebugging ("delivered the message `%s` for consumer `%s`...", token, AmqpQueueConsumerConnectorProxy.this.consumerIdentifier);
@@ -220,8 +204,7 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 		}
 		
 		@Override
-		public CallbackCompletion<Void> handleShutdownSignal (final String consumerTag, final String message)
-		{
+		public CallbackCompletion<Void> handleShutdownSignal (final String consumerTag, final String message) {
 			// FIXME: this should be handled...
 			return (CallbackCompletion.createOutcome ());
 		}
@@ -230,24 +213,21 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 	}
 	
 	private static final class DeliveryToken
-			implements
-				IAmqpMessageToken
+				implements
+					IAmqpMessageToken
 	{
-		DeliveryToken (final AmqpQueueConsumerConnectorProxy<?> proxy, final long token)
-		{
+		DeliveryToken (final AmqpQueueConsumerConnectorProxy<?> proxy, final long token) {
 			super ();
 			this.proxy = proxy;
 			this.token = token;
 		}
 		
 		@Override
-		public String toString ()
-		{
+		public String toString () {
 			return (String.format ("%032x", Long.valueOf (this.token)));
 		}
 		
-		long getDelivery ()
-		{
+		long getDelivery () {
 			return (this.token);
 		}
 		

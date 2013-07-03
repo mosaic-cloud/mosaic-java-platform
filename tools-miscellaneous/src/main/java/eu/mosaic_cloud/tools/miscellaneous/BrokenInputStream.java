@@ -26,69 +26,58 @@ import java.io.InputStream;
 
 
 public final class BrokenInputStream
-		extends InputStream
+			extends InputStream
 {
-	private BrokenInputStream ()
-	{
+	private BrokenInputStream () {
 		super ();
 	}
 	
 	@Override
-	public final int available ()
-	{
+	public final int available () {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public final void close ()
-	{
+	public final void close () {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public final void mark (final int readlimit)
-	{
+	public final void mark (final int readlimit) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public final boolean markSupported ()
-	{
+	public final boolean markSupported () {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public final int read ()
-	{
+	public final int read () {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public final int read (final byte[] b)
-	{
+	public final int read (final byte[] b) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public final int read (final byte[] b, final int off, final int len)
-	{
+	public final int read (final byte[] b, final int off, final int len) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public final void reset ()
-	{
+	public final void reset () {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public final long skip (final long n)
-	{
+	public final long skip (final long n) {
 		throw (new UnsupportedOperationException ());
 	}
 	
-	public static final BrokenInputStream create ()
-	{
+	public static final BrokenInputStream create () {
 		return (new BrokenInputStream ());
 	}
 	

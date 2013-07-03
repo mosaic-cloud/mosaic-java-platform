@@ -48,20 +48,17 @@ import com.google.common.base.Preconditions;
 
 
 /**
- * This callback class enables a resource driver to be exposed as a component.
- * Upon initialization it will look for the resource and will create a driver
- * object for the resource.
+ * This callback class enables a resource driver to be exposed as a component. Upon initialization it will look for the resource
+ * and will create a driver object for the resource.
  * 
  * @author Georgiana Macariu
- * 
  */
 public abstract class AbstractDriverComponentCallbacks
-		implements
-			ComponentCallbacks,
-			CallbackHandler
+			implements
+				ComponentCallbacks,
+				CallbackHandler
 {
-	protected AbstractDriverComponentCallbacks (final ComponentEnvironment context)
-	{
+	protected AbstractDriverComponentCallbacks (final ComponentEnvironment context) {
 		this.threading = context.threading;
 		final Transcript transcript = Transcript.create (this, true);
 		this.logger = transcript.adaptAs (Logger.class);
@@ -69,16 +66,14 @@ public abstract class AbstractDriverComponentCallbacks
 	}
 	
 	@Override
-	public CallbackCompletion<Void> casted (final ComponentController component, final ComponentCastRequest request)
-	{
+	public CallbackCompletion<Void> casted (final ComponentController component, final ComponentCastRequest request) {
 		Preconditions.checkState (this.component == component);
 		Preconditions.checkState ((this.status != Status.Terminated) && (this.status != Status.Unregistered));
 		throw new UnsupportedOperationException ();
 	}
 	
 	@Override
-	public CallbackCompletion<Void> failed (final ComponentController component, final Throwable exception)
-	{
+	public CallbackCompletion<Void> failed (final ComponentController component, final Throwable exception) {
 		Preconditions.checkState (this.component == component);
 		Preconditions.checkState ((this.status != Status.Terminated) && (this.status != Status.Unregistered));
 		if (this.stub != null) {
@@ -91,24 +86,20 @@ public abstract class AbstractDriverComponentCallbacks
 	}
 	
 	@Override
-	public final void failedCallbacks (final Callbacks trigger, final Throwable exception)
-	{
+	public final void failedCallbacks (final Callbacks trigger, final Throwable exception) {
 		this.failed (this.component, exception);
 	}
 	
 	@Override
-	public final void registeredCallbacks (final Callbacks trigger, final CallbackIsolate isolate)
-	{}
+	public final void registeredCallbacks (final Callbacks trigger, final CallbackIsolate isolate) {}
 	
-	public void terminate ()
-	{
+	public void terminate () {
 		Preconditions.checkState (this.component != null);
 		this.component.terminate ();
 	}
 	
 	@Override
-	public CallbackCompletion<Void> terminated (final ComponentController component)
-	{
+	public CallbackCompletion<Void> terminated (final ComponentController component) {
 		Preconditions.checkState (this.component == component);
 		Preconditions.checkState ((this.status != Status.Terminated) && (this.status != Status.Unregistered));
 		if (this.stub != null) {
@@ -121,11 +112,9 @@ public abstract class AbstractDriverComponentCallbacks
 	}
 	
 	@Override
-	public final void unregisteredCallbacks (final Callbacks trigger)
-	{}
+	public final void unregisteredCallbacks (final Callbacks trigger) {}
 	
-	protected ZeroMqChannel createDriverChannel (final String channelIdentifierProp, final String channelEndpointProp, final SessionSpecification role)
-	{
+	protected ZeroMqChannel createDriverChannel (final String channelIdentifierProp, final String channelEndpointProp, final SessionSpecification role) {
 		// NOTE: create stub and interop channel
 		Preconditions.checkNotNull (this.driverConfiguration);
 		final ZeroMqChannel driverChannel = ZeroMqChannel.create (ConfigUtils.resolveParameter (this.driverConfiguration, channelIdentifierProp, String.class, ""), this.threading, this.exceptions);
@@ -134,13 +123,11 @@ public abstract class AbstractDriverComponentCallbacks
 		return driverChannel;
 	}
 	
-	protected IConfiguration getDriverConfiguration ()
-	{
+	protected IConfiguration getDriverConfiguration () {
 		return this.driverConfiguration;
 	}
 	
-	protected void setDriverConfiguration (final IConfiguration driverConfiguration)
-	{
+	protected void setDriverConfiguration (final IConfiguration driverConfiguration) {
 		this.driverConfiguration = driverConfiguration;
 	}
 	

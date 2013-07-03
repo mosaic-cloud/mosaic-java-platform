@@ -32,20 +32,17 @@ import eu.mosaic_cloud.interoperability.tools.Identifiers;
 
 
 /**
- * Defines the AMQP session: the messages that can be exchanged and the roles of
- * the participants.
+ * Defines the AMQP session: the messages that can be exchanged and the roles of the participants.
  * 
  * @author Georgiana Macariu
- * 
  */
 public enum AmqpSession
-		implements
-			SessionSpecification
+			implements
+				SessionSpecification
 {
 	CONNECTOR (AmqpRole.CONNECTOR, AmqpRole.DRIVER),
 	DRIVER (AmqpRole.DRIVER, AmqpRole.CONNECTOR);
-	private AmqpSession (final AmqpRole selfRole, final AmqpRole peerRole)
-	{
+	private AmqpSession (final AmqpRole selfRole, final AmqpRole peerRole) {
 		this.selfRole = selfRole;
 		this.peerRole = peerRole;
 		final List<AmqpMessage> messages = new LinkedList<AmqpMessage> ();
@@ -56,26 +53,22 @@ public enum AmqpSession
 	}
 	
 	@Override
-	public Iterable<? extends MessageSpecification> getMessages ()
-	{
+	public Iterable<? extends MessageSpecification> getMessages () {
 		return this.messages;
 	}
 	
 	@Override
-	public RoleSpecification getPeerRole ()
-	{
+	public RoleSpecification getPeerRole () {
 		return this.peerRole;
 	}
 	
 	@Override
-	public String getQualifiedName ()
-	{
+	public String getQualifiedName () {
 		return (Identifiers.generateName (this));
 	}
 	
 	@Override
-	public RoleSpecification getSelfRole ()
-	{
+	public RoleSpecification getSelfRole () {
 		return this.selfRole;
 	}
 	

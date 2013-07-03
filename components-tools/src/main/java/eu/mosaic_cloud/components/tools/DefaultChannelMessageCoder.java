@@ -37,12 +37,11 @@ import net.minidev.json.JSONObject;
 
 
 public final class DefaultChannelMessageCoder
-		extends Object
-		implements
-			ChannelMessageCoder
+			extends Object
+			implements
+				ChannelMessageCoder
 {
-	private DefaultChannelMessageCoder (final JsonCoder jsonCoder)
-	{
+	private DefaultChannelMessageCoder (final JsonCoder jsonCoder) {
 		super ();
 		Preconditions.checkNotNull (jsonCoder);
 		this.jsonCoder = jsonCoder;
@@ -50,8 +49,7 @@ public final class DefaultChannelMessageCoder
 	
 	@Override
 	public final ChannelMessage decode (final ByteBuffer packet_)
-			throws Throwable
-	{
+				throws Throwable {
 		Preconditions.checkNotNull (packet_);
 		final ByteBuffer packet = packet_.asReadOnlyBuffer ();
 		Preconditions.checkArgument (packet.order () == ByteOrder.BIG_ENDIAN, "invalid packet byte-order");
@@ -88,8 +86,7 @@ public final class DefaultChannelMessageCoder
 	
 	@Override
 	public final ByteBuffer encode (final ChannelMessage message)
-			throws Throwable
-	{
+				throws Throwable {
 		Preconditions.checkNotNull (message);
 		Preconditions.checkArgument (message.type != null, "unexpected message-type value: `%s`", message.type);
 		Preconditions.checkArgument ((message.metaData != null), "unexpected meta-data value: `%s`", message.metaData);
@@ -108,11 +105,11 @@ public final class DefaultChannelMessageCoder
 		return (packet.asReadOnlyBuffer ());
 	}
 	
-	public static final DefaultChannelMessageCoder create ()
-	{
+	private final JsonCoder jsonCoder;
+	
+	public static final DefaultChannelMessageCoder create () {
 		return (new DefaultChannelMessageCoder (DefaultJsonCoder.defaultInstance));
 	}
 	
-	private final JsonCoder jsonCoder;
 	public static final DefaultChannelMessageCoder defaultInstance = DefaultChannelMessageCoder.create ();
 }

@@ -34,15 +34,13 @@ import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 
 
 public final class HttpgQueueConnectorFactoryInitializer
-		extends BaseConnectorsFactoryInitializer
+			extends BaseConnectorsFactoryInitializer
 {
 	@Override
-	protected void initialize_1 (final IConnectorsFactoryBuilder builder, final ConnectorEnvironment environment, final IConnectorsFactory delegate)
-	{
+	protected void initialize_1 (final IConnectorsFactoryBuilder builder, final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
 		builder.register (IHttpgQueueConnectorFactory.class, new IHttpgQueueConnectorFactory () {
 			@Override
-			public <TRequestBody, TResponseBody> IHttpgQueueConnector<TRequestBody, TResponseBody> create (final IConfiguration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final IHttpgQueueCallback<TRequestBody, TResponseBody> callback)
-			{
+			public <TRequestBody, TResponseBody> IHttpgQueueConnector<TRequestBody, TResponseBody> create (final IConfiguration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final IHttpgQueueCallback<TRequestBody, TResponseBody> callback) {
 				return HttpgQueueConnector.create (ConnectorConfiguration.create (configuration, environment), requestBodyClass, requestBodyEncoder, responseBodyClass, responseBodyEncoder, callback);
 			}
 		});

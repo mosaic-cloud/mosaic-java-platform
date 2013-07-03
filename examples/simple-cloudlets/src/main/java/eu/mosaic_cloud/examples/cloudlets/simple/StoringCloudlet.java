@@ -44,8 +44,7 @@ import org.slf4j.Logger;
 
 public class StoringCloudlet
 {
-	private static CallbackCompletion<Void> maybeSetValue (final StoringCloudletContext context)
-	{
+	private static CallbackCompletion<Void> maybeSetValue (final StoringCloudletContext context) {
 		{
 			// FIXME: DON'T DO THIS IN YOUR CODE... This is for throttling...
 			Threading.sleep (context.delay);
@@ -63,25 +62,22 @@ public class StoringCloudlet
 	}
 	
 	public static final class LifeCycleHandler
-			extends DefaultCloudletCallback<StoringCloudletContext>
+				extends DefaultCloudletCallback<StoringCloudletContext>
 	{
 		@Override
-		public CallbackCompletion<Void> destroy (final StoringCloudletContext context, final CloudletCallbackArguments<StoringCloudletContext> arguments)
-		{
+		public CallbackCompletion<Void> destroy (final StoringCloudletContext context, final CloudletCallbackArguments<StoringCloudletContext> arguments) {
 			context.logger.info ("PublisherCloudlet destroying...");
 			return context.store.destroy ();
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final StoringCloudletContext context, final CloudletCallbackCompletionArguments<StoringCloudletContext> arguments)
-		{
+		public CallbackCompletion<Void> destroySucceeded (final StoringCloudletContext context, final CloudletCallbackCompletionArguments<StoringCloudletContext> arguments) {
 			context.logger.info ("PublisherCloudlet destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initialize (final StoringCloudletContext context, final CloudletCallbackArguments<StoringCloudletContext> arguments)
-		{
+		public CallbackCompletion<Void> initialize (final StoringCloudletContext context, final CloudletCallbackArguments<StoringCloudletContext> arguments) {
 			context.cloudlet = arguments.getCloudlet ();
 			context.logger = this.logger;
 			context.logger.info ("PublisherCloudlet initializing...");
@@ -92,26 +88,23 @@ public class StoringCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final StoringCloudletContext context, final CloudletCallbackCompletionArguments<StoringCloudletContext> arguments)
-		{
+		public CallbackCompletion<Void> initializeSucceeded (final StoringCloudletContext context, final CloudletCallbackCompletionArguments<StoringCloudletContext> arguments) {
 			context.logger.info ("PublisherCloudlet initialized successfully.");
 			return (StoringCloudlet.maybeSetValue (context));
 		}
 	}
 	
 	public static final class StoreCallback
-			extends DefaultKvStoreConnectorCallback<StoringCloudletContext, String, String>
+				extends DefaultKvStoreConnectorCallback<StoringCloudletContext, String, String>
 	{
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final StoringCloudletContext context, final CallbackArguments arguments)
-		{
+		public CallbackCompletion<Void> destroySucceeded (final StoringCloudletContext context, final CallbackArguments arguments) {
 			context.logger.info ("PublisherCloudlet publisher destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
-		public CallbackCompletion<Void> getSucceeded (final StoringCloudletContext context, final KvStoreCallbackCompletionArguments<String, String> arguments)
-		{
+		public CallbackCompletion<Void> getSucceeded (final StoringCloudletContext context, final KvStoreCallbackCompletionArguments<String, String> arguments) {
 			final String key = arguments.getExtra ();
 			final String value = arguments.getValue ();
 			context.logger.info ("StoringCloudlet got value `{}` -> `{}`.", key, value);
@@ -119,15 +112,13 @@ public class StoringCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final StoringCloudletContext context, final CallbackArguments arguments)
-		{
+		public CallbackCompletion<Void> initializeSucceeded (final StoringCloudletContext context, final CallbackArguments arguments) {
 			context.logger.info ("PublisherCloudlet publisher initialized successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
-		public CallbackCompletion<Void> setSucceeded (final StoringCloudletContext context, final KvStoreCallbackCompletionArguments<String, String> arguments)
-		{
+		public CallbackCompletion<Void> setSucceeded (final StoringCloudletContext context, final KvStoreCallbackCompletionArguments<String, String> arguments) {
 			final String key = arguments.getExtra ();
 			context.logger.info ("StoringCloudlet getting value `{}`.", key);
 			context.store.get (key, key);

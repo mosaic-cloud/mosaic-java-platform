@@ -28,10 +28,9 @@ import com.google.common.base.Preconditions;
 
 
 public final class ChannelMessage
-		extends Object
+			extends Object
 {
-	private ChannelMessage (final ChannelMessageType type, final Map<String, Object> metaData, final ByteBuffer data)
-	{
+	private ChannelMessage (final ChannelMessageType type, final Map<String, Object> metaData, final ByteBuffer data) {
 		super ();
 		Preconditions.checkNotNull (type);
 		Preconditions.checkNotNull (metaData);
@@ -41,12 +40,11 @@ public final class ChannelMessage
 		this.data = data;
 	}
 	
-	public static final ChannelMessage create (final ChannelMessageType type, final Map<String, Object> metaData, final ByteBuffer data)
-	{
-		return (new ChannelMessage (type, metaData, data));
-	}
-	
 	public final ByteBuffer data;
 	public final Map<String, Object> metaData;
 	public final ChannelMessageType type;
+	
+	public static final ChannelMessage create (final ChannelMessageType type, final Map<String, Object> metaData, final ByteBuffer data) {
+		return (new ChannelMessage (type, metaData, data));
+	}
 }

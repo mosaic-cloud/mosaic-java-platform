@@ -31,12 +31,11 @@ import com.google.common.base.Preconditions;
 
 
 public abstract class BaseConnectorsFactoryBuilder<TFactory extends BaseConnectorsFactory>
-		extends Object
-		implements
-			IConnectorsFactoryBuilder
+			extends Object
+			implements
+				IConnectorsFactoryBuilder
 {
-	protected BaseConnectorsFactoryBuilder (final TFactory factory)
-	{
+	protected BaseConnectorsFactoryBuilder (final TFactory factory) {
 		super ();
 		Preconditions.checkNotNull (factory);
 		this.factory = factory;
@@ -46,16 +45,14 @@ public abstract class BaseConnectorsFactoryBuilder<TFactory extends BaseConnecto
 	}
 	
 	@Override
-	public final TFactory build ()
-	{
+	public final TFactory build () {
 		Preconditions.checkState (this.built.compareAndSet (false, true));
 		this.build_1 ();
 		return (this.factory);
 	}
 	
 	@Override
-	public final <TConnectorFactory extends IConnectorFactory<?>> void register (final Class<TConnectorFactory> factoryClass, final TConnectorFactory factory)
-	{
+	public final <TConnectorFactory extends IConnectorFactory<?>> void register (final Class<TConnectorFactory> factoryClass, final TConnectorFactory factory) {
 		Preconditions.checkState (!this.built.get ());
 		Preconditions.checkNotNull (factoryClass);
 		Preconditions.checkArgument (factoryClass.isInterface ());
@@ -65,19 +62,15 @@ public abstract class BaseConnectorsFactoryBuilder<TFactory extends BaseConnecto
 		this.factory.registerFactory (factoryClass, factory);
 	}
 	
-	protected void build_1 ()
-	{}
+	protected void build_1 () {}
 	
-	protected void initialize ()
-	{
+	protected void initialize () {
 		this.initialize_1 ();
 	}
 	
-	protected void initialize_1 ()
-	{}
+	protected void initialize_1 () {}
 	
-	protected <TConnectorFactory extends IConnectorFactory<?>> void register_1 (final Class<TConnectorFactory> factoryClass, final TConnectorFactory factory)
-	{
+	protected <TConnectorFactory extends IConnectorFactory<?>> void register_1 (final Class<TConnectorFactory> factoryClass, final TConnectorFactory factory) {
 		this.factory.registerFactory (factoryClass, factory);
 	}
 	

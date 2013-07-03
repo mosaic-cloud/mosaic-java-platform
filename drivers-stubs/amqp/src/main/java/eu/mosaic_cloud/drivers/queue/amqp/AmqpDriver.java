@@ -57,10 +57,9 @@ import com.rabbitmq.client.ShutdownSignalException;
  * Driver class for the AMQP-based management systems.
  * 
  * @author Georgiana Macariu
- * 
  */
 public class AmqpDriver
-		extends AbstractResourceDriver
+			extends AbstractResourceDriver
 {
 	/**
 	 * Creates a new driver.
@@ -70,8 +69,7 @@ public class AmqpDriver
 	 * @param noThreads
 	 *            number of threads to be used for serving requests
 	 */
-	private AmqpDriver (final IConfiguration configuration, final ThreadingContext threading, final int noThreads)
-	{
+	private AmqpDriver (final IConfiguration configuration, final ThreadingContext threading, final int noThreads) {
 		super (threading, noThreads);
 		this.configuration = configuration;
 		this.connected = false;
@@ -90,15 +88,13 @@ public class AmqpDriver
 	 * @param delivery
 	 *            the tag received with the messages
 	 * @param multiple
-	 *            <code>true</code> to acknowledge all messages up to and
-	 *            including the supplied delivery tag; <code>false</code> to
-	 *            acknowledge just the supplied delivery tag.
+	 *            <code>true</code> to acknowledge all messages up to and including the supplied delivery tag;
+	 *            <code>false</code> to acknowledge just the supplied delivery tag.
 	 * @param complHandler
 	 *            handlers to be called when the operation finishes
 	 * @return <code>true</code> if messages were acknowledged successfully
 	 */
-	public IResult<Boolean> basicAck (final String clientId, final long delivery, final boolean multiple, final IOperationCompletionHandler<Boolean> complHandler)
-	{
+	public IResult<Boolean> basicAck (final String clientId, final long delivery, final boolean multiple, final IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings ("unchecked") final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) this.opFactory.getOperation (AmqpOperations.ACK, delivery, multiple, clientId);
 		return this.startOperation (operation, complHandler);
 	}
@@ -107,14 +103,12 @@ public class AmqpDriver
 	 * Cancels a consumer.
 	 * 
 	 * @param consumer
-	 *            a client- or server-generated consumer tag to establish
-	 *            context
+	 *            a client- or server-generated consumer tag to establish context
 	 * @param complHandler
 	 *            handlers to be called when the operation finishes
 	 * @return <code>true</code> if consumer was canceled
 	 */
-	public IResult<Boolean> basicCancel (final String consumer, final IOperationCompletionHandler<Boolean> complHandler)
-	{
+	public IResult<Boolean> basicCancel (final String consumer, final IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings ("unchecked") final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) this.opFactory.getOperation (AmqpOperations.CANCEL, consumer);
 		return this.startOperation (operation, complHandler);
 	}
@@ -129,19 +123,16 @@ public class AmqpDriver
 	 * @param exclusive
 	 *            <code>true</code> if this is an exclusive consumer
 	 * @param autoAck
-	 *            <code>true</code> if the server should consider messages
-	 *            acknowledged once delivered; false if the server should expect
-	 *            explicit acknowledgments
+	 *            <code>true</code> if the server should consider messages acknowledged once delivered; false if the server
+	 *            should expect explicit acknowledgments
 	 * @param extra
 	 * @param consumeCallback
-	 *            the consumer callback (this will called when the queuing
-	 *            system will send Consume messages)
+	 *            the consumer callback (this will called when the queuing system will send Consume messages)
 	 * @param complHandler
 	 *            handlers to be called when the operation finishes
 	 * @return the client-generated consumer tag to establish context
 	 */
-	public IResult<String> basicConsume (final String queue, final String consumer, final boolean exclusive, final boolean autoAck, final IAmqpConsumer consumeCallback, final IOperationCompletionHandler<String> complHandler)
-	{
+	public IResult<String> basicConsume (final String queue, final String consumer, final boolean exclusive, final boolean autoAck, final IAmqpConsumer consumeCallback, final IOperationCompletionHandler<String> complHandler) {
 		@SuppressWarnings ("unchecked") final GenericOperation<String> operation = (GenericOperation<String>) this.opFactory.getOperation (AmqpOperations.CONSUME, queue, consumer, exclusive, autoAck, consumeCallback);
 		return this.startOperation (operation, complHandler);
 	}
@@ -154,15 +145,13 @@ public class AmqpDriver
 	 * @param queue
 	 *            the name of the queue
 	 * @param autoAck
-	 *            <code>true</code> if the server should consider messages
-	 *            acknowledged once delivered; <code>false</code> if the server
-	 *            should expect explicit acknowledgments
+	 *            <code>true</code> if the server should consider messages acknowledged once delivered; <code>false</code> if
+	 *            the server should expect explicit acknowledgments
 	 * @param complHandler
 	 *            handlers to be called when the operation finishes
 	 * @return <code>true</code> if message was retrieved successfully
 	 */
-	public IResult<Boolean> basicGet (final String clientId, final String queue, final boolean autoAck, final IOperationCompletionHandler<Boolean> complHandler)
-	{
+	public IResult<Boolean> basicGet (final String clientId, final String queue, final boolean autoAck, final IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings ("unchecked") final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) this.opFactory.getOperation (AmqpOperations.GET, queue, autoAck, clientId);
 		return this.startOperation (operation, complHandler);
 	}
@@ -178,8 +167,7 @@ public class AmqpDriver
 	 *            handlers to be called when the operation finishes
 	 * @return <code>true</code> if message was published successfully
 	 */
-	public IResult<Boolean> basicPublish (final String clientId, final AmqpOutboundMessage message, final IOperationCompletionHandler<Boolean> complHandler)
-	{
+	public IResult<Boolean> basicPublish (final String clientId, final AmqpOutboundMessage message, final IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings ("unchecked") final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) this.opFactory.getOperation (AmqpOperations.PUBLISH, message, clientId);
 		return this.startOperation (operation, complHandler);
 	}
@@ -199,8 +187,7 @@ public class AmqpDriver
 	 *            handlers to be called when the operation finishes
 	 * @return <code>true</code> if the queue bind succeeded
 	 */
-	public IResult<Boolean> bindQueue (final String clientId, final String exchange, final String queue, final String routingKey, final IOperationCompletionHandler<Boolean> complHandler)
-	{
+	public IResult<Boolean> bindQueue (final String clientId, final String exchange, final String queue, final String routingKey, final IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings ("unchecked") final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) this.opFactory.getOperation (AmqpOperations.BIND_QUEUE, exchange, queue, routingKey, clientId);
 		return this.startOperation (operation, complHandler);
 	}
@@ -215,20 +202,16 @@ public class AmqpDriver
 	 * @param type
 	 *            the exchange type
 	 * @param durable
-	 *            <code>true</code> if we are declaring a durable exchange (the
-	 *            exchange will survive a server restart)
+	 *            <code>true</code> if we are declaring a durable exchange (the exchange will survive a server restart)
 	 * @param autoDelete
-	 *            <code>true</code> if the server should delete the exchange
-	 *            when it is no longer in use
+	 *            <code>true</code> if the server should delete the exchange when it is no longer in use
 	 * @param passive
-	 *            <code>true</code> if we declare an exchange passively; that
-	 *            is, check if the named exchange exists
+	 *            <code>true</code> if we declare an exchange passively; that is, check if the named exchange exists
 	 * @param complHandler
 	 *            handlers to be called when the operation finishes
 	 * @return <code>true</code> if the exchange declaration succeeded
 	 */
-	public IResult<Boolean> declareExchange (final String clientId, final String name, final AmqpExchangeType type, final boolean durable, final boolean autoDelete, final boolean passive, final IOperationCompletionHandler<Boolean> complHandler)
-	{
+	public IResult<Boolean> declareExchange (final String clientId, final String name, final AmqpExchangeType type, final boolean durable, final boolean autoDelete, final boolean passive, final IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings ("unchecked") final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) this.opFactory.getOperation (AmqpOperations.DECLARE_EXCHANGE, name, type, durable, autoDelete, passive, clientId);
 		return this.startOperation (operation, complHandler);
 	}
@@ -241,30 +224,24 @@ public class AmqpDriver
 	 * @param queue
 	 *            the name of the queue
 	 * @param exclusive
-	 *            <code>true</code> if we are declaring an exclusive queue
-	 *            (restricted to this connection)
+	 *            <code>true</code> if we are declaring an exclusive queue (restricted to this connection)
 	 * @param durable
-	 *            <code>true</code> if we are declaring a durable queue (the
-	 *            queue will survive a server restart)
+	 *            <code>true</code> if we are declaring a durable queue (the queue will survive a server restart)
 	 * @param autoDelete
-	 *            <code>true</code> if we are declaring an autodelete queue
-	 *            (server will delete it when no longer in use)
+	 *            <code>true</code> if we are declaring an autodelete queue (server will delete it when no longer in use)
 	 * @param passive
-	 *            <code>true</code> if we declare a queue passively; i.e., check
-	 *            if it exists
+	 *            <code>true</code> if we declare a queue passively; i.e., check if it exists
 	 * @param complHandler
 	 *            handlers to be called when the operation finishes
 	 * @return <code>true</code> if the queue declaration succeeded
 	 */
-	public IResult<Boolean> declareQueue (final String clientId, final String queue, final boolean exclusive, final boolean durable, final boolean autoDelete, final boolean passive, final IOperationCompletionHandler<Boolean> complHandler)
-	{
+	public IResult<Boolean> declareQueue (final String clientId, final String queue, final boolean exclusive, final boolean durable, final boolean autoDelete, final boolean passive, final IOperationCompletionHandler<Boolean> complHandler) {
 		@SuppressWarnings ("unchecked") final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) this.opFactory.getOperation (AmqpOperations.DECLARE_QUEUE, queue, exclusive, durable, autoDelete, passive, clientId);
 		return this.startOperation (operation, complHandler);
 	}
 	
 	@Override
-	public synchronized void destroy ()
-	{
+	public synchronized void destroy () {
 		super.destroy ();
 		// NOTE: close any existing connection
 		if (this.connected) {
@@ -289,8 +266,7 @@ public class AmqpDriver
 		this.logger.trace ("AmqpDriver destroyed.");
 	}
 	
-	protected Channel getChannel (final String clientId)
-	{
+	protected Channel getChannel (final String clientId) {
 		Channel channel = this.channels.get (clientId);
 		if (channel == null) {
 			channel = this.openChannel (clientId);
@@ -298,8 +274,7 @@ public class AmqpDriver
 		return channel;
 	}
 	
-	private synchronized void connectResource ()
-	{
+	private synchronized void connectResource () {
 		final String amqpServerHost = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.AmqpDriver_1, String.class, ConnectionFactory.DEFAULT_HOST);
 		final int amqpServerPort = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.AmqpDriver_2, Integer.class, ConnectionFactory.DEFAULT_AMQP_PORT);
 		final String amqpServerUser = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.AmqpDriver_3, String.class, ConnectionFactory.DEFAULT_USER);
@@ -327,8 +302,7 @@ public class AmqpDriver
 		}
 	}
 	
-	private synchronized Channel openChannel (final String clientId)
-	{
+	private synchronized Channel openChannel (final String clientId) {
 		Channel channel = null;
 		try {
 			if (this.connected) {
@@ -345,32 +319,12 @@ public class AmqpDriver
 	}
 	
 	@SuppressWarnings ({"unchecked", "rawtypes"})
-	private <T extends Object> IResult<T> startOperation (final GenericOperation<T> operation, final IOperationCompletionHandler complHandler)
-	{
+	private <T extends Object> IResult<T> startOperation (final GenericOperation<T> operation, final IOperationCompletionHandler complHandler) {
 		final IResult<T> iResult = new GenericResult<T> (operation);
 		operation.setHandler (complHandler);
 		super.addPendingOperation (iResult);
 		super.submitOperation (operation.getOperation ());
 		return iResult;
-	}
-	
-	/**
-	 * Returns an AMQP driver.
-	 * 
-	 * @param configuration
-	 *            configuration data required for starting the driver
-	 * @return an AMQP driver
-	 */
-	public static AmqpDriver create (final IConfiguration configuration, final ThreadingContext threading)
-	{
-		final int noThreads = ConfigUtils.resolveParameter (configuration, ConfigProperties.AmqpDriver_0, Integer.class, 1);
-		AmqpDriver driver = new AmqpDriver (configuration, threading, noThreads);
-		// NOTE: open connection - moved to the stub
-		driver.connectResource ();
-		if (!driver.connected) {
-			driver = null;
-		}
-		return driver;
 	}
 	
 	protected final ConcurrentHashMap<String, IAmqpConsumer> consumers;
@@ -384,24 +338,39 @@ public class AmqpDriver
 	private final ShutdownListener shutdownListener;
 	
 	/**
+	 * Returns an AMQP driver.
+	 * 
+	 * @param configuration
+	 *            configuration data required for starting the driver
+	 * @return an AMQP driver
+	 */
+	public static AmqpDriver create (final IConfiguration configuration, final ThreadingContext threading) {
+		final int noThreads = ConfigUtils.resolveParameter (configuration, ConfigProperties.AmqpDriver_0, Integer.class, 1);
+		AmqpDriver driver = new AmqpDriver (configuration, threading, noThreads);
+		// NOTE: open connection - moved to the stub
+		driver.connectResource ();
+		if (!driver.connected) {
+			driver = null;
+		}
+		return driver;
+	}
+	
+	/**
 	 * Listener for connection shutdown signals.
 	 * 
 	 * @author Georgiana Macariu
-	 * 
 	 */
 	final class ConnectionShutdownListener
-			implements
-				ShutdownListener
+				implements
+					ShutdownListener
 	{
-		public ConnectionShutdownListener ()
-		{
+		public ConnectionShutdownListener () {
 			this.maxReconnectionTries = ConfigUtils.resolveParameter (AmqpDriver.this.configuration, ConfigProperties.AmqpDriver_6, Integer.class, ConnectionShutdownListener.DEFAULT_MAX_RECONNECTION_TRIES);
 			this.minReconnectionTime = ConfigUtils.resolveParameter (AmqpDriver.this.configuration, ConfigProperties.AmqpDriver_7, Long.class, ConnectionShutdownListener.DEFAULT_MIN_RECONNECTION_TIME);
 		}
 		
 		@Override
-		public void shutdownCompleted (final ShutdownSignalException arg0)
-		{
+		public void shutdownCompleted (final ShutdownSignalException arg0) {
 			synchronized (AmqpDriver.this) {
 				if (AmqpDriver.super.isDestroyed ()) {
 					return;
@@ -435,37 +404,30 @@ public class AmqpDriver
 	}
 	
 	/**
-	 * Message consumer class which will receive notifications and messages from
-	 * a queue by subscription.
+	 * Message consumer class which will receive notifications and messages from a queue by subscription.
 	 * <p>
-	 * Note: all methods of this class are invoked inside the Connection's
-	 * thread. This means they a) should be non-blocking and generally do little
-	 * work, b) must not call ChannelController or Connection methods, or a
-	 * deadlock will ensue.
+	 * Note: all methods of this class are invoked inside the Connection's thread. This means they a) should be non-blocking and
+	 * generally do little work, b) must not call ChannelController or Connection methods, or a deadlock will ensue.
 	 * 
 	 * @author Georgiana Macariu
-	 * 
 	 */
 	final class ConsumerCallback
-			implements
-				Consumer
+				implements
+					Consumer
 	{
-		ConsumerCallback ()
-		{
+		ConsumerCallback () {
 			super ();
 		}
 		
 		@Override
 		public void handleCancel (final String consumer)
-				throws IOException
-		{
+					throws IOException {
 			AmqpDriver.this.logger.trace ("AmqpDriver - Received CANCEL callback for consumer " + consumer + ".");
 			final IAmqpConsumer cancelCallback = AmqpDriver.this.consumers.remove (consumer);
 			if (cancelCallback != null) {
 				final Runnable task = new Runnable () {
 					@Override
-					public void run ()
-					{
+					public void run () {
 						cancelCallback.handleCancel (consumer);
 					}
 				};
@@ -474,16 +436,14 @@ public class AmqpDriver
 		}
 		
 		@Override
-		public void handleCancelOk (final String consumer)
-		{
+		public void handleCancelOk (final String consumer) {
 			AmqpDriver.this.logger.trace ("AmqpDriver - Received CANCEL Ok callback for consumer " + consumer + ".");
 			final IAmqpConsumer cancelCallback = AmqpDriver.this.consumers.remove (consumer);
 			AmqpDriver.this.channels.remove (consumer);
 			if (cancelCallback != null) {
 				final Runnable task = new Runnable () {
 					@Override
-					public void run ()
-					{
+					public void run () {
 						cancelCallback.handleCancelOk (consumer);
 					}
 				};
@@ -492,8 +452,7 @@ public class AmqpDriver
 		}
 		
 		@Override
-		public void handleConsumeOk (final String consumer)
-		{
+		public void handleConsumeOk (final String consumer) {
 			AmqpDriver.this.logger.trace ("AmqpDriver - Received CONSUME Ok callback for consumer " + consumer + ".");
 			final IAmqpConsumer consumeCallback = AmqpDriver.this.consumers.get (consumer);
 			if (consumeCallback == null) {
@@ -501,8 +460,7 @@ public class AmqpDriver
 			} else {
 				final Runnable task = new Runnable () {
 					@Override
-					public void run ()
-					{
+					public void run () {
 						consumeCallback.handleConsumeOk (consumer);
 					}
 				};
@@ -511,14 +469,12 @@ public class AmqpDriver
 		}
 		
 		@Override
-		public void handleDelivery (final String consumer, final Envelope envelope, final AMQP.BasicProperties properties, final byte[] data)
-		{
+		public void handleDelivery (final String consumer, final Envelope envelope, final AMQP.BasicProperties properties, final byte[] data) {
 			final IAmqpConsumer consumeCallback = AmqpDriver.this.consumers.get (consumer);
 			if (consumeCallback != null) {
 				final Runnable task = new Runnable () {
 					@Override
-					public void run ()
-					{
+					public void run () {
 						final AmqpInboundMessage message = new AmqpInboundMessage (consumer, envelope.getDeliveryTag (), envelope.getExchange (), envelope.getRoutingKey (), data, ((properties.getDeliveryMode () != null) && (properties.getDeliveryMode () == 2)) ? true : false, properties.getReplyTo (), properties.getContentEncoding (), properties.getContentType (), properties.getCorrelationId (), null);
 						consumeCallback.handleDelivery (message);
 					}
@@ -528,22 +484,19 @@ public class AmqpDriver
 		}
 		
 		@Override
-		public void handleRecoverOk (final String consumerTag)
-		{
+		public void handleRecoverOk (final String consumerTag) {
 			// NOTE: nothing to do here
 		}
 		
 		@Override
-		public void handleShutdownSignal (final String consumer, final ShutdownSignalException signal)
-		{
+		public void handleShutdownSignal (final String consumer, final ShutdownSignalException signal) {
 			AmqpDriver.this.logger.trace ("AmqpDriver - Received SHUTDOWN callback for consumer " + consumer + ".");
 			final IAmqpConsumer consumeCallback = AmqpDriver.this.consumers.remove (consumer);
 			AmqpDriver.this.channels.remove (consumer);
 			if (consumeCallback != null) {
 				final Runnable task = new Runnable () {
 					@Override
-					public void run ()
-					{
+					public void run () {
 						consumeCallback.handleShutdown (consumer, signal.getMessage ());
 						AmqpDriver.this.executor.shutdown ();
 					}
@@ -554,20 +507,18 @@ public class AmqpDriver
 	}
 	
 	/**
-	 * Listener to be called in order to be notified of failed deliveries when
-	 * basicPublish is called with "mandatory" or "immediate" flags set.
+	 * Listener to be called in order to be notified of failed deliveries when basicPublish is called with "mandatory" or
+	 * "immediate" flags set.
 	 * 
 	 * @author Georgiana Macariu
-	 * 
 	 */
 	private final class ReturnCallback
-			implements
-				ReturnListener
+				implements
+					ReturnListener
 	{
 		@Override
 		public void handleReturn (final int replyCode, final String replyMessage, final String exchange, final String routingKey, final BasicProperties properties, final byte[] data)
-				throws IOException
-		{
+					throws IOException {
 			final AmqpInboundMessage message = new AmqpInboundMessage (null, -1, exchange, routingKey, data, properties.getDeliveryMode () == 2 ? true : false, properties.getReplyTo (), properties.getContentEncoding (), properties.getContentType (), properties.getCorrelationId (), properties.getMessageId ());
 			AmqpDriver.this.logger.trace ("AmqpDriver - Received RETURN callback for " + message.getDelivery ());
 			// FIXME: We should trigger a `publishFailed` callback, but due to

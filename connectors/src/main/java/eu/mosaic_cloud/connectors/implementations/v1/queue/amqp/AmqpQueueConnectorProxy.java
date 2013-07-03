@@ -32,11 +32,10 @@ import com.google.common.base.Preconditions;
 
 
 public abstract class AmqpQueueConnectorProxy<TMessage>
-		implements
-			IAmqpQueueConnector
+			implements
+				IAmqpQueueConnector
 {
-	protected AmqpQueueConnectorProxy (final AmqpQueueRawConnectorProxy raw, final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder)
-	{
+	protected AmqpQueueConnectorProxy (final AmqpQueueRawConnectorProxy raw, final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder) {
 		super ();
 		Preconditions.checkNotNull (raw);
 		Preconditions.checkNotNull (configuration);

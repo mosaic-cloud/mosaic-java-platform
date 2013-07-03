@@ -58,60 +58,51 @@ import com.google.common.collect.HashBiMap;
 
 
 public final class BasicComponent
-		extends Object
+			extends Object
 {
-	BasicComponent (final CallbackReactor callbackReactor, final ExceptionTracer exceptions)
-	{
+	BasicComponent (final CallbackReactor callbackReactor, final ExceptionTracer exceptions) {
 		super ();
 		final Transcript transcript = Transcript.create (this, true);
 		this.backend = new Backend (this, callbackReactor, transcript, exceptions);
 	}
 	
-	public final boolean await ()
-	{
+	public final boolean await () {
 		return (this.await (-1));
 	}
 	
-	public final boolean await (final long timeout)
-	{
+	public final boolean await (final long timeout) {
 		return (this.backend.await (timeout));
 	}
 	
-	public void destroy ()
-	{
+	public void destroy () {
 		Preconditions.checkState (this.destroy (-1));
 	}
 	
-	public final boolean destroy (final long timeout)
-	{
+	public final boolean destroy (final long timeout) {
 		return (this.backend.destroy (timeout));
 	}
 	
-	public final ComponentController getController ()
-	{
+	public final ComponentController getController () {
 		return (this.backend.componentControllerProxy);
 	}
 	
-	public final void initialize ()
-	{
+	public final void initialize () {
 		Preconditions.checkState (this.initialize (-1));
 	}
 	
-	public final boolean initialize (final long timeout)
-	{
+	public final boolean initialize (final long timeout) {
 		return (this.backend.initialize (timeout));
-	}
-	
-	public static final BasicComponent create (final CallbackReactor reactor, final ExceptionTracer exceptions)
-	{
-		return (new BasicComponent (reactor, exceptions));
 	}
 	
 	final Backend backend;
 	
+	public static final BasicComponent create (final CallbackReactor reactor, final ExceptionTracer exceptions) {
+		return (new BasicComponent (reactor, exceptions));
+	}
+	
 	public interface ComponentInternals
-			extends
-				Callbacks
+				extends
+					Callbacks
 	{
 		public abstract CallbackCompletion<Void> destroy ();
 		
@@ -128,15 +119,14 @@ public final class BasicComponent
 	}
 	
 	static final class Backend
-			extends StateMachine<Backend.State, Backend.Transition>
-			implements
-				ComponentInternals,
-				ComponentController,
-				ChannelCallbacks,
-				CallbackHandler
+				extends StateMachine<Backend.State, Backend.Transition>
+				implements
+					ComponentInternals,
+					ComponentController,
+					ChannelCallbacks,
+					CallbackHandler
 	{
-		Backend (final BasicComponent facade, final CallbackReactor reactor, final Transcript transcript, final ExceptionTracer exceptions)
-		{
+		Backend (final BasicComponent facade, final CallbackReactor reactor, final Transcript transcript, final ExceptionTracer exceptions) {
 			super (State.class, Transition.class, transcript, exceptions);
 			Preconditions.checkNotNull (facade);
 			Preconditions.checkNotNull (reactor);
@@ -157,15 +147,13 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final CallbackCompletion<Void> acquire (final ComponentAcquireRequest request)
-		{
+		public final CallbackCompletion<Void> acquire (final ComponentAcquireRequest request) {
 			Preconditions.checkNotNull (request);
 			final ComponentResourceSpecification specification = request.specification;
 			final ComponentCallReference reference = request.reference;
 			this.execute (Transition.Executing, State.Ready, new Runnable () {
 				@Override
-				public final void run ()
-				{
+				public final void run () {
 					Preconditions.checkNotNull (specification);
 					Preconditions.checkNotNull (reference);
 					Preconditions.checkArgument (!Backend.this.acquires.containsKey (reference));
@@ -187,20 +175,17 @@ public final class BasicComponent
 			return (null);
 		}
 		
-		public final boolean await (final long timeout)
-		{
+		public final boolean await (final long timeout) {
 			if (this.hasState (State.Terminated))
 				return (true);
 			return (this.isolate.await (timeout));
 		}
 		
 		@Override
-		public final CallbackCompletion<Void> bind (final ComponentCallbacks componentCallbacks, final ChannelController channelController)
-		{
+		public final CallbackCompletion<Void> bind (final ComponentCallbacks componentCallbacks, final ChannelController channelController) {
 			this.execute (Transition.Bind, State.Binding, new Runnable () {
 				@Override
-				public final void run ()
-				{
+				public final void run () {
 					Preconditions.checkNotNull (componentCallbacks);
 					Preconditions.checkNotNull (channelController);
 					Backend.this.componentCallbacks = componentCallbacks;
@@ -214,12 +199,10 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final CallbackCompletion<Void> call (final ComponentIdentifier identifier, final ComponentCallRequest request)
-		{
+		public final CallbackCompletion<Void> call (final ComponentIdentifier identifier, final ComponentCallRequest request) {
 			this.execute (Transition.Executing, State.Ready, new Runnable () {
 				@Override
-				public final void run ()
-				{
+				public final void run () {
 					Preconditions.checkNotNull (identifier);
 					Preconditions.checkNotNull (request);
 					Preconditions.checkArgument (!Backend.this.outboundCalls.containsKey (request.reference));
@@ -239,12 +222,10 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final CallbackCompletion<Void> callReturn (final ComponentCallReply reply)
-		{
+		public final CallbackCompletion<Void> callReturn (final ComponentCallReply reply) {
 			this.execute (Transition.Executing, State.Ready, new Runnable () {
 				@Override
-				public final void run ()
-				{
+				public final void run () {
 					Preconditions.checkNotNull (reply);
 					Preconditions.checkArgument (Backend.this.inboundCalls.containsKey (reply.reference));
 					final String correlation = Backend.this.inboundCalls.remove (reply.reference);
@@ -264,12 +245,10 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final CallbackCompletion<Void> cast (final ComponentIdentifier identifier, final ComponentCastRequest request)
-		{
+		public final CallbackCompletion<Void> cast (final ComponentIdentifier identifier, final ComponentCastRequest request) {
 			this.execute (Transition.Executing, State.Ready, new Runnable () {
 				@Override
-				public final void run ()
-				{
+				public final void run () {
 					Preconditions.checkNotNull (identifier);
 					Preconditions.checkNotNull (request);
 					final HashMap<String, Object> metaData = new HashMap<String, Object> ();
@@ -285,12 +264,10 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final CallbackCompletion<Void> closed (final ChannelController channelController, final ChannelFlow flow)
-		{
+		public final CallbackCompletion<Void> closed (final ChannelController channelController, final ChannelFlow flow) {
 			this.execute (new Runnable () {
 				@Override
-				public final void run ()
-				{
+				public final void run () {
 					Preconditions.checkState (channelController == Backend.this.channelController);
 					Backend.this.componentControllerProxy.terminate ();
 				}
@@ -299,46 +276,39 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final CallbackCompletion<Void> destroy ()
-		{
+		public final CallbackCompletion<Void> destroy () {
 			this.execute (new Runnable () {
 				@Override
-				public final void run ()
-				{
+				public final void run () {
 					Backend.this.componentControllerProxy.terminate ();
 				}
 			});
 			return null;
 		}
 		
-		public final boolean destroy (final long timeout)
-		{
+		public final boolean destroy (final long timeout) {
 			if (this.hasState (State.Terminated))
 				return (true);
 			return (this.componentInternalsProxy.destroy ().await (timeout));
 		}
 		
 		@Override
-		public final CallbackCompletion<Void> failed (final ChannelController channelController, final Throwable exception)
-		{
+		public final CallbackCompletion<Void> failed (final ChannelController channelController, final Throwable exception) {
 			this.exceptions.traceIgnoredException (exception);
 			throw (new UnsupportedOperationException ());
 		}
 		
 		@Override
-		public final void failedCallbacks (final Callbacks proxy, final Throwable exception)
-		{
+		public final void failedCallbacks (final Callbacks proxy, final Throwable exception) {
 			this.exceptions.traceIgnoredException (exception);
 			throw (new UnsupportedOperationException ());
 		}
 		
 		@Override
-		public final CallbackCompletion<Void> initialize ()
-		{
+		public final CallbackCompletion<Void> initialize () {
 			this.execute (Transition.Initialize, State.Initialized, new Runnable () {
 				@Override
-				public final void run ()
-				{
+				public final void run () {
 					Backend.this.reactor.assignHandler (Backend.this.componentControllerProxy, Backend.this, Backend.this.isolate);
 					Backend.this.reactor.assignHandler (Backend.this.channelCallbacksProxy, Backend.this, Backend.this.isolate);
 				}
@@ -346,20 +316,17 @@ public final class BasicComponent
 			return (null);
 		}
 		
-		public final boolean initialize (final long timeout)
-		{
+		public final boolean initialize (final long timeout) {
 			if (this.hasState (State.Terminated))
 				return (false);
 			return (this.componentInternalsProxy.initialize ().await (timeout));
 		}
 		
 		@Override
-		public final CallbackCompletion<Void> initialized (final ChannelController channelController)
-		{
+		public final CallbackCompletion<Void> initialized (final ChannelController channelController) {
 			this.execute (Transition.Binding, State.Ready, new Runnable () {
 				@Override
-				public final void run ()
-				{
+				public final void run () {
 					Preconditions.checkState (channelController == Backend.this.channelController);
 					Backend.this.componentCallbacksProxy.initialized (Backend.this.componentControllerProxy);
 				}
@@ -368,19 +335,17 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final CallbackCompletion<Void> received (final ChannelController channelController, final ChannelMessage message)
-		{
+		public final CallbackCompletion<Void> received (final ChannelController channelController, final ChannelMessage message) {
 			this.execute (Transition.Executing, State.Ready, new Runnable () {
 				@Override
-				public final void run ()
-				{
+				public final void run () {
 					Preconditions.checkState (channelController == Backend.this.channelController);
 					Preconditions.checkNotNull (message);
 					switch (message.type) {
 						case Exchange :
 							Backend.this.receivedExchange (message);
 							break;
-						default:
+						default :
 							Preconditions.checkState (false);
 							break;
 					}
@@ -390,12 +355,10 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final CallbackCompletion<Void> register (final ComponentIdentifier identifier, final ComponentCallReference reference)
-		{
+		public final CallbackCompletion<Void> register (final ComponentIdentifier identifier, final ComponentCallReference reference) {
 			this.execute (Transition.Executing, State.Ready, new Runnable () {
 				@Override
-				public final void run ()
-				{
+				public final void run () {
 					Preconditions.checkNotNull (identifier);
 					Preconditions.checkNotNull (reference);
 					Preconditions.checkArgument (!Backend.this.registers.containsKey (reference));
@@ -413,8 +376,7 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final void registeredCallbacks (final Callbacks proxy, final CallbackIsolate isolate)
-		{
+		public final void registeredCallbacks (final Callbacks proxy, final CallbackIsolate isolate) {
 			Preconditions.checkNotNull (proxy);
 			Preconditions.checkNotNull (isolate);
 			if (proxy == this.componentInternalsProxy) {
@@ -438,12 +400,10 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final CallbackCompletion<Void> terminate ()
-		{
+		public final CallbackCompletion<Void> terminate () {
 			this.execute (Transition.Terminate, State.Terminating, new Runnable () {
 				@Override
-				public final void run ()
-				{
+				public final void run () {
 					if (Backend.this.hasState (State.Ready))
 						Backend.this.channelControllerProxy.terminate ();
 				}
@@ -452,12 +412,10 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final CallbackCompletion<Void> terminated (final ChannelController channelController)
-		{
+		public final CallbackCompletion<Void> terminated (final ChannelController channelController) {
 			this.execute (Transition.Terminating, State.Terminated, new Runnable () {
 				@Override
-				public final void run ()
-				{
+				public final void run () {
 					Preconditions.checkState (channelController == Backend.this.channelController);
 					Backend.this.componentCallbacksProxy.terminated (Backend.this.componentControllerProxy);
 					Backend.this.reactor.destroyProxy (Backend.this.componentControllerProxy);
@@ -473,11 +431,9 @@ public final class BasicComponent
 		}
 		
 		@Override
-		public final void unregisteredCallbacks (final Callbacks proxy)
-		{}
+		public final void unregisteredCallbacks (final Callbacks proxy) {}
 		
-		final void bootstrap ()
-		{
+		final void bootstrap () {
 			this.defineStates (State.class);
 			this.defineTransition (Transition.Bootstrap, State.New, State.Bootstrapped);
 			this.defineTransition (Transition.Initialize, State.Bootstrapped, State.Initialized);
@@ -489,15 +445,13 @@ public final class BasicComponent
 			this.initialize (State.New);
 			this.execute (Transition.Bootstrap, State.Bootstrapped, new Runnable () {
 				@Override
-				public final void run ()
-				{
+				public final void run () {
 					Backend.this.reactor.assignHandler (Backend.this.componentInternalsProxy, Backend.this, Backend.this.isolate);
 				}
 			});
 		}
 		
-		final void receivedAcquireReturn (final ChannelMessage message)
-		{
+		final void receivedAcquireReturn (final ChannelMessage message) {
 			final Object correlationValue = message.metaData.get (Token.Correlation.string);
 			Preconditions.checkNotNull (correlationValue, "missing correlation attribute");
 			Preconditions.checkArgument (correlationValue instanceof String, "invalid correlation attribute `%s`", correlationValue);
@@ -543,8 +497,7 @@ public final class BasicComponent
 			this.componentCallbacksProxy.acquireReturned (this.componentControllerProxy, reply);
 		}
 		
-		final void receivedCall (final ChannelMessage message)
-		{
+		final void receivedCall (final ChannelMessage message) {
 			final Object operationValue = message.metaData.get (Token.Operation.string);
 			Preconditions.checkNotNull (operationValue, "missing operation attribute");
 			Preconditions.checkArgument (operationValue instanceof String, "invalid operation attribute `%s`", operationValue);
@@ -560,8 +513,7 @@ public final class BasicComponent
 			this.componentCallbacksProxy.called (this.componentControllerProxy, request);
 		}
 		
-		final void receivedCallReturn (final ChannelMessage message)
-		{
+		final void receivedCallReturn (final ChannelMessage message) {
 			final Object correlationValue = message.metaData.get (Token.Correlation.string);
 			Preconditions.checkNotNull (correlationValue, "missing correlation attribute");
 			Preconditions.checkArgument (correlationValue instanceof String, "invalid correlation attribute `%s`", correlationValue);
@@ -586,8 +538,7 @@ public final class BasicComponent
 			this.componentCallbacksProxy.callReturned (this.componentControllerProxy, reply);
 		}
 		
-		final void receivedCast (final ChannelMessage message)
-		{
+		final void receivedCast (final ChannelMessage message) {
 			final Object operationValue = message.metaData.get (Token.Operation.string);
 			Preconditions.checkNotNull (operationValue, "missing operation attribute");
 			Preconditions.checkArgument (operationValue instanceof String, "invalid operation attribute `%s`", operationValue);
@@ -597,8 +548,7 @@ public final class BasicComponent
 			this.componentCallbacksProxy.casted (this.componentControllerProxy, request);
 		}
 		
-		final void receivedExchange (final ChannelMessage message)
-		{
+		final void receivedExchange (final ChannelMessage message) {
 			final Object actionValue = message.metaData.get (Token.Action.string);
 			Preconditions.checkNotNull (actionValue, "missing action attribute");
 			Preconditions.checkArgument (actionValue instanceof String, "invalid action attribute `%s`", actionValue);
@@ -632,14 +582,13 @@ public final class BasicComponent
 				case AcquireReturn :
 					this.receivedAcquireReturn (message);
 					break;
-				default:
+				default :
 					Preconditions.checkState (false);
 					break;
 			}
 		}
 		
-		final void receivedRegisterReturn (final ChannelMessage message)
-		{
+		final void receivedRegisterReturn (final ChannelMessage message) {
 			final Object correlationValue = message.metaData.get (Token.Correlation.string);
 			Preconditions.checkNotNull (correlationValue, "missing correlation attribute");
 			Preconditions.checkArgument (correlationValue instanceof String, "invalid correlation attribute `%s`", correlationValue);
@@ -674,8 +623,8 @@ public final class BasicComponent
 		final HashBiMap<ComponentCallReference, String> registers;
 		
 		enum State
-				implements
-					StateMachine.State
+					implements
+						StateMachine.State
 		{
 			Binding (),
 			Bootstrapped (),
@@ -687,8 +636,8 @@ public final class BasicComponent
 		}
 		
 		enum Transition
-				implements
-					StateMachine.Transition
+					implements
+						StateMachine.Transition
 		{
 			Bind (),
 			Binding (),
@@ -726,8 +675,7 @@ public final class BasicComponent
 		SocketIpv4Tcp ("socket:ipv4:tcp"),
 		Specifications ("specifications"),
 		Type ("type");
-		Token (final String string)
-		{
+		Token (final String string) {
 			Preconditions.checkNotNull (string);
 			this.string = string;
 		}

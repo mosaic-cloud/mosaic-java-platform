@@ -25,18 +25,15 @@ import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 
 
 /**
- * Interface for application callback objects to receive notifications and
- * messages from a queue by subscription. Methods of this interface are invoked
- * inside the driver.
+ * Interface for application callback objects to receive notifications and messages from a queue by subscription. Methods of
+ * this interface are invoked inside the driver.
  * 
  * @author Georgiana Macariu
- * 
  */
 public interface IAmqpConsumer
 {
 	/**
-	 * Handles the Cancel message. Called when the consumer is cancelled for
-	 * reasons other than by a basicCancel.
+	 * Handles the Cancel message. Called when the consumer is cancelled for reasons other than by a basicCancel.
 	 * 
 	 * @param consumerTag
 	 *            the consumer identifier

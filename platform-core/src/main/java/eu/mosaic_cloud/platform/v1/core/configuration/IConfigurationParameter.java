@@ -25,7 +25,6 @@ package eu.mosaic_cloud.platform.v1.core.configuration;
  * Interface for configuration parameters.
  * 
  * @author Ciprian Craciun, Georgiana Macariu
- * 
  * @param <T>
  *            the type of the value of the parameter
  */
@@ -42,8 +41,7 @@ public interface IConfigurationParameter<T extends Object>
 	 * Returns the value of the parameter.
 	 * 
 	 * @param defaultValue
-	 *            a default value of the parameter used in case the parameter is
-	 *            not found in the configuration
+	 *            a default value of the parameter used in case the parameter is not found in the configuration
 	 * @return the value of the parameter
 	 */
 	T getValue (final T defaultValue);

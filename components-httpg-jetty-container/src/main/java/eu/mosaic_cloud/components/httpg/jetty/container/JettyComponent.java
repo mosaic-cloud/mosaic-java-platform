@@ -35,65 +35,55 @@ import com.google.common.util.concurrent.Atomics;
 
 
 public final class JettyComponent
-		extends Object
+			extends Object
 {
-	private JettyComponent ()
-	{
+	private JettyComponent () {
 		super ();
 	}
 	
-	public final Future<ComponentCallReply> call (final ComponentIdentifier component, final ComponentCallRequest request)
-	{
+	public final Future<ComponentCallReply> call (final ComponentIdentifier component, final ComponentCallRequest request) {
 		final JettyComponentCallbacks callbacks = JettyComponentContext.callbacks;
 		Preconditions.checkState (callbacks != null);
 		return (callbacks.call (component, request));
 	}
 	
-	public final Future<ComponentCallReply> call (final String component, final String operation, final Object inputs)
-	{
+	public final Future<ComponentCallReply> call (final String component, final String operation, final Object inputs) {
 		return (this.call (ComponentIdentifier.resolve (component), ComponentCallRequest.create (operation, inputs, ComponentCallReference.create ())));
 	}
 	
-	public final void cast (final ComponentIdentifier component, final ComponentCastRequest request)
-	{
+	public final void cast (final ComponentIdentifier component, final ComponentCastRequest request) {
 		final JettyComponentCallbacks callbacks = JettyComponentContext.callbacks;
 		Preconditions.checkState (callbacks != null);
 		callbacks.cast (component, request);
 	}
 	
-	public final void cast (final String component, final String operation, final Object inputs)
-	{
+	public final void cast (final String component, final String operation, final Object inputs) {
 		this.cast (ComponentIdentifier.resolve (component), ComponentCastRequest.create (operation, inputs));
 	}
 	
-	public final ComponentIdentifier getGroup ()
-	{
+	public final ComponentIdentifier getGroup () {
 		final ComponentIdentifier group = JettyComponentContext.selfGroup;
 		Preconditions.checkState (group != null);
 		return (group);
 	}
 	
-	public final ComponentIdentifier getIdentifier ()
-	{
+	public final ComponentIdentifier getIdentifier () {
 		final ComponentIdentifier identifier = JettyComponentContext.selfIdentifier;
 		Preconditions.checkState (identifier != null);
 		return (identifier);
 	}
 	
-	public final boolean isStandalone ()
-	{
+	public final boolean isStandalone () {
 		return (JettyComponentContext.callbacks != null);
 	}
 	
-	public final void terminate ()
-	{
+	public final void terminate () {
 		final JettyComponentCallbacks callbacks = JettyComponentContext.callbacks;
 		Preconditions.checkState (callbacks != null);
 		callbacks.terminate ();
 	}
 	
-	public static final JettyComponent create ()
-	{
+	public static final JettyComponent create () {
 		final JettyComponent component;
 		synchronized (JettyComponent.currentComponent) {
 			if (JettyComponent.currentComponent.get () == null) {
@@ -106,8 +96,7 @@ public final class JettyComponent
 		return (component);
 	}
 	
-	public static final JettyComponent get ()
-	{
+	public static final JettyComponent get () {
 		final JettyComponent component = JettyComponent.currentComponent.get ();
 		Preconditions.checkState (component != null);
 		return (component);

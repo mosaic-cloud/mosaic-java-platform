@@ -22,5 +22,5 @@ package eu.mosaic_cloud.cloudlets.implementations.v1.tests;
 
 
 public final class VoidCloudletContext
-		extends Object
+			extends Object
 {}

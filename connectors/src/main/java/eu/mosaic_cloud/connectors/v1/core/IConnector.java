@@ -29,11 +29,10 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
  * Generic interface that should be implemented by all resource connectors.
  * 
  * @author Georgiana Macariu
- * 
  */
 public interface IConnector
-		extends
-			Callbacks
+			extends
+				Callbacks
 {
 	/**
 	 * Destroy the connection with the resource.

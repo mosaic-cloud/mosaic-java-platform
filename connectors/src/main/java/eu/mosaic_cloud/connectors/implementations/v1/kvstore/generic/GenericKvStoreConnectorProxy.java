@@ -33,28 +33,24 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 /**
- * Proxy for the driver for key-value distributed storage systems. This is used
- * by the {@link GenericKvStoreConnector} to communicate with a key-value store
- * driver.
+ * Proxy for the driver for key-value distributed storage systems. This is used by the {@link GenericKvStoreConnector} to
+ * communicate with a key-value store driver.
  * 
  * @author Georgiana Macariu
  * @param <TValue>
  *            type of stored data
- * 
  */
 public final class GenericKvStoreConnectorProxy<TValue extends Object>
-		extends BaseKvStoreConnectorProxy<TValue>
+			extends BaseKvStoreConnectorProxy<TValue>
 {
-	protected GenericKvStoreConnectorProxy (final ConnectorConfiguration configuration, final DataEncoder<TValue> encoder)
-	{
+	protected GenericKvStoreConnectorProxy (final ConnectorConfiguration configuration, final DataEncoder<TValue> encoder) {
 		super (configuration, encoder);
 		this.bucket = super.configuration.getConfigParameter (ConfigProperties.GenericKvStoreConnector_1, String.class, "");
 		this.transcript.traceDebugging ("created generic kv store connector proxy for bucket `%s`.", this.bucket);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> initialize ()
-	{
+	public CallbackCompletion<Void> initialize () {
 		this.transcript.traceDebugging ("initializing proxy...");
 		final InitRequest.Builder requestBuilder = InitRequest.newBuilder ();
 		requestBuilder.setToken (this.generateToken ());
@@ -63,10 +59,11 @@ public final class GenericKvStoreConnectorProxy<TValue extends Object>
 	}
 	
 	@Override
-	protected String getDefaultDriverGroup ()
-	{
+	protected String getDefaultDriverGroup () {
 		return (ConfigProperties.GenericKvStoreConnector_0);
 	}
+	
+	protected final String bucket;
 	
 	/**
 	 * Returns a proxy for key-value distributed storage systems.
@@ -74,15 +71,11 @@ public final class GenericKvStoreConnectorProxy<TValue extends Object>
 	 * @param configuration
 	 *            the execution environment of a connector
 	 * @param encoder
-	 *            encoder used for serializing and deserializing data stored in
-	 *            the key-value store
+	 *            encoder used for serializing and deserializing data stored in the key-value store
 	 * @return the proxy
 	 */
-	public static <TValue extends Object> GenericKvStoreConnectorProxy<TValue> create (final ConnectorConfiguration configuration, final DataEncoder<TValue> encoder)
-	{
+	public static <TValue extends Object> GenericKvStoreConnectorProxy<TValue> create (final ConnectorConfiguration configuration, final DataEncoder<TValue> encoder) {
 		final GenericKvStoreConnectorProxy<TValue> proxy = new GenericKvStoreConnectorProxy<TValue> (configuration, encoder);
 		return (proxy);
 	}
-	
-	protected final String bucket;
 }

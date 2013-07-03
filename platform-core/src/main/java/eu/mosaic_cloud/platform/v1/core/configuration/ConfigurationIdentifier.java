@@ -26,17 +26,14 @@ import java.util.regex.Pattern;
 
 
 /**
- * Class for handling identifiers of configuration parameters. The parameters in
- * a configuration file may form a hierarchy and thus an identifier string may
- * be absolute or relative.
+ * Class for handling identifiers of configuration parameters. The parameters in a configuration file may form a hierarchy and
+ * thus an identifier string may be absolute or relative.
  * 
  * @author Ciprian Craciun, Georgiana Macariu
- * 
  */
 public final class ConfigurationIdentifier
 {
-	private ConfigurationIdentifier (final boolean absolute, final String identifier)
-	{
+	private ConfigurationIdentifier (final boolean absolute, final String identifier) {
 		super ();
 		this.absolute = absolute;
 		this.identifier = identifier;
@@ -48,8 +45,7 @@ public final class ConfigurationIdentifier
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals (final Object identifier)
-	{
+	public boolean equals (final Object identifier) {
 		boolean isEqual;
 		if (identifier == null) {
 			isEqual = false;
@@ -67,14 +63,12 @@ public final class ConfigurationIdentifier
 	 * 
 	 * @return the string identifier
 	 */
-	public String getIdentifier ()
-	{
+	public String getIdentifier () {
 		return this.identifier;
 	}
 	
 	@Override
-	public int hashCode ()
-	{
+	public int hashCode () {
 		final int prime = 31;
 		int result = 1;
 		result = (prime * result) + (this.absolute ? 1231 : 1237);
@@ -87,21 +81,18 @@ public final class ConfigurationIdentifier
 	 * 
 	 * @return <code>true</code> if it is absolute
 	 */
-	public boolean isAbsolute ()
-	{
+	public boolean isAbsolute () {
 		return this.absolute;
 	}
 	
 	/**
-	 * Builds the {@link ConfigurationIdentifier} object of a configuration
-	 * parameter relative to this configuration identifier.
+	 * Builds the {@link ConfigurationIdentifier} object of a configuration parameter relative to this configuration identifier.
 	 * 
 	 * @param identifier
 	 *            the identifier to solve
 	 * @return the built identifier
 	 */
-	public ConfigurationIdentifier resolve (final ConfigurationIdentifier identifier)
-	{
+	public ConfigurationIdentifier resolve (final ConfigurationIdentifier identifier) {
 		if (identifier.absolute) {
 			throw new IllegalArgumentException ();
 		}
@@ -109,27 +100,32 @@ public final class ConfigurationIdentifier
 	}
 	
 	/**
-	 * Builds the {@link ConfigurationIdentifier} object of a configuration
-	 * parameter relative to this configuration identifier.
+	 * Builds the {@link ConfigurationIdentifier} object of a configuration parameter relative to this configuration identifier.
 	 * 
 	 * @param specification
 	 *            the string specification of the identifier to be built
 	 * @return the built identifier
 	 */
-	public ConfigurationIdentifier resolve (final String specification)
-	{
+	public ConfigurationIdentifier resolve (final String specification) {
 		return ConfigurationIdentifier.resolve (this, specification);
 	}
 	
 	@Override
-	public String toString ()
-	{
+	public String toString () {
 		return this.identifier;
 	}
 	
 	/**
-	 * Builds the {@link ConfigurationIdentifier} object of a configuration
-	 * parameter given by an absolute identifier.
+	 * Indicates if this identifier is absolute
+	 */
+	private final boolean absolute;
+	/**
+	 * The string identifier.
+	 */
+	private final String identifier;
+	
+	/**
+	 * Builds the {@link ConfigurationIdentifier} object of a configuration parameter given by an absolute identifier.
 	 * 
 	 * @param reference
 	 *            the parent {@link ConfigurationIdentifier} object
@@ -137,14 +133,12 @@ public final class ConfigurationIdentifier
 	 *            the string specification of the parameter identifier
 	 * @return the built {@link ConfigurationIdentifier} object
 	 */
-	public static ConfigurationIdentifier resolveAbsolute (final String specification)
-	{
+	public static ConfigurationIdentifier resolveAbsolute (final String specification) {
 		return ConfigurationIdentifier.resolve (ConfigurationIdentifier.ROOT, specification);
 	}
 	
 	/**
-	 * Builds the {@link ConfigurationIdentifier} object of a configuration
-	 * parameter.
+	 * Builds the {@link ConfigurationIdentifier} object of a configuration parameter.
 	 * 
 	 * @param reference
 	 *            the parent {@link ConfigurationIdentifier} object
@@ -152,27 +146,23 @@ public final class ConfigurationIdentifier
 	 *            the string specification of the parameter identifier
 	 * @return the built {@link ConfigurationIdentifier} object
 	 */
-	public static ConfigurationIdentifier resolveRelative (final ConfigurationIdentifier reference, final String specification)
-	{
+	public static ConfigurationIdentifier resolveRelative (final ConfigurationIdentifier reference, final String specification) {
 		return ConfigurationIdentifier.resolve (reference, specification);
 	}
 	
 	/**
-	 * Builds the {@link ConfigurationIdentifier} object of a configuration
-	 * parameter.
+	 * Builds the {@link ConfigurationIdentifier} object of a configuration parameter.
 	 * 
 	 * @param specification
 	 *            the string specification of the parameter identifier
 	 * @return the built {@link ConfigurationIdentifier} object
 	 */
-	public static ConfigurationIdentifier resolveRelative (final String specification)
-	{
+	public static ConfigurationIdentifier resolveRelative (final String specification) {
 		return ConfigurationIdentifier.resolve (null, specification);
 	}
 	
 	/**
-	 * Builds the {@link ConfigurationIdentifier} object of a configuration
-	 * parameter.
+	 * Builds the {@link ConfigurationIdentifier} object of a configuration parameter.
 	 * 
 	 * @param reference
 	 *            the parent {@link ConfigurationIdentifier} object
@@ -180,8 +170,7 @@ public final class ConfigurationIdentifier
 	 *            the string specification of the parameter identifier
 	 * @return the built {@link ConfigurationIdentifier} object
 	 */
-	private static ConfigurationIdentifier resolve (final ConfigurationIdentifier reference, final String specification)
-	{
+	private static ConfigurationIdentifier resolve (final ConfigurationIdentifier reference, final String specification) {
 		boolean isAbsolute = false;
 		String identifier_;
 		String identifier;
@@ -217,14 +206,6 @@ public final class ConfigurationIdentifier
 		return parameterIdentifier;
 	}
 	
-	/**
-	 * Indicates if this identifier is absolute
-	 */
-	private final boolean absolute;
-	/**
-	 * The string identifier.
-	 */
-	private final String identifier;
 	public static final ConfigurationIdentifier ROOT = new ConfigurationIdentifier (true, null);
 	private static final Pattern IDENTIFIER_PATTERN = Pattern.compile ("^/?([a-z]([a-z0-9_.]*[a-z0-9])?/)*([a-z]([a-z0-9_.]*[a-z0-9])?)$", Pattern.DOTALL);
 	private static final IdentityHashMap<String, ConfigurationIdentifier> IDENTIFIERS = new IdentityHashMap<String, ConfigurationIdentifier> ();

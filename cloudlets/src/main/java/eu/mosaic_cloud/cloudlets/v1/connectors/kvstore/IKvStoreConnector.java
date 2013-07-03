@@ -31,18 +31,15 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * Basic interface for cloudlets to access key-value storages.
  * 
  * @author Georgiana Macariu
- * 
  * @param <TValue>
- *            the type of the values exchanged with the key-value store using
- *            this connector
+ *            the type of the values exchanged with the key-value store using this connector
  * @param <TExtra>
- *            the type of the extra data; as an example, this data can be used
- *            correlation
+ *            the type of the extra data; as an example, this data can be used correlation
  */
 public interface IKvStoreConnector<TValue, TExtra>
-		extends
-			IConnector,
-			eu.mosaic_cloud.connectors.v1.kvstore.IKvStoreConnector<TValue>
+			extends
+				IConnector,
+				eu.mosaic_cloud.connectors.v1.kvstore.IKvStoreConnector<TValue>
 {
 	/**
 	 * Deletes the given key.

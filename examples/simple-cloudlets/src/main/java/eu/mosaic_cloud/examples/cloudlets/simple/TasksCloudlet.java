@@ -42,26 +42,23 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public class TasksCloudlet
 {
 	public static final class CloudletCallback
-			extends DefaultCloudletCallback<Context>
+				extends DefaultCloudletCallback<Context>
 	{
 		@Override
-		public CallbackCompletion<Void> destroy (final Context context, final CloudletCallbackArguments<Context> arguments)
-		{
+		public CallbackCompletion<Void> destroy (final Context context, final CloudletCallbackArguments<Context> arguments) {
 			context.logger.info ("destroying cloudlet...");
 			context.logger.info ("destroying executor...");
 			return context.executor.destroy ();
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final Context context, final CloudletCallbackCompletionArguments<Context> arguments)
-		{
+		public CallbackCompletion<Void> destroySucceeded (final Context context, final CloudletCallbackCompletionArguments<Context> arguments) {
 			context.logger.info ("cloudlet destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initialize (final Context context, final CloudletCallbackArguments<Context> arguments)
-		{
+		public CallbackCompletion<Void> initialize (final Context context, final CloudletCallbackArguments<Context> arguments) {
 			context.logger.info ("initializing cloudlet...");
 			context.cloudletCallback = this;
 			context.executorCallback = new ExecutorCallback ();
@@ -76,15 +73,14 @@ public class TasksCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final Context context, final CloudletCallbackCompletionArguments<Context> arguments)
-		{
+		public CallbackCompletion<Void> initializeSucceeded (final Context context, final CloudletCallbackCompletionArguments<Context> arguments) {
 			context.logger.info ("cloudlet initialized successfully.");
 			return context.workflow.submitExecution (context);
 		}
 	}
 	
 	public static class Context
-			extends DefaultContext
+				extends DefaultContext
 	{
 		ICloudletController<Context> cloudlet;
 		CloudletCallback cloudletCallback;
@@ -95,29 +91,26 @@ public class TasksCloudlet
 	}
 	
 	static class ExecutorCallback
-			extends DefaultExecutorCallback<Context, String, String>
+				extends DefaultExecutorCallback<Context, String, String>
 	{
 		@Override
-		public CallbackCompletion<Void> executionSucceeded (final Context context, final ExecutionSucceededCallbackArguments<String, String> arguments)
-		{
+		public CallbackCompletion<Void> executionSucceeded (final Context context, final ExecutionSucceededCallbackArguments<String, String> arguments) {
 			return context.workflow.handleOutcome (context, arguments.getOutcome (), arguments.getExtra ());
 		}
 	}
 	
 	static class TimeConsumingOperation
-			implements
-				Callable<String>
+				implements
+					Callable<String>
 	{
-		TimeConsumingOperation (final Context context, final String input)
-		{
+		TimeConsumingOperation (final Context context, final String input) {
 			super ();
 			this.context = context;
 			this.input = input;
 		}
 		
 		@Override
-		public String call ()
-		{
+		public String call () {
 			this.context.logger.info ("executing time-consuming operation...");
 			return new StringBuilder ().append (this.input).reverse ().toString ();
 		}
@@ -128,8 +121,7 @@ public class TasksCloudlet
 	
 	static class Workflow
 	{
-		CallbackCompletion<Void> handleOutcome (final Context context, final String output, final String input)
-		{
+		CallbackCompletion<Void> handleOutcome (final Context context, final String output, final String input) {
 			context.logger.info ("succeeded task with input `{}` and output `{}`...", input, output);
 			context.counter++;
 			if (context.counter == 10) {
@@ -139,8 +131,7 @@ public class TasksCloudlet
 			return (context.workflow.submitExecution (context));
 		}
 		
-		CallbackCompletion<Void> submitExecution (final Context context)
-		{
+		CallbackCompletion<Void> submitExecution (final Context context) {
 			final String input = UUID.randomUUID ().toString ();
 			context.logger.info ("scheduling task with input `{}`...", input);
 			context.executor.execute (new TimeConsumingOperation (context, input), input);

@@ -22,20 +22,17 @@ package eu.mosaic_cloud.tools.exceptions.core;
 
 
 public final class IgnoredException
-		extends CaughtException
+			extends CaughtException
 {
-	public IgnoredException (final Throwable exception)
-	{
+	public IgnoredException (final Throwable exception) {
 		super (ExceptionResolution.Ignored, exception);
 	}
 	
-	public IgnoredException (final Throwable exception, final String message)
-	{
+	public IgnoredException (final Throwable exception, final String message) {
 		super (ExceptionResolution.Ignored, exception, message);
 	}
 	
-	public IgnoredException (final Throwable exception, final String messageFormat, final Object ... messageArguments)
-	{
+	public IgnoredException (final Throwable exception, final String messageFormat, final Object ... messageArguments) {
 		super (ExceptionResolution.Ignored, exception, messageFormat, messageArguments);
 	}
 	

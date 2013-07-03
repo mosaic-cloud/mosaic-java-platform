@@ -25,10 +25,9 @@ import com.google.common.base.Preconditions;
 
 
 public abstract class ComponentResourceDescriptor
-		extends Object
+			extends Object
 {
-	ComponentResourceDescriptor (final String identifier)
-	{
+	ComponentResourceDescriptor (final String identifier) {
 		super ();
 		Preconditions.checkNotNull (identifier);
 		this.identifier = identifier;

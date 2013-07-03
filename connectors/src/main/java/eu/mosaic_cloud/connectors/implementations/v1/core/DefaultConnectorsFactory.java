@@ -31,49 +31,42 @@ import com.google.common.base.Preconditions;
 
 
 public class DefaultConnectorsFactory
-		extends BaseConnectorsFactory
+			extends BaseConnectorsFactory
 {
-	protected DefaultConnectorsFactory (final ConnectorEnvironment environment, final IConnectorsFactory delegate)
-	{
+	protected DefaultConnectorsFactory (final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
 		super (environment, delegate);
 	}
 	
-	public static final DefaultConnectorsFactory create (final ConnectorEnvironment environment)
-	{
+	public static final DefaultConnectorsFactory create (final ConnectorEnvironment environment) {
 		return DefaultConnectorsFactory.create (environment, null);
 	}
 	
-	public static final DefaultConnectorsFactory create (final ConnectorEnvironment environment, final IConnectorsFactory delegate)
-	{
+	public static final DefaultConnectorsFactory create (final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
 		return DefaultConnectorsFactory.Builder.create (environment, delegate).build ();
 	}
 	
 	public static final class Builder
-			extends BaseConnectorsFactoryBuilder<DefaultConnectorsFactory>
+				extends BaseConnectorsFactoryBuilder<DefaultConnectorsFactory>
 	{
-		Builder (final DefaultConnectorsFactory factory)
-		{
+		Builder (final DefaultConnectorsFactory factory) {
 			super (factory);
 			this.initialize ();
 		}
 		
 		@Override
-		public void initialize (final IConnectorsFactoryInitializer initializer)
-		{
+		public void initialize (final IConnectorsFactoryInitializer initializer) {
 			Preconditions.checkNotNull (initializer);
 			initializer.initialize (this, this.environment, this.factory);
 		}
 		
 		@Override
-		protected final void initialize_1 ()
-		{
+		protected final void initialize_1 () {
 			this.initialize (GenericKvStoreConnectorFactoryInitializer.defaultInstance);
 			this.initialize (AmqpQueueConnectorFactoryInitializer.defaultInstance);
 			this.initialize (HttpgQueueConnectorFactoryInitializer.defaultInstance);
 		}
 		
-		public static final Builder create (final ConnectorEnvironment environment, final IConnectorsFactory delegate)
-		{
+		public static final Builder create (final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
 			final DefaultConnectorsFactory factory = new DefaultConnectorsFactory (environment, delegate);
 			final Builder builder = new Builder (factory);
 			return (builder);

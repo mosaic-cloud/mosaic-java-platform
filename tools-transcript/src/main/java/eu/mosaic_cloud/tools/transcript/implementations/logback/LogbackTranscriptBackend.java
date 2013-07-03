@@ -34,12 +34,11 @@ import ch.qos.logback.classic.Logger;
 
 
 public final class LogbackTranscriptBackend
-		extends Object
-		implements
-			TranscriptBackend
+			extends Object
+			implements
+				TranscriptBackend
 {
-	private LogbackTranscriptBackend (final Logger logger, final ExtendedFormatter formatter)
-	{
+	private LogbackTranscriptBackend (final Logger logger, final ExtendedFormatter formatter) {
 		super ();
 		Preconditions.checkNotNull (logger);
 		Preconditions.checkNotNull (formatter);
@@ -48,8 +47,7 @@ public final class LogbackTranscriptBackend
 	}
 	
 	@Override
-	public final <_Logger_ extends Object> _Logger_ adaptAs (final Class<_Logger_> loggerClass)
-	{
+	public final <_Logger_ extends Object> _Logger_ adaptAs (final Class<_Logger_> loggerClass) {
 		final Object logger;
 		if (loggerClass == org.slf4j.Logger.class)
 			logger = this.logger;
@@ -61,37 +59,31 @@ public final class LogbackTranscriptBackend
 	}
 	
 	@Override
-	public final void trace (final ExceptionResolution resolution, final Throwable exception)
-	{
+	public final void trace (final ExceptionResolution resolution, final Throwable exception) {
 		this.trace (this.map (resolution), null, null, exception);
 	}
 	
 	@Override
-	public final void trace (final ExceptionResolution resolution, final Throwable exception, final String message)
-	{
+	public final void trace (final ExceptionResolution resolution, final Throwable exception, final String message) {
 		this.trace (this.map (resolution), message, null, exception);
 	}
 	
 	@Override
-	public final void trace (final ExceptionResolution resolution, final Throwable exception, final String format, final Object ... tokens)
-	{
+	public final void trace (final ExceptionResolution resolution, final Throwable exception, final String format, final Object ... tokens) {
 		this.trace (this.map (resolution), format, tokens, exception);
 	}
 	
 	@Override
-	public final void trace (final TranscriptTraceType type, final String message)
-	{
+	public final void trace (final TranscriptTraceType type, final String message) {
 		this.trace (type, message, null, null);
 	}
 	
 	@Override
-	public final void trace (final TranscriptTraceType type, final String format, final Object ... tokens)
-	{
+	public final void trace (final TranscriptTraceType type, final String format, final Object ... tokens) {
 		this.trace (type, format, tokens, null);
 	}
 	
-	private final String format (final String format, final Object[] tokens)
-	{
+	private final String format (final String format, final Object[] tokens) {
 		if (format == null) {
 			if (tokens != null)
 				throw (new IllegalArgumentException ());
@@ -102,8 +94,7 @@ public final class LogbackTranscriptBackend
 		return (this.formatter.format (format, tokens));
 	}
 	
-	private final TranscriptTraceType map (final ExceptionResolution resolution)
-	{
+	private final TranscriptTraceType map (final ExceptionResolution resolution) {
 		switch (resolution) {
 			case Handled :
 				return (TranscriptTraceType.Trace);
@@ -111,13 +102,12 @@ public final class LogbackTranscriptBackend
 				return (TranscriptTraceType.Debugging);
 			case Ignored :
 				return (TranscriptTraceType.Warning);
-			default:
+			default :
 				throw (new AssertionError ());
 		}
 	}
 	
-	private final void trace (final TranscriptTraceType type, final String format, final Object[] tokens, final Throwable exception)
-	{
+	private final void trace (final TranscriptTraceType type, final String format, final Object[] tokens, final Throwable exception) {
 		Preconditions.checkNotNull (type);
 		switch (type) {
 			case Information :
@@ -168,15 +158,16 @@ public final class LogbackTranscriptBackend
 		}
 	}
 	
-	public static final LogbackTranscriptBackend create (final Class<?> owner)
-	{
+	private final ExtendedFormatter formatter;
+	private final Logger logger;
+	
+	public static final LogbackTranscriptBackend create (final Class<?> owner) {
 		Preconditions.checkNotNull (owner);
 		final String loggerName = owner.getName ();
 		return (new LogbackTranscriptBackend ((Logger) LoggerFactory.getLogger (loggerName), ExtendedFormatter.defaultInstance));
 	}
 	
-	public static final LogbackTranscriptBackend create (final Object owner, final boolean individual)
-	{
+	public static final LogbackTranscriptBackend create (final Object owner, final boolean individual) {
 		Preconditions.checkNotNull (owner);
 		final String loggerName;
 		if (individual)
@@ -185,7 +176,4 @@ public final class LogbackTranscriptBackend
 			loggerName = owner.getClass ().getName ().replace ('$', '.');
 		return (new LogbackTranscriptBackend ((Logger) LoggerFactory.getLogger (loggerName), ExtendedFormatter.defaultInstance));
 	}
-	
-	private final ExtendedFormatter formatter;
-	private final Logger logger;
 }

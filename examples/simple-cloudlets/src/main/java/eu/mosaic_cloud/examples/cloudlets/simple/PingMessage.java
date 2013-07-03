@@ -23,21 +23,17 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 
 public class PingMessage
 {
-	public PingMessage ()
-	{}
+	public PingMessage () {}
 	
-	public PingMessage (final String key)
-	{
+	public PingMessage (final String key) {
 		this.key = key;
 	}
 	
-	public String getKey ()
-	{
+	public String getKey () {
 		return this.key;
 	}
 	
-	public void setKey (final String key)
-	{
+	public void setKey (final String key) {
 		this.key = key;
 	}
 	

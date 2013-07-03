@@ -79,17 +79,15 @@ import ch.qos.logback.classic.net.SocketAppender;
 
 
 public final class BasicComponentHarnessMain
-		extends Object
+			extends Object
 {
-	private BasicComponentHarnessMain ()
-	{
+	private BasicComponentHarnessMain () {
 		super ();
 		throw (new UnsupportedOperationException ());
 	}
 	
 	public static final void main (final ArgumentsProvider arguments, final ClassLoader classLoader, final ThreadingContext threading, final Transcript transcript, final ExceptionTracer exceptions)
-			throws Throwable
-	{
+				throws Throwable {
 		Preconditions.checkNotNull (arguments);
 		final Environment environment = BasicComponentHarnessMain.prepareEnvironment (arguments, classLoader, threading, transcript, exceptions);
 		BasicComponentHarnessMain.main (environment, arguments);
@@ -97,8 +95,7 @@ public final class BasicComponentHarnessMain
 	}
 	
 	public static final void main (final Environment environment, final ArgumentsProvider arguments)
-			throws Throwable
-	{
+				throws Throwable {
 		Preconditions.checkNotNull (environment);
 		Preconditions.checkNotNull (arguments);
 		BasicComponentHarnessMain.prepareLogger (environment, arguments);
@@ -112,8 +109,7 @@ public final class BasicComponentHarnessMain
 	}
 	
 	public static final void main (final String[] argumentsList)
-			throws Throwable
-	{
+				throws Throwable {
 		Preconditions.checkNotNull (argumentsList);
 		final Transcript transcript = Transcript.create (BasicComponentHarnessMain.class);
 		final BaseExceptionTracer exceptions = TranscriptExceptionTracer.create (transcript, AbortingExceptionTracer.defaultInstance);
@@ -122,16 +118,14 @@ public final class BasicComponentHarnessMain
 	}
 	
 	private static final ArgumentsProvider parseArguments (final String[] argumentsList, final Transcript transcript, final ExceptionTracer exceptions)
-			throws Throwable
-	{
+				throws Throwable {
 		transcript.traceDebugging ("parsing arguments: `%{array}`...", (Object) argumentsList);
 		final ArgumentsProvider arguments = CliFactory.parseArguments (ArgumentsProvider.class, argumentsList);
 		return (arguments);
 	}
 	
 	private static final ComponentCallbacksProvider prepareCallbacks (final Environment environment, final ArgumentsProvider arguments)
-			throws Throwable
-	{
+				throws Throwable {
 		environment.transcript.traceInformation ("preparing callbacks provider...");
 		final Class<?> callbacksClass;
 		{
@@ -156,8 +150,7 @@ public final class BasicComponentHarnessMain
 	}
 	
 	private static final BasicChannel prepareChannel (final Environment environment, final ArgumentsProvider arguments)
-			throws Throwable
-	{
+				throws Throwable {
 		environment.transcript.traceInformation ("preparing channel...");
 		final String endpoint = arguments.getChannelEndpoint ();
 		final InputStream inputStream;
@@ -200,8 +193,7 @@ public final class BasicComponentHarnessMain
 		return (channel);
 	}
 	
-	private static final ClassLoader prepareClassLoader (final ArgumentsProvider arguments, final Transcript transcript, final ExceptionTracer exceptions)
-	{
+	private static final ClassLoader prepareClassLoader (final ArgumentsProvider arguments, final Transcript transcript, final ExceptionTracer exceptions) {
 		transcript.traceInformation ("preparing class loader...");
 		final String classpath = arguments.getClasspath ();
 		final ClassLoader classLoader;
@@ -234,8 +226,7 @@ public final class BasicComponentHarnessMain
 	}
 	
 	private static final BasicComponent prepareComponent (final Environment environment, final ArgumentsProvider arguments, final BasicChannel channel, final ComponentCallbacksProvider callbacksProvider)
-			throws Throwable
-	{
+				throws Throwable {
 		environment.transcript.traceInformation ("preparing component...");
 		environment.transcript.traceDebugging ("creating component...");
 		final BasicComponent component = BasicComponent.create (environment.reactor, environment.exceptions);
@@ -259,8 +250,7 @@ public final class BasicComponentHarnessMain
 	}
 	
 	private static final Environment prepareEnvironment (final ArgumentsProvider arguments, final ClassLoader classLoader_, final ThreadingContext threading_, final Transcript transcript_, final ExceptionTracer exceptions_)
-			throws Throwable
-	{
+				throws Throwable {
 		BasicThreadingSecurityManager.initialize ();
 		final Transcript transcript;
 		if (transcript_ == null)
@@ -326,8 +316,7 @@ public final class BasicComponentHarnessMain
 	}
 	
 	private static final void prepareLogger (final Environment environment, final ArgumentsProvider arguments)
-			throws Throwable
-	{
+				throws Throwable {
 		environment.transcript.traceInformation ("preparing logger...");
 		final String endpoint = arguments.getLoggingEndpoint ();
 		if (endpoint != null) {
@@ -374,8 +363,7 @@ public final class BasicComponentHarnessMain
 	
 	public static final class Environment
 	{
-		public Environment (final ComponentIdentifier identifier, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final Transcript transcript, final ExceptionTracer exceptions, final Map<String, Object> options)
-		{
+		public Environment (final ComponentIdentifier identifier, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final Transcript transcript, final ExceptionTracer exceptions, final Map<String, Object> options) {
 			super ();
 			Preconditions.checkNotNull (identifier);
 			Preconditions.checkNotNull (classLoader);
@@ -403,13 +391,12 @@ public final class BasicComponentHarnessMain
 	}
 	
 	private static final class Piper
-			extends Object
-			implements
-				Runnable,
-				Thread.UncaughtExceptionHandler
+				extends Object
+				implements
+					Runnable,
+					Thread.UncaughtExceptionHandler
 	{
-		Piper (final ReadableByteChannel source, final WritableByteChannel sink, final ThreadingContext threading, final ExceptionTracer exceptions)
-		{
+		Piper (final ReadableByteChannel source, final WritableByteChannel sink, final ThreadingContext threading, final ExceptionTracer exceptions) {
 			super ();
 			this.threading = threading;
 			this.transcript = Transcript.create (this, true);
@@ -419,14 +406,12 @@ public final class BasicComponentHarnessMain
 			this.thread = Threading.createAndStartDaemonThread (this.threading, this, "piper", this, exceptions, this);
 		}
 		
-		public final boolean join ()
-		{
+		public final boolean join () {
 			return (Threading.join (this.thread));
 		}
 		
 		@Override
-		public final void run ()
-		{
+		public final void run () {
 			final ByteBuffer buffer = ByteBuffer.allocateDirect (1024 * 1024);
 			loop : while (true) {
 				if ((!this.source.isOpen () && (buffer.remaining () == 0)) || !this.sink.isOpen ())
@@ -461,15 +446,13 @@ public final class BasicComponentHarnessMain
 		}
 		
 		@Override
-		public final void uncaughtException (final Thread thread, final Throwable exception)
-		{
+		public final void uncaughtException (final Thread thread, final Throwable exception) {
 			Preconditions.checkArgument (this.thread == thread);
 			this.exceptions.traceIgnoredException (exception);
 			this.close ();
 		}
 		
-		private final void close ()
-		{
+		private final void close () {
 			this.transcript.traceDebugging ("closing source...");
 			try {
 				this.source.close ();
@@ -493,20 +476,18 @@ public final class BasicComponentHarnessMain
 	}
 	
 	private static final class Provider
-			extends Object
-			implements
-				ComponentCallbacksProvider
+				extends Object
+				implements
+					ComponentCallbacksProvider
 	{
-		Provider (final Class<?> clasz)
-		{
+		Provider (final Class<?> clasz) {
 			super ();
 			Preconditions.checkNotNull (clasz);
 			this.clasz = clasz;
 		}
 		
 		@Override
-		public final ComponentCallbacks provide (final ComponentEnvironment context)
-		{
+		public final ComponentCallbacks provide (final ComponentEnvironment context) {
 			Preconditions.checkNotNull (context);
 			Method provideMethod;
 			try {

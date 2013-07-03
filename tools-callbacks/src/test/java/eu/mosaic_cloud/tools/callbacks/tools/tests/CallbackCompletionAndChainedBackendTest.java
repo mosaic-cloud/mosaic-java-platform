@@ -37,8 +37,7 @@ import com.google.common.base.Preconditions;
 public final class CallbackCompletionAndChainedBackendTest
 {
 	@Test
-	public final void testFailure1 ()
-	{
+	public final void testFailure1 () {
 		final Throwable marker = new Throwable ();
 		final AtomicBoolean observed1 = new AtomicBoolean (false);
 		final AtomicBoolean observed2 = new AtomicBoolean (false);
@@ -70,8 +69,7 @@ public final class CallbackCompletionAndChainedBackendTest
 	}
 	
 	@Test
-	public final void testFailure2 ()
-	{
+	public final void testFailure2 () {
 		final Throwable marker = new Throwable ();
 		final AtomicBoolean observed1 = new AtomicBoolean (false);
 		final AtomicBoolean observed2 = new AtomicBoolean (false);
@@ -103,8 +101,7 @@ public final class CallbackCompletionAndChainedBackendTest
 	}
 	
 	@Test
-	public final void testSucceeded ()
-	{
+	public final void testSucceeded () {
 		final AtomicBoolean observed1 = new AtomicBoolean (false);
 		final AtomicBoolean observed2 = new AtomicBoolean (false);
 		final CallbackCompletionDeferredFuture<Void> future1 = CallbackCompletionDeferredFuture.create (Void.class);
@@ -126,20 +123,18 @@ public final class CallbackCompletionAndChainedBackendTest
 	}
 	
 	final class Observer
-			extends Object
-			implements
-				CallbackCompletionObserver
+				extends Object
+				implements
+					CallbackCompletionObserver
 	{
-		Observer (final CallbackCompletion<?> completion, final AtomicBoolean triggered)
-		{
+		Observer (final CallbackCompletion<?> completion, final AtomicBoolean triggered) {
 			super ();
 			this.completion = completion;
 			this.obvserved = triggered;
 		}
 		
 		@Override
-		public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion)
-		{
+		public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion) {
 			Preconditions.checkArgument (completion == this.completion);
 			Preconditions.checkState (this.obvserved.compareAndSet (false, true));
 			return (CallbackCompletion.createOutcome ());

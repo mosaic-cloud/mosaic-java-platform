@@ -28,19 +28,17 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 public class DefaultExecutorCallback<TContext, TOutcome, TExtra>
-		extends DefaultConnectorCallback<TContext>
-		implements
-			IExecutorCallback<TContext, TOutcome, TExtra>
+			extends DefaultConnectorCallback<TContext>
+			implements
+				IExecutorCallback<TContext, TOutcome, TExtra>
 {
 	@Override
-	public CallbackCompletion<Void> executionFailed (final TContext context, final ExecutionFailedCallbackArguments<TExtra> arguments)
-	{
+	public CallbackCompletion<Void> executionFailed (final TContext context, final ExecutionFailedCallbackArguments<TExtra> arguments) {
 		return this.handleUnhandledCallback (arguments, "Execution Failed", false, false);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> executionSucceeded (final TContext context, final ExecutionSucceededCallbackArguments<TOutcome, TExtra> arguments)
-	{
+	public CallbackCompletion<Void> executionSucceeded (final TContext context, final ExecutionSucceededCallbackArguments<TOutcome, TExtra> arguments) {
 		return this.handleUnhandledCallback (arguments, "Execution Succeeded", true, false);
 	}
 }

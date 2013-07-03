@@ -39,8 +39,7 @@ import org.junit.Test;
 public final class KvTest
 {
 	@Test
-	public final void test ()
-	{
+	public final void test () {
 		final Transcript transcript = Transcript.create (this);
 		BasicThreadingSecurityManager.initialize ();
 		final QueueingExceptionTracer exceptionsQueue = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);

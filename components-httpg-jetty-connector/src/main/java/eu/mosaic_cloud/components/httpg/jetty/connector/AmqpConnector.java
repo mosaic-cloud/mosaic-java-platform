@@ -47,10 +47,9 @@ import com.rabbitmq.client.ShutdownSignalException;
 
 
 public class AmqpConnector
-		extends AbstractConnector
+			extends AbstractConnector
 {
-	public AmqpConnector (final String exchangeName, final String routingKey, final String queueName, final String hostName, final String userName, final String userPassword, final int port, final String virtualHost, final boolean autoDeclareQueue)
-	{
+	public AmqpConnector (final String exchangeName, final String routingKey, final String queueName, final String hostName, final String userName, final String userPassword, final int port, final String virtualHost, final boolean autoDeclareQueue) {
 		this._userName = userName;
 		this._userPassword = userPassword;
 		this._exchangeName = exchangeName;
@@ -65,26 +64,22 @@ public class AmqpConnector
 	
 	@Override
 	public void close ()
-			throws IOException
-	{}
+				throws IOException {}
 	
 	@Override
-	public Object getConnection ()
-	{
+	public Object getConnection () {
 		Log.debug ("getConnection()");
 		return this._consumer;
 	}
 	
 	@Override
-	public int getLocalPort ()
-	{
+	public int getLocalPort () {
 		return 0;
 	}
 	
 	@Override
 	public void open ()
-			throws IOException
-	{
+				throws IOException {
 		while (true) {
 			try {
 				this.setupConnection ();
@@ -97,8 +92,7 @@ public class AmqpConnector
 		}
 		this._connection.addShutdownListener (new ShutdownListener () {
 			@Override
-			public void shutdownCompleted (final ShutdownSignalException cause)
-			{
+			public void shutdownCompleted (final ShutdownSignalException cause) {
 				Log.warn ("Connection to RabbitMQ failed!");
 				while (true) {
 					try {
@@ -116,9 +110,7 @@ public class AmqpConnector
 	
 	@Override
 	protected void accept (final int acceptorID)
-			throws IOException,
-				InterruptedException
-	{
+				throws IOException, InterruptedException {
 		QueueMessage msg = null;
 		QueueingConsumer.Delivery delivery;
 		try {
@@ -141,14 +133,12 @@ public class AmqpConnector
 		_endPoint.dispatch ();
 	}
 	
-	protected org.eclipse.jetty.io.Connection newConnection (final EndPoint endp)
-	{
+	protected org.eclipse.jetty.io.Connection newConnection (final EndPoint endp) {
 		return new BlockingHttpConnection (this, endp, this.getServer ());
 	}
 	
 	private void setupConnection ()
-			throws IOException
-	{
+				throws IOException {
 		Log.info ("Opening AmqpConnector");
 		if (this._connectionFactory == null) {
 			this._connectionFactory = new ConnectionFactory ();
@@ -185,13 +175,12 @@ public class AmqpConnector
 	private final String _virtualHost;
 	
 	protected class ConnectorEndPoint
-			extends ByteArrayEndPoint
-			implements
-				ConnectedEndPoint,
-				Runnable
+				extends ByteArrayEndPoint
+				implements
+					ConnectedEndPoint,
+					Runnable
 	{
-		public ConnectorEndPoint (final QueueMessage msg)
-		{
+		public ConnectorEndPoint (final QueueMessage msg) {
 			super (msg.get_http_request (), 128);
 			this._jettyConnection = AmqpConnector.this.newConnection (this);
 			this.set_message (msg);
@@ -200,8 +189,7 @@ public class AmqpConnector
 		
 		@Override
 		public void close ()
-				throws IOException
-		{
+					throws IOException {
 			if (!this._closed) {
 				try {
 					this.sendResponse ();
@@ -214,28 +202,24 @@ public class AmqpConnector
 		}
 		
 		public void dispatch ()
-				throws IOException
-		{
+					throws IOException {
 			if ((AmqpConnector.this.getThreadPool () == null) || !AmqpConnector.this.getThreadPool ().dispatch (this)) {
 				Log.warn ("dispatch failed for {}", this._jettyConnection);
 				this.close ();
 			}
 		}
 		
-		public QueueMessage get_message ()
-		{
+		public QueueMessage get_message () {
 			return this._message;
 		}
 		
 		@Override
-		public org.eclipse.jetty.io.Connection getConnection ()
-		{
+		public org.eclipse.jetty.io.Connection getConnection () {
 			return this._jettyConnection;
 		}
 		
 		@Override
-		public void run ()
-		{
+		public void run () {
 			try {
 				AmqpConnector.this.connectionOpened (this.getConnection ());
 				AmqpConnector.this._connections.add (this);
@@ -267,14 +251,12 @@ public class AmqpConnector
 			}
 		}
 		
-		public void set_message (final QueueMessage _message)
-		{
+		public void set_message (final QueueMessage _message) {
 			this._message = _message;
 		}
 		
 		@Override
-		public void setConnection (final org.eclipse.jetty.io.Connection connection)
-		{
+		public void setConnection (final org.eclipse.jetty.io.Connection connection) {
 			if (this._jettyConnection != connection) {
 				AmqpConnector.this.connectionUpgraded (this._jettyConnection, connection);
 			}
@@ -282,9 +264,7 @@ public class AmqpConnector
 		}
 		
 		private void sendResponse ()
-				throws IOException,
-					JSONException
-		{
+					throws IOException, JSONException {
 			final QueueMessage msg = this.get_message ();
 			final Channel c = msg.get_channel ();
 			c.basicPublish (msg.get_callback_exchange (), msg.get_callback_routing_key (), null, MessageHandler.encodeMessage (this.getOut ().array (), msg.get_callback_identifier ()));

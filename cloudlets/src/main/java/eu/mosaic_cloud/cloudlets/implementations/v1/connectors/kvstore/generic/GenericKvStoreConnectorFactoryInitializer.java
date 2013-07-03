@@ -36,16 +36,14 @@ import com.google.common.base.Preconditions;
 
 
 public final class GenericKvStoreConnectorFactoryInitializer
-		extends BaseConnectorsFactoryInitializer
+			extends BaseConnectorsFactoryInitializer
 {
 	@Override
-	protected void initialize_1 (final IConnectorsFactoryBuilder builder, final ICloudletController<?> cloudlet, final ConnectorEnvironment environment, final IConnectorsFactory delegate)
-	{
+	protected void initialize_1 (final IConnectorsFactoryBuilder builder, final ICloudletController<?> cloudlet, final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
 		Preconditions.checkNotNull (delegate);
 		builder.register (IKvStoreConnectorFactory.class, new IKvStoreConnectorFactory () {
 			@Override
-			public <TContext, TTValue, TExtra> IKvStoreConnector<TTValue, TExtra> create (final IConfiguration configuration, final Class<TTValue> valueClass, final DataEncoder<TTValue> valueEncoder, final IKvStoreConnectorCallback<TContext, TTValue, TExtra> callback, final TContext callbackContext)
-			{
+			public <TContext, TTValue, TExtra> IKvStoreConnector<TTValue, TExtra> create (final IConfiguration configuration, final Class<TTValue> valueClass, final DataEncoder<TTValue> valueEncoder, final IKvStoreConnectorCallback<TContext, TTValue, TExtra> callback, final TContext callbackContext) {
 				final eu.mosaic_cloud.connectors.implementations.v1.kvstore.generic.GenericKvStoreConnector<TTValue> backingConnector = (eu.mosaic_cloud.connectors.implementations.v1.kvstore.generic.GenericKvStoreConnector<TTValue>) delegate.getConnectorFactory (eu.mosaic_cloud.connectors.v1.kvstore.IKvStoreConnectorFactory.class).create (configuration, valueClass, valueEncoder);
 				return new GenericKvStoreConnector<TContext, TTValue, TExtra> (cloudlet, backingConnector, configuration, callback, callbackContext);
 			}

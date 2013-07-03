@@ -28,13 +28,12 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * Interface for using for an AMQP resource as a consumer.
  * 
  * @author Georgiana Macariu
- * 
  * @param <TMessage>
  *            the type of the consumed data
  */
 public interface IAmqpQueueConsumerConnector<TMessage>
-		extends
-			IAmqpQueueConnector
+			extends
+				IAmqpQueueConnector
 {
 	/**
 	 * Acknowledges a message.

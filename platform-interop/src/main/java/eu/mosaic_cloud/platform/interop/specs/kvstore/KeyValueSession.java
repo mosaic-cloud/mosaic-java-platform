@@ -32,20 +32,17 @@ import eu.mosaic_cloud.interoperability.tools.Identifiers;
 
 
 /**
- * Defines the Key-Value session: the messages that can be exchanged and the
- * roles of the participants.
+ * Defines the Key-Value session: the messages that can be exchanged and the roles of the participants.
  * 
  * @author Georgiana Macariu
- * 
  */
 public enum KeyValueSession
-		implements
-			SessionSpecification
+			implements
+				SessionSpecification
 {
 	CONNECTOR (KeyValueRole.CONNECTOR, KeyValueRole.DRIVER),
 	DRIVER (KeyValueRole.DRIVER, KeyValueRole.CONNECTOR);
-	private KeyValueSession (final KeyValueRole selfRole, final KeyValueRole peerRole)
-	{
+	private KeyValueSession (final KeyValueRole selfRole, final KeyValueRole peerRole) {
 		this.selfRole = selfRole;
 		this.peerRole = peerRole;
 		final List<KeyValueMessage> messages = new LinkedList<KeyValueMessage> ();
@@ -56,26 +53,22 @@ public enum KeyValueSession
 	}
 	
 	@Override
-	public Iterable<? extends MessageSpecification> getMessages ()
-	{
+	public Iterable<? extends MessageSpecification> getMessages () {
 		return this.messages;
 	}
 	
 	@Override
-	public RoleSpecification getPeerRole ()
-	{
+	public RoleSpecification getPeerRole () {
 		return this.peerRole;
 	}
 	
 	@Override
-	public String getQualifiedName ()
-	{
+	public String getQualifiedName () {
 		return (Identifiers.generateName (this));
 	}
 	
 	@Override
-	public RoleSpecification getSelfRole ()
-	{
+	public RoleSpecification getSelfRole () {
 		return this.selfRole;
 	}
 	

@@ -27,16 +27,14 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
 
 /**
- * Interface for handlers (callbacks) to be called when a queue consumer
- * receives a message. Methods defined in this interface are called by the
- * connector when one of the consume messages is received from the driver.
+ * Interface for handlers (callbacks) to be called when a queue consumer receives a message. Methods defined in this interface
+ * are called by the connector when one of the consume messages is received from the driver.
  * 
  * @author Georgiana Macariu
- * 
  */
 public interface IAmqpQueueRawConsumerCallback
-		extends
-			Callbacks
+			extends
+				Callbacks
 {
 	/**
 	 * Handles the Cancel OK message.

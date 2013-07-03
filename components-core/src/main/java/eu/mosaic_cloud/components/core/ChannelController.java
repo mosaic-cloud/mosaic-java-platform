@@ -26,8 +26,8 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
 
 public interface ChannelController
-		extends
-			Callbacks
+			extends
+				Callbacks
 {
 	public abstract CallbackCompletion<Void> bind (final ChannelCallbacks callbacks);
 	

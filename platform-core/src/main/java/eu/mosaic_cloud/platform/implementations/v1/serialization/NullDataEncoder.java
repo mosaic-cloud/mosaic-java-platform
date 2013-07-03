@@ -27,35 +27,30 @@ import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 
 
 public class NullDataEncoder
-		extends BaseDataEncoder<byte[]>
+			extends BaseDataEncoder<byte[]>
 {
-	protected NullDataEncoder (final ExceptionTracer exceptions)
-	{
+	protected NullDataEncoder (final ExceptionTracer exceptions) {
 		super (byte[].class, false, NullDataEncoder.EXPECTED_ENCODING_METADATA, exceptions);
 	}
 	
 	@Override
-	protected byte[] decodeActual (final byte[] data, final EncodingMetadata metadata)
-	{
+	protected byte[] decodeActual (final byte[] data, final EncodingMetadata metadata) {
 		return (data);
 	}
 	
 	@Override
-	protected byte[] encodeActual (final byte[] data, final EncodingMetadata metadata)
-	{
+	protected byte[] encodeActual (final byte[] data, final EncodingMetadata metadata) {
 		return (data);
+	}
+	
+	public static final NullDataEncoder create () {
+		return (new NullDataEncoder (FallbackExceptionTracer.defaultInstance));
 	}
 	
 	static {
 		EXPECTED_ENCODING_METADATA = EncodingMetadata.ANY;
 		DEFAULT_INSTANCE = NullDataEncoder.create ();
 	}
-	
-	public static final NullDataEncoder create ()
-	{
-		return (new NullDataEncoder (FallbackExceptionTracer.defaultInstance));
-	}
-	
 	public static final NullDataEncoder DEFAULT_INSTANCE;
 	public static final EncodingMetadata EXPECTED_ENCODING_METADATA;
 }

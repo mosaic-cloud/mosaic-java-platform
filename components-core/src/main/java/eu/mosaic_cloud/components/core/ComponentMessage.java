@@ -22,10 +22,9 @@ package eu.mosaic_cloud.components.core;
 
 
 public abstract class ComponentMessage
-		extends Object
+			extends Object
 {
-	ComponentMessage ()
-	{
+	ComponentMessage () {
 		super ();
 	}
 }

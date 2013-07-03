@@ -23,32 +23,26 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 
 public class PingPongData
 {
-	public PingPongData ()
-	{}
+	public PingPongData () {}
 	
-	public String getPing ()
-	{
+	public String getPing () {
 		return this.ping;
 	}
 	
-	public String getPong ()
-	{
+	public String getPong () {
 		return this.pong;
 	}
 	
-	public void setPing (final String ping)
-	{
+	public void setPing (final String ping) {
 		this.ping = ping;
 	}
 	
-	public void setPong (final String pong)
-	{
+	public void setPong (final String pong) {
 		this.pong = pong;
 	}
 	
 	@Override
-	public String toString ()
-	{
+	public String toString () {
 		return "(" + this.ping + ", " + this.pong + ")";
 	}
 	

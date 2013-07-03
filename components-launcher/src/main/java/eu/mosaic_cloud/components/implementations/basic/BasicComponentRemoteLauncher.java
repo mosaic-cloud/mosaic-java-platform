@@ -49,15 +49,13 @@ import ch.qos.logback.classic.net.SimpleSocketServer;
 
 public final class BasicComponentRemoteLauncher
 {
-	private BasicComponentRemoteLauncher ()
-	{
+	private BasicComponentRemoteLauncher () {
 		super ();
 		throw (new UnsupportedOperationException ());
 	}
 	
 	public static final void launch (final String[] arguments, final ClassLoader classLoader, final ThreadingContext threading, final ExceptionTracer exceptions)
-			throws Throwable
-	{
+				throws Throwable {
 		Preconditions.checkArgument ((arguments != null) && (arguments.length == 6), "invalid arguments: expected ` <component-callbacks> <component-configuration> <local-ip> <local-port-1> <local-port-2> <controller-url>`");
 		Preconditions.checkNotNull (classLoader);
 		Preconditions.checkNotNull (threading);
@@ -71,8 +69,7 @@ public final class BasicComponentRemoteLauncher
 	}
 	
 	public static final void launch (final URL controllerBaseUrl, final InetSocketAddress exporterAddress, final InetSocketAddress appenderAddress, final String componentCallbacks, final String componentConfiguration, final ClassLoader classLoader, final ThreadingContext threading, final ExceptionTracer exceptions)
-			throws Throwable
-	{
+				throws Throwable {
 		Preconditions.checkNotNull (controllerBaseUrl);
 		Preconditions.checkNotNull (exporterAddress);
 		Preconditions.checkNotNull (appenderAddress);
@@ -96,8 +93,7 @@ public final class BasicComponentRemoteLauncher
 		final SimpleSocketServer appender = new SimpleSocketServer ((LoggerContext) LoggerFactory.getILoggerFactory (), appenderAddress.getPort ());
 		Threading.registerExitCallback (threading, BasicComponentRemoteLauncher.class, "exit-hook-2", new Runnable () {
 			@Override
-			public final void run ()
-			{
+			public final void run () {
 				logger.debug ("stopping exporter...");
 				try {
 					exporter.stopServer ();
@@ -133,8 +129,7 @@ public final class BasicComponentRemoteLauncher
 		final AtomicReference<String> componentIdentifier = Atomics.newReference (null);
 		final Runnable run = new Runnable () {
 			@Override
-			public final void run ()
-			{
+			public final void run () {
 				try {
 					new BufferedReader (new InputStreamReader (System.in)).readLine ();
 				} catch (final Throwable exception) {

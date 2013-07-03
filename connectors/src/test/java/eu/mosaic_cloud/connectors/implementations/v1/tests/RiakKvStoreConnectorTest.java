@@ -34,19 +34,17 @@ import org.junit.BeforeClass;
 
 
 public class RiakKvStoreConnectorTest
-		extends BaseKvStoreConnectorTest<GenericKvStoreConnector<String>>
+			extends BaseKvStoreConnectorTest<GenericKvStoreConnector<String>>
 {
 	@Override
-	public void setUp ()
-	{
+	public void setUp () {
 		this.scenario = RiakKvStoreConnectorTest.scenario_;
 		final ConnectorConfiguration configuration = ConnectorConfiguration.create (this.scenario.getConfiguration (), this.scenario.getEnvironment ());
 		this.connector = GenericKvStoreConnector.create (configuration, PlainTextDataEncoder.DEFAULT_INSTANCE);
 	}
 	
 	@BeforeClass
-	public static void setUpBeforeClass ()
-	{
+	public static void setUpBeforeClass () {
 		final String host = System.getProperty (RiakKvStoreConnectorTest.MOSAIC_RIAK_HOST, RiakKvStoreConnectorTest.MOSAIC_RIAK_HOST_DEFAULT);
 		final Integer port = Integer.valueOf (System.getProperty (RiakKvStoreConnectorTest.MOSAIC_RIAK_PORT, RiakKvStoreConnectorTest.MOSAIC_RIAK_PORT_DEFAULT));
 		final IConfiguration configuration = PropertyTypeConfiguration.create ();
@@ -64,8 +62,7 @@ public class RiakKvStoreConnectorTest
 	}
 	
 	@AfterClass
-	public static void tearDownAfterClass ()
-	{
+	public static void tearDownAfterClass () {
 		BaseConnectorTest.tearDownScenario (RiakKvStoreConnectorTest.scenario_);
 	}
 	

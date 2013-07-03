@@ -44,19 +44,17 @@ import com.basho.riak.client.util.Constants;
 
 
 /**
- * Factory class which builds the asynchronous calls for the operations defined
- * on the Riak key-value store.
+ * Factory class which builds the asynchronous calls for the operations defined on the Riak key-value store.
  * 
  * @author Carmine Di Biase, Georgiana Macariu
  * @deprecated
  */
 @Deprecated
 public final class RiakRestOperationFactory
-		implements
-			IOperationFactory
+			implements
+				IOperationFactory
 {
-	private RiakRestOperationFactory (final String riakHost, final int riakPort, final String bucket, final String clientId)
-	{
+	private RiakRestOperationFactory (final String riakHost, final int riakPort, final String bucket, final String clientId) {
 		super ();
 		final String address = "http://" + riakHost + ":" + riakPort + "/riak";
 		this.riakcl = new RiakClient (address);
@@ -66,21 +64,18 @@ public final class RiakRestOperationFactory
 	}
 	
 	@Override
-	public void destroy ()
-	{
+	public void destroy () {
 		// NOTE: nothing to do here
 	}
 	
 	@Override
-	public IOperation<?> getOperation (final IOperationType type, final Object ... parameters)
-	{
+	public IOperation<?> getOperation (final IOperationType type, final Object ... parameters) {
 		IOperation<?> operation;
 		if (!(type instanceof KeyValueOperations)) {
 			return new GenericOperation<Object> (new Callable<Object> () {
 				@Override
 				public Object call ()
-						throws UnsupportedOperationException
-				{
+							throws UnsupportedOperationException {
 					throw new UnsupportedOperationException ("Unsupported operation: " + type.toString ());
 				}
 			});
@@ -100,12 +95,11 @@ public final class RiakRestOperationFactory
 				case DELETE :
 					operation = this.buildDeleteOperation (parameters);
 					break;
-				default:
+				default :
 					operation = new GenericOperation<Object> (new Callable<Object> () {
 						@Override
 						public Object call ()
-								throws UnsupportedOperationException
-						{
+									throws UnsupportedOperationException {
 							throw new UnsupportedOperationException ("Unsupported operation: " + mType.toString ());
 						}
 					});
@@ -115,8 +109,7 @@ public final class RiakRestOperationFactory
 			operation = new GenericOperation<Object> (new Callable<Object> () {
 				@Override
 				public Object call ()
-						throws Exception
-				{
+							throws Exception {
 					throw e;
 				}
 			});
@@ -124,12 +117,10 @@ public final class RiakRestOperationFactory
 		return operation;
 	}
 	
-	private IOperation<?> buildDeleteOperation (final Object ... parameters)
-	{
+	private IOperation<?> buildDeleteOperation (final Object ... parameters) {
 		return new GenericOperation<Boolean> (new Callable<Boolean> () {
 			@Override
-			public Boolean call ()
-			{
+			public Boolean call () {
 				final String key = (String) parameters[0];
 				final RequestMeta meta = new RequestMeta ();
 				meta.setClientId (RiakRestOperationFactory.this.clientId);
@@ -142,12 +133,10 @@ public final class RiakRestOperationFactory
 		});
 	}
 	
-	private IOperation<?> buildGetOperation (final Object ... parameters)
-	{
+	private IOperation<?> buildGetOperation (final Object ... parameters) {
 		return new GenericOperation<byte[]> (new Callable<byte[]> () {
 			@Override
-			public byte[] call ()
-			{
+			public byte[] call () {
 				final String key = (String) parameters[0];
 				final RequestMeta meta = new RequestMeta ();
 				meta.setClientId (RiakRestOperationFactory.this.clientId);
@@ -179,12 +168,10 @@ public final class RiakRestOperationFactory
 		});
 	}
 	
-	private IOperation<?> buildListOperation ()
-	{
+	private IOperation<?> buildListOperation () {
 		return new GenericOperation<List<String>> (new Callable<List<String>> () {
 			@Override
-			public List<String> call ()
-			{
+			public List<String> call () {
 				final RequestMeta meta = new RequestMeta ();
 				meta.setClientId (RiakRestOperationFactory.this.clientId);
 				final BucketResponse res = RiakRestOperationFactory.this.riakcl.listBucket (RiakRestOperationFactory.this.bucket, meta);
@@ -200,12 +187,10 @@ public final class RiakRestOperationFactory
 		});
 	}
 	
-	private IOperation<?> buildSetOperation (final Object ... parameters)
-	{
+	private IOperation<?> buildSetOperation (final Object ... parameters) {
 		return new GenericOperation<Boolean> (new Callable<Boolean> () {
 			@Override
-			public Boolean call ()
-			{
+			public Boolean call () {
 				final String key = (String) parameters[0];
 				final byte[] dataBytes = (byte[]) parameters[1];
 				final RiakObject riakobj = new RiakObject (RiakRestOperationFactory.this.bucket, key, dataBytes);
@@ -220,6 +205,11 @@ public final class RiakRestOperationFactory
 		});
 	}
 	
+	private final String bucket;
+	private final String clientId;
+	private final BaseExceptionTracer exceptions;
+	private final RiakClient riakcl;
+	
 	/**
 	 * Creates a new factory.
 	 * 
@@ -231,13 +221,7 @@ public final class RiakRestOperationFactory
 	 *            the bucket associated with the connection
 	 * @return the factory
 	 */
-	public static RiakRestOperationFactory getFactory (final String riakHost, final int port, final String bucket, final String clientId)
-	{
+	public static RiakRestOperationFactory getFactory (final String riakHost, final int port, final String bucket, final String clientId) {
 		return new RiakRestOperationFactory (riakHost, port, bucket, clientId);
 	}
-	
-	private final String bucket;
-	private final String clientId;
-	private final BaseExceptionTracer exceptions;
-	private final RiakClient riakcl;
 }

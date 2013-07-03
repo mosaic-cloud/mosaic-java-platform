@@ -33,10 +33,9 @@ import com.google.common.base.Preconditions;
 
 
 public class PlainTextDataEncoder
-		extends BaseDataEncoder<String>
+			extends BaseDataEncoder<String>
 {
-	protected PlainTextDataEncoder (final Charset charset, final ExceptionTracer exceptions)
-	{
+	protected PlainTextDataEncoder (final Charset charset, final ExceptionTracer exceptions) {
 		super (String.class, false, PlainTextDataEncoder.EXPECTED_ENCODING_METADATA, exceptions);
 		Preconditions.checkNotNull (charset);
 		this.charset = charset;
@@ -44,8 +43,7 @@ public class PlainTextDataEncoder
 	
 	@Override
 	protected String decodeActual (final byte[] dataBytes, final EncodingMetadata metadata)
-			throws EncodingException
-	{
+				throws EncodingException {
 		try {
 			return (new String (dataBytes, this.charset));
 		} catch (final Throwable exception) {
@@ -56,8 +54,7 @@ public class PlainTextDataEncoder
 	
 	@Override
 	protected byte[] encodeActual (final String data, final EncodingMetadata metadata)
-			throws EncodingException
-	{
+				throws EncodingException {
 		try {
 			return (data.getBytes (this.charset));
 		} catch (final Throwable exception) {
@@ -66,23 +63,21 @@ public class PlainTextDataEncoder
 		}
 	}
 	
+	protected final Charset charset;
+	
+	public static PlainTextDataEncoder create () {
+		return (new PlainTextDataEncoder (PlainTextDataEncoder.DEFAULT_CHARSET, FallbackExceptionTracer.defaultInstance));
+	}
+	
+	public static PlainTextDataEncoder create (final Charset charset) {
+		return (new PlainTextDataEncoder (charset, FallbackExceptionTracer.defaultInstance));
+	}
+	
 	static {
 		EXPECTED_ENCODING_METADATA = new EncodingMetadata ("text/plain", "identity");
 		DEFAULT_CHARSET = Charsets.UTF_8;
 		DEFAULT_INSTANCE = PlainTextDataEncoder.create ();
 	}
-	
-	public static PlainTextDataEncoder create ()
-	{
-		return (new PlainTextDataEncoder (PlainTextDataEncoder.DEFAULT_CHARSET, FallbackExceptionTracer.defaultInstance));
-	}
-	
-	public static PlainTextDataEncoder create (final Charset charset)
-	{
-		return (new PlainTextDataEncoder (charset, FallbackExceptionTracer.defaultInstance));
-	}
-	
-	protected final Charset charset;
 	public static final Charset DEFAULT_CHARSET;
 	public static final PlainTextDataEncoder DEFAULT_INSTANCE;
 	public static final EncodingMetadata EXPECTED_ENCODING_METADATA;

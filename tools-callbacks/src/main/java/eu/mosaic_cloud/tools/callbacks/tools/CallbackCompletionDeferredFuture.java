@@ -29,10 +29,9 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 
 public final class CallbackCompletionDeferredFuture<_Outcome_ extends Object>
-		extends ForwardingFuture<_Outcome_>
+			extends ForwardingFuture<_Outcome_>
 {
-	private CallbackCompletionDeferredFuture (final Class<_Outcome_> outcomeClass)
-	{
+	private CallbackCompletionDeferredFuture (final Class<_Outcome_> outcomeClass) {
 		super ();
 		this.future = DeferredFuture.create (outcomeClass);
 		this.trigger = this.future.trigger;
@@ -40,17 +39,15 @@ public final class CallbackCompletionDeferredFuture<_Outcome_ extends Object>
 	}
 	
 	@Override
-	protected ListenableFuture<_Outcome_> delegate ()
-	{
+	protected ListenableFuture<_Outcome_> delegate () {
 		return (this.future);
-	}
-	
-	public static final <_Outcome_ extends Object> CallbackCompletionDeferredFuture<_Outcome_> create (final Class<_Outcome_> outcomeClass)
-	{
-		return (new CallbackCompletionDeferredFuture<_Outcome_> (outcomeClass));
 	}
 	
 	public final CallbackCompletion<_Outcome_> completion;
 	public final DeferredFuture<_Outcome_> future;
 	public final DeferredFuture.Trigger<_Outcome_> trigger;
+	
+	public static final <_Outcome_ extends Object> CallbackCompletionDeferredFuture<_Outcome_> create (final Class<_Outcome_> outcomeClass) {
+		return (new CallbackCompletionDeferredFuture<_Outcome_> (outcomeClass));
+	}
 }

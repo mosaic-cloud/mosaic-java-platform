@@ -25,28 +25,24 @@ import java.io.Serializable;
 
 
 public final class LoggingData
-		implements
-			Serializable
+			implements
+				Serializable
 {
-	public LoggingData (final String user, final String password)
-	{
+	public LoggingData (final String user, final String password) {
 		this.user = user;
 		this.password = password;
 	}
 	
-	public String getPassword ()
-	{
+	public String getPassword () {
 		return this.password;
 	}
 	
-	public String getUser ()
-	{
+	public String getUser () {
 		return this.user;
 	}
 	
 	@Override
-	public String toString ()
-	{
+	public String toString () {
 		return this.user + "(" + this.password + ")";
 	}
 	

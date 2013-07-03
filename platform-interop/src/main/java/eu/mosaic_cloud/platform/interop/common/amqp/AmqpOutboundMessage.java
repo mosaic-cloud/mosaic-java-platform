@@ -22,15 +22,13 @@ package eu.mosaic_cloud.platform.interop.common.amqp;
 
 
 /**
- * This class defines an outbound message and all information required to
- * publish it.
+ * This class defines an outbound message and all information required to publish it.
  * 
  * @author Georgiana Macariu
- * 
  */
 public class AmqpOutboundMessage
-		implements
-			IAmqpMessage
+			implements
+				IAmqpMessage
 {
 	/**
 	 * @param exchange
@@ -46,11 +44,9 @@ public class AmqpOutboundMessage
 	 * @param durable
 	 *            <code>true</code> if delivery mode should be 2
 	 * @param contentType
-	 *            the RFC-2046 MIME type for the Message content (such as
-	 *            "text/plain")
+	 *            the RFC-2046 MIME type for the Message content (such as "text/plain")
 	 */
-	public AmqpOutboundMessage (final String exchange, final String routingKey, final byte[] data, final boolean mandatory, final boolean immediate, final boolean durable, final String contentType)
-	{
+	public AmqpOutboundMessage (final String exchange, final String routingKey, final byte[] data, final boolean mandatory, final boolean immediate, final boolean durable, final String contentType) {
 		this (exchange, routingKey, data, mandatory, immediate, durable, null, null, contentType, null, null);
 	}
 	
@@ -73,24 +69,17 @@ public class AmqpOutboundMessage
 	 *            the address of the Node to send replies to
 	 * @param contentEncoding
 	 * @param contentType
-	 *            the RFC-2046 MIME type for the Message content (such as
-	 *            "text/plain")
+	 *            the RFC-2046 MIME type for the Message content (such as "text/plain")
 	 * @param correlation
-	 *            this is a client-specific id that may be used to mark or
-	 *            identify Messages between clients. The server ignores this
-	 *            field.
+	 *            this is a client-specific id that may be used to mark or identify Messages between clients. The server ignores
+	 *            this field.
 	 * @param identifier
-	 *            message-id is an optional property which uniquely identifies a
-	 *            Message within the Message system. The Message publisher is
-	 *            usually responsible for setting the message-id in such a way
-	 *            that it is assured to be globally unique. The server MAY
-	 *            discard a Message as a duplicate if the value of the
-	 *            message-id matches that of a previously received Message sent
-	 *            to the same Node.
-	 * 
+	 *            message-id is an optional property which uniquely identifies a Message within the Message system. The Message
+	 *            publisher is usually responsible for setting the message-id in such a way that it is assured to be globally
+	 *            unique. The server MAY discard a Message as a duplicate if the value of the message-id matches that of a
+	 *            previously received Message sent to the same Node.
 	 */
-	public AmqpOutboundMessage (final String exchange, final String routingKey, final byte[] data, final boolean mandatory, final boolean immediate, final boolean durable, final String callback, final String contentEncoding, final String contentType, final String correlation, final String identifier)
-	{
+	public AmqpOutboundMessage (final String exchange, final String routingKey, final byte[] data, final boolean mandatory, final boolean immediate, final boolean durable, final String callback, final String contentEncoding, final String contentType, final String correlation, final String identifier) {
 		super ();
 		this.callback = callback;
 		this.contentEncoding = contentEncoding;
@@ -113,63 +102,51 @@ public class AmqpOutboundMessage
 	 * @param data
 	 *            the message body
 	 */
-	public AmqpOutboundMessage (final String exchange, final String routingKey, final byte[] data, final String contentEncoding, final String contentType)
-	{
+	public AmqpOutboundMessage (final String exchange, final String routingKey, final byte[] data, final String contentEncoding, final String contentType) {
 		this (exchange, routingKey, data, false, false, false, null, contentEncoding, contentType, null, null);
 	}
 	
-	public String getCallback ()
-	{
+	public String getCallback () {
 		return this.callback;
 	}
 	
-	public String getContentEncoding ()
-	{
+	public String getContentEncoding () {
 		return this.contentEncoding;
 	}
 	
-	public String getContentType ()
-	{
+	public String getContentType () {
 		return this.contentType;
 	}
 	
-	public String getCorrelation ()
-	{
+	public String getCorrelation () {
 		return this.correlation;
 	}
 	
-	public byte[] getData ()
-	{
+	public byte[] getData () {
 		return this.data;
 	}
 	
-	public String getExchange ()
-	{
+	public String getExchange () {
 		return this.exchange;
 	}
 	
-	public String getIdentifier ()
-	{
+	public String getIdentifier () {
 		return this.identifier;
 	}
 	
-	public String getRoutingKey ()
-	{
+	public String getRoutingKey () {
 		return this.routingKey;
 	}
 	
-	public boolean isDurable ()
-	{
+	public boolean isDurable () {
 		return this.durable;
 	}
 	
-	public boolean isImmediate ()
-	{
+	public boolean isImmediate () {
 		return this.immediate;
 	}
 	
-	public boolean isMandatory ()
-	{
+	public boolean isMandatory () {
 		return this.mandatory;
 	}
 	

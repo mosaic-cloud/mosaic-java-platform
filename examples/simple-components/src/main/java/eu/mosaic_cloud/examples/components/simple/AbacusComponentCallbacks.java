@@ -45,13 +45,12 @@ import com.google.common.base.Preconditions;
 
 
 public final class AbacusComponentCallbacks
-		extends Object
-		implements
-			ComponentCallbacks,
-			CallbackHandler
+			extends Object
+			implements
+				ComponentCallbacks,
+				CallbackHandler
 {
-	public AbacusComponentCallbacks (final ComponentEnvironment context)
-	{
+	public AbacusComponentCallbacks (final ComponentEnvironment context) {
 		super ();
 		this.transcript = Transcript.create (this, true);
 		this.exceptions = TranscriptExceptionTracer.create (this.transcript, context.exceptions);
@@ -60,14 +59,12 @@ public final class AbacusComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> acquireReturned (final ComponentController component, final ComponentAcquireReply reply)
-	{
+	public final CallbackCompletion<Void> acquireReturned (final ComponentController component, final ComponentAcquireReply reply) {
 		throw (new IllegalStateException ());
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> called (final ComponentController component, final ComponentCallRequest request)
-	{
+	public final CallbackCompletion<Void> called (final ComponentController component, final ComponentCallRequest request) {
 		Preconditions.checkState (this.status == Status.Initialized);
 		Preconditions.checkState (this.component == component);
 		Preconditions.checkArgument (request.data.remaining () == 0);
@@ -100,24 +97,21 @@ public final class AbacusComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> callReturned (final ComponentController component, final ComponentCallReply reply)
-	{
+	public final CallbackCompletion<Void> callReturned (final ComponentController component, final ComponentCallReply reply) {
 		Preconditions.checkState (this.status == Status.Initialized);
 		Preconditions.checkState (this.component == component);
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> casted (final ComponentController component, final ComponentCastRequest request)
-	{
+	public final CallbackCompletion<Void> casted (final ComponentController component, final ComponentCastRequest request) {
 		Preconditions.checkState (this.status == Status.Initialized);
 		Preconditions.checkState (this.component == component);
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> failed (final ComponentController component, final Throwable exception)
-	{
+	public final CallbackCompletion<Void> failed (final ComponentController component, final Throwable exception) {
 		Preconditions.checkState (this.status == Status.Initialized);
 		Preconditions.checkState (this.component == component);
 		this.exceptions.traceIgnoredException (exception);
@@ -125,14 +119,12 @@ public final class AbacusComponentCallbacks
 	}
 	
 	@Override
-	public final void failedCallbacks (final Callbacks trigger, final Throwable exception)
-	{
+	public final void failedCallbacks (final Callbacks trigger, final Throwable exception) {
 		this.failed (this.component, exception);
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> initialized (final ComponentController component)
-	{
+	public final CallbackCompletion<Void> initialized (final ComponentController component) {
 		Preconditions.checkState (this.status == Status.Registered);
 		Preconditions.checkState (this.component == null);
 		this.component = component;
@@ -141,22 +133,19 @@ public final class AbacusComponentCallbacks
 	}
 	
 	@Override
-	public final void registeredCallbacks (final Callbacks trigger, final CallbackIsolate isolate)
-	{
+	public final void registeredCallbacks (final Callbacks trigger, final CallbackIsolate isolate) {
 		Preconditions.checkState (this.status == Status.Created);
 		Preconditions.checkState (this.component == null);
 		this.status = Status.Registered;
 	}
 	
 	@Override
-	public CallbackCompletion<Void> registerReturned (final ComponentController component, final ComponentCallReference reference, final boolean ok)
-	{
+	public CallbackCompletion<Void> registerReturned (final ComponentController component, final ComponentCallReference reference, final boolean ok) {
 		throw (new IllegalStateException ());
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> terminated (final ComponentController component)
-	{
+	public final CallbackCompletion<Void> terminated (final ComponentController component) {
 		Preconditions.checkState (this.status == Status.Initialized);
 		Preconditions.checkState (this.component == component);
 		this.component = null;
@@ -165,8 +154,7 @@ public final class AbacusComponentCallbacks
 	}
 	
 	@Override
-	public final void unregisteredCallbacks (final Callbacks trigger)
-	{
+	public final void unregisteredCallbacks (final Callbacks trigger) {
 		Preconditions.checkState ((this.status == Status.Registered) || (this.status == Status.Initialized) || (this.status == Status.Terminated));
 		this.component = null;
 		this.status = Status.Unregistered;

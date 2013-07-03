@@ -37,13 +37,12 @@ import com.google.common.base.Preconditions;
 
 
 public final class QueueingQueueCallbackHandler<_Element_ extends Object>
-		extends Object
-		implements
-			QueueCallbacks<_Element_>,
-			CallbackHandler
+			extends Object
+			implements
+				QueueCallbacks<_Element_>,
+				CallbackHandler
 {
-	private QueueingQueueCallbackHandler (final BlockingQueue<_Element_> queue, final long waitTimeout, final ExceptionTracer exceptions)
-	{
+	private QueueingQueueCallbackHandler (final BlockingQueue<_Element_> queue, final long waitTimeout, final ExceptionTracer exceptions) {
 		super ();
 		Preconditions.checkNotNull (queue);
 		Preconditions.checkArgument ((waitTimeout >= 0) || (waitTimeout == -1));
@@ -54,38 +53,32 @@ public final class QueueingQueueCallbackHandler<_Element_ extends Object>
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> enqueue (final _Element_ element)
-	{
+	public final CallbackCompletion<Void> enqueue (final _Element_ element) {
 		if (!Threading.offer (this.queue, element, this.waitTimeout))
 			throw (new BufferOverflowException ());
 		return (null);
 	}
 	
 	@Override
-	public final void failedCallbacks (final Callbacks proxy, final Throwable exception)
-	{
+	public final void failedCallbacks (final Callbacks proxy, final Throwable exception) {
 		this.exceptions.trace (ExceptionResolution.Ignored, exception);
 	}
 	
 	@Override
-	public final void registeredCallbacks (final Callbacks proxy, final CallbackIsolate isolate)
-	{}
+	public final void registeredCallbacks (final Callbacks proxy, final CallbackIsolate isolate) {}
 	
 	@Override
-	public final void unregisteredCallbacks (final Callbacks proxy)
-	{}
-	
-	public static final <_Element_ extends Object> QueueingQueueCallbackHandler<_Element_> create (final BlockingQueue<_Element_> queue, final long waitTimeout, final ExceptionTracer exceptions)
-	{
-		return (new QueueingQueueCallbackHandler<_Element_> (queue, waitTimeout, exceptions));
-	}
-	
-	public static final <_Element_ extends Object> QueueingQueueCallbackHandler<_Element_> create (final ExceptionTracer exceptions)
-	{
-		return (new QueueingQueueCallbackHandler<_Element_> (new LinkedBlockingQueue<_Element_> (), 0, exceptions));
-	}
+	public final void unregisteredCallbacks (final Callbacks proxy) {}
 	
 	public final BlockingQueue<_Element_> queue;
 	private final ExceptionTracer exceptions;
 	private final long waitTimeout;
+	
+	public static final <_Element_ extends Object> QueueingQueueCallbackHandler<_Element_> create (final BlockingQueue<_Element_> queue, final long waitTimeout, final ExceptionTracer exceptions) {
+		return (new QueueingQueueCallbackHandler<_Element_> (queue, waitTimeout, exceptions));
+	}
+	
+	public static final <_Element_ extends Object> QueueingQueueCallbackHandler<_Element_> create (final ExceptionTracer exceptions) {
+		return (new QueueingQueueCallbackHandler<_Element_> (new LinkedBlockingQueue<_Element_> (), 0, exceptions));
+	}
 }

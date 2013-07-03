@@ -40,11 +40,10 @@ import com.google.common.util.concurrent.Atomics;
 
 
 public final class CallbackCompletionAndChainedBackend
-		implements
-			CallbackCompletionBackend
+			implements
+				CallbackCompletionBackend
 {
-	private CallbackCompletionAndChainedBackend (final CallbackCompletion<?>[] dependents)
-	{
+	private CallbackCompletionAndChainedBackend (final CallbackCompletion<?>[] dependents) {
 		super ();
 		Preconditions.checkNotNull (dependents);
 		this.pending = new CountDownLatch (dependents.length);
@@ -60,15 +59,13 @@ public final class CallbackCompletionAndChainedBackend
 	}
 	
 	@Override
-	public final boolean awaitCompletion (final CallbackCompletion<?> completion, final long timeout)
-	{
+	public final boolean awaitCompletion (final CallbackCompletion<?> completion, final long timeout) {
 		Preconditions.checkArgument (completion == this.completion);
 		return (Threading.await (this.pending, timeout));
 	}
 	
 	@Override
-	public final Throwable getCompletionException (final CallbackCompletion<?> completion)
-	{
+	public final Throwable getCompletionException (final CallbackCompletion<?> completion) {
 		Preconditions.checkArgument (completion == this.completion);
 		this.enforceCompleted ();
 		if (!this.outcome.get ().booleanValue ())
@@ -77,8 +74,7 @@ public final class CallbackCompletionAndChainedBackend
 	}
 	
 	@Override
-	public final Object getCompletionOutcome (final CallbackCompletion<?> completion)
-	{
+	public final Object getCompletionOutcome (final CallbackCompletion<?> completion) {
 		Preconditions.checkArgument (completion == this.completion);
 		this.enforceCompleted ();
 		if (!this.outcome.get ().booleanValue ())
@@ -87,14 +83,12 @@ public final class CallbackCompletionAndChainedBackend
 	}
 	
 	@Override
-	public final CallbackReactor getReactor ()
-	{
+	public final CallbackReactor getReactor () {
 		return (null);
 	}
 	
 	@Override
-	public final void observeCompletion (final CallbackCompletion<?> completion, final CallbackCompletionObserver observer)
-	{
+	public final void observeCompletion (final CallbackCompletion<?> completion, final CallbackCompletionObserver observer) {
 		Preconditions.checkArgument (completion == this.completion);
 		Preconditions.checkNotNull (observer);
 		final boolean trigger;
@@ -109,8 +103,7 @@ public final class CallbackCompletionAndChainedBackend
 			this.triggerObserver (observer);
 	}
 	
-	final void enforceCompleted ()
-	{
+	final void enforceCompleted () {
 		if (!Threading.await (this.pending, 0))
 			throw (new IllegalStateException ());
 		if (this.outcome.get () == null) {
@@ -130,8 +123,7 @@ public final class CallbackCompletionAndChainedBackend
 		}
 	}
 	
-	final CallbackCompletion<Void> triggerCompleted (final CallbackCompletion<?> completion)
-	{
+	final CallbackCompletion<Void> triggerCompleted (final CallbackCompletion<?> completion) {
 		final Throwable exception = completion.getException ();
 		if (exception != null)
 			this.exceptions.add (CaughtException.create (ExceptionResolution.Deferred, exception));
@@ -143,14 +135,8 @@ public final class CallbackCompletionAndChainedBackend
 		return (CallbackCompletion.createOutcome ());
 	}
 	
-	private final void triggerObserver (final CallbackCompletionObserver observer)
-	{
+	private final void triggerObserver (final CallbackCompletionObserver observer) {
 		CallbackCompletion.triggerObserver (this.completion, observer);
-	}
-	
-	public static final CallbackCompletion<Void> createCompletion (final CallbackCompletion<?>[] dependents)
-	{
-		return (new CallbackCompletionAndChainedBackend (dependents).completion);
 	}
 	
 	public final CallbackCompletion<Void> completion;
@@ -160,21 +146,23 @@ public final class CallbackCompletionAndChainedBackend
 	private final AtomicReference<Boolean> outcome;
 	private final CountDownLatch pending;
 	
+	public static final CallbackCompletion<Void> createCompletion (final CallbackCompletion<?>[] dependents) {
+		return (new CallbackCompletionAndChainedBackend (dependents).completion);
+	}
+	
 	private final class Observer
-			extends Object
-			implements
-				CallbackCompletionObserver
+				extends Object
+				implements
+					CallbackCompletionObserver
 	{
-		Observer (final CallbackCompletion<?> dependent)
-		{
+		Observer (final CallbackCompletion<?> dependent) {
 			super ();
 			this.dependent = dependent;
 			this.triggered = new AtomicBoolean (false);
 		}
 		
 		@Override
-		public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion)
-		{
+		public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion) {
 			Preconditions.checkState (completion == this.dependent);
 			Preconditions.checkState (this.triggered.compareAndSet (false, true));
 			return (CallbackCompletionAndChainedBackend.this.triggerCompleted (this.dependent));

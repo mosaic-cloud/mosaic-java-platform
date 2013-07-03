@@ -31,8 +31,8 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
  * @author Georgiana Macariu
  */
 public interface ICallback<TContext>
-		extends
-			Callbacks
+			extends
+				Callbacks
 {
 	public static final CallbackCompletion<Void> SUCCESS = CallbackCompletion.createOutcome ();
 }

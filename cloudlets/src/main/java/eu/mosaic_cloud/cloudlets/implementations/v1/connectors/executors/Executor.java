@@ -44,12 +44,11 @@ import com.google.common.util.concurrent.ListenableFutureTask;
 
 
 public class Executor<TContext, TOutcome, TExtra>
-		implements
-			IExecutor<TOutcome, TExtra>,
-			CallbackProxy
+			implements
+				IExecutor<TOutcome, TExtra>,
+				CallbackProxy
 {
-	public Executor (final ICloudletController<?> cloudlet, final ThreadingContext threading, final ExceptionTracer exceptions, final IConfiguration configuration, final IExecutorCallback<TContext, TOutcome, TExtra> callback, final TContext context)
-	{
+	public Executor (final ICloudletController<?> cloudlet, final ThreadingContext threading, final ExceptionTracer exceptions, final IConfiguration configuration, final IExecutorCallback<TContext, TOutcome, TExtra> callback, final TContext context) {
 		super ();
 		Preconditions.checkNotNull (cloudlet);
 		Preconditions.checkNotNull (threading);
@@ -70,16 +69,14 @@ public class Executor<TContext, TOutcome, TExtra>
 	}
 	
 	@Override
-	public CallbackCompletion<Void> destroy ()
-	{
+	public CallbackCompletion<Void> destroy () {
 		// FIXME: We should return success only on actual destruction...
 		this.executor.shutdownNow ();
 		return (CallbackCompletion.createOutcome ());
 	}
 	
 	@Override
-	public CallbackCompletion<TOutcome> execute (final Callable<TOutcome> callable, final TExtra extra)
-	{
+	public CallbackCompletion<TOutcome> execute (final Callable<TOutcome> callable, final TExtra extra) {
 		final ListenableFutureTask<TOutcome> task = ListenableFutureTask.create (callable);
 		this.executor.execute (task);
 		final CallbackCompletion<TOutcome> completion = CallbackCompletion.createDeferred (task);
@@ -87,8 +84,7 @@ public class Executor<TContext, TOutcome, TExtra>
 			completion.observe (new CallbackCompletionObserver () {
 				@SuppressWarnings ("synthetic-access")
 				@Override
-				public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_)
-				{
+				public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_) {
 					assert (completion_ == completion);
 					CallbackCompletion<Void> result;
 					if (completion.getException () == null) {
@@ -104,8 +100,7 @@ public class Executor<TContext, TOutcome, TExtra>
 	}
 	
 	@Override
-	public CallbackCompletion<Void> initialize ()
-	{
+	public CallbackCompletion<Void> initialize () {
 		return (CallbackCompletion.createOutcome ());
 	}
 	

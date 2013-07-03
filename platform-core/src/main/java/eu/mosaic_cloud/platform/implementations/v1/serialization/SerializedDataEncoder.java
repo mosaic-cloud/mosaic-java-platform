@@ -30,17 +30,15 @@ import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 
 
 public class SerializedDataEncoder<TData extends Object>
-		extends BaseDataEncoder<TData>
+			extends BaseDataEncoder<TData>
 {
-	protected SerializedDataEncoder (final Class<TData> dataClass, final boolean nullAllowed, final ExceptionTracer exceptions)
-	{
+	protected SerializedDataEncoder (final Class<TData> dataClass, final boolean nullAllowed, final ExceptionTracer exceptions) {
 		super (dataClass, nullAllowed, SerializedDataEncoder.EXPECTED_ENCODING_METADATA, exceptions);
 	}
 	
 	@Override
 	protected TData decodeActual (final byte[] dataBytes, final EncodingMetadata metadata)
-			throws EncodingException
-	{
+				throws EncodingException {
 		try {
 			return (this.dataClass.cast (SerDesUtils.toObject (dataBytes)));
 		} catch (final ClassNotFoundException exception) {
@@ -54,8 +52,7 @@ public class SerializedDataEncoder<TData extends Object>
 	
 	@Override
 	protected byte[] encodeActual (final TData data, final EncodingMetadata metadata)
-			throws EncodingException
-	{
+				throws EncodingException {
 		try {
 			return (SerDesUtils.pojoToBytes (data));
 		} catch (final IOException exception) {
@@ -64,19 +61,16 @@ public class SerializedDataEncoder<TData extends Object>
 		}
 	}
 	
-	static {
-		EXPECTED_ENCODING_METADATA = new EncodingMetadata ("application/x-java-serialized-object", "identity");
-	}
-	
-	public static <TData extends Object> SerializedDataEncoder<TData> create (final Class<TData> dataClass)
-	{
+	public static <TData extends Object> SerializedDataEncoder<TData> create (final Class<TData> dataClass) {
 		return (new SerializedDataEncoder<TData> (dataClass, false, FallbackExceptionTracer.defaultInstance));
 	}
 	
-	public static <TData extends Object> SerializedDataEncoder<TData> create (final Class<TData> dataClass, final boolean nullAllowed)
-	{
+	public static <TData extends Object> SerializedDataEncoder<TData> create (final Class<TData> dataClass, final boolean nullAllowed) {
 		return (new SerializedDataEncoder<TData> (dataClass, nullAllowed, FallbackExceptionTracer.defaultInstance));
 	}
 	
+	static {
+		EXPECTED_ENCODING_METADATA = new EncodingMetadata ("application/x-java-serialized-object", "identity");
+	}
 	public static final EncodingMetadata EXPECTED_ENCODING_METADATA;
 }

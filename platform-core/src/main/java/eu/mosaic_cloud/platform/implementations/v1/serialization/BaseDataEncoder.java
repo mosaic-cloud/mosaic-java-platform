@@ -32,11 +32,10 @@ import com.google.common.base.Preconditions;
 
 
 public abstract class BaseDataEncoder<TData extends Object>
-		implements
-			DataEncoder<TData>
+			implements
+				DataEncoder<TData>
 {
-	protected BaseDataEncoder (final Class<TData> dataClass, final boolean nullAllowed, final EncodingMetadata expectedEncodingMetadata, final ExceptionTracer exceptions)
-	{
+	protected BaseDataEncoder (final Class<TData> dataClass, final boolean nullAllowed, final EncodingMetadata expectedEncodingMetadata, final ExceptionTracer exceptions) {
 		super ();
 		Preconditions.checkNotNull (dataClass);
 		Preconditions.checkNotNull (expectedEncodingMetadata);
@@ -49,8 +48,7 @@ public abstract class BaseDataEncoder<TData extends Object>
 	
 	@Override
 	public final TData decode (final byte[] dataBytes, final EncodingMetadata metadata)
-			throws EncodingException
-	{
+				throws EncodingException {
 		Preconditions.checkNotNull (metadata);
 		this.checkMetadata (metadata);
 		if (dataBytes == null) {
@@ -79,8 +77,7 @@ public abstract class BaseDataEncoder<TData extends Object>
 	
 	@Override
 	public final EncodeOutcome encode (final TData data, final EncodingMetadata metadata)
-			throws EncodingException
-	{
+				throws EncodingException {
 		final EncodingMetadata metadataActual = (metadata != null) ? metadata : this.expectedEncodingMetadata;
 		Preconditions.checkNotNull (metadataActual);
 		this.checkMetadata (metadataActual);
@@ -108,14 +105,12 @@ public abstract class BaseDataEncoder<TData extends Object>
 	}
 	
 	@Override
-	public EncodingMetadata getExpectedEncodingMetadata ()
-	{
+	public EncodingMetadata getExpectedEncodingMetadata () {
 		return (this.expectedEncodingMetadata);
 	}
 	
 	protected void checkMetadata (final EncodingMetadata metadata)
-			throws EncodingException
-	{
+				throws EncodingException {
 		if (!this.expectedEncodingMetadata.hasSameContentEncoding (EncodingMetadata.ANY)) {
 			if (!metadata.hasContentType ()) {
 				this.transcirpt.traceWarning ("decoding binary data with a `null` content-type; ignoring!");
@@ -133,10 +128,10 @@ public abstract class BaseDataEncoder<TData extends Object>
 	}
 	
 	protected abstract TData decodeActual (final byte[] dataBytes, final EncodingMetadata metadata)
-			throws EncodingException;
+				throws EncodingException;
 	
 	protected abstract byte[] encodeActual (final TData data, final EncodingMetadata metadata)
-			throws EncodingException;
+				throws EncodingException;
 	
 	protected final Class<TData> dataClass;
 	protected final TranscriptExceptionTracer exceptions;

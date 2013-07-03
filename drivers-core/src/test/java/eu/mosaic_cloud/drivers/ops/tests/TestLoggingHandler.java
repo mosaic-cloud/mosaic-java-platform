@@ -27,26 +27,23 @@ import eu.mosaic_cloud.tools.transcript.core.Transcript;
 
 
 public class TestLoggingHandler<T extends Object>
-		implements
-			IOperationCompletionHandler<T>
+			implements
+				IOperationCompletionHandler<T>
 {
-	public TestLoggingHandler (final String testName)
-	{
+	public TestLoggingHandler (final String testName) {
 		super ();
 		this.name = testName;
 		this.transcript = Transcript.create (this, true);
 	}
 	
 	@Override
-	public void onFailure (final Throwable error)
-	{
+	public void onFailure (final Throwable error) {
 		this.transcript.traceError ("Test `%s` finished with error `%{object:class}`: `%s`.", this.name, error, error.getMessage ());
 		this.transcript.trace (ExceptionResolution.Ignored, error);
 	}
 	
 	@Override
-	public void onSuccess (final T result)
-	{
+	public void onSuccess (final T result) {
 		this.transcript.traceDebugging ("Test `%s` finished with result `%{object:class}`: `%s`.", result, result);
 	}
 	

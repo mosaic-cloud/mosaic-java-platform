@@ -35,16 +35,14 @@ import org.slf4j.Logger;
  * Default callback class.
  * 
  * @author Georgiana Macariu
- * 
  * @param <TContext>
  *            the type of the context of the cloudlet using this callback
  */
 public class DefaultCallback<TContext>
-		implements
-			ICallback<TContext>
+			implements
+				ICallback<TContext>
 {
-	protected DefaultCallback ()
-	{
+	protected DefaultCallback () {
 		super ();
 		this.transcript = Transcript.create (this, true);
 		this.logger = this.transcript.adaptAs (Logger.class);
@@ -59,13 +57,11 @@ public class DefaultCallback<TContext>
 	 * @param callbackType
 	 *            a string describing the type of callback (e.g. initialize)
 	 * @param positive
-	 *            <code>true</code> if callback corresponds to successful
-	 *            termination of the operation
+	 *            <code>true</code> if callback corresponds to successful termination of the operation
 	 * @param couldDestroy
 	 *            <code>true</code> if cloudlet can be destroyed here
 	 */
-	protected CallbackCompletion<Void> handleUnhandledCallback (final CallbackArguments arguments, final String callbackType, final boolean positive, final boolean couldDestroy)
-	{
+	protected CallbackCompletion<Void> handleUnhandledCallback (final CallbackArguments arguments, final String callbackType, final boolean positive, final boolean couldDestroy) {
 		this.traceUnhandledCallback (arguments, callbackType, positive);
 		if (!positive && couldDestroy) {
 			arguments.getCloudlet ().destroy ();
@@ -81,11 +77,9 @@ public class DefaultCallback<TContext>
 	 * @param callbackType
 	 *            a string describing the type of callback (e.g. initialize)
 	 * @param positive
-	 *            <code>true</code> if callback corresponds to successful
-	 *            termination of the operation
+	 *            <code>true</code> if callback corresponds to successful termination of the operation
 	 */
-	protected void traceUnhandledCallback (final CallbackArguments arguments, final String callbackType, final boolean positive)
-	{
+	protected void traceUnhandledCallback (final CallbackArguments arguments, final String callbackType, final boolean positive) {
 		if (positive) {
 			this.transcript.traceDebugging ("unhandled successfull callback `%s` for cloudlet `%{object:identity}`; ignoring!", callbackType, arguments.getCloudlet ());
 		} else {

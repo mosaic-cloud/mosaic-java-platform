@@ -58,8 +58,7 @@ import org.junit.Test;
 public class AmqpDriverTest
 {
 	@Before
-	public void setUp ()
-	{
+	public void setUp () {
 		final Transcript transcript = Transcript.create (this);
 		final QueueingExceptionTracer exceptionsQueue = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		final TranscriptExceptionTracer exceptions = TranscriptExceptionTracer.create (transcript, exceptionsQueue);
@@ -72,18 +71,14 @@ public class AmqpDriverTest
 	}
 	
 	@After
-	public void tearDown ()
-	{
+	public void tearDown () {
 		this.wrapper.destroy ();
 		this.threadingContext.destroy ();
 	}
 	
 	@Test
 	public void testAll ()
-			throws InterruptedException,
-				ExecutionException,
-				EncodingException
-	{
+				throws InterruptedException, ExecutionException, EncodingException {
 		this.testDriver ();
 		this.testDeclareExchange ();
 		this.testDeclareQueue ();
@@ -94,9 +89,7 @@ public class AmqpDriverTest
 	}
 	
 	public void testBindQueue ()
-			throws InterruptedException,
-				ExecutionException
-	{
+				throws InterruptedException, ExecutionException {
 		final String exchange = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "publisher.amqp.exchange", String.class, "");
 		final String routingKey = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "publisher.amqp.routing_key", String.class, "");
 		final String queue = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "consumer.amqp.queue", String.class, "");
@@ -106,9 +99,7 @@ public class AmqpDriverTest
 	}
 	
 	public void testConsume ()
-			throws InterruptedException,
-				ExecutionException
-	{
+				throws InterruptedException, ExecutionException {
 		final String queue = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "consumer.amqp.queue", String.class, "");
 		final boolean autoAck = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "consumer.amqp.auto_ack", Boolean.class, true);
 		final boolean exclusive = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "consumer.amqp.exclusive", Boolean.class, true);
@@ -118,8 +109,7 @@ public class AmqpDriverTest
 		Assert.assertTrue ("Register consumer", this.clientId.equals (r.getResult ()));
 	}
 	
-	public void testConsumeCancel ()
-	{
+	public void testConsumeCancel () {
 		Threading.sleep (1000);
 		Assert.assertNotNull (this.consumerTag);
 		this.wrapper.basicCancel (this.consumerTag, null);
@@ -127,9 +117,7 @@ public class AmqpDriverTest
 	}
 	
 	public void testDeclareExchange ()
-			throws InterruptedException,
-				ExecutionException
-	{
+				throws InterruptedException, ExecutionException {
 		final String exchange = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "publisher.amqp.exchange", String.class, "");
 		final IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean> ("declare exchange");
 		final IResult<Boolean> r = this.wrapper.declareExchange (this.clientId, exchange, AmqpExchangeType.DIRECT, false, true, false, handler);
@@ -137,9 +125,7 @@ public class AmqpDriverTest
 	}
 	
 	public void testDeclareQueue ()
-			throws InterruptedException,
-				ExecutionException
-	{
+				throws InterruptedException, ExecutionException {
 		final String queue = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "consumer.amqp.queue", String.class, "");
 		final IOperationCompletionHandler<Boolean> handler = new TestLoggingHandler<Boolean> ("declare queue");
 		final IResult<Boolean> r = this.wrapper.declareQueue (this.clientId, queue, true, false, true, false, handler);
@@ -147,17 +133,12 @@ public class AmqpDriverTest
 	}
 	
 	public void testDriver ()
-			throws InterruptedException,
-				ExecutionException
-	{
+				throws InterruptedException, ExecutionException {
 		Assert.assertNotNull (this.wrapper);
 	}
 	
 	public void testPublish ()
-			throws EncodingException,
-				InterruptedException,
-				ExecutionException
-	{
+				throws EncodingException, InterruptedException, ExecutionException {
 		final String exchange = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "publisher.amqp.exchange", String.class, "");
 		final String routingKey = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "publisher.amqp.routing_key", String.class, "");
 		final boolean manadatory = ConfigUtils.resolveParameter (AmqpDriverTest.configuration, "publisher.amqp.manadatory", Boolean.class, true);
@@ -170,9 +151,15 @@ public class AmqpDriverTest
 		Assert.assertTrue (r.getResult ());
 	}
 	
+	private final String clientId = UUID.randomUUID ().toString ();
+	private String consumerTag;
+	private DataEncoder<String> encoder;
+	private String sentMessage;
+	private BasicThreadingContext threadingContext;
+	private AmqpDriver wrapper;
+	
 	@BeforeClass
-	public static void setUpBeforeClass ()
-	{
+	public static void setUpBeforeClass () {
 		final String host = System.getProperty (AmqpDriverTest.MOSAIC_AMQP_HOST, AmqpDriverTest.MOSAIC_AMQP_HOST_DEFAULT);
 		final Integer port = Integer.valueOf (System.getProperty (AmqpDriverTest.MOSAIC_AMQP_PORT, AmqpDriverTest.MOSAIC_AMQP_PORT_DEFAULT));
 		AmqpDriverTest.configuration = PropertyTypeConfiguration.create ();
@@ -189,12 +176,6 @@ public class AmqpDriverTest
 		AmqpDriverTest.configuration.addParameter ("publisher.amqp.durable", false);
 	}
 	
-	private final String clientId = UUID.randomUUID ().toString ();
-	private String consumerTag;
-	private DataEncoder<String> encoder;
-	private String sentMessage;
-	private BasicThreadingContext threadingContext;
-	private AmqpDriver wrapper;
 	private static IConfiguration configuration;
 	private static final String MOSAIC_AMQP_HOST = "mosaic.tests.resources.amqp.host";
 	private static final String MOSAIC_AMQP_HOST_DEFAULT = "127.0.0.1";
@@ -202,31 +183,27 @@ public class AmqpDriverTest
 	private static final String MOSAIC_AMQP_PORT_DEFAULT = "21688";
 	
 	final class ConsumerHandler
-			implements
-				IAmqpConsumer
+				implements
+					IAmqpConsumer
 	{
 		@Override
-		public void handleCancel (final String consumerTag)
-		{
+		public void handleCancel (final String consumerTag) {
 			Assert.assertTrue ("Cancel - consumer tag compare", consumerTag.equals (AmqpDriverTest.this.consumerTag));
 		}
 		
 		@Override
-		public void handleCancelOk (final String consumerTag)
-		{
+		public void handleCancelOk (final String consumerTag) {
 			Assert.assertTrue ("CancelOk - consumer tag compare", consumerTag.equals (AmqpDriverTest.this.consumerTag));
 		}
 		
 		@Override
-		public void handleConsumeOk (final String consumerTag)
-		{
+		public void handleConsumeOk (final String consumerTag) {
 			Assert.assertTrue ("ConsumeOk - consumer tag compare", AmqpDriverTest.this.consumerTag == null);
 			AmqpDriverTest.this.consumerTag = consumerTag;
 		}
 		
 		@Override
-		public void handleDelivery (final AmqpInboundMessage message)
-		{
+		public void handleDelivery (final AmqpInboundMessage message) {
 			String recvMessage;
 			final EncodingMetadata encoding = new EncodingMetadata (message.getContentType (), message.getContentEncoding ());
 			try {
@@ -238,8 +215,7 @@ public class AmqpDriverTest
 		}
 		
 		@Override
-		public void handleShutdown (final String consumerTag, final String signalMessage)
-		{
+		public void handleShutdown (final String consumerTag, final String signalMessage) {
 			Assert.assertTrue ("Shutdown - consumer tag compare", consumerTag.equals (AmqpDriverTest.this.consumerTag));
 		}
 	}

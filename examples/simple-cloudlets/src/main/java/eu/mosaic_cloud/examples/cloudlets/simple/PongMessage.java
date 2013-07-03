@@ -23,32 +23,26 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 
 public class PongMessage
 {
-	public PongMessage ()
-	{}
+	public PongMessage () {}
 	
-	public PongMessage (final String key, final PingPongData value)
-	{
+	public PongMessage (final String key, final PingPongData value) {
 		this.key = key;
 		this.value = value;
 	}
 	
-	public String getKey ()
-	{
+	public String getKey () {
 		return this.key;
 	}
 	
-	public PingPongData getValue ()
-	{
+	public PingPongData getValue () {
 		return this.value;
 	}
 	
-	public void setKey (final String key)
-	{
+	public void setKey (final String key) {
 		this.key = key;
 	}
 	
-	public void setValue (final PingPongData value)
-	{
+	public void setValue (final PingPongData value) {
 		this.value = value;
 	}
 	

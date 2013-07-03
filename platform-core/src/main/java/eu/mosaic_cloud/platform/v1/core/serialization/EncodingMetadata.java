@@ -28,40 +28,33 @@ import com.google.common.base.Strings;
 
 public final class EncodingMetadata
 {
-	public EncodingMetadata (final String contentType, final String contentEncoding)
-	{
+	public EncodingMetadata (final String contentType, final String contentEncoding) {
 		super ();
 		this.contentType = Strings.emptyToNull (contentType);
 		this.contentEncoding = Strings.emptyToNull (contentEncoding);
 	}
 	
-	public String getContentEncoding ()
-	{
+	public String getContentEncoding () {
 		return this.contentEncoding;
 	}
 	
-	public String getContentType ()
-	{
+	public String getContentType () {
 		return this.contentType;
 	}
 	
-	public boolean hasContentEncoding ()
-	{
+	public boolean hasContentEncoding () {
 		return this.contentEncoding != null;
 	}
 	
-	public boolean hasContentType ()
-	{
+	public boolean hasContentType () {
 		return this.contentType != null;
 	}
 	
-	public boolean hasSameContentEncoding (final EncodingMetadata other)
-	{
+	public boolean hasSameContentEncoding (final EncodingMetadata other) {
 		return Objects.equals (this.contentEncoding, other.contentEncoding);
 	}
 	
-	public boolean hasSameContentType (final EncodingMetadata other)
-	{
+	public boolean hasSameContentType (final EncodingMetadata other) {
 		return Objects.equals (this.contentType, other.contentType);
 	}
 	

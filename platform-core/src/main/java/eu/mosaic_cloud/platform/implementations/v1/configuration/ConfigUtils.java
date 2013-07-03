@@ -20,6 +20,7 @@
 
 package eu.mosaic_cloud.platform.implementations.v1.configuration;
 
+
 import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
 
@@ -28,12 +29,10 @@ import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
  * Utility functions used for handling configurations.
  * 
  * @author Georgiana Macariu
- * 
  */
 public final class ConfigUtils
 {
-	private ConfigUtils ()
-	{}
+	private ConfigUtils () {}
 	
 	/**
 	 * Resolves a configuration parameter given its relative specification.
@@ -47,12 +46,10 @@ public final class ConfigUtils
 	 * @param valueClass
 	 *            the class object representing the type of the parameter
 	 * @param defaultValue
-	 *            a default value to give to the parameter if it is not found in
-	 *            the given configuration
+	 *            a default value to give to the parameter if it is not found in the given configuration
 	 * @return the value of the parameter
 	 */
-	public static <T extends Object> T resolveParameter (final IConfiguration configuration, final String identifier, final Class<T> valueClass, final T defaultValue)
-	{
+	public static <T extends Object> T resolveParameter (final IConfiguration configuration, final String identifier, final Class<T> valueClass, final T defaultValue) {
 		T retValue;
 		if (configuration == null) {
 			retValue = defaultValue;

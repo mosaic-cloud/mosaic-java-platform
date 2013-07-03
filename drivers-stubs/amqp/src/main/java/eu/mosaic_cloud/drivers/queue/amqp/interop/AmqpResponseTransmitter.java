@@ -45,14 +45,12 @@ import com.google.protobuf.ByteString;
 
 
 /**
- * Serializes responses for AMQP operation requests and sends them to the
- * connector proxy which requested the operations.
+ * Serializes responses for AMQP operation requests and sends them to the connector proxy which requested the operations.
  * 
  * @author Georgiana Macariu
- * 
  */
 public class AmqpResponseTransmitter
-		extends ResponseTransmitter
+			extends ResponseTransmitter
 {
 	/**
 	 * Builds the Cancel message and sends it to the actual consumer.
@@ -62,8 +60,7 @@ public class AmqpResponseTransmitter
 	 * @param consumerTag
 	 *            the tag of the consumer
 	 */
-	public void sendCancel (final Session session, final String consumerTag)
-	{
+	public void sendCancel (final Session session, final String consumerTag) {
 		final AmqpPayloads.ServerCancelRequest.Builder cancelPayload = ServerCancelRequest.newBuilder ();
 		cancelPayload.setConsumerTag (consumerTag);
 		final Message message = new Message (AmqpMessage.SERVER_CANCEL, cancelPayload.build ());
@@ -79,8 +76,7 @@ public class AmqpResponseTransmitter
 	 * @param consumerTag
 	 *            the tag of the consumer
 	 */
-	public void sendCancelOk (final Session session, final String consumerTag)
-	{
+	public void sendCancelOk (final Session session, final String consumerTag) {
 		final AmqpPayloads.CancelOkMessage.Builder cancelPayload = CancelOkMessage.newBuilder ();
 		cancelPayload.setConsumerTag (consumerTag);
 		final Message message = new Message (AmqpMessage.CANCEL_OK, cancelPayload.build ());
@@ -97,8 +93,7 @@ public class AmqpResponseTransmitter
 	 * @param consumerTag
 	 *            the tag of the consumer
 	 */
-	public void sendConsumeOk (final Session session, final String consumerTag)
-	{
+	public void sendConsumeOk (final Session session, final String consumerTag) {
 		final AmqpPayloads.ConsumeOkMessage.Builder consumePayload = ConsumeOkMessage.newBuilder ();
 		consumePayload.setConsumerTag (consumerTag);
 		final Message message = new Message (AmqpMessage.CONSUME_OK, consumePayload.build ());
@@ -114,8 +109,7 @@ public class AmqpResponseTransmitter
 	 * @param message
 	 *            the message contents and properties
 	 */
-	public void sendDelivery (final Session session, final AmqpInboundMessage message)
-	{
+	public void sendDelivery (final Session session, final AmqpInboundMessage message) {
 		final AmqpPayloads.DeliveryMessage.Builder deliveryPayload = DeliveryMessage.newBuilder ();
 		final IdlCommon.Envelope.Builder envelopePayload = Envelope.newBuilder ();
 		deliveryPayload.setConsumerTag (message.getConsumer ());
@@ -152,7 +146,6 @@ public class AmqpResponseTransmitter
 	 * 
 	 * @param session
 	 *            the session to which the response message belongs
-	 * 
 	 * @param token
 	 *            the token identifying the operation
 	 * @param operation
@@ -162,8 +155,7 @@ public class AmqpResponseTransmitter
 	 * @param isError
 	 *            <code>true</code> if the result is actual an error
 	 */
-	public void sendResponse (final Session session, final CompletionToken token, final AmqpOperations operation, final Object result, final boolean isError)
-	{
+	public void sendResponse (final Session session, final CompletionToken token, final AmqpOperations operation, final Object result, final boolean isError) {
 		Message message = null;
 		if (isError) {
 			// NOTE: create error message
@@ -197,7 +189,7 @@ public class AmqpResponseTransmitter
 					consumePayload.setConsumerTag ((String) result);
 					message = new Message (AmqpMessage.CONSUME_REPLY, consumePayload.build ());
 					break;
-				default:
+				default :
 					break;
 			}
 		}
@@ -216,8 +208,7 @@ public class AmqpResponseTransmitter
 	 * @param errorMessage
 	 *            a message about the shutdown cause
 	 */
-	public void sendShutdownSignal (final Session session, final String consumerTag, final String errorMessage)
-	{
+	public void sendShutdownSignal (final Session session, final String consumerTag, final String errorMessage) {
 		final AmqpPayloads.ShutdownMessage.Builder downPayload = ShutdownMessage.newBuilder ();
 		downPayload.setConsumerTag (consumerTag);
 		downPayload.setMessage (errorMessage);

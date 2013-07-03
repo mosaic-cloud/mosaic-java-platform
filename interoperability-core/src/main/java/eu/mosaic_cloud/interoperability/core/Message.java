@@ -26,13 +26,11 @@ import com.google.common.base.Preconditions;
 
 public final class Message
 {
-	public Message (final MessageSpecification specification)
-	{
+	public Message (final MessageSpecification specification) {
 		this (specification, null);
 	}
 	
-	public Message (final MessageSpecification specification, final Object payload)
-	{
+	public Message (final MessageSpecification specification, final Object payload) {
 		super ();
 		Preconditions.checkNotNull (specification);
 		this.specification = specification;

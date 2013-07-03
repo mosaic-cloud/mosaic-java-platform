@@ -30,37 +30,32 @@ import com.google.common.base.Preconditions;
 
 
 public final class TranscriptExceptionTracer
-		extends DelegatingExceptionTracer
+			extends DelegatingExceptionTracer
 {
-	private TranscriptExceptionTracer (final TranscriptBackend transcript, final ExceptionTracer delegate)
-	{
+	private TranscriptExceptionTracer (final TranscriptBackend transcript, final ExceptionTracer delegate) {
 		super (delegate);
 		Preconditions.checkNotNull (transcript);
 		this.transcript = transcript;
 	}
 	
 	@Override
-	protected final void trace_ (final ExceptionResolution resolution, final Throwable exception)
-	{
+	protected final void trace_ (final ExceptionResolution resolution, final Throwable exception) {
 		this.transcript.trace (resolution, exception);
 	}
 	
 	@Override
-	protected void trace_ (final ExceptionResolution resolution, final Throwable exception, final String message)
-	{
+	protected void trace_ (final ExceptionResolution resolution, final Throwable exception, final String message) {
 		this.transcript.trace (resolution, exception, message);
 	}
 	
 	@Override
-	protected void trace_ (final ExceptionResolution resolution, final Throwable exception, final String format, final Object ... tokens)
-	{
+	protected void trace_ (final ExceptionResolution resolution, final Throwable exception, final String format, final Object ... tokens) {
 		this.transcript.trace (resolution, exception, format, tokens);
 	}
 	
-	public static final TranscriptExceptionTracer create (final TranscriptBackend transcript, final ExceptionTracer delegate)
-	{
+	private final TranscriptBackend transcript;
+	
+	public static final TranscriptExceptionTracer create (final TranscriptBackend transcript, final ExceptionTracer delegate) {
 		return (new TranscriptExceptionTracer (transcript, delegate));
 	}
-	
-	private final TranscriptBackend transcript;
 }

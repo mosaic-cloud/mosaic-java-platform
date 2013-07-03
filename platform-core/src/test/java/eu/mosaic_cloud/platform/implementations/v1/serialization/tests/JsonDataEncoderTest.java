@@ -18,47 +18,41 @@ public class JsonDataEncoderTest
 {
 	@Test
 	public void testArrayContainer ()
-			throws Throwable
-	{
+				throws Throwable {
 		final ArrayContainer input = new ArrayContainer ();
 		final ArrayContainer output = this.testEncodeDecode (input);
 	}
 	
 	@Test
 	public void testArrayListContainer ()
-			throws Throwable
-	{
+				throws Throwable {
 		final ArrayListContainer input = new ArrayListContainer ();
 		final ArrayListContainer output = this.testEncodeDecode (input);
 	}
 	
 	@Test
 	public void testIssue01VariantA ()
-			throws Throwable
-	{
+				throws Throwable {
 		final Issue01VariantA input = new Issue01VariantA ();
 		final Issue01VariantA output = this.testEncodeDecode (input);
 	}
 	
 	@Test
 	public void testIssue01VariantB ()
-			throws Throwable
-	{
+				throws Throwable {
 		final Issue01VariantB input = new Issue01VariantB ();
 		final Issue01VariantB output = this.testEncodeDecode (input);
 	}
 	
 	@Test
 	public void testSimpleObject ()
-			throws Throwable
-	{
+				throws Throwable {
 		final SimpleObject input = new SimpleObject ();
 		final SimpleObject output = this.testEncodeDecode (input);
 	}
 	
 	protected <TObject> TObject testEncodeDecode (final TObject input)
-			throws EncodingException
-	{
+				throws EncodingException {
 		final JsonDataEncoder<TObject> encoder = JsonDataEncoder.create ((Class<TObject>) input.getClass (), false);
 		final EncodeOutcome outcome = encoder.encode (input, null);
 		final TObject output = encoder.decode (outcome.data, outcome.metadata);
@@ -79,11 +73,10 @@ public class JsonDataEncoderTest
 	}
 	
 	public static class Issue01VariantA
-			implements
-				Serializable
+				implements
+					Serializable
 	{
-		public Issue01VariantA ()
-		{
+		public Issue01VariantA () {
 			this.list = new String[6];
 		}
 		
@@ -95,33 +88,28 @@ public class JsonDataEncoderTest
 	}
 	
 	public static class Issue01VariantB
-			implements
-				Serializable
+				implements
+					Serializable
 	{
-		public Issue01VariantB ()
-		{
+		public Issue01VariantB () {
 			this.list = new String[6];
 		}
 		
-		public void addCSP (final String cspname)
-		{
+		public void addCSP (final String cspname) {
 			this.list[this.i] = cspname;
 			this.i++;
 		}
 		
-		public void addString (final String val)
-		{
+		public void addString (final String val) {
 			this.prova = val;
 		}
 		
-		public String get (final int indice)
-		{
+		public String get (final int indice) {
 			return this.list[indice];
 		}
 		
 		@JsonIgnore
-		public int getSize ()
-		{
+		public int getSize () {
 			this.cont = this.i;
 			return this.cont + 1;
 		}

@@ -27,8 +27,8 @@ import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 
 
 public interface IHttpgQueueConnectorFactory
-		extends
-			IQueueConnectorFactory<IHttpgQueueConnector<?, ?, ?>>
+			extends
+				IQueueConnectorFactory<IHttpgQueueConnector<?, ?, ?>>
 {
 	<TContext, TRequestBody, TResponseBody, TExtra> IHttpgQueueConnector<TRequestBody, TResponseBody, TExtra> create (final IConfiguration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, IHttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra> callback, TContext callbackContext);
 }

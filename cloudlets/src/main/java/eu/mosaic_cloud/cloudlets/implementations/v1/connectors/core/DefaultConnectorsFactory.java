@@ -37,38 +37,34 @@ import com.google.common.base.Preconditions;
 
 
 public class DefaultConnectorsFactory
-		extends BaseConnectorsFactory
-		implements
-			eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorsFactory
+			extends BaseConnectorsFactory
+			implements
+				eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorsFactory
 {
-	protected DefaultConnectorsFactory (final ICloudletController<?> cloudlet, final ConnectorEnvironment environment, final IConnectorsFactory delegate)
-	{
+	protected DefaultConnectorsFactory (final ICloudletController<?> cloudlet, final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
 		super (environment, delegate);
 		Preconditions.checkNotNull (delegate);
 		Preconditions.checkNotNull (cloudlet);
 		this.cloudlet = cloudlet;
 	}
 	
-	public static final DefaultConnectorsFactory create (final ICloudletController<?> cloudlet, final ConnectorEnvironment environment)
-	{
+	protected final ICloudletController<?> cloudlet;
+	
+	public static final DefaultConnectorsFactory create (final ICloudletController<?> cloudlet, final ConnectorEnvironment environment) {
 		final eu.mosaic_cloud.connectors.implementations.v1.core.DefaultConnectorsFactory delegate = eu.mosaic_cloud.connectors.implementations.v1.core.DefaultConnectorsFactory.create (environment);
 		return DefaultConnectorsFactory.create (cloudlet, environment, delegate);
 	}
 	
-	public static final DefaultConnectorsFactory create (final ICloudletController<?> cloudlet, final ConnectorEnvironment environment, final IConnectorsFactory delegate)
-	{
+	public static final DefaultConnectorsFactory create (final ICloudletController<?> cloudlet, final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
 		return DefaultConnectorsFactory.Builder.create (cloudlet, environment, delegate).build ();
 	}
 	
-	protected final ICloudletController<?> cloudlet;
-	
 	public static final class Builder
-			extends BaseConnectorsFactoryBuilder<DefaultConnectorsFactory>
-			implements
-				IConnectorsFactoryBuilder
+				extends BaseConnectorsFactoryBuilder<DefaultConnectorsFactory>
+				implements
+					IConnectorsFactoryBuilder
 	{
-		Builder (final DefaultConnectorsFactory factory, final ICloudletController<?> cloudlet)
-		{
+		Builder (final DefaultConnectorsFactory factory, final ICloudletController<?> cloudlet) {
 			super (factory);
 			Preconditions.checkNotNull (this.delegate);
 			Preconditions.checkNotNull (cloudlet);
@@ -77,35 +73,31 @@ public class DefaultConnectorsFactory
 		}
 		
 		@Override
-		public void initialize (final eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorsFactoryInitializer initializer)
-		{
+		public void initialize (final eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorsFactoryInitializer initializer) {
 			Preconditions.checkNotNull (initializer);
 			initializer.initialize (this, this.cloudlet, this.environment, this.factory);
 		}
 		
 		@Override
-		public void initialize (final IConnectorsFactoryInitializer initializer)
-		{
+		public void initialize (final IConnectorsFactoryInitializer initializer) {
 			Preconditions.checkNotNull (initializer);
 			initializer.initialize (this, this.environment, this.factory);
 		}
 		
 		@Override
-		protected final void initialize_1 ()
-		{
+		protected final void initialize_1 () {
 			this.initialize (GenericKvStoreConnectorFactoryInitializer.defaultInstance);
 			this.initialize (AmqpQueueConnectorFactoryInitializer.defaultInstance);
 			this.initialize (HttpgQueueConnectorFactoryInitializer.defaultInstance);
 			this.initialize (ExecutorFactoryInitializer.defaultInstance);
 		}
 		
-		public static final Builder create (final ICloudletController<?> cloudlet, final ConnectorEnvironment environment, final IConnectorsFactory delegate)
-		{
+		protected final ICloudletController<?> cloudlet;
+		
+		public static final Builder create (final ICloudletController<?> cloudlet, final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
 			final DefaultConnectorsFactory factory = new DefaultConnectorsFactory (cloudlet, environment, delegate);
 			final Builder builder = new Builder (factory, cloudlet);
 			return (builder);
 		}
-		
-		protected final ICloudletController<?> cloudlet;
 	}
 }

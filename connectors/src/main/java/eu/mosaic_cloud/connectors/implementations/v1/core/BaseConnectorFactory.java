@@ -29,12 +29,11 @@ import com.google.common.base.Preconditions;
 
 
 public abstract class BaseConnectorFactory<TConnector extends IConnector>
-		extends Object
-		implements
-			IConnectorFactory<TConnector>
+			extends Object
+			implements
+				IConnectorFactory<TConnector>
 {
-	protected BaseConnectorFactory (final ConnectorEnvironment environment, final IConnectorsFactory delegate)
-	{
+	protected BaseConnectorFactory (final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
 		super ();
 		Preconditions.checkNotNull (environment);
 		this.environment = environment;

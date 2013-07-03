@@ -31,17 +31,15 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 
 /**
- * Interface for cloudlet control operations. Each cloudlet has access to an
- * object implementing this interface and uses it to ask for resources or
- * destroying them when they are not required anymore.
+ * Interface for cloudlet control operations. Each cloudlet has access to an object implementing this interface and uses it to
+ * ask for resources or destroying them when they are not required anymore.
  * 
  * @author Georgiana Macariu
- * 
  */
 public interface ICloudletController<Context>
-		extends
-			Callbacks,
-			IConnectorsFactory
+			extends
+				Callbacks,
+				IConnectorsFactory
 {
 	CallbackCompletion<Void> destroy ();
 	

@@ -27,10 +27,9 @@ import ch.qos.logback.core.PropertyDefinerBase;
 
 
 public final class LogbackJvmPidPropertyDefiner
-		extends PropertyDefinerBase
+			extends PropertyDefinerBase
 {
-	public LogbackJvmPidPropertyDefiner ()
-	{
+	public LogbackJvmPidPropertyDefiner () {
 		super ();
 		final String vm = ManagementFactory.getRuntimeMXBean ().getName ();
 		if (vm.matches ("^[0-9]+@.*"))
@@ -40,8 +39,7 @@ public final class LogbackJvmPidPropertyDefiner
 	}
 	
 	@Override
-	public final String getPropertyValue ()
-	{
+	public final String getPropertyValue () {
 		return (this.pid);
 	}
 	

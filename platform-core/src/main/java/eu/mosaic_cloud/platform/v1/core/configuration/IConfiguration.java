@@ -25,7 +25,6 @@ package eu.mosaic_cloud.platform.v1.core.configuration;
  * Generic interface for handling configuration files.
  * 
  * @author Ciprian Craciun, Georgiana Macariu
- * 
  */
 public interface IConfiguration
 {
@@ -57,8 +56,7 @@ public interface IConfiguration
 	 * @param identifier
 	 *            the identifier of the parameter
 	 * @param valueClass
-	 *            the class object representing the type of the configuration
-	 *            parameter
+	 *            the class object representing the type of the configuration parameter
 	 * @return the configuration parameter
 	 */
 	<T extends Object> IConfigurationParameter<T> getParameter (final ConfigurationIdentifier identifier, final Class<T> valueClass);
@@ -71,8 +69,7 @@ public interface IConfiguration
 	ConfigurationIdentifier getRootIdentifier ();
 	
 	/**
-	 * Returns a configuration containing all parameters which names start with
-	 * a given identifier (root identifier).
+	 * Returns a configuration containing all parameters which names start with a given identifier (root identifier).
 	 * 
 	 * @param relative
 	 *            the root identifier

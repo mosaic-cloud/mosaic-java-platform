@@ -26,10 +26,9 @@ import com.google.common.base.Throwables;
 
 
 public abstract class CaughtException
-		extends Throwable
+			extends Throwable
 {
-	CaughtException (final ExceptionResolution resolution, final Throwable caught)
-	{
+	CaughtException (final ExceptionResolution resolution, final Throwable caught) {
 		super (caught);
 		Preconditions.checkNotNull (caught);
 		this.caught = caught;
@@ -38,8 +37,7 @@ public abstract class CaughtException
 		this.messageArguments = null;
 	}
 	
-	CaughtException (final ExceptionResolution resolution, final Throwable caught, final String message)
-	{
+	CaughtException (final ExceptionResolution resolution, final Throwable caught, final String message) {
 		super (message, caught);
 		Preconditions.checkNotNull (caught);
 		this.caught = caught;
@@ -48,8 +46,7 @@ public abstract class CaughtException
 		this.messageArguments = null;
 	}
 	
-	CaughtException (final ExceptionResolution resolution, final Throwable caught, final String messageFormat, final Object ... messageArguments)
-	{
+	CaughtException (final ExceptionResolution resolution, final Throwable caught, final String messageFormat, final Object ... messageArguments) {
 		super (String.format (messageFormat, messageArguments), caught);
 		Preconditions.checkNotNull (caught);
 		this.caught = caught;
@@ -58,33 +55,27 @@ public abstract class CaughtException
 		this.messageArguments = messageArguments;
 	}
 	
-	public final Throwable getCaught ()
-	{
+	public final Throwable getCaught () {
 		return (this.caught);
 	}
 	
-	public final Object[] getMessageArguments ()
-	{
+	public final Object[] getMessageArguments () {
 		return (this.messageArguments);
 	}
 	
-	public final String getMessageFormat ()
-	{
+	public final String getMessageFormat () {
 		return (this.messageFormat);
 	}
 	
-	public final ExceptionResolution getResolution ()
-	{
+	public final ExceptionResolution getResolution () {
 		return (this.resolution);
 	}
 	
-	public final void rethrow ()
-	{
+	public final void rethrow () {
 		Throwables.propagate (this.caught);
 	}
 	
-	public final void trace (final ExceptionResolution resolution, final ExceptionTracer tracer)
-	{
+	public final void trace (final ExceptionResolution resolution, final ExceptionTracer tracer) {
 		tracer.trace (ExceptionResolution.Handled, this);
 		final Throwable cause = this.getCause ();
 		if (this.messageFormat != null) {
@@ -97,18 +88,20 @@ public abstract class CaughtException
 			tracer.trace (resolution, cause, this.messageFormat, this.messageArguments);
 	}
 	
-	public final void trace (final ExceptionTracer tracer)
-	{
+	public final void trace (final ExceptionTracer tracer) {
 		this.trace (this.resolution, tracer);
 	}
 	
-	public final Wrapper wrap ()
-	{
+	public final Wrapper wrap () {
 		return (new Wrapper (this));
 	}
 	
-	public static final CaughtException create (final ExceptionResolution resolution, final Throwable caught)
-	{
+	public final Throwable caught;
+	public final ExceptionResolution resolution;
+	protected final Object[] messageArguments;
+	protected final String messageFormat;
+	
+	public static final CaughtException create (final ExceptionResolution resolution, final Throwable caught) {
 		switch (resolution) {
 			case Handled :
 				return (new HandledException (caught));
@@ -116,13 +109,12 @@ public abstract class CaughtException
 				return (new DeferredException (caught));
 			case Ignored :
 				return (new IgnoredException (caught));
-			default:
+			default :
 				throw (new AssertionError ());
 		}
 	}
 	
-	public static final CaughtException create (final ExceptionResolution resolution, final Throwable caught, final String message)
-	{
+	public static final CaughtException create (final ExceptionResolution resolution, final Throwable caught, final String message) {
 		switch (resolution) {
 			case Handled :
 				return (new HandledException (caught, message));
@@ -130,13 +122,12 @@ public abstract class CaughtException
 				return (new DeferredException (caught, message));
 			case Ignored :
 				return (new IgnoredException (caught, message));
-			default:
+			default :
 				throw (new AssertionError ());
 		}
 	}
 	
-	public static final CaughtException create (final ExceptionResolution resolution, final Throwable caught, final String messageFormat, final Object ... messageArguments)
-	{
+	public static final CaughtException create (final ExceptionResolution resolution, final Throwable caught, final String messageFormat, final Object ... messageArguments) {
 		switch (resolution) {
 			case Handled :
 				return (new HandledException (caught, messageFormat, messageArguments));
@@ -144,39 +135,31 @@ public abstract class CaughtException
 				return (new DeferredException (caught, messageFormat, messageArguments));
 			case Ignored :
 				return (new IgnoredException (caught, messageFormat, messageArguments));
-			default:
+			default :
 				throw (new AssertionError ());
 		}
 	}
 	
-	public final Throwable caught;
-	public final ExceptionResolution resolution;
-	protected final Object[] messageArguments;
-	protected final String messageFormat;
 	private static final long serialVersionUID = 1L;
 	
 	public static final class Wrapper
-			extends Error
+				extends Error
 	{
-		Wrapper (final CaughtException exception)
-		{
+		Wrapper (final CaughtException exception) {
 			super (exception);
 			this.exception = exception;
 		}
 		
-		public final void rethrow ()
-		{
+		public final void rethrow () {
 			this.exception.rethrow ();
 		}
 		
-		public final void trace (final ExceptionResolution resolution, final ExceptionTracer tracer)
-		{
+		public final void trace (final ExceptionResolution resolution, final ExceptionTracer tracer) {
 			tracer.trace (ExceptionResolution.Handled, this);
 			this.exception.trace (resolution, tracer);
 		}
 		
-		public final void trace (final ExceptionTracer tracer)
-		{
+		public final void trace (final ExceptionTracer tracer) {
 			tracer.trace (ExceptionResolution.Handled, this);
 			this.exception.trace (tracer);
 		}

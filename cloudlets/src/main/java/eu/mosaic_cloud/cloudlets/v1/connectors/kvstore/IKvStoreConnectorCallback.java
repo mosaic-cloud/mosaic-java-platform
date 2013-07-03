@@ -28,28 +28,24 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 /**
- * Base interface for key-value storage accessor callbacks. This interface
- * should be implemented directly or indirectly by cloudlets wishing to use a
- * key value storage.
+ * Base interface for key-value storage accessor callbacks. This interface should be implemented directly or indirectly by
+ * cloudlets wishing to use a key value storage.
  * 
  * @author Georgiana Macariu
- * 
  * @param <TContext>
  *            the type of the cloudlet context
  * @param <TValue>
- *            the type of the values exchanged with the key-value store using
- *            this connector
+ *            the type of the values exchanged with the key-value store using this connector
  * @param <TExtra>
- *            the type of the extra data; as an example, this data can be used
- *            correlation
+ *            the type of the extra data; as an example, this data can be used correlation
  */
 public interface IKvStoreConnectorCallback<TContext, TValue, TExtra>
-		extends
-			IConnectorCallback<TContext>
+			extends
+				IConnectorCallback<TContext>
 {
 	/**
-	 * Called when the delete operation completed unsuccessfully. The error can
-	 * be retrieved from the <i>arguments</i> parameter.
+	 * Called when the delete operation completed unsuccessfully. The error can be retrieved from the <i>arguments</i>
+	 * parameter.
 	 * 
 	 * @param context
 	 *            cloudlet context
@@ -69,8 +65,7 @@ public interface IKvStoreConnectorCallback<TContext, TValue, TExtra>
 	CallbackCompletion<Void> deleteSucceeded (TContext context, KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
 	
 	/**
-	 * Called when the get operation completed unsuccessfully. The error can be
-	 * retrieved from the <i>arguments</i> parameter.
+	 * Called when the get operation completed unsuccessfully. The error can be retrieved from the <i>arguments</i> parameter.
 	 * 
 	 * @param context
 	 *            cloudlet context
@@ -80,8 +75,8 @@ public interface IKvStoreConnectorCallback<TContext, TValue, TExtra>
 	CallbackCompletion<Void> getFailed (TContext context, KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
 	
 	/**
-	 * Called when the get operation completed successfully. The result of the
-	 * get operation can be retrieved from the <i>arguments</i> parameter.
+	 * Called when the get operation completed successfully. The result of the get operation can be retrieved from the
+	 * <i>arguments</i> parameter.
 	 * 
 	 * @param context
 	 *            cloudlet context
@@ -91,8 +86,7 @@ public interface IKvStoreConnectorCallback<TContext, TValue, TExtra>
 	CallbackCompletion<Void> getSucceeded (TContext context, KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
 	
 	/**
-	 * Called when the list operation completed unsuccessfully. The error can be
-	 * retrieved from the <i>arguments</i> parameter.
+	 * Called when the list operation completed unsuccessfully. The error can be retrieved from the <i>arguments</i> parameter.
 	 * 
 	 * @param context
 	 *            cloudlet context
@@ -102,8 +96,8 @@ public interface IKvStoreConnectorCallback<TContext, TValue, TExtra>
 	CallbackCompletion<Void> listFailed (TContext context, KvStoreCallbackCompletionArguments<List<String>, TExtra> arguments);
 	
 	/**
-	 * Called when the list operation completed successfully. The result of the
-	 * get operation can be retrieved from the <i>arguments</i> parameter.
+	 * Called when the list operation completed successfully. The result of the get operation can be retrieved from the
+	 * <i>arguments</i> parameter.
 	 * 
 	 * @param context
 	 *            cloudlet context
@@ -113,8 +107,7 @@ public interface IKvStoreConnectorCallback<TContext, TValue, TExtra>
 	CallbackCompletion<Void> listSucceeded (TContext context, KvStoreCallbackCompletionArguments<List<String>, TExtra> arguments);
 	
 	/**
-	 * Called when the set operation completed unsuccessfully. The error can be
-	 * retrieved from the <i>arguments</i> parameter.
+	 * Called when the set operation completed unsuccessfully. The error can be retrieved from the <i>arguments</i> parameter.
 	 * 
 	 * @param context
 	 *            cloudlet context

@@ -35,15 +35,13 @@ import com.google.protobuf.GeneratedMessage;
 
 
 /**
- * Encodes an object (request for operation or response to operation) using the
- * Google Protocol Buffers encoding.
+ * Encodes an object (request for operation or response to operation) using the Google Protocol Buffers encoding.
  * 
  * @author Georgiana Macariu
- * 
  */
 public class DefaultPBPayloadCoder
-		implements
-			PayloadCoder
+			implements
+				PayloadCoder
 {
 	/**
 	 * Creates a new encoder.
@@ -53,8 +51,7 @@ public class DefaultPBPayloadCoder
 	 * @param nullAllowed
 	 *            <code>true</code> if null objects can also be encoded
 	 */
-	public DefaultPBPayloadCoder (final Class<? extends GeneratedMessage> clasz, final boolean nullAllowed)
-	{
+	public DefaultPBPayloadCoder (final Class<? extends GeneratedMessage> clasz, final boolean nullAllowed) {
 		super ();
 		Preconditions.checkNotNull (clasz);
 		Preconditions.checkArgument (Serializable.class.isAssignableFrom (clasz));
@@ -64,8 +61,7 @@ public class DefaultPBPayloadCoder
 	
 	@Override
 	public Object decode (final ByteBuffer buffer)
-			throws Throwable
-	{
+				throws Throwable {
 		final Method createMethod = this.clasz.getMethod ("parseFrom", byte[].class);
 		final Object object;
 		try {
@@ -85,8 +81,7 @@ public class DefaultPBPayloadCoder
 	
 	@Override
 	public ByteBuffer encode (final Object object)
-			throws Throwable
-	{
+				throws Throwable {
 		if (!this.nullAllowed) {
 			Preconditions.checkNotNull (object);
 		}

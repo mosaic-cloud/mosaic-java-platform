@@ -25,7 +25,6 @@ package eu.mosaic_cloud.platform.interop.common.amqp;
  * Interface for AMQP messages.
  * 
  * @author Georgiana Macariu
- * 
  */
 public interface IAmqpMessage
 {}

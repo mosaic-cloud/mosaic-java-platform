@@ -38,8 +38,7 @@ import com.google.common.base.Preconditions;
 
 public final class ConnectorEnvironment
 {
-	private ConnectorEnvironment (final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ChannelFactory channelFactory, final ChannelResolver channelResolver, final Map<String, Object> supplementary)
-	{
+	private ConnectorEnvironment (final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ChannelFactory channelFactory, final ChannelResolver channelResolver, final Map<String, Object> supplementary) {
 		super ();
 		Preconditions.checkNotNull (reactor);
 		Preconditions.checkNotNull (threading);
@@ -54,51 +53,34 @@ public final class ConnectorEnvironment
 		this.channelResolver = channelResolver;
 		this.supplementary = SupplementaryEnvironment.create (supplementary, new UncaughtExceptionHandler () {
 			@Override
-			public void uncaughtException (final Thread thread, final Throwable exception)
-			{
+			public void uncaughtException (final Thread thread, final Throwable exception) {
 				ConnectorEnvironment.this.exceptions.trace (ExceptionResolution.Ignored, exception);
 			}
 		});
 	}
 	
-	public ChannelFactory getChannelFactory ()
-	{
+	public ChannelFactory getChannelFactory () {
 		return this.channelFactory;
 	}
 	
-	public ChannelResolver getChannelResolver ()
-	{
+	public ChannelResolver getChannelResolver () {
 		return this.channelResolver;
 	}
 	
-	public ExceptionTracer getExceptions ()
-	{
+	public ExceptionTracer getExceptions () {
 		return this.exceptions;
 	}
 	
-	public CallbackReactor getReactor ()
-	{
+	public CallbackReactor getReactor () {
 		return this.reactor;
 	}
 	
-	public SupplementaryEnvironment getSupplementary ()
-	{
+	public SupplementaryEnvironment getSupplementary () {
 		return this.supplementary;
 	}
 	
-	public ThreadingContext getThreading ()
-	{
+	public ThreadingContext getThreading () {
 		return this.threading;
-	}
-	
-	public static ConnectorEnvironment create (final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ChannelFactory channelFactory, final ChannelResolver channelResolver)
-	{
-		return new ConnectorEnvironment (reactor, threading, exceptions, channelFactory, channelResolver, new HashMap<String, Object> ());
-	}
-	
-	public static ConnectorEnvironment create (final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ChannelFactory channelFactory, final ChannelResolver channelResolver, final Map<String, Object> supplementary)
-	{
-		return new ConnectorEnvironment (reactor, threading, exceptions, channelFactory, channelResolver, supplementary);
 	}
 	
 	private final ChannelFactory channelFactory;
@@ -107,4 +89,12 @@ public final class ConnectorEnvironment
 	private final CallbackReactor reactor;
 	private final SupplementaryEnvironment supplementary;
 	private final ThreadingContext threading;
+	
+	public static ConnectorEnvironment create (final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ChannelFactory channelFactory, final ChannelResolver channelResolver) {
+		return new ConnectorEnvironment (reactor, threading, exceptions, channelFactory, channelResolver, new HashMap<String, Object> ());
+	}
+	
+	public static ConnectorEnvironment create (final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ChannelFactory channelFactory, final ChannelResolver channelResolver, final Map<String, Object> supplementary) {
+		return new ConnectorEnvironment (reactor, threading, exceptions, channelFactory, channelResolver, supplementary);
+	}
 }

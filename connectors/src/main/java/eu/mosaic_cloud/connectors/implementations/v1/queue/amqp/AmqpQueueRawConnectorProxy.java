@@ -56,28 +56,24 @@ import com.google.protobuf.ByteString;
 
 
 /**
- * Proxy for the driver for queuing systems implementing the AMQP protocol. This
- * is used by the {@link AmqpQueueRawConnector} to communicate with a AMQP
- * driver.
+ * Proxy for the driver for queuing systems implementing the AMQP protocol. This is used by the {@link AmqpQueueRawConnector} to
+ * communicate with a AMQP driver.
  * 
  * @author Georgiana Macariu
- * 
  */
 public final class AmqpQueueRawConnectorProxy
-		extends BaseConnectorProxy
-		implements
-			IAmqpQueueRawConnector
+			extends BaseConnectorProxy
+			implements
+				IAmqpQueueRawConnector
 {
-	protected AmqpQueueRawConnectorProxy (final ConnectorConfiguration configuration)
-	{
+	protected AmqpQueueRawConnectorProxy (final ConnectorConfiguration configuration) {
 		super (configuration);
 		this.pendingConsumers = new ConcurrentHashMap<String, IAmqpQueueRawConsumerCallback> ();
 		this.transcript.traceDebugging ("created queue raw connector proxy.");
 	}
 	
 	@Override
-	public CallbackCompletion<Void> ack (final long delivery, final boolean multiple)
-	{
+	public CallbackCompletion<Void> ack (final long delivery, final boolean multiple) {
 		final CompletionToken token = this.generateToken ();
 		this.transcript.traceDebugging ("acknowledging the message `%l` (with multiple `%b`) (with request token `%s`)...", Long.valueOf (delivery), Boolean.valueOf (multiple), token.getMessageId ());
 		final AmqpPayloads.Ack.Builder requestBuilder = AmqpPayloads.Ack.newBuilder ();
@@ -89,8 +85,7 @@ public final class AmqpQueueRawConnectorProxy
 	}
 	
 	@Override
-	public CallbackCompletion<Void> bindQueue (final String exchange, final String queue, final String routingKey)
-	{
+	public CallbackCompletion<Void> bindQueue (final String exchange, final String queue, final String routingKey) {
 		Preconditions.checkNotNull (exchange);
 		Preconditions.checkNotNull (queue);
 		Preconditions.checkNotNull (routingKey);
@@ -106,8 +101,7 @@ public final class AmqpQueueRawConnectorProxy
 	}
 	
 	@Override
-	public CallbackCompletion<Void> cancel (final String consumer)
-	{
+	public CallbackCompletion<Void> cancel (final String consumer) {
 		Preconditions.checkNotNull (consumer);
 		final CompletionToken token = this.generateToken ();
 		this.transcript.traceDebugging ("canceling the consumer `%s` (with request token `%s`)...", consumer, token.getMessageId ());
@@ -122,8 +116,7 @@ public final class AmqpQueueRawConnectorProxy
 	}
 	
 	@Override
-	public CallbackCompletion<Void> consume (final String queue, final String consumer, final boolean exclusive, final boolean autoAck, final IAmqpQueueRawConsumerCallback consumerCallback)
-	{
+	public CallbackCompletion<Void> consume (final String queue, final String consumer, final boolean exclusive, final boolean autoAck, final IAmqpQueueRawConsumerCallback consumerCallback) {
 		Preconditions.checkNotNull (queue);
 		Preconditions.checkNotNull (consumer);
 		Preconditions.checkNotNull (consumerCallback);
@@ -146,8 +139,7 @@ public final class AmqpQueueRawConnectorProxy
 	}
 	
 	@Override
-	public CallbackCompletion<Void> declareExchange (final String name, final AmqpExchangeType type, final boolean durable, final boolean autoDelete, final boolean passive)
-	{
+	public CallbackCompletion<Void> declareExchange (final String name, final AmqpExchangeType type, final boolean durable, final boolean autoDelete, final boolean passive) {
 		Preconditions.checkNotNull (name);
 		Preconditions.checkNotNull (type);
 		final CompletionToken token = this.generateToken ();
@@ -165,8 +157,7 @@ public final class AmqpQueueRawConnectorProxy
 	}
 	
 	@Override
-	public CallbackCompletion<Void> declareQueue (final String queue, final boolean exclusive, final boolean durable, final boolean autoDelete, final boolean passive)
-	{
+	public CallbackCompletion<Void> declareQueue (final String queue, final boolean exclusive, final boolean durable, final boolean autoDelete, final boolean passive) {
 		Preconditions.checkNotNull (queue);
 		final CompletionToken token = this.generateToken ();
 		this.transcript.traceDebugging ("declaring the queue `%s` (with exclusive `%b`, durable `%b`, auto-delete `%b`, and passive `%b`) (with request token `%s`)...", queue, Boolean.valueOf (exclusive), Boolean.valueOf (durable), Boolean.valueOf (autoDelete), Boolean.valueOf (passive), Boolean.valueOf (passive), token.getMessageId ());
@@ -182,15 +173,13 @@ public final class AmqpQueueRawConnectorProxy
 	}
 	
 	@Override
-	public CallbackCompletion<Void> destroy ()
-	{
+	public CallbackCompletion<Void> destroy () {
 		this.transcript.traceDebugging ("destroying the proxy...");
 		return (this.disconnect (null));
 	}
 	
 	@Override
-	public CallbackCompletion<Void> get (final String queue, final boolean autoAck)
-	{
+	public CallbackCompletion<Void> get (final String queue, final boolean autoAck) {
 		Preconditions.checkNotNull (queue);
 		final CompletionToken token = this.generateToken ();
 		this.transcript.traceDebugging ("pulling one message from the queue `%s` (with auto-acknowledge `%b`) (with request token `%s`)...", queue, Boolean.valueOf (autoAck), token.getMessageId ());
@@ -203,15 +192,13 @@ public final class AmqpQueueRawConnectorProxy
 	}
 	
 	@Override
-	public CallbackCompletion<Void> initialize ()
-	{
+	public CallbackCompletion<Void> initialize () {
 		this.transcript.traceDebugging ("initializing the proxy...");
 		return (this.connect (AmqpSession.CONNECTOR, new Message (AmqpMessage.ACCESS, null)));
 	}
 	
 	@Override
-	public CallbackCompletion<Void> publish (final AmqpOutboundMessage message)
-	{
+	public CallbackCompletion<Void> publish (final AmqpOutboundMessage message) {
 		Preconditions.checkNotNull (message);
 		final String exchange = message.getExchange ();
 		final String routingKey = message.getRoutingKey ();
@@ -226,8 +213,7 @@ public final class AmqpQueueRawConnectorProxy
 		return (this.publish (data, exchange, routingKey, contentType, contentEncoding, mandatory, immediate, durable, correlation, callback));
 	}
 	
-	public CallbackCompletion<Void> publish (final byte[] data, final String exchange, final String routingKey, final String contentType, final String contentEncoding, final boolean mandatory, final boolean immediate, final boolean durable, final String correlation, final String callback)
-	{
+	public CallbackCompletion<Void> publish (final byte[] data, final String exchange, final String routingKey, final String contentType, final String contentEncoding, final boolean mandatory, final boolean immediate, final boolean durable, final String correlation, final String callback) {
 		Preconditions.checkNotNull (data);
 		Preconditions.checkNotNull (exchange);
 		Preconditions.checkNotNull (routingKey);
@@ -253,14 +239,12 @@ public final class AmqpQueueRawConnectorProxy
 	}
 	
 	@Override
-	protected String getDefaultDriverGroup ()
-	{
+	protected String getDefaultDriverGroup () {
 		return (ConfigProperties.AmqpConnector_0);
 	}
 	
 	@Override
-	protected void processResponse (final Message message)
-	{
+	protected void processResponse (final Message message) {
 		final AmqpMessage amqpMessage = (AmqpMessage) message.specification;
 		switch (amqpMessage) {
 			case OK : {
@@ -363,12 +347,14 @@ public final class AmqpQueueRawConnectorProxy
 				}
 			}
 				break;
-			default: {
+			default : {
 				this.transcript.traceWarning ("processing unexpected message of type `%s`; ignoring...", message.specification);
 			}
 				break;
 		}
 	}
+	
+	private final ConcurrentHashMap<String, IAmqpQueueRawConsumerCallback> pendingConsumers;
 	
 	/**
 	 * Returns a proxy for AMQP queuing systems.
@@ -377,11 +363,8 @@ public final class AmqpQueueRawConnectorProxy
 	 *            the execution environment of a connector
 	 * @return the proxy
 	 */
-	public static AmqpQueueRawConnectorProxy create (final ConnectorConfiguration configuration)
-	{
+	public static AmqpQueueRawConnectorProxy create (final ConnectorConfiguration configuration) {
 		final AmqpQueueRawConnectorProxy proxy = new AmqpQueueRawConnectorProxy (configuration);
 		return (proxy);
 	}
-	
-	private final ConcurrentHashMap<String, IAmqpQueueRawConsumerCallback> pendingConsumers;
 }

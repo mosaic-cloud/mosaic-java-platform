@@ -27,21 +27,18 @@ import com.google.common.base.Preconditions;
 
 
 public final class Identifiers
-		extends Object
+			extends Object
 {
-	private Identifiers ()
-	{
+	private Identifiers () {
 		throw (new IllegalAccessError ());
 	}
 	
-	public static final String generate (final Enum<?> object)
-	{
+	public static final String generate (final Enum<?> object) {
 		Preconditions.checkNotNull (object);
 		return (UUID.nameUUIDFromBytes ((object.getClass ().getName () + ":" + object.name ()).getBytes ()).toString ());
 	}
 	
-	public static final String generateName (final Enum<?> object)
-	{
+	public static final String generateName (final Enum<?> object) {
 		Preconditions.checkNotNull (object);
 		return (object.getClass ().getName () + ":" + object.name ());
 	}

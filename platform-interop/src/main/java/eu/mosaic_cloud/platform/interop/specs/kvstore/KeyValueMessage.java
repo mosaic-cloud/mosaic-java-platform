@@ -36,11 +36,10 @@ import com.google.protobuf.GeneratedMessage;
  * Enum containing all possible AMQP connector-driver messages.
  * 
  * @author Georgiana Macariu
- * 
  */
 public enum KeyValueMessage
-		implements
-			MessageSpecification
+			implements
+				MessageSpecification
 {
 	ABORTED (MessageType.Termination, IdlCommon.AbortRequest.class),
 	ACCESS (MessageType.Initiation, KeyValuePayloads.InitRequest.class),
@@ -61,8 +60,7 @@ public enum KeyValueMessage
 	 * @param clasz
 	 *            the class containing the payload of the message
 	 */
-	KeyValueMessage (final MessageType type, final Class<? extends GeneratedMessage> clasz)
-	{
+	KeyValueMessage (final MessageType type, final Class<? extends GeneratedMessage> clasz) {
 		this.identifier = Identifiers.generate (this);
 		this.type = type;
 		if (clasz != null) {
@@ -71,26 +69,22 @@ public enum KeyValueMessage
 	}
 	
 	@Override
-	public String getIdentifier ()
-	{
+	public String getIdentifier () {
 		return this.identifier;
 	}
 	
 	@Override
-	public PayloadCoder getPayloadCoder ()
-	{
+	public PayloadCoder getPayloadCoder () {
 		return this.coder;
 	}
 	
 	@Override
-	public String getQualifiedName ()
-	{
+	public String getQualifiedName () {
 		return (Identifiers.generateName (this));
 	}
 	
 	@Override
-	public MessageType getType ()
-	{
+	public MessageType getType () {
 		return this.type;
 	}
 	

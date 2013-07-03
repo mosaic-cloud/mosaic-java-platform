@@ -33,21 +33,18 @@ import com.google.common.base.Preconditions;
 
 public final class BasicComponentLauncherMain
 {
-	private BasicComponentLauncherMain ()
-	{
+	private BasicComponentLauncherMain () {
 		super ();
 		throw (new UnsupportedOperationException ());
 	}
 	
 	public static final void main (final String componentCallbacks, final String componentConfiguration, final String[] arguments)
-			throws Throwable
-	{
+				throws Throwable {
 		BasicComponentLauncherMain.main (componentCallbacks, componentConfiguration, arguments, 0);
 	}
 	
 	public static final void main (final String componentCallbacks, final String componentConfiguration, final String[] arguments, final int argumentsOffset)
-			throws Throwable
-	{
+				throws Throwable {
 		Preconditions.checkNotNull (componentCallbacks);
 		Preconditions.checkNotNull (componentConfiguration);
 		Preconditions.checkNotNull (arguments);
@@ -60,20 +57,17 @@ public final class BasicComponentLauncherMain
 	}
 	
 	public static final void main (final String componentCallbacks, final String[] arguments)
-			throws Throwable
-	{
+				throws Throwable {
 		BasicComponentLauncherMain.main (componentCallbacks, arguments, 0);
 	}
 	
 	public static final void main (final String componentCallbacks, final String[] arguments, final int argumentsOffset)
-			throws Throwable
-	{
+				throws Throwable {
 		BasicComponentLauncherMain.main (componentCallbacks, "null", arguments, argumentsOffset);
 	}
 	
 	public static final void main (final String[] arguments)
-			throws Throwable
-	{
+				throws Throwable {
 		Preconditions.checkNotNull (arguments);
 		BasicThreadingSecurityManager.initialize ();
 		final BaseExceptionTracer exceptions = AbortingExceptionTracer.defaultInstance;
@@ -85,8 +79,7 @@ public final class BasicComponentLauncherMain
 	}
 	
 	public static final void main (final String[] arguments, final ClassLoader classLoader, final ThreadingContext threading, final ExceptionTracer exceptions)
-			throws Throwable
-	{
+				throws Throwable {
 		Preconditions.checkArgument ((arguments != null) && (arguments.length >= 3), "invalid arguments; expected `<component-callbacks> <component-configuration> <mode> ...`");
 		Preconditions.checkNotNull (classLoader);
 		Preconditions.checkNotNull (threading);

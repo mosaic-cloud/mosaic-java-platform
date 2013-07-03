@@ -32,30 +32,25 @@ import com.google.common.base.Preconditions;
 
 
 /**
- * Implements a Map between request (response) identifier and response handler
- * (callback).
+ * Implements a Map between request (response) identifier and response handler (callback).
  * 
  * @author Georgiana Macariu
- * 
  */
 public final class ResponseHandlerMap
 {
-	public ResponseHandlerMap (final Transcript transcript)
-	{
+	public ResponseHandlerMap (final Transcript transcript) {
 		super ();
 		this.futures = new ConcurrentHashMap<String, CallbackCompletionDeferredFuture<?>> ();
 		this.transcript = transcript;
 	}
 	
 	/**
-	 * Cancels a request and removes from the map the handlers for a request and
-	 * the actual request.
+	 * Cancels a request and removes from the map the handlers for a request and the actual request.
 	 * 
 	 * @param request
 	 *            the request identifier
 	 */
-	public void cancel (final String request)
-	{
+	public void cancel (final String request) {
 		Preconditions.checkNotNull (request);
 		this.transcript.traceDebugging ("calceling the pending request `%s`...", request);
 		final CallbackCompletionDeferredFuture<?> future = this.removeRequest (request);
@@ -64,11 +59,9 @@ public final class ResponseHandlerMap
 	}
 	
 	/**
-	 * Cancels all pending requests and removes from the handler map all pending
-	 * requests.
+	 * Cancels all pending requests and removes from the handler map all pending requests.
 	 */
-	public void cancelAll ()
-	{
+	public void cancelAll () {
 		synchronized (this.futures) {
 			this.transcript.traceDebugging ("canceling all pending requests...");
 			for (final Map.Entry<String, CallbackCompletionDeferredFuture<?>> entry : this.futures.entrySet ()) {
@@ -82,16 +75,14 @@ public final class ResponseHandlerMap
 	}
 	
 	/**
-	 * Removes from the map the handlers for a failed request and the actual
-	 * request.
+	 * Removes from the map the handlers for a failed request and the actual request.
 	 * 
 	 * @param request
 	 *            the request identifier
 	 * @param exception
 	 *            the cause of the request failure
 	 */
-	public void fail (final String request, final Throwable exception)
-	{
+	public void fail (final String request, final Throwable exception) {
 		Preconditions.checkNotNull (request);
 		Preconditions.checkNotNull (exception);
 		this.transcript.traceDebugging ("failing the pending request `%s` with exception `%s` (`%s`)...", request, exception.getClass ().getName (), exception.getMessage ());
@@ -101,15 +92,13 @@ public final class ResponseHandlerMap
 	}
 	
 	/**
-	 * Checks if the map contains an entry for the specified request. (It throws
-	 * if no request exists.)
+	 * Checks if the map contains an entry for the specified request. (It throws if no request exists.)
 	 * 
 	 * @param request
 	 *            the request identifier
 	 * @return the callback future for the request
 	 */
-	public CallbackCompletionDeferredFuture<?> peek (final String request)
-	{
+	public CallbackCompletionDeferredFuture<?> peek (final String request) {
 		Preconditions.checkNotNull (request);
 		final CallbackCompletionDeferredFuture<?> future = this.futures.get (request);
 		Preconditions.checkState (future != null);
@@ -117,32 +106,28 @@ public final class ResponseHandlerMap
 	}
 	
 	/**
-	 * Checks if the map contains an entry for the specified request. (It
-	 * returns null if no request exists.)
+	 * Checks if the map contains an entry for the specified request. (It returns null if no request exists.)
 	 * 
 	 * @param request
 	 *            the request identifier
 	 * @return the callback future for the request
 	 */
-	public CallbackCompletionDeferredFuture<?> peekMaybe (final String request)
-	{
+	public CallbackCompletionDeferredFuture<?> peekMaybe (final String request) {
 		Preconditions.checkNotNull (request);
 		final CallbackCompletionDeferredFuture<?> future = this.futures.get (request);
 		return future;
 	}
 	
 	/**
-	 * Add handler for the response of the request with the given identifier. If
-	 * another handler has been added previously for the request, these handler
-	 * will be replaced.
+	 * Add handler for the response of the request with the given identifier. If another handler has been added previously for
+	 * the request, these handler will be replaced.
 	 * 
 	 * @param request
 	 *            the request identifier
 	 * @param future
 	 *            the handler to set
 	 */
-	public void register (final String request, final CallbackCompletionDeferredFuture<?> future)
-	{
+	public void register (final String request, final CallbackCompletionDeferredFuture<?> future) {
 		Preconditions.checkNotNull (request);
 		Preconditions.checkNotNull (future);
 		this.transcript.traceDebugging ("registering the pending request `%s`...", request);
@@ -150,8 +135,7 @@ public final class ResponseHandlerMap
 	}
 	
 	/**
-	 * Removes a request entry from the map and triggers the callback for the
-	 * response.
+	 * Removes a request entry from the map and triggers the callback for the response.
 	 * 
 	 * @param request
 	 *            the request identifier
@@ -159,8 +143,7 @@ public final class ResponseHandlerMap
 	 *            the actual result for the request
 	 */
 	@SuppressWarnings ("unchecked")
-	public void succeed (final String request, final Object outcome)
-	{
+	public void succeed (final String request, final Object outcome) {
 		Preconditions.checkNotNull (request);
 		this.transcript.traceDebugging ("succeeding the pending request `%s`...", request);
 		final CallbackCompletionDeferredFuture<?> future = this.futures.remove (request);
@@ -174,8 +157,7 @@ public final class ResponseHandlerMap
 	 * @param request
 	 *            the request identifier
 	 */
-	private CallbackCompletionDeferredFuture<?> removeRequest (final String request)
-	{
+	private CallbackCompletionDeferredFuture<?> removeRequest (final String request) {
 		Preconditions.checkNotNull (request);
 		final CallbackCompletionDeferredFuture<?> future = this.futures.remove (request);
 		Preconditions.checkState (future != null);

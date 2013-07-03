@@ -44,8 +44,7 @@ import org.slf4j.Logger;
 
 public class PublisherCloudlet
 {
-	private static CallbackCompletion<Void> maybePushMessage (final PublisherCloudletContext context)
-	{
+	private static CallbackCompletion<Void> maybePushMessage (final PublisherCloudletContext context) {
 		{
 			// FIXME: DON'T DO THIS IN YOUR CODE... This is for throttling...
 			Threading.sleep (context.delay);
@@ -62,49 +61,43 @@ public class PublisherCloudlet
 	}
 	
 	public static final class AmqpPublisherCallback
-			extends DefaultAmqpPublisherConnectorCallback<PublisherCloudletContext, String, Void>
+				extends DefaultAmqpPublisherConnectorCallback<PublisherCloudletContext, String, Void>
 	{
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final PublisherCloudletContext context, final CallbackArguments arguments)
-		{
+		public CallbackCompletion<Void> destroySucceeded (final PublisherCloudletContext context, final CallbackArguments arguments) {
 			context.logger.info ("PublisherCloudlet publisher destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final PublisherCloudletContext context, final CallbackArguments arguments)
-		{
+		public CallbackCompletion<Void> initializeSucceeded (final PublisherCloudletContext context, final CallbackArguments arguments) {
 			context.logger.info ("PublisherCloudlet publisher initialized successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
-		public CallbackCompletion<Void> publishSucceeded (final PublisherCloudletContext context, final GenericCallbackCompletionArguments<Void> arguments)
-		{
+		public CallbackCompletion<Void> publishSucceeded (final PublisherCloudletContext context, final GenericCallbackCompletionArguments<Void> arguments) {
 			return PublisherCloudlet.maybePushMessage (context);
 		}
 	}
 	
 	public static final class LifeCycleHandler
-			extends DefaultCloudletCallback<PublisherCloudletContext>
+				extends DefaultCloudletCallback<PublisherCloudletContext>
 	{
 		@Override
-		public CallbackCompletion<Void> destroy (final PublisherCloudletContext context, final CloudletCallbackArguments<PublisherCloudletContext> arguments)
-		{
+		public CallbackCompletion<Void> destroy (final PublisherCloudletContext context, final CloudletCallbackArguments<PublisherCloudletContext> arguments) {
 			context.logger.info ("PublisherCloudlet destroying...");
 			return context.publisher.destroy ();
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final PublisherCloudletContext context, final CloudletCallbackCompletionArguments<PublisherCloudletContext> arguments)
-		{
+		public CallbackCompletion<Void> destroySucceeded (final PublisherCloudletContext context, final CloudletCallbackCompletionArguments<PublisherCloudletContext> arguments) {
 			context.logger.info ("PublisherCloudlet destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initialize (final PublisherCloudletContext context, final CloudletCallbackArguments<PublisherCloudletContext> arguments)
-		{
+		public CallbackCompletion<Void> initialize (final PublisherCloudletContext context, final CloudletCallbackArguments<PublisherCloudletContext> arguments) {
 			context.cloudlet = arguments.getCloudlet ();
 			context.logger = this.logger;
 			context.logger.info ("PublisherCloudlet initializing...");
@@ -115,8 +108,7 @@ public class PublisherCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final PublisherCloudletContext context, final CloudletCallbackCompletionArguments<PublisherCloudletContext> arguments)
-		{
+		public CallbackCompletion<Void> initializeSucceeded (final PublisherCloudletContext context, final CloudletCallbackCompletionArguments<PublisherCloudletContext> arguments) {
 			context.logger.info ("PublisherCloudlet initialized successfully.");
 			return (PublisherCloudlet.maybePushMessage (context));
 		}

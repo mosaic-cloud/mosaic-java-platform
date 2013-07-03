@@ -26,8 +26,8 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
 
 public interface IAmqpQueueConsumerCallback<TMessage>
-		extends
-			Callbacks
+			extends
+				Callbacks
 {
 	/**
 	 * Handles a delivered message.

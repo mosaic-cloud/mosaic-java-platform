@@ -43,13 +43,12 @@ import com.google.common.base.Preconditions;
 
 
 public final class BasicThreadingContext
-		implements
-			ThreadingContext,
-			ThreadController,
-			Iterable<Thread>
+			implements
+				ThreadingContext,
+				ThreadController,
+				Iterable<Thread>
 {
-	private BasicThreadingContext (final ThreadGroup group, final ThreadConfiguration configuration)
-	{
+	private BasicThreadingContext (final ThreadGroup group, final ThreadConfiguration configuration) {
 		super ();
 		Preconditions.checkNotNull (group);
 		Preconditions.checkNotNull (configuration);
@@ -68,113 +67,95 @@ public final class BasicThreadingContext
 	
 	// FIXME: This method is currently "half" implemented as it doesn't wait for threads not derived from `BasicThread`.
 	@Override
-	public final boolean await ()
-	{
+	public final boolean await () {
 		return (this.threads.await ());
 	}
 	
 	@Override
-	public final boolean await (final long timeout)
-	{
+	public final boolean await (final long timeout) {
 		return (this.threads.await (timeout));
 	}
 	
 	// FIXME: Returned executors should extend `ThreadPoolExecutor` (or the like) and override certain methods for logging and error handling.
 	@Override
-	public final ExecutorService createCachedThreadPool (final ThreadConfiguration configuration)
-	{
+	public final ExecutorService createCachedThreadPool (final ThreadConfiguration configuration) {
 		return (Executors.unconfigurableExecutorService (Executors.newCachedThreadPool (this.createThreadFactory (configuration, true))));
 	}
 	
 	@Override
-	public final ExecutorService createFixedThreadPool (final ThreadConfiguration configuration, final int threads)
-	{
+	public final ExecutorService createFixedThreadPool (final ThreadConfiguration configuration, final int threads) {
 		return (Executors.unconfigurableExecutorService (Executors.newFixedThreadPool (threads, this.createThreadFactory (configuration, true))));
 	}
 	
 	@Override
-	public final ScheduledExecutorService createScheduledThreadPool (final ThreadConfiguration configuration, final int coreThreads)
-	{
+	public final ScheduledExecutorService createScheduledThreadPool (final ThreadConfiguration configuration, final int coreThreads) {
 		return (Executors.unconfigurableScheduledExecutorService (Executors.newScheduledThreadPool (coreThreads, this.createThreadFactory (configuration, true))));
 	}
 	
 	@Override
-	public final ExecutorService createSingleThreadExecutor (final ThreadConfiguration configuration)
-	{
+	public final ExecutorService createSingleThreadExecutor (final ThreadConfiguration configuration) {
 		return (Executors.unconfigurableExecutorService (Executors.newSingleThreadExecutor (this.createThreadFactory (configuration, false))));
 	}
 	
 	@Override
-	public final ScheduledExecutorService createSingleThreadScheduledExecutor (final ThreadConfiguration configuration)
-	{
+	public final ScheduledExecutorService createSingleThreadScheduledExecutor (final ThreadConfiguration configuration) {
 		return (Executors.unconfigurableScheduledExecutorService (Executors.newSingleThreadScheduledExecutor (this.createThreadFactory (configuration, false))));
 	}
 	
 	@Override
-	public final Thread createThread (final ThreadConfiguration configuration, final Runnable runnable)
-	{
+	public final Thread createThread (final ThreadConfiguration configuration, final Runnable runnable) {
 		Preconditions.checkState (this.isActive ());
 		Preconditions.checkState (!this.isSealed ());
 		return (new BasicThread (this.group, configuration, runnable, -1));
 	}
 	
 	@Override
-	public final ThreadFactory createThreadFactory (final ThreadConfiguration configuration)
-	{
+	public final ThreadFactory createThreadFactory (final ThreadConfiguration configuration) {
 		return (this.createThreadFactory (configuration, true));
 	}
 	
-	public final ThreadFactory createThreadFactory (final ThreadConfiguration configuration, final boolean index)
-	{
+	public final ThreadFactory createThreadFactory (final ThreadConfiguration configuration, final boolean index) {
 		Preconditions.checkState (this.isActive ());
 		Preconditions.checkState (!this.isSealed ());
 		return (new BasicThreadFactory (new BasicThreadGroup (this.group, configuration), configuration, index));
 	}
 	
-	public final void destroy ()
-	{
+	public final void destroy () {
 		Preconditions.checkState (this.destroy (-1));
 	}
 	
-	public final boolean destroy (final long timeout)
-	{
+	public final boolean destroy (final long timeout) {
 		this.interrupt ();
 		return (this.await (timeout));
 	}
 	
 	@Override
-	public final ThreadGroup getDefaultThreadGroup ()
-	{
+	public final ThreadGroup getDefaultThreadGroup () {
 		return (this.defaultGroup);
 	}
 	
 	@Override
-	public final ThreadConfiguration getThreadConfiguration ()
-	{
+	public final ThreadConfiguration getThreadConfiguration () {
 		return (this.configuration);
 	}
 	
-	public final void initialize ()
-	{
+	public final void initialize () {
 		Preconditions.checkState (this.initialize (-1));
 	}
 	
-	public final boolean initialize (final long timeout)
-	{
+	public final boolean initialize (final long timeout) {
 		Preconditions.checkArgument (timeout >= -1);
 		Preconditions.checkState (this.initialized.compareAndSet (false, true));
 		return (true);
 	}
 	
 	@Override
-	public final void interrupt ()
-	{
+	public final void interrupt () {
 		this.threads.interrupt ();
 	}
 	
 	@Override
-	public final boolean isActive ()
-	{
+	public final boolean isActive () {
 		if (!this.initialized.get ())
 			return (false);
 		final Object owner = this.configuration.owner.get ();
@@ -184,8 +165,7 @@ public final class BasicThreadingContext
 	}
 	
 	@Override
-	public final boolean isManaged (final Thread thread)
-	{
+	public final boolean isManaged (final Thread thread) {
 		Preconditions.checkNotNull (thread);
 		// FIXME: It seems that "terminated" threads have no thread group...
 		final ThreadGroup group = thread.getThreadGroup ();
@@ -195,8 +175,7 @@ public final class BasicThreadingContext
 	}
 	
 	@Override
-	public final boolean isManaged (final ThreadGroup group)
-	{
+	public final boolean isManaged (final ThreadGroup group) {
 		Preconditions.checkNotNull (group);
 		for (ThreadGroup parent = group; true; parent = parent.getParent ()) {
 			if (parent == this.group)
@@ -207,38 +186,32 @@ public final class BasicThreadingContext
 	}
 	
 	@Override
-	public final boolean isSealed ()
-	{
+	public final boolean isSealed () {
 		return (this.sealed.get ());
 	}
 	
 	@Override
-	public final Iterator<Thread> iterator ()
-	{
+	public final Iterator<Thread> iterator () {
 		return (this.threads.iterator ());
 	}
 	
 	@Override
-	public final void registerThread (final Thread thread)
-	{
+	public final void registerThread (final Thread thread) {
 		Preconditions.checkArgument (this.isManaged (thread));
 		this.threads.register (thread);
 	}
 	
-	public final void seal ()
-	{
+	public final void seal () {
 		this.sealed.set (true);
 	}
 	
-	final void handleException (final Thread thread, final Throwable exception)
-	{
+	final void handleException (final Thread thread, final Throwable exception) {
 		final UncaughtExceptionHandler catcher = this.resolveCatcher (thread);
 		if (catcher != null)
 			this.handleException (catcher, thread, exception);
 	}
 	
-	final UncaughtExceptionHandler resolveCatcher (final Thread thread)
-	{
+	final UncaughtExceptionHandler resolveCatcher (final Thread thread) {
 		Preconditions.checkNotNull (thread);
 		Preconditions.checkArgument (this.isManaged (thread));
 		final UncaughtExceptionHandler threadCatcher;
@@ -273,8 +246,7 @@ public final class BasicThreadingContext
 		return (null);
 	}
 	
-	final ExceptionTracer resolveExceptions (final Thread thread)
-	{
+	final ExceptionTracer resolveExceptions (final Thread thread) {
 		Preconditions.checkNotNull (thread);
 		Preconditions.checkArgument (this.isManaged (thread));
 		final ExceptionTracer threadExceptions;
@@ -309,21 +281,26 @@ public final class BasicThreadingContext
 		return (null);
 	}
 	
-	private final void handleException (final UncaughtExceptionHandler catcher, final Thread thread, final Throwable exception)
-	{
+	private final void handleException (final UncaughtExceptionHandler catcher, final Thread thread, final Throwable exception) {
 		catcher.uncaughtException (thread, exception);
 	}
 	
-	public static final WeakReference<Object> buildOwner (final ThreadConfiguration configuration)
-	{
+	private final ThreadConfiguration configuration;
+	private final BasicThreadGroup defaultGroup;
+	private final BasicThreadGroup group;
+	private final AtomicBoolean initialized;
+	private final WeakReference<Object> owner;
+	private final AtomicBoolean sealed;
+	private final ThreadBundle<Thread> threads;
+	
+	public static final WeakReference<Object> buildOwner (final ThreadConfiguration configuration) {
 		Preconditions.checkNotNull (configuration.owner);
 		final Object owner = configuration.owner.get ();
 		Preconditions.checkNotNull (owner);
 		return (new WeakReference<Object> (owner));
 	}
 	
-	public static final String buildThreadGroupName (final ThreadConfiguration configuration)
-	{
+	public static final String buildThreadGroupName (final ThreadConfiguration configuration) {
 		Preconditions.checkNotNull (configuration);
 		final Object owner = configuration.owner.get ();
 		Preconditions.checkNotNull (owner);
@@ -341,8 +318,7 @@ public final class BasicThreadingContext
 		return (finalName);
 	}
 	
-	public static final String buildThreadName (final ThreadGroup group, final ThreadConfiguration configuration, final int index)
-	{
+	public static final String buildThreadName (final ThreadGroup group, final ThreadConfiguration configuration, final int index) {
 		Preconditions.checkNotNull (configuration);
 		final Object owner = configuration.owner.get ();
 		Preconditions.checkNotNull (owner);
@@ -368,31 +344,20 @@ public final class BasicThreadingContext
 		return (finalName);
 	}
 	
-	public static final BasicThreadingContext create (final Object owner, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher)
-	{
+	public static final BasicThreadingContext create (final Object owner, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher) {
 		return (BasicThreadingContext.create (owner, exceptions, catcher, null));
 	}
 	
-	public static final BasicThreadingContext create (final Object owner, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher, final ClassLoader classLoader)
-	{
+	public static final BasicThreadingContext create (final Object owner, final ExceptionTracer exceptions, final Thread.UncaughtExceptionHandler catcher, final ClassLoader classLoader) {
 		return (new BasicThreadingContext (Threading.getRootThreadGroup (), ThreadConfiguration.create (owner, null, true, exceptions, catcher, classLoader)));
 	}
 	
-	private final ThreadConfiguration configuration;
-	private final BasicThreadGroup defaultGroup;
-	private final BasicThreadGroup group;
-	private final AtomicBoolean initialized;
-	private final WeakReference<Object> owner;
-	private final AtomicBoolean sealed;
-	private final ThreadBundle<Thread> threads;
-	
 	public final class BasicThread
-			extends Thread
-			implements
-				ManagedThread
+				extends Thread
+				implements
+					ManagedThread
 	{
-		BasicThread (final BasicThreadGroup group, final ThreadConfiguration configuration, final Runnable runnable, final int index)
-		{
+		BasicThread (final BasicThreadGroup group, final ThreadConfiguration configuration, final Runnable runnable, final int index) {
 			super (group, runnable);
 			Preconditions.checkNotNull (group);
 			Preconditions.checkNotNull (configuration);
@@ -416,32 +381,27 @@ public final class BasicThreadingContext
 		}
 		
 		@Override
-		public final boolean await ()
-		{
+		public final boolean await () {
 			return (Threading.join (this));
 		}
 		
 		@Override
-		public final boolean await (final long timeout)
-		{
+		public final boolean await (final long timeout) {
 			return (Threading.join (this, timeout));
 		}
 		
 		@Override
-		public final BasicThreadingContext getContext ()
-		{
+		public final BasicThreadingContext getContext () {
 			return (BasicThreadingContext.this);
 		}
 		
 		@Override
-		public final UncaughtExceptionHandler getUncaughtExceptionHandler ()
-		{
+		public final UncaughtExceptionHandler getUncaughtExceptionHandler () {
 			return (super.getUncaughtExceptionHandler ());
 		}
 		
 		@Override
-		public final void run ()
-		{
+		public final void run () {
 			Preconditions.checkState (this == Thread.currentThread ());
 			Preconditions.checkState (this.running.compareAndSet (false, true));
 			Preconditions.checkState (Threading.getCurrentContext () == BasicThreadingContext.this);
@@ -458,12 +418,11 @@ public final class BasicThreadingContext
 	}
 	
 	public final class BasicThreadFactory
-			extends Object
-			implements
-				ThreadFactory
+				extends Object
+				implements
+					ThreadFactory
 	{
-		BasicThreadFactory (final BasicThreadGroup group, final ThreadConfiguration configuration, final boolean index)
-		{
+		BasicThreadFactory (final BasicThreadGroup group, final ThreadConfiguration configuration, final boolean index) {
 			super ();
 			Preconditions.checkNotNull (group);
 			Preconditions.checkNotNull (configuration);
@@ -474,14 +433,12 @@ public final class BasicThreadingContext
 			this.index = index ? new AtomicInteger (0) : null;
 		}
 		
-		public final BasicThreadingContext getContext ()
-		{
+		public final BasicThreadingContext getContext () {
 			return (BasicThreadingContext.this);
 		}
 		
 		@Override
-		public final Thread newThread (final Runnable runnable)
-		{
+		public final Thread newThread (final Runnable runnable) {
 			return (new BasicThread (this.group, this.configuration.overrideName (null), runnable, this.index != null ? this.index.incrementAndGet () : -1));
 		}
 		
@@ -491,18 +448,16 @@ public final class BasicThreadingContext
 	}
 	
 	public final class BasicThreadGroup
-			extends ThreadGroup
-			implements
-				ManagedThreadGroup
+				extends ThreadGroup
+				implements
+					ManagedThreadGroup
 	{
-		BasicThreadGroup (final BasicThreadGroup group, final ThreadConfiguration configuration)
-		{
+		BasicThreadGroup (final BasicThreadGroup group, final ThreadConfiguration configuration) {
 			this ((ThreadGroup) group, configuration);
 			Preconditions.checkNotNull (group);
 		}
 		
-		BasicThreadGroup (final ThreadGroup group, final ThreadConfiguration configuration)
-		{
+		BasicThreadGroup (final ThreadGroup group, final ThreadConfiguration configuration) {
 			super (group, BasicThreadingContext.buildThreadGroupName (configuration));
 			Preconditions.checkNotNull (group);
 			this.configuration = configuration;
@@ -517,81 +472,68 @@ public final class BasicThreadingContext
 		}
 		
 		@Override
-		public final int activeCount ()
-		{
+		public final int activeCount () {
 			return super.activeCount ();
 		}
 		
 		@Override
-		public final int activeGroupCount ()
-		{
+		public final int activeGroupCount () {
 			return super.activeGroupCount ();
 		}
 		
 		@SuppressWarnings ("deprecation")
 		@Override
 		@Deprecated
-		public final boolean allowThreadSuspension (final boolean b)
-		{
+		public final boolean allowThreadSuspension (final boolean b) {
 			return super.allowThreadSuspension (b);
 		}
 		
 		@Override
-		public final int enumerate (final Thread[] collector)
-		{
+		public final int enumerate (final Thread[] collector) {
 			return super.enumerate (collector);
 		}
 		
 		@Override
-		public final int enumerate (final Thread[] collector, final boolean recursive)
-		{
+		public final int enumerate (final Thread[] collector, final boolean recursive) {
 			return super.enumerate (collector, recursive);
 		}
 		
 		@Override
-		public final int enumerate (final ThreadGroup[] collector)
-		{
+		public final int enumerate (final ThreadGroup[] collector) {
 			return super.enumerate (collector);
 		}
 		
 		@Override
-		public final int enumerate (final ThreadGroup[] collector, final boolean recursive)
-		{
+		public final int enumerate (final ThreadGroup[] collector, final boolean recursive) {
 			return super.enumerate (collector, recursive);
 		}
 		
-		public final ThreadConfiguration getConfiguration ()
-		{
+		public final ThreadConfiguration getConfiguration () {
 			return (this.configuration);
 		}
 		
 		@Override
-		public final BasicThreadingContext getContext ()
-		{
+		public final BasicThreadingContext getContext () {
 			return (BasicThreadingContext.this);
 		}
 		
 		@Override
-		public final boolean isDestroyed ()
-		{
+		public final boolean isDestroyed () {
 			return (super.isDestroyed ());
 		}
 		
 		@Override
-		public final void list ()
-		{
+		public final void list () {
 			throw (new UnsupportedOperationException ());
 		}
 		
 		@Override
-		public final String toString ()
-		{
+		public final String toString () {
 			return super.toString ();
 		}
 		
 		@Override
-		public final void uncaughtException (final Thread thread, final Throwable exception)
-		{
+		public final void uncaughtException (final Thread thread, final Throwable exception) {
 			Preconditions.checkArgument (thread.getThreadGroup () == this);
 			BasicThreadingContext.this.handleException (thread, exception);
 		}

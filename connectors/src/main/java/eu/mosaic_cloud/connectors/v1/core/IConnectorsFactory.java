@@ -25,7 +25,6 @@ package eu.mosaic_cloud.connectors.v1.core;
  * Interface for the factory of connector factories class.
  * 
  * @author Ciprian Craciun
- * 
  */
 public interface IConnectorsFactory
 {

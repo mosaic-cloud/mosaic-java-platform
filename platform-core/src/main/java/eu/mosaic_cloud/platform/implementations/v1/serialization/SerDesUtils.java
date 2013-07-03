@@ -46,24 +46,16 @@ import org.json.JSONTokener;
  * Defines utility methods for serializing and deserializing messages.
  * 
  * @author Georgiana Macariu
- * 
  */
 public final class SerDesUtils
 {
-	private SerDesUtils ()
-	{
+	private SerDesUtils () {
 		throw (new UnsupportedOperationException ());
 	}
 	
-	static {
-		objectMapper = new ObjectMapper ();
-		SerDesUtils.objectMapper.configure (SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
-	}
-	
 	/**
-	 * Converts an array of bytes corresponding to a JSON object back to its
-	 * constituent Java Bean object. The input array is assumed to have been
-	 * created from the original object.
+	 * Converts an array of bytes corresponding to a JSON object back to its constituent Java Bean object. The input array is
+	 * assumed to have been created from the original object.
 	 * 
 	 * @param bytes
 	 *            the byte array to convert.
@@ -74,8 +66,7 @@ public final class SerDesUtils
 	 * @throws IOException
 	 */
 	public static <T extends Object> T jsonToObject (final byte[] bytes, final Class<T> valueClass, final Charset charset)
-			throws IOException
-	{
+				throws IOException {
 		// FIXME: Should be able to use the charset...
 		T object = null;
 		if (bytes.length > 0) {
@@ -85,8 +76,7 @@ public final class SerDesUtils
 	}
 	
 	public static JSONObject jsonToRawObject (final byte[] dataBytes, final Charset charset)
-			throws JSONException
-	{
+				throws JSONException {
 		if (dataBytes.length == 0) {
 			return null;
 		}
@@ -104,8 +94,7 @@ public final class SerDesUtils
 	 * @return the associated byte array.
 	 */
 	public static byte[] pojoToBytes (final Object object)
-			throws IOException
-	{
+				throws IOException {
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream ();
 		final ObjectOutputStream oos = new ObjectOutputStream (baos);
 		oos.writeObject (object);
@@ -114,9 +103,7 @@ public final class SerDesUtils
 	}
 	
 	public static byte[] toJsonBytes (final JSONObject data, final Charset charset)
-			throws JSONException,
-				IOException
-	{
+				throws JSONException, IOException {
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream ();
 		final Writer writer = new BufferedWriter (new OutputStreamWriter (baos, charset));
 		data.write (writer);
@@ -125,24 +112,22 @@ public final class SerDesUtils
 	}
 	
 	/**
-	 * Converts an object (Java Bean) to an array of bytes corresponding to the
-	 * JSON encoding of the bean..
+	 * Converts an object (Java Bean) to an array of bytes corresponding to the JSON encoding of the bean..
 	 * 
 	 * @param object
 	 *            the object to convert.
 	 * @return the associated byte array.
 	 */
 	public static byte[] toJsonBytes (final Object object, final Charset charset)
-			throws IOException
-	{
+				throws IOException {
 		// FIXME: Should be able to use the charset...
 		final byte[] bytes = SerDesUtils.objectMapper.writeValueAsString (object).getBytes ();
 		return bytes;
 	}
 	
 	/**
-	 * Converts an array of bytes back to its constituent object. The input
-	 * array is assumed to have been created from the original object.
+	 * Converts an array of bytes back to its constituent object. The input array is assumed to have been created from the
+	 * original object.
 	 * 
 	 * @param bytes
 	 *            the byte array to convert.
@@ -151,9 +136,7 @@ public final class SerDesUtils
 	 * @throws IOException
 	 */
 	public static Object toObject (final byte[] bytes)
-			throws IOException,
-				ClassNotFoundException
-	{
+				throws IOException, ClassNotFoundException {
 		Object object = null;
 		if (bytes.length > 0) {
 			final ObjectInputStream stream = new SpecialObjectInputStream (new ByteArrayInputStream (bytes));
@@ -163,22 +146,23 @@ public final class SerDesUtils
 		return object;
 	}
 	
+	static {
+		objectMapper = new ObjectMapper ();
+		SerDesUtils.objectMapper.configure (SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
+	}
 	private static final ObjectMapper objectMapper;
 	
 	private static class SpecialObjectInputStream
-			extends ObjectInputStream
+				extends ObjectInputStream
 	{
 		public SpecialObjectInputStream (final InputStream stream)
-				throws IOException
-		{
+					throws IOException {
 			super (stream);
 		}
 		
 		@Override
 		public Class<?> resolveClass (final ObjectStreamClass descriptor)
-				throws ClassNotFoundException,
-					IOException
-		{
+					throws ClassNotFoundException, IOException {
 			final ClassLoader currentLoader = Thread.currentThread ().getContextClassLoader ();
 			Class<?> clasz = null;
 			if (currentLoader != null) {

@@ -32,17 +32,15 @@ import eu.mosaic_cloud.interoperability.tools.Identifiers;
 
 
 /**
- * Defines the Dfs session: the messages that can be exchanged and the
- * roles of the participants.
+ * Defines the Dfs session: the messages that can be exchanged and the roles of the participants.
  */
 public enum DFSSession
-		implements
-			SessionSpecification
+			implements
+				SessionSpecification
 {
 	CONNECTOR (DFSRole.CONNECTOR, DFSRole.DRIVER),
 	DRIVER (DFSRole.DRIVER, DFSRole.CONNECTOR);
-	private DFSSession (final DFSRole selfRole, final DFSRole peerRole)
-	{
+	private DFSSession (final DFSRole selfRole, final DFSRole peerRole) {
 		this.selfRole = selfRole;
 		this.peerRole = peerRole;
 		final List<MessageSpecification> messages = new LinkedList<MessageSpecification> ();
@@ -56,26 +54,22 @@ public enum DFSSession
 	}
 	
 	@Override
-	public Iterable<? extends MessageSpecification> getMessages ()
-	{
+	public Iterable<? extends MessageSpecification> getMessages () {
 		return this.messages;
 	}
 	
 	@Override
-	public RoleSpecification getPeerRole ()
-	{
+	public RoleSpecification getPeerRole () {
 		return this.peerRole;
 	}
 	
 	@Override
-	public String getQualifiedName ()
-	{
+	public String getQualifiedName () {
 		return (Identifiers.generateName (this));
 	}
 	
 	@Override
-	public RoleSpecification getSelfRole ()
-	{
+	public RoleSpecification getSelfRole () {
 		return this.selfRole;
 	}
 	

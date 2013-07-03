@@ -27,18 +27,16 @@ import com.google.common.base.Preconditions;
 
 
 public abstract class DelegatingExceptionTracer
-		extends InterceptingExceptionTracer
+			extends InterceptingExceptionTracer
 {
-	protected DelegatingExceptionTracer (final ExceptionTracer delegate)
-	{
+	protected DelegatingExceptionTracer (final ExceptionTracer delegate) {
 		super ();
 		Preconditions.checkNotNull (delegate);
 		this.delegate = delegate;
 	}
 	
 	@Override
-	protected final ExceptionTracer getDelegate ()
-	{
+	protected final ExceptionTracer getDelegate () {
 		return (this.delegate);
 	}
 	

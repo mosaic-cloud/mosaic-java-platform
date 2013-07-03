@@ -25,7 +25,6 @@ package eu.mosaic_cloud.drivers.ops;
  * Marker interface for operation types enums.
  * 
  * @author Georgiana Macariu
- * 
  */
 public interface IOperationType
 {}

@@ -28,27 +28,24 @@ import com.google.common.base.Preconditions;
 
 
 public final class UncaughtExceptionHandler
-		extends Object
-		implements
-			Thread.UncaughtExceptionHandler
+			extends Object
+			implements
+				Thread.UncaughtExceptionHandler
 {
-	private UncaughtExceptionHandler (final ExceptionTracer delegate)
-	{
+	private UncaughtExceptionHandler (final ExceptionTracer delegate) {
 		super ();
 		Preconditions.checkNotNull (delegate);
 		this.delegate = delegate;
 	}
 	
 	@Override
-	public final void uncaughtException (final Thread thread, final Throwable exception)
-	{
+	public final void uncaughtException (final Thread thread, final Throwable exception) {
 		this.delegate.trace (ExceptionResolution.Ignored, exception);
 	}
 	
-	public static final UncaughtExceptionHandler create (final ExceptionTracer delegate)
-	{
+	private final ExceptionTracer delegate;
+	
+	public static final UncaughtExceptionHandler create (final ExceptionTracer delegate) {
 		return (new UncaughtExceptionHandler (delegate));
 	}
-	
-	private final ExceptionTracer delegate;
 }

@@ -25,17 +25,15 @@ import eu.mosaic_cloud.drivers.component.AbstractDriverComponentPreMain;
 
 
 public final class AmqpDriverComponentPreMain
-		extends Object
+			extends Object
 {
-	private AmqpDriverComponentPreMain ()
-	{
+	private AmqpDriverComponentPreMain () {
 		super ();
 		throw (new UnsupportedOperationException ());
 	}
 	
 	public static void main (final String[] arguments)
-			throws Throwable
-	{
+				throws Throwable {
 		AbstractDriverComponentPreMain.main (AmqpDriverComponentCallbacks.class.getName ().replace ("PreMain", "Callbacks"), arguments);
 	}
 }

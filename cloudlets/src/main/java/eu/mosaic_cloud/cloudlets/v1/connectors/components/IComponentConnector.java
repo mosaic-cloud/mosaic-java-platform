@@ -28,12 +28,13 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 public interface IComponentConnector<TExtra>
-		extends
-			eu.mosaic_cloud.connectors.v1.components.IComponentConnector
+			extends
+				eu.mosaic_cloud.connectors.v1.components.IComponentConnector
 {
 	CallbackCompletion<ComponentResourceDescriptor> acquire (final ComponentResourceSpecification resource, final TExtra extra);
 	
 	<TInputs, TOutputs> CallbackCompletion<TOutputs> call (final ComponentIdentifier component, final String operation, final TInputs inputs, final Class<TOutputs> outputs, final TExtra extra);
 	
+	@Override
 	<TInputs> CallbackCompletion<Void> cast (final ComponentIdentifier component, final String operation, final TInputs inputs);
 }

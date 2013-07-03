@@ -27,22 +27,19 @@ import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
 
 
 public class ComponentAcquireSucceededCallbackArguments<TExtra>
-		extends CallbackArguments
+			extends CallbackArguments
 {
-	public ComponentAcquireSucceededCallbackArguments (final ICloudletController<?> cloudlet, final ComponentResourceDescriptor descriptor, final TExtra extra)
-	{
+	public ComponentAcquireSucceededCallbackArguments (final ICloudletController<?> cloudlet, final ComponentResourceDescriptor descriptor, final TExtra extra) {
 		super (cloudlet);
 		this.descriptor = descriptor;
 		this.extra = extra;
 	}
 	
-	public ComponentResourceDescriptor getDescriptor ()
-	{
+	public ComponentResourceDescriptor getDescriptor () {
 		return (this.descriptor);
 	}
 	
-	public TExtra getExtra ()
-	{
+	public TExtra getExtra () {
 		return (this.extra);
 	}
 	

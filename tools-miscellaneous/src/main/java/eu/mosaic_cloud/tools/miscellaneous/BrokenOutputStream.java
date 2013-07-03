@@ -25,45 +25,38 @@ import java.io.OutputStream;
 
 
 public final class BrokenOutputStream
-		extends OutputStream
+			extends OutputStream
 {
-	private BrokenOutputStream ()
-	{
+	private BrokenOutputStream () {
 		super ();
 	}
 	
 	@Override
-	public void close ()
-	{
+	public void close () {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void flush ()
-	{
+	public void flush () {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void write (final byte[] b)
-	{
+	public void write (final byte[] b) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void write (final byte[] b, final int off, final int len)
-	{
+	public void write (final byte[] b, final int off, final int len) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void write (final int b)
-	{
+	public void write (final int b) {
 		throw (new UnsupportedOperationException ());
 	}
 	
-	public static final BrokenOutputStream create ()
-	{
+	public static final BrokenOutputStream create () {
 		return (new BrokenOutputStream ());
 	}
 	

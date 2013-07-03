@@ -29,24 +29,21 @@ import ch.qos.logback.core.util.StatusPrinter;
 
 
 public final class LogbackStatusListener
-		extends Object
-		implements
-			StatusListener
+			extends Object
+			implements
+				StatusListener
 {
-	public LogbackStatusListener ()
-	{
+	public LogbackStatusListener () {
 		this (null);
 	}
 	
-	public LogbackStatusListener (final PrintStream transcript)
-	{
+	public LogbackStatusListener (final PrintStream transcript) {
 		super ();
 		this.transcript = transcript;
 	}
 	
 	@Override
-	public final void addStatusEvent (final Status status)
-	{
+	public final void addStatusEvent (final Status status) {
 		final PrintStream finalTranscript = ((this.transcript != null) ? this.transcript : System.err);
 		final StringBuilder builder = new StringBuilder ();
 		builder.append (String.format ("[%5s][STAT ] ", LogbackJvmPidPropertyDefiner.defaultInstance.getPropertyValue ()));

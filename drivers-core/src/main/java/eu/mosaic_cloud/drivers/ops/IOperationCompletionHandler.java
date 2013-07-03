@@ -22,11 +22,9 @@ package eu.mosaic_cloud.drivers.ops;
 
 
 /**
- * Interface for handlers to be called when the result of an event-drive
- * asynchronous operation arrives.
+ * Interface for handlers to be called when the result of an event-drive asynchronous operation arrives.
  * 
  * @author Georgiana Macariu
- * 
  * @param <T>
  *            the type of the result of the operation
  */
@@ -43,8 +41,7 @@ public interface IOperationCompletionHandler<T>
 	void onFailure (Throwable error);
 	
 	/**
-	 * Handles the result of the operation. This shall be called when operation
-	 * finishes successfully.
+	 * Handles the result of the operation. This shall be called when operation finishes successfully.
 	 * 
 	 * @param result
 	 *            the result

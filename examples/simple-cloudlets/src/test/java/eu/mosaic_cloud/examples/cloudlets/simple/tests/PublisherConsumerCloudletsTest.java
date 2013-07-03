@@ -34,8 +34,7 @@ import org.junit.runner.Result;
 public class PublisherConsumerCloudletsTest
 {
 	@Test
-	public void test ()
-	{
+	public void test () {
 		PublisherConsumerCloudletsTest.doRun = true;
 		try {
 			final ParallelComputer computer = new ParallelComputer (true, false);
@@ -49,22 +48,20 @@ public class PublisherConsumerCloudletsTest
 	static boolean doRun = false;
 	
 	public static class ConsumerCloudletTest
-			extends BaseCloudletTest
+				extends BaseCloudletTest
 	{
 		@Override
-		public void setUp ()
-		{
+		public void setUp () {
 			this.doRun = PublisherConsumerCloudletsTest.doRun;
 			this.setUp (ConsumerCloudlet.LifeCycleHandler.class, ConsumerCloudlet.ConsumerCloudletContext.class, "consumer-cloudlet.properties");
 		}
 	}
 	
 	public static class PublisherCloudletTest
-			extends BaseCloudletTest
+				extends BaseCloudletTest
 	{
 		@Override
-		public void setUp ()
-		{
+		public void setUp () {
 			this.doRun = PublisherConsumerCloudletsTest.doRun;
 			this.setUp (PublisherCloudlet.LifeCycleHandler.class, PublisherCloudlet.PublisherCloudletContext.class, "publisher-cloudlet.properties");
 		}

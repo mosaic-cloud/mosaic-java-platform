@@ -22,20 +22,17 @@ package eu.mosaic_cloud.tools.exceptions.core;
 
 
 public final class HandledException
-		extends CaughtException
+			extends CaughtException
 {
-	public HandledException (final Throwable exception)
-	{
+	public HandledException (final Throwable exception) {
 		super (ExceptionResolution.Handled, exception);
 	}
 	
-	public HandledException (final Throwable exception, final String message)
-	{
+	public HandledException (final Throwable exception, final String message) {
 		super (ExceptionResolution.Handled, exception, message);
 	}
 	
-	public HandledException (final Throwable exception, final String messageFormat, final Object ... messageArguments)
-	{
+	public HandledException (final Throwable exception, final String messageFormat, final Object ... messageArguments) {
 		super (ExceptionResolution.Handled, exception, messageFormat, messageArguments);
 	}
 	

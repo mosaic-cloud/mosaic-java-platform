@@ -51,21 +51,18 @@ import com.google.common.base.Preconditions;
 
 
 /**
- * This callback class enables the Key Value store driver to be exposed as a
- * component. Upon initialization it will look for a Key Value store server and
- * will create a driver object for the server.
+ * This callback class enables the Key Value store driver to be exposed as a component. Upon initialization it will look for a
+ * Key Value store server and will create a driver object for the server.
  * 
  * @author Georgiana Macariu
- * 
  */
 public final class KvDriverComponentCallbacks
-		extends AbstractDriverComponentCallbacks
+			extends AbstractDriverComponentCallbacks
 {
 	/**
 	 * Creates a driver callback.
 	 */
-	public KvDriverComponentCallbacks (final ComponentEnvironment context)
-	{
+	public KvDriverComponentCallbacks (final ComponentEnvironment context) {
 		super (context);
 		try {
 			final IConfiguration configuration = PropertyTypeConfiguration.create (KvDriverComponentCallbacks.class.getResourceAsStream ("driver-component.properties"));
@@ -80,14 +77,12 @@ public final class KvDriverComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> acquireReturned (final ComponentController component, final ComponentAcquireReply reply)
-	{
+	public final CallbackCompletion<Void> acquireReturned (final ComponentController component, final ComponentAcquireReply reply) {
 		throw (new IllegalStateException ());
 	}
 	
 	@Override
-	public CallbackCompletion<Void> called (final ComponentController component, final ComponentCallRequest request)
-	{
+	public CallbackCompletion<Void> called (final ComponentController component, final ComponentCallRequest request) {
 		Preconditions.checkState (this.component == component);
 		Preconditions.checkState ((this.status != KvDriverComponentCallbacks.Status.Terminated) && (this.status != KvDriverComponentCallbacks.Status.Unregistered));
 		if (this.status == KvDriverComponentCallbacks.Status.Registered) {
@@ -120,8 +115,7 @@ public final class KvDriverComponentCallbacks
 	}
 	
 	@Override
-	public CallbackCompletion<Void> callReturned (final ComponentController component, final ComponentCallReply reply)
-	{
+	public CallbackCompletion<Void> callReturned (final ComponentController component, final ComponentCallReply reply) {
 		Preconditions.checkState (this.component == component);
 		if (this.pendingReference == reply.reference) {
 			if (this.status == Status.WaitingResourceResolved) {
@@ -159,8 +153,7 @@ public final class KvDriverComponentCallbacks
 	}
 	
 	@Override
-	public CallbackCompletion<Void> initialized (final ComponentController component)
-	{
+	public CallbackCompletion<Void> initialized (final ComponentController component) {
 		Preconditions.checkState (this.component == null);
 		Preconditions.checkState (this.status == Status.Created);
 		this.component = component;
@@ -179,8 +172,7 @@ public final class KvDriverComponentCallbacks
 	}
 	
 	@Override
-	public CallbackCompletion<Void> registerReturned (final ComponentController component, final ComponentCallReference reference, final boolean success)
-	{
+	public CallbackCompletion<Void> registerReturned (final ComponentController component, final ComponentCallReference reference, final boolean success) {
 		Preconditions.checkState (this.component == component);
 		if (this.pendingReference == reference) {
 			if (!success) {
@@ -200,8 +192,7 @@ public final class KvDriverComponentCallbacks
 		return null;
 	}
 	
-	private void configureDriver (final String brokerIp, final String port)
-	{
+	private void configureDriver (final String brokerIp, final String port) {
 		this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.KVStoreDriver_0), brokerIp);
 		this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.KVStoreDriver_1), port);
 	}

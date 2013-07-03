@@ -32,12 +32,11 @@ import org.junit.Test;
 
 
 public abstract class BaseKvStoreConnectorTest<TConnector extends BaseKvStoreConnector<String, ?>>
-		extends BaseConnectorTest<TConnector, BaseKvStoreConnectorTest.Scenario>
+			extends BaseConnectorTest<TConnector, BaseKvStoreConnectorTest.Scenario>
 {
 	@Override
 	@Test
-	public void test ()
-	{
+	public void test () {
 		this.testConnector ();
 		this.testSet ();
 		this.testGet ();
@@ -45,8 +44,7 @@ public abstract class BaseKvStoreConnectorTest<TConnector extends BaseKvStoreCon
 		this.testDelete ();
 	}
 	
-	protected void testDelete ()
-	{
+	protected void testDelete () {
 		final String k1 = this.scenario.keyPrefix + "_key_fantastic";
 		final String k2 = this.scenario.keyPrefix + "_key_famous";
 		// NOTE: In past this would have returned `true`.
@@ -57,20 +55,17 @@ public abstract class BaseKvStoreConnectorTest<TConnector extends BaseKvStoreCon
 		Assert.assertNull (this.awaitOutcome (this.connector.get (k2)));
 	}
 	
-	protected void testGet ()
-	{
+	protected void testGet () {
 		final String k1 = this.scenario.keyPrefix + "_key_fantastic";
 		final EncodingMetadata encoding1 = new EncodingMetadata ("text/plain", "identity");
 		Assert.assertEquals ("fantastic", this.awaitOutcome (this.connector.get (k1)));
 	}
 	
-	protected void testList ()
-	{
+	protected void testList () {
 		Assert.assertNotNull (this.awaitOutcome (this.connector.list ()));
 	}
 	
-	protected void testSet ()
-	{
+	protected void testSet () {
 		final String k1 = this.scenario.keyPrefix + "_key_fantastic";
 		final String k2 = this.scenario.keyPrefix + "_key_famous";
 		Assert.assertNull (this.awaitOutcome (this.connector.set (k1, "fantastic")));
@@ -78,10 +73,9 @@ public abstract class BaseKvStoreConnectorTest<TConnector extends BaseKvStoreCon
 	}
 	
 	public static class Scenario
-			extends BaseScenario
+				extends BaseScenario
 	{
-		public <C extends BaseKvStoreConnector<String, ?>> Scenario (final Class<? extends BaseKvStoreConnectorTest<C>> owner, final IConfiguration configuration)
-		{
+		public <C extends BaseKvStoreConnector<String, ?>> Scenario (final Class<? extends BaseKvStoreConnectorTest<C>> owner, final IConfiguration configuration) {
 			super (owner, configuration);
 		}
 		

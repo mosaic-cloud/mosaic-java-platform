@@ -25,23 +25,20 @@ import java.io.Serializable;
 
 
 public final class AuthenticationToken
-		implements
-			Serializable
+			implements
+				Serializable
 {
-	public AuthenticationToken (final String token)
-	{
+	public AuthenticationToken (final String token) {
 		super ();
 		this.token = token;
 	}
 	
-	public String getToken ()
-	{
+	public String getToken () {
 		return this.token;
 	}
 	
 	@Override
-	public String toString ()
-	{
+	public String toString () {
 		return this.token;
 	}
 	

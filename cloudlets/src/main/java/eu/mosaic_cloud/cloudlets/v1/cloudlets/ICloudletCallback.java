@@ -26,17 +26,15 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 /**
- * Main interface for user cloudlets. All user cloudlets must implement this
- * interface.
+ * Main interface for user cloudlets. All user cloudlets must implement this interface.
  * 
  * @author Georgiana Macariu
- * 
  * @param <TContext>
  *            The type of the object encoding the context of the cloudlet.
  */
 public interface ICloudletCallback<TContext>
-		extends
-			ICallback<TContext>
+			extends
+				ICallback<TContext>
 {
 	/**
 	 * Destroys the user cloudlet.
@@ -44,8 +42,7 @@ public interface ICloudletCallback<TContext>
 	 * @param context
 	 *            the context of the cloudlet
 	 * @param arguments
-	 *            here, this argument just gives access to the cloudlet
-	 *            controller
+	 *            here, this argument just gives access to the cloudlet controller
 	 */
 	CallbackCompletion<Void> destroy (TContext context, CloudletCallbackArguments<TContext> arguments);
 	
@@ -55,8 +52,7 @@ public interface ICloudletCallback<TContext>
 	 * @param context
 	 *            the context of the cloudlet
 	 * @param arguments
-	 *            here, this argument just gives access to the cloudlet
-	 *            controller
+	 *            here, this argument just gives access to the cloudlet controller
 	 */
 	CallbackCompletion<Void> destroyFailed (TContext context, CloudletCallbackCompletionArguments<TContext> arguments);
 	
@@ -66,8 +62,7 @@ public interface ICloudletCallback<TContext>
 	 * @param context
 	 *            the context of the cloudlet
 	 * @param arguments
-	 *            here, this argument just gives access to the cloudlet
-	 *            controller
+	 *            here, this argument just gives access to the cloudlet controller
 	 */
 	CallbackCompletion<Void> destroySucceeded (TContext context, CloudletCallbackCompletionArguments<TContext> arguments);
 	
@@ -77,8 +72,7 @@ public interface ICloudletCallback<TContext>
 	 * @param context
 	 *            the context of the cloudlet
 	 * @param arguments
-	 *            here, this argument just gives access to the cloudlet
-	 *            controller
+	 *            here, this argument just gives access to the cloudlet controller
 	 */
 	CallbackCompletion<Void> initialize (TContext context, CloudletCallbackArguments<TContext> arguments);
 	
@@ -88,8 +82,7 @@ public interface ICloudletCallback<TContext>
 	 * @param context
 	 *            the context of the cloudlet
 	 * @param arguments
-	 *            here, this argument just gives access to the cloudlet
-	 *            controller
+	 *            here, this argument just gives access to the cloudlet controller
 	 */
 	CallbackCompletion<Void> initializeFailed (TContext context, CloudletCallbackCompletionArguments<TContext> arguments);
 	
@@ -99,8 +92,7 @@ public interface ICloudletCallback<TContext>
 	 * @param context
 	 *            the context of the cloudlet
 	 * @param arguments
-	 *            here, this argument just gives access to the cloudlet
-	 *            controller
+	 *            here, this argument just gives access to the cloudlet controller
 	 */
 	CallbackCompletion<Void> initializeSucceeded (TContext context, CloudletCallbackCompletionArguments<TContext> arguments);
 }

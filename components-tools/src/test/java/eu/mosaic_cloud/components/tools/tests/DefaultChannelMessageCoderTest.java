@@ -34,8 +34,7 @@ public final class DefaultChannelMessageCoderTest
 {
 	@Test
 	public final void test ()
-			throws Throwable
-	{
+				throws Throwable {
 		final DefaultChannelMessageCoder coder = DefaultChannelMessageCoder.defaultInstance;
 		final int tries = 16;
 		for (int index = 0; index < tries; index++) {

@@ -27,30 +27,24 @@ import java.util.concurrent.TimeoutException;
 
 
 /**
- * Defines a generic result handle of asynchronous operation. The asynchronous
- * operation is implemented using Java Futures in this case. It implements the
- * {@link IResult} interface.
+ * Defines a generic result handle of asynchronous operation. The asynchronous operation is implemented using Java Futures in
+ * this case. It implements the {@link IResult} interface.
  * <p>
- * If you would like to use a GenericResult for the sake of managing
- * asynchronous operation but not provide a usable result, you can declare types
- * of the form GenericResult<?> and return null as a result of the underlying
- * operation.
+ * If you would like to use a GenericResult for the sake of managing asynchronous operation but not provide a usable result, you
+ * can declare types of the form GenericResult<?> and return null as a result of the underlying operation.
  * <p>
- * For working with {@link GenericOperation} types, you should either use this
- * class or extend it instead of implementing another one directly from
- * {@link IResult}.
+ * For working with {@link GenericOperation} types, you should either use this class or extend it instead of implementing
+ * another one directly from {@link IResult}.
  * 
  * @author Georgiana Macariu
- * 
  * @param <T>
  *            The type of the actual result of the asynchronous operation.
  */
 public class GenericResult<T>
-		implements
-			IResult<T>
+			implements
+				IResult<T>
 {
-	public GenericResult (final GenericOperation<T> operation)
-	{
+	public GenericResult (final GenericOperation<T> operation) {
 		this.operation = operation;
 	}
 	
@@ -60,8 +54,7 @@ public class GenericResult<T>
 	 * @see eu.mosaic_cloud.drivers.ops.IResult#cancel()
 	 */
 	@Override
-	public final boolean cancel ()
-	{
+	public final boolean cancel () {
 		boolean done;
 		// NOTE: first test if it was not already cancelled
 		done = this.operation.isCancelled ();
@@ -84,18 +77,13 @@ public class GenericResult<T>
 	 */
 	@Override
 	public T getResult ()
-			throws InterruptedException,
-				ExecutionException
-	{
+				throws InterruptedException, ExecutionException {
 		return this.operation.get ();
 	}
 	
 	@Override
 	public T getResult (final long timeout, final TimeUnit unit)
-			throws InterruptedException,
-				ExecutionException,
-				TimeoutException
-	{
+				throws InterruptedException, ExecutionException, TimeoutException {
 		return this.operation.get (timeout, unit);
 	}
 	
@@ -105,8 +93,7 @@ public class GenericResult<T>
 	 * @see eu.mosaic_cloud.drivers.ops.IResult#isDone()
 	 */
 	@Override
-	public final boolean isDone ()
-	{
+	public final boolean isDone () {
 		return this.operation.isDone ();
 	}
 	

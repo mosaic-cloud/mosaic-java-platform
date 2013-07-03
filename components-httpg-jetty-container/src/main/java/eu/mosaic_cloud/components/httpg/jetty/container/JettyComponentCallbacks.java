@@ -54,13 +54,12 @@ import com.google.common.base.Preconditions;
 
 
 public final class JettyComponentCallbacks
-		extends Object
-		implements
-			ComponentCallbacks,
-			CallbackHandler
+			extends Object
+			implements
+				ComponentCallbacks,
+				CallbackHandler
 {
-	public JettyComponentCallbacks (final ComponentEnvironment context)
-	{
+	public JettyComponentCallbacks (final ComponentEnvironment context) {
 		super ();
 		this.monitor = Monitor.create (this);
 		synchronized (this.monitor) {
@@ -83,13 +82,11 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> acquireReturned (final ComponentController component, final ComponentAcquireReply reply)
-	{
+	public final CallbackCompletion<Void> acquireReturned (final ComponentController component, final ComponentAcquireReply reply) {
 		throw (new IllegalStateException ());
 	}
 	
-	public final Future<ComponentCallReply> call (final ComponentIdentifier component, final ComponentCallRequest request)
-	{
+	public final Future<ComponentCallReply> call (final ComponentIdentifier component, final ComponentCallRequest request) {
 		Preconditions.checkNotNull (component);
 		Preconditions.checkNotNull (request);
 		final DeferredFuture<ComponentCallReply> replyFuture = DeferredFuture.create (ComponentCallReply.class);
@@ -104,8 +101,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> called (final ComponentController component, final ComponentCallRequest request)
-	{
+	public final CallbackCompletion<Void> called (final ComponentController component, final ComponentCallRequest request) {
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == component);
 			Preconditions.checkState ((this.status != Status.Terminated) && (this.status != Status.Unregistered));
@@ -114,8 +110,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> callReturned (final ComponentController component, final ComponentCallReply reply)
-	{
+	public final CallbackCompletion<Void> callReturned (final ComponentController component, final ComponentCallReply reply) {
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == component);
 			if (this.pendingReference == reply.reference)
@@ -148,7 +143,7 @@ public final class JettyComponentCallbacks
 						}
 					}
 						break;
-					default:
+					default :
 						throw (new IllegalStateException ());
 				}
 			else if (this.pendingCallReturnFutures.containsKey (reply.reference)) {
@@ -160,8 +155,7 @@ public final class JettyComponentCallbacks
 		return (null);
 	}
 	
-	public final void cast (final ComponentIdentifier component, final ComponentCastRequest request)
-	{
+	public final void cast (final ComponentIdentifier component, final ComponentCastRequest request) {
 		Preconditions.checkNotNull (component);
 		Preconditions.checkNotNull (request);
 		synchronized (this.monitor) {
@@ -172,8 +166,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> casted (final ComponentController component, final ComponentCastRequest request)
-	{
+	public final CallbackCompletion<Void> casted (final ComponentController component, final ComponentCastRequest request) {
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == component);
 			Preconditions.checkState ((this.status != Status.Terminated) && (this.status != Status.Unregistered));
@@ -182,8 +175,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> failed (final ComponentController component, final Throwable exception)
-	{
+	public final CallbackCompletion<Void> failed (final ComponentController component, final Throwable exception) {
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == component);
 			Preconditions.checkState ((this.status != Status.Terminated) && (this.status != Status.Unregistered));
@@ -197,14 +189,12 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public final void failedCallbacks (final Callbacks trigger, final Throwable exception)
-	{
+	public final void failedCallbacks (final Callbacks trigger, final Throwable exception) {
 		this.failed (this.component, exception);
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> initialized (final ComponentController component)
-	{
+	public final CallbackCompletion<Void> initialized (final ComponentController component) {
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == null);
 			Preconditions.checkState (this.status == Status.WaitingInitialized);
@@ -218,8 +208,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public final void registeredCallbacks (final Callbacks trigger, final CallbackIsolate isolate)
-	{
+	public final void registeredCallbacks (final Callbacks trigger, final CallbackIsolate isolate) {
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == null);
 			Preconditions.checkState (this.status == Status.WaitingRegistered);
@@ -228,8 +217,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> registerReturned (final ComponentController component, final ComponentCallReference reference, final boolean ok)
-	{
+	public final CallbackCompletion<Void> registerReturned (final ComponentController component, final ComponentCallReference reference, final boolean ok) {
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == component);
 			if (this.pendingReference == reference) {
@@ -246,8 +234,7 @@ public final class JettyComponentCallbacks
 		return (null);
 	}
 	
-	public final void terminate ()
-	{
+	public final void terminate () {
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component != null);
 			this.component.terminate ();
@@ -255,8 +242,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> terminated (final ComponentController component)
-	{
+	public final CallbackCompletion<Void> terminated (final ComponentController component) {
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.component == component);
 			Preconditions.checkState ((this.status != Status.Terminated) && (this.status != Status.Unregistered));
@@ -269,8 +255,7 @@ public final class JettyComponentCallbacks
 	}
 	
 	@Override
-	public void unregisteredCallbacks (final Callbacks trigger)
-	{
+	public void unregisteredCallbacks (final Callbacks trigger) {
 		synchronized (this.monitor) {
 			Preconditions.checkState (this.status != Status.Unregistered);
 			if (this.jettyServer != null)
@@ -280,8 +265,7 @@ public final class JettyComponentCallbacks
 		}
 	}
 	
-	final void startJetty (final String brokerIp, final int brokerPort)
-	{
+	final void startJetty (final String brokerIp, final int brokerPort) {
 		synchronized (this.monitor) {
 			final Properties jettyProperties = new Properties ();
 			jettyProperties.setProperty ("server", brokerIp);
@@ -306,8 +290,7 @@ public final class JettyComponentCallbacks
 			this.jettyServer = jettyServer;
 			this.jettyThread = Threading.createAndStartDaemonThread (this.threading, jettyServer, "jetty", new Runnable () {
 				@Override
-				public final void run ()
-				{
+				public final void run () {
 					try {
 						jettyServer.start ();
 					} catch (final Throwable exception) {
@@ -319,8 +302,7 @@ public final class JettyComponentCallbacks
 		}
 	}
 	
-	final void stopJetty ()
-	{
+	final void stopJetty () {
 		synchronized (this.monitor) {
 			try {
 				if (this.jettyServer != null)

@@ -26,22 +26,19 @@ import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
 
 
 public class ExecutionFailedCallbackArguments<TExtra>
-		extends CallbackArguments
+			extends CallbackArguments
 {
-	public ExecutionFailedCallbackArguments (final ICloudletController<?> cloudlet, final Throwable exception, final TExtra extra)
-	{
+	public ExecutionFailedCallbackArguments (final ICloudletController<?> cloudlet, final Throwable exception, final TExtra extra) {
 		super (cloudlet);
 		this.exception = exception;
 		this.extra = extra;
 	}
 	
-	public Throwable getException ()
-	{
+	public Throwable getException () {
 		return (this.exception);
 	}
 	
-	public TExtra getExtra ()
-	{
+	public TExtra getExtra () {
 		return (this.extra);
 	}
 	

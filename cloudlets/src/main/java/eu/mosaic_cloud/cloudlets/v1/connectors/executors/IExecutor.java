@@ -28,8 +28,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 public interface IExecutor<TOutcome, TExtra>
-		extends
-			IConnector
+			extends
+				IConnector
 {
 	CallbackCompletion<TOutcome> execute (Callable<TOutcome> callable, TExtra extra);
 }

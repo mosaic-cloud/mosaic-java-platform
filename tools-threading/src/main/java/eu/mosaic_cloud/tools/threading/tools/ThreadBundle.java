@@ -35,60 +35,52 @@ import com.google.common.base.Preconditions;
 
 
 public final class ThreadBundle<_Thread_ extends Thread>
-		extends Object
-		implements
-			ThreadController,
-			Iterable<_Thread_>
+			extends Object
+			implements
+				ThreadController,
+				Iterable<_Thread_>
 {
-	private ThreadBundle ()
-	{
+	private ThreadBundle () {
 		super ();
 		this.collector = new ReferenceQueue<_Thread_> ();
 		this.threads = new ConcurrentSkipListSet<ThreadReference<_Thread_>> (new ThreadComparator ());
 	}
 	
 	@Override
-	public final boolean await ()
-	{
+	public final boolean await () {
 		this.collect ();
 		return (Threading.join (this));
 	}
 	
 	@Override
-	public final boolean await (final long timeout)
-	{
+	public final boolean await (final long timeout) {
 		this.collect ();
 		return (Threading.join (this, timeout));
 	}
 	
 	@Override
-	public final void interrupt ()
-	{
+	public final void interrupt () {
 		this.collect ();
 		Threading.interrupt (this);
 	}
 	
 	@Override
-	public final Iterator<_Thread_> iterator ()
-	{
+	public final Iterator<_Thread_> iterator () {
 		this.collect ();
 		return (new ThreadIterator<_Thread_> (this.threads.iterator ()));
 	}
 	
-	public final void register (final _Thread_ thread)
-	{
+	public final void register (final _Thread_ thread) {
 		Preconditions.checkNotNull (thread);
 		this.threads.add (new ThreadReference<_Thread_> (thread, this.collector));
 	}
 	
-	public final int start ()
-	{
+	public final int start () {
 		this.collect ();
 		return (Threading.start (this));
 	}
 	
-	private final void collect ()
-	{
+	private final void collect () {
 		while (true) {
 			final Reference<? extends _Thread_> reference = this.collector.poll ();
 			if (reference == null)
@@ -100,53 +92,47 @@ public final class ThreadBundle<_Thread_ extends Thread>
 		}
 	}
 	
-	public static final <_Thread_ extends Thread> ThreadBundle<_Thread_> create ()
-	{
-		return (new ThreadBundle<_Thread_> ());
-	}
-	
 	private final ReferenceQueue<_Thread_> collector;
 	private final ConcurrentSkipListSet<ThreadReference<_Thread_>> threads;
 	
+	public static final <_Thread_ extends Thread> ThreadBundle<_Thread_> create () {
+		return (new ThreadBundle<_Thread_> ());
+	}
+	
 	private static final class ThreadComparator
-			extends Object
-			implements
-				Comparator<ThreadReference<?>>
+				extends Object
+				implements
+					Comparator<ThreadReference<?>>
 	{
-		ThreadComparator ()
-		{
+		ThreadComparator () {
 			super ();
 		}
 		
 		@Override
-		public final int compare (final ThreadReference<?> left, final ThreadReference<?> right)
-		{
+		public final int compare (final ThreadReference<?> left, final ThreadReference<?> right) {
 			return ((left.hashCode () - right.hashCode ()));
 		}
 	}
 	
 	private static final class ThreadIterator<_Thread_ extends Thread>
-			extends Object
-			implements
-				Iterator<_Thread_>
+				extends Object
+				implements
+					Iterator<_Thread_>
 	{
-		ThreadIterator (final Iterator<ThreadReference<_Thread_>> threads)
-		{
+		ThreadIterator (final Iterator<ThreadReference<_Thread_>> threads) {
 			super ();
 			this.threads = threads;
 		}
 		
 		@Override
-		public final boolean hasNext ()
-		{
+		public final boolean hasNext () {
 			if (this.current == null)
 				this.advance ();
 			return (this.current != null);
 		}
 		
 		@Override
-		public final _Thread_ next ()
-		{
+		public final _Thread_ next () {
 			if (this.current == null)
 				this.advance ();
 			if (this.current == null)
@@ -157,13 +143,11 @@ public final class ThreadBundle<_Thread_ extends Thread>
 		}
 		
 		@Override
-		public final void remove ()
-		{
+		public final void remove () {
 			throw (new UnsupportedOperationException ());
 		}
 		
-		private final void advance ()
-		{
+		private final void advance () {
 			this.current = null;
 			while (true) {
 				if (!this.threads.hasNext ())
@@ -179,18 +163,16 @@ public final class ThreadBundle<_Thread_ extends Thread>
 	}
 	
 	private static final class ThreadReference<_Thread_ extends Thread>
-			extends Object
+				extends Object
 	{
-		ThreadReference (final _Thread_ thread)
-		{
+		ThreadReference (final _Thread_ thread) {
 			super ();
 			this.threadIdentifier = thread.getId ();
 			this.objectIdentifier = System.identityHashCode (thread);
 			this.reference = null;
 		}
 		
-		ThreadReference (final _Thread_ thread, final ReferenceQueue<? super _Thread_> collector)
-		{
+		ThreadReference (final _Thread_ thread, final ReferenceQueue<? super _Thread_> collector) {
 			super ();
 			Preconditions.checkNotNull (thread);
 			this.reference = new WeakReference<_Thread_> (thread, collector);
@@ -199,8 +181,7 @@ public final class ThreadBundle<_Thread_ extends Thread>
 		}
 		
 		@Override
-		public final boolean equals (final Object object)
-		{
+		public final boolean equals (final Object object) {
 			if (this == object)
 				return (true);
 			if (!(object instanceof ThreadReference))
@@ -209,14 +190,12 @@ public final class ThreadBundle<_Thread_ extends Thread>
 			return ((this.objectIdentifier == other.objectIdentifier) && (this.threadIdentifier == other.threadIdentifier));
 		}
 		
-		public final _Thread_ get ()
-		{
+		public final _Thread_ get () {
 			return (this.reference.get ());
 		}
 		
 		@Override
-		public final int hashCode ()
-		{
+		public final int hashCode () {
 			return (this.objectIdentifier);
 		}
 		

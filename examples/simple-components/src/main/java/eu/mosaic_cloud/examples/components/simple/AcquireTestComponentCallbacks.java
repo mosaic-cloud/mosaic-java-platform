@@ -41,13 +41,12 @@ import com.google.common.base.Preconditions;
 
 
 public final class AcquireTestComponentCallbacks
-		extends Object
-		implements
-			ComponentCallbacks,
-			CallbackHandler
+			extends Object
+			implements
+				ComponentCallbacks,
+				CallbackHandler
 {
-	public AcquireTestComponentCallbacks (final ComponentEnvironment context)
-	{
+	public AcquireTestComponentCallbacks (final ComponentEnvironment context) {
 		super ();
 		this.transcript = Transcript.create (this, true);
 		this.component = null;
@@ -55,8 +54,7 @@ public final class AcquireTestComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> acquireReturned (final ComponentController component, final ComponentAcquireReply reply)
-	{
+	public final CallbackCompletion<Void> acquireReturned (final ComponentController component, final ComponentAcquireReply reply) {
 		Preconditions.checkArgument (reply.reference == this.pending);
 		if (reply.ok) {
 			this.transcript.traceInformation ("acquire succeeded `%s`", reply.descriptor);
@@ -67,40 +65,34 @@ public final class AcquireTestComponentCallbacks
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> called (final ComponentController component, final ComponentCallRequest request)
-	{
+	public final CallbackCompletion<Void> called (final ComponentController component, final ComponentCallRequest request) {
 		throw (new IllegalStateException ());
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> callReturned (final ComponentController component, final ComponentCallReply reply)
-	{
+	public final CallbackCompletion<Void> callReturned (final ComponentController component, final ComponentCallReply reply) {
 		throw (new IllegalStateException ());
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> casted (final ComponentController component, final ComponentCastRequest request)
-	{
+	public final CallbackCompletion<Void> casted (final ComponentController component, final ComponentCastRequest request) {
 		throw (new IllegalStateException ());
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> failed (final ComponentController component, final Throwable exception)
-	{
+	public final CallbackCompletion<Void> failed (final ComponentController component, final Throwable exception) {
 		Preconditions.checkState (this.component == component);
 		this.component = component;
 		return (null);
 	}
 	
 	@Override
-	public final void failedCallbacks (final Callbacks trigger, final Throwable exception)
-	{
+	public final void failedCallbacks (final Callbacks trigger, final Throwable exception) {
 		this.failed (this.component, exception);
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> initialized (final ComponentController component)
-	{
+	public final CallbackCompletion<Void> initialized (final ComponentController component) {
 		Preconditions.checkState (this.component == null);
 		this.component = component;
 		this.pending = ComponentCallReference.create ();
@@ -109,28 +101,24 @@ public final class AcquireTestComponentCallbacks
 	}
 	
 	@Override
-	public final void registeredCallbacks (final Callbacks trigger, final CallbackIsolate isolate)
-	{
+	public final void registeredCallbacks (final Callbacks trigger, final CallbackIsolate isolate) {
 		Preconditions.checkState (this.component == null);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> registerReturned (final ComponentController component, final ComponentCallReference reference, final boolean ok)
-	{
+	public CallbackCompletion<Void> registerReturned (final ComponentController component, final ComponentCallReference reference, final boolean ok) {
 		throw (new IllegalStateException ());
 	}
 	
 	@Override
-	public final CallbackCompletion<Void> terminated (final ComponentController component)
-	{
+	public final CallbackCompletion<Void> terminated (final ComponentController component) {
 		Preconditions.checkState (this.component == component);
 		this.component = null;
 		return (null);
 	}
 	
 	@Override
-	public final void unregisteredCallbacks (final Callbacks trigger)
-	{
+	public final void unregisteredCallbacks (final Callbacks trigger) {
 		this.component = null;
 	}
 	

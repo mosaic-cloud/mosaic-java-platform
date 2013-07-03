@@ -22,15 +22,13 @@ package eu.mosaic_cloud.platform.interop.common.amqp;
 
 
 /**
- * This class defines an inbound message and all information required to consume
- * it.
+ * This class defines an inbound message and all information required to consume it.
  * 
  * @author Georgiana Macariu
- * 
  */
 public class AmqpInboundMessage
-		implements
-			IAmqpMessage
+			implements
+				IAmqpMessage
 {
 	/**
 	 * Constructs a inbound message.
@@ -50,8 +48,7 @@ public class AmqpInboundMessage
 	 * @param contentType
 	 *            the type of the content
 	 */
-	public AmqpInboundMessage (final String consumer, final long delivery, final String exchange, final String routingKey, final byte[] data, final boolean durable, final String contentType)
-	{
+	public AmqpInboundMessage (final String consumer, final long delivery, final String exchange, final String routingKey, final byte[] data, final boolean durable, final String contentType) {
 		super ();
 		this.consumer = consumer;
 		this.delivery = delivery;
@@ -85,24 +82,17 @@ public class AmqpInboundMessage
 	 *            the address of the Node to send replies to
 	 * @param contentEncoding
 	 * @param contentType
-	 *            the RFC-2046 MIME type for the Message content (such as
-	 *            "text/plain")
+	 *            the RFC-2046 MIME type for the Message content (such as "text/plain")
 	 * @param correlation
-	 *            this is a client-specific id that may be used to mark or
-	 *            identify Messages between clients. The server ignores this
-	 *            field.
+	 *            this is a client-specific id that may be used to mark or identify Messages between clients. The server ignores
+	 *            this field.
 	 * @param identifier
-	 *            message-id is an optional property which uniquely identifies a
-	 *            Message within the Message system. The Message publisher is
-	 *            usually responsible for setting the message-id in such a way
-	 *            that it is assured to be globally unique. The server MAY
-	 *            discard a Message as a duplicate if the value of the
-	 *            message-id matches that of a previously received Message sent
-	 *            to the same Node.
-	 * 
+	 *            message-id is an optional property which uniquely identifies a Message within the Message system. The Message
+	 *            publisher is usually responsible for setting the message-id in such a way that it is assured to be globally
+	 *            unique. The server MAY discard a Message as a duplicate if the value of the message-id matches that of a
+	 *            previously received Message sent to the same Node.
 	 */
-	public AmqpInboundMessage (final String consumer, final long delivery, final String exchange, final String routingKey, final byte[] data, final boolean durable, final String callback, final String contentEncoding, final String contentType, final String correlation, final String identifier)
-	{
+	public AmqpInboundMessage (final String consumer, final long delivery, final String exchange, final String routingKey, final byte[] data, final boolean durable, final String callback, final String contentEncoding, final String contentType, final String correlation, final String identifier) {
 		super ();
 		this.consumer = consumer;
 		this.delivery = delivery;
@@ -117,58 +107,47 @@ public class AmqpInboundMessage
 		this.durable = durable;
 	}
 	
-	public String getCallback ()
-	{
+	public String getCallback () {
 		return this.callback;
 	}
 	
-	public String getConsumer ()
-	{
+	public String getConsumer () {
 		return this.consumer;
 	}
 	
-	public String getContentEncoding ()
-	{
+	public String getContentEncoding () {
 		return this.contentEncoding;
 	}
 	
-	public String getContentType ()
-	{
+	public String getContentType () {
 		return this.contentType;
 	}
 	
-	public String getCorrelation ()
-	{
+	public String getCorrelation () {
 		return this.correlation;
 	}
 	
-	public byte[] getData ()
-	{
+	public byte[] getData () {
 		return this.data;
 	}
 	
-	public long getDelivery ()
-	{
+	public long getDelivery () {
 		return this.delivery;
 	}
 	
-	public String getExchange ()
-	{
+	public String getExchange () {
 		return this.exchange;
 	}
 	
-	public String getIdentifier ()
-	{
+	public String getIdentifier () {
 		return this.identifier;
 	}
 	
-	public String getRoutingKey ()
-	{
+	public String getRoutingKey () {
 		return this.routingKey;
 	}
 	
-	public boolean isDurable ()
-	{
+	public boolean isDurable () {
 		return this.durable;
 	}
 	

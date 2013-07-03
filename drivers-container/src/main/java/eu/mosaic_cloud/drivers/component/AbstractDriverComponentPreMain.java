@@ -25,17 +25,15 @@ import eu.mosaic_cloud.components.implementations.basic.BasicComponentHarnessPre
 
 
 public final class AbstractDriverComponentPreMain
-		extends Object
+			extends Object
 {
-	private AbstractDriverComponentPreMain ()
-	{
+	private AbstractDriverComponentPreMain () {
 		super ();
 		throw (new UnsupportedOperationException ());
 	}
 	
 	public static final void main (final String callbacks, final String[] arguments)
-			throws Throwable
-	{
+				throws Throwable {
 		BasicComponentHarnessPreMain.main (callbacks, arguments);
 	}
 }

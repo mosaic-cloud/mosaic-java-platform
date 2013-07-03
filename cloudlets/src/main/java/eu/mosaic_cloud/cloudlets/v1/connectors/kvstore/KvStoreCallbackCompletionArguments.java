@@ -29,22 +29,18 @@ import eu.mosaic_cloud.cloudlets.v1.core.CallbackCompletionArguments;
 
 
 /**
- * The arguments of the cloudlet callback methods for the operations on
- * key-value storages.
+ * The arguments of the cloudlet callback methods for the operations on key-value storages.
  * 
  * @author Georgiana Macariu
- * 
  * @param <TContext>
  *            the context of the cloudlet
  * @param <TValue>
- *            the type of the values exchanged with the key-value store using
- *            this connector
+ *            the type of the values exchanged with the key-value store using this connector
  * @param <TExtra>
- *            the type of the extra data; as an example, this data can be used
- *            correlation
+ *            the type of the extra data; as an example, this data can be used correlation
  */
 public class KvStoreCallbackCompletionArguments<TValue, TExtra>
-		extends CallbackCompletionArguments
+			extends CallbackCompletionArguments
 {
 	/**
 	 * Creates a new argument.
@@ -58,8 +54,7 @@ public class KvStoreCallbackCompletionArguments<TValue, TExtra>
 	 * @param extra
 	 *            some application specific object
 	 */
-	public KvStoreCallbackCompletionArguments (final ICloudletController<?> cloudlet, final List<String> keys, final Throwable error, final TExtra extra)
-	{
+	public KvStoreCallbackCompletionArguments (final ICloudletController<?> cloudlet, final List<String> keys, final Throwable error, final TExtra extra) {
 		super (cloudlet, error);
 		this.keys = keys;
 		this.value = null;
@@ -67,21 +62,19 @@ public class KvStoreCallbackCompletionArguments<TValue, TExtra>
 	}
 	
 	/**
-	 * Creates a new argument for the callbacks of operations using more than
-	 * one key.
+	 * Creates a new argument for the callbacks of operations using more than one key.
 	 * 
 	 * @param cloudlet
 	 *            the cloudlet
 	 * @param keys
 	 *            the keys used in the operation
 	 * @param value
-	 *            the value associated with the key (if this callback is used
-	 *            for failed operations this value should contain the error)
+	 *            the value associated with the key (if this callback is used for failed operations this value should contain
+	 *            the error)
 	 * @param extra
 	 *            some application specific object
 	 */
-	public KvStoreCallbackCompletionArguments (final ICloudletController<?> cloudlet, final List<String> keys, final TValue value, final TExtra extra)
-	{
+	public KvStoreCallbackCompletionArguments (final ICloudletController<?> cloudlet, final List<String> keys, final TValue value, final TExtra extra) {
 		super (cloudlet);
 		this.keys = keys;
 		this.value = value;
@@ -98,8 +91,7 @@ public class KvStoreCallbackCompletionArguments<TValue, TExtra>
 	 * @param error
 	 *            the exception thrown by the operation
 	 */
-	public KvStoreCallbackCompletionArguments (final ICloudletController<?> cloudlet, final String key, final Throwable error)
-	{
+	public KvStoreCallbackCompletionArguments (final ICloudletController<?> cloudlet, final String key, final Throwable error) {
 		super (cloudlet, error);
 		this.keys = Arrays.asList (key);
 		this.value = null;
@@ -118,8 +110,7 @@ public class KvStoreCallbackCompletionArguments<TValue, TExtra>
 	 * @param extra
 	 *            some application specific object
 	 */
-	public KvStoreCallbackCompletionArguments (final ICloudletController<?> cloudlet, final String key, final Throwable error, final TExtra extra)
-	{
+	public KvStoreCallbackCompletionArguments (final ICloudletController<?> cloudlet, final String key, final Throwable error, final TExtra extra) {
 		super (cloudlet, error);
 		this.keys = Arrays.asList (key);
 		this.value = null;
@@ -134,13 +125,12 @@ public class KvStoreCallbackCompletionArguments<TValue, TExtra>
 	 * @param key
 	 *            the key used in the operation
 	 * @param value
-	 *            the value associated with the key (if this callback is used
-	 *            for failed operations this value should contain the error)
+	 *            the value associated with the key (if this callback is used for failed operations this value should contain
+	 *            the error)
 	 * @param extra
 	 *            some application specific object
 	 */
-	public KvStoreCallbackCompletionArguments (final ICloudletController<?> cloudlet, final String key, final TValue value, final TExtra extra)
-	{
+	public KvStoreCallbackCompletionArguments (final ICloudletController<?> cloudlet, final String key, final TValue value, final TExtra extra) {
 		super (cloudlet);
 		this.keys = Arrays.asList (key);
 		this.value = value;
@@ -148,14 +138,11 @@ public class KvStoreCallbackCompletionArguments<TValue, TExtra>
 	}
 	
 	/**
-	 * Returns any application specific data used for the key-value store
-	 * operation.
+	 * Returns any application specific data used for the key-value store operation.
 	 * 
-	 * @return any application specific data used for the key-value store
-	 *         operation
+	 * @return any application specific data used for the key-value store operation
 	 */
-	public TExtra getExtra ()
-	{
+	public TExtra getExtra () {
 		return this.extra;
 	}
 	
@@ -164,8 +151,7 @@ public class KvStoreCallbackCompletionArguments<TValue, TExtra>
 	 * 
 	 * @return the key used in single-key operations
 	 */
-	public String getKey ()
-	{
+	public String getKey () {
 		return this.keys.get (0);
 	}
 	
@@ -174,8 +160,7 @@ public class KvStoreCallbackCompletionArguments<TValue, TExtra>
 	 * 
 	 * @return the key used in multiple-key operations
 	 */
-	public List<String> getKeys ()
-	{
+	public List<String> getKeys () {
 		return this.keys;
 	}
 	
@@ -184,8 +169,7 @@ public class KvStoreCallbackCompletionArguments<TValue, TExtra>
 	 * 
 	 * @return the value field of the argument
 	 */
-	public TValue getValue ()
-	{
+	public TValue getValue () {
 		return this.value;
 	}
 	

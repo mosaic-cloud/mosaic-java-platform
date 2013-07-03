@@ -27,10 +27,9 @@ import com.google.common.base.Preconditions;
 
 
 public final class ZeroMqChannelPacket
-		extends Object
+			extends Object
 {
-	ZeroMqChannelPacket (final String peer, final ByteBuffer header, final ByteBuffer payload)
-	{
+	ZeroMqChannelPacket (final String peer, final ByteBuffer header, final ByteBuffer payload) {
 		super ();
 		Preconditions.checkNotNull (peer);
 		Preconditions.checkNotNull (header);
@@ -39,12 +38,11 @@ public final class ZeroMqChannelPacket
 		this.payload = payload;
 	}
 	
-	public static final ZeroMqChannelPacket create (final String peer, final ByteBuffer header, final ByteBuffer payload)
-	{
-		return (new ZeroMqChannelPacket (peer, header, payload));
-	}
-	
 	public final ByteBuffer header;
 	public final ByteBuffer payload;
 	public final String peer;
+	
+	public static final ZeroMqChannelPacket create (final String peer, final ByteBuffer header, final ByteBuffer payload) {
+		return (new ZeroMqChannelPacket (peer, header, payload));
+	}
 }

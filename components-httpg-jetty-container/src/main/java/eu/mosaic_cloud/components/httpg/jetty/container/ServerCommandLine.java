@@ -46,8 +46,7 @@ import org.eclipse.jetty.webapp.WebAppContext;
 
 public class ServerCommandLine
 {
-	public static Server createServer (final Properties props, final ClassLoader loader)
-	{
+	public static Server createServer (final Properties props, final ClassLoader loader) {
 		final Server jettyServer = new Server ();
 		final String userName = props.getProperty ("username");
 		final String userPassword = props.getProperty ("password");
@@ -118,16 +117,14 @@ public class ServerCommandLine
 	}
 	
 	public static void main (final String[] args)
-			throws Exception
-	{
+				throws Exception {
 		final Properties props = ServerCommandLine.getConfig (args);
 		final Server server = ServerCommandLine.createServer (props, ClassLoader.getSystemClassLoader ());
 		server.start ();
 		server.join ();
 	}
 	
-	private static Properties getConfig (final String[] args)
-	{
+	private static Properties getConfig (final String[] args) {
 		CommandLine line = null;
 		final CommandLineParser parser = new GnuParser ();
 		final Properties props = new Properties ();
@@ -208,8 +205,7 @@ public class ServerCommandLine
 		return props;
 	}
 	
-	private static void printHelpAndExit (final Options options)
-	{
+	private static void printHelpAndExit (final Options options) {
 		final HelpFormatter formatter = new HelpFormatter ();
 		formatter.printHelp ("jetty-amqp-connector", options);
 		System.exit (1);

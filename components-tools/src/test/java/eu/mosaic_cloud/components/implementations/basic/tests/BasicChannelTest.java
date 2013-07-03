@@ -48,8 +48,7 @@ public final class BasicChannelTest
 {
 	@Test
 	public final void test ()
-			throws Exception
-	{
+				throws Exception {
 		final Transcript transcript = Transcript.create (this);
 		BasicThreadingSecurityManager.initialize ();
 		final Pipe pipe = Pipe.open ();

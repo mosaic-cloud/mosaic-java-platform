@@ -36,11 +36,10 @@ import com.google.protobuf.GeneratedMessage;
  * Enum containing all possible AMQP connector-driver messages.
  * 
  * @author Georgiana Macariu
- * 
  */
 public enum AmqpMessage
-		implements
-			MessageSpecification
+			implements
+				MessageSpecification
 {
 	ABORTED (MessageType.Termination, null),
 	ACCESS (MessageType.Initiation, null),
@@ -69,8 +68,7 @@ public enum AmqpMessage
 	 * @param clasz
 	 *            the class containing the payload of the message
 	 */
-	AmqpMessage (final MessageType type, final Class<? extends GeneratedMessage> clasz)
-	{
+	AmqpMessage (final MessageType type, final Class<? extends GeneratedMessage> clasz) {
 		this.identifier = Identifiers.generate (this);
 		this.type = type;
 		if (clasz != null) {
@@ -79,26 +77,22 @@ public enum AmqpMessage
 	}
 	
 	@Override
-	public String getIdentifier ()
-	{
+	public String getIdentifier () {
 		return this.identifier;
 	}
 	
 	@Override
-	public PayloadCoder getPayloadCoder ()
-	{
+	public PayloadCoder getPayloadCoder () {
 		return this.coder;
 	}
 	
 	@Override
-	public String getQualifiedName ()
-	{
+	public String getQualifiedName () {
 		return (Identifiers.generateName (this));
 	}
 	
 	@Override
-	public MessageType getType ()
-	{
+	public MessageType getType () {
 		return this.type;
 	}
 	

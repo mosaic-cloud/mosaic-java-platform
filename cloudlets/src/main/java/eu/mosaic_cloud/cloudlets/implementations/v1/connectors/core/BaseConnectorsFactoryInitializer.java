@@ -31,18 +31,16 @@ import com.google.common.base.Preconditions;
 
 
 public abstract class BaseConnectorsFactoryInitializer
-		extends Object
-		implements
-			IConnectorsFactoryInitializer
+			extends Object
+			implements
+				IConnectorsFactoryInitializer
 {
-	protected BaseConnectorsFactoryInitializer ()
-	{
+	protected BaseConnectorsFactoryInitializer () {
 		super ();
 	}
 	
 	@Override
-	public final void initialize (final IConnectorsFactoryBuilder builder, final ICloudletController<?> cloudlet, final ConnectorEnvironment environment, final IConnectorsFactory delegate)
-	{
+	public final void initialize (final IConnectorsFactoryBuilder builder, final ICloudletController<?> cloudlet, final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
 		Preconditions.checkNotNull (builder);
 		Preconditions.checkNotNull (cloudlet);
 		Preconditions.checkNotNull (environment);

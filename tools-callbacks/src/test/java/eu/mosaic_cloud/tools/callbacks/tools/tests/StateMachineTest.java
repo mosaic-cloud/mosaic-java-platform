@@ -32,8 +32,7 @@ import org.junit.Test;
 public final class StateMachineTest
 {
 	@Test
-	public final void test ()
-	{
+	public final void test () {
 		final TestStateMachine machine = new TestStateMachine ();
 		{
 			machine.new Accessor ().begin ().release ();
@@ -41,8 +40,7 @@ public final class StateMachineTest
 		{
 			machine.new Accessor ().execute (new AccessorOperation<TestStateMachine.Accessor, Void, Void> () {
 				@Override
-				public final Void execute (final TestStateMachine.Accessor accessor, final Void input)
-				{
+				public final Void execute (final TestStateMachine.Accessor accessor, final Void input) {
 					return (null);
 				}
 			}, null);
@@ -53,8 +51,7 @@ public final class StateMachineTest
 		{
 			machine.new Transaction (TestStateMachine.Transition.Executing).execute (new TransactionOperation<TestStateMachine.Transaction, TestStateMachine.State, Void, Void> () {
 				@Override
-				public final StateAndOutput<TestStateMachine.State, Void> execute (final TestStateMachine.Transaction transaction, final Void input)
-				{
+				public final StateAndOutput<TestStateMachine.State, Void> execute (final TestStateMachine.Transaction transaction, final Void input) {
 					return (StateAndOutput.create (TestStateMachine.State.Ready, null));
 				}
 			}, null);
@@ -65,8 +62,7 @@ public final class StateMachineTest
 		{
 			machine.new Transaction (TestStateMachine.Transition.Executing).execute (new TransactionOperation<TestStateMachine.Transaction, TestStateMachine.State, Void, Void> () {
 				@Override
-				public final StateAndOutput<TestStateMachine.State, Void> execute (final TestStateMachine.Transaction transaction, final Void input)
-				{
+				public final StateAndOutput<TestStateMachine.State, Void> execute (final TestStateMachine.Transaction transaction, final Void input) {
 					return (StateAndOutput.create (TestStateMachine.State.Ready, null));
 				}
 			}, null);
@@ -79,10 +75,9 @@ public final class StateMachineTest
 	}
 	
 	public static final class TestStateMachine
-			extends StateMachine<TestStateMachine.State, TestStateMachine.Transition>
+				extends StateMachine<TestStateMachine.State, TestStateMachine.Transition>
 	{
-		TestStateMachine ()
-		{
+		TestStateMachine () {
 			super (State.class, Transition.class);
 			this.defineStates (TestStateMachine.State.class);
 			this.defineTransition (Transition.Executing, State.Ready, State.Ready);
@@ -90,15 +85,15 @@ public final class StateMachineTest
 		}
 		
 		public enum State
-				implements
-					StateMachine.State
+					implements
+						StateMachine.State
 		{
 			Ready ();
 		}
 		
 		public enum Transition
-				implements
-					StateMachine.Transition
+					implements
+						StateMachine.Transition
 		{
 			Executing ();
 		}

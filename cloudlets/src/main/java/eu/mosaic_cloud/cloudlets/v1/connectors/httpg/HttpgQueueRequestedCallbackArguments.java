@@ -27,16 +27,14 @@ import eu.mosaic_cloud.connectors.v1.httpg.HttpgRequestMessage;
 
 
 public class HttpgQueueRequestedCallbackArguments<TRequestBody>
-		extends CallbackArguments
+			extends CallbackArguments
 {
-	public HttpgQueueRequestedCallbackArguments (final ICloudletController<?> cloudlet, final HttpgRequestMessage<TRequestBody> request)
-	{
+	public HttpgQueueRequestedCallbackArguments (final ICloudletController<?> cloudlet, final HttpgRequestMessage<TRequestBody> request) {
 		super (cloudlet);
 		this.request = request;
 	}
 	
-	public HttpgRequestMessage<TRequestBody> getRequest ()
-	{
+	public HttpgRequestMessage<TRequestBody> getRequest () {
 		return (this.request);
 	}
 	

@@ -27,11 +27,10 @@ import java.io.Serializable;
 public interface KvPayloads
 {
 	public static final class Error
-			implements
-				Serializable
+				implements
+					Serializable
 	{
-		public Error (final long sequence)
-		{
+		public Error (final long sequence) {
 			this.sequence = sequence;
 		}
 		
@@ -40,11 +39,10 @@ public interface KvPayloads
 	}
 	
 	public static final class GetReply
-			implements
-				Serializable
+				implements
+					Serializable
 	{
-		public GetReply (final long sequence, final String value)
-		{
+		public GetReply (final long sequence, final String value) {
 			this.sequence = sequence;
 			this.value = value;
 		}
@@ -55,11 +53,10 @@ public interface KvPayloads
 	}
 	
 	public static final class GetRequest
-			implements
-				Serializable
+				implements
+					Serializable
 	{
-		public GetRequest (final long sequence, final String key)
-		{
+		public GetRequest (final long sequence, final String key) {
 			this.sequence = sequence;
 			this.key = key;
 		}
@@ -70,11 +67,10 @@ public interface KvPayloads
 	}
 	
 	public static final class Ok
-			implements
-				Serializable
+				implements
+					Serializable
 	{
-		public Ok (final long sequence)
-		{
+		public Ok (final long sequence) {
 			this.sequence = sequence;
 		}
 		
@@ -83,11 +79,10 @@ public interface KvPayloads
 	}
 	
 	public static final class PutRequest
-			implements
-				Serializable
+				implements
+					Serializable
 	{
-		public PutRequest (final long sequence, final String key, final String value)
-		{
+		public PutRequest (final long sequence, final String key, final String value) {
 			this.sequence = sequence;
 			this.key = key;
 			this.value = value;

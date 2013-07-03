@@ -57,8 +57,7 @@ public class AbacusTest
 {
 	@Test
 	public final void test ()
-			throws Throwable
-	{
+				throws Throwable {
 		final Transcript transcript = Transcript.create (this);
 		BasicThreadingSecurityManager.initialize ();
 		final Pipe pipe1 = Pipe.open ();

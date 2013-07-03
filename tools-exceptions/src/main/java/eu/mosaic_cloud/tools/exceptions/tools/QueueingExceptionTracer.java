@@ -34,10 +34,9 @@ import com.google.common.base.Preconditions;
 
 
 public final class QueueingExceptionTracer
-		extends DelegatingExceptionTracer
+			extends DelegatingExceptionTracer
 {
-	private QueueingExceptionTracer (final BlockingQueue<CaughtException> queue, final long waitTimeout, final ExceptionTracer delegate)
-	{
+	private QueueingExceptionTracer (final BlockingQueue<CaughtException> queue, final long waitTimeout, final ExceptionTracer delegate) {
 		super (delegate);
 		Preconditions.checkNotNull (queue);
 		Preconditions.checkArgument ((waitTimeout >= 0) || (waitTimeout == -1));
@@ -46,25 +45,21 @@ public final class QueueingExceptionTracer
 	}
 	
 	@Override
-	protected final void trace_ (final ExceptionResolution resolution, final Throwable exception)
-	{
+	protected final void trace_ (final ExceptionResolution resolution, final Throwable exception) {
 		this.enqueue (CaughtException.create (resolution, exception));
 	}
 	
 	@Override
-	protected final void trace_ (final ExceptionResolution resolution, final Throwable exception, final String message)
-	{
+	protected final void trace_ (final ExceptionResolution resolution, final Throwable exception, final String message) {
 		this.enqueue (CaughtException.create (resolution, exception, message));
 	}
 	
 	@Override
-	protected final void trace_ (final ExceptionResolution resolution, final Throwable exception, final String format, final Object ... tokens)
-	{
+	protected final void trace_ (final ExceptionResolution resolution, final Throwable exception, final String format, final Object ... tokens) {
 		this.enqueue (CaughtException.create (resolution, exception, format, tokens));
 	}
 	
-	private final void enqueue (final CaughtException exception)
-	{
+	private final void enqueue (final CaughtException exception) {
 		if (exception.getResolution () == ExceptionResolution.Handled)
 			return;
 		try {
@@ -85,16 +80,14 @@ public final class QueueingExceptionTracer
 		}
 	}
 	
-	public static final QueueingExceptionTracer create (final BlockingQueue<CaughtException> queue, final long waitTimeout, final ExceptionTracer delegate)
-	{
+	public final BlockingQueue<CaughtException> queue;
+	private final long waitTimeout;
+	
+	public static final QueueingExceptionTracer create (final BlockingQueue<CaughtException> queue, final long waitTimeout, final ExceptionTracer delegate) {
 		return (new QueueingExceptionTracer (queue, waitTimeout, delegate));
 	}
 	
-	public static final QueueingExceptionTracer create (final ExceptionTracer delegate)
-	{
+	public static final QueueingExceptionTracer create (final ExceptionTracer delegate) {
 		return (new QueueingExceptionTracer (new LinkedBlockingQueue<CaughtException> (), 0, delegate));
 	}
-	
-	public final BlockingQueue<CaughtException> queue;
-	private final long waitTimeout;
 }

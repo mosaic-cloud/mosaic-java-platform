@@ -45,15 +45,13 @@ import com.google.common.util.concurrent.Atomics;
 
 public final class BasicComponentLocalLauncher
 {
-	private BasicComponentLocalLauncher ()
-	{
+	private BasicComponentLocalLauncher () {
 		super ();
 		throw (new UnsupportedOperationException ());
 	}
 	
 	public static final void launch (final String[] arguments, final ClassLoader classLoader, final ThreadingContext threading, final ExceptionTracer exceptions)
-			throws Throwable
-	{
+				throws Throwable {
 		Preconditions.checkArgument ((arguments != null) && (arguments.length == 5), "invalid arguments; expected `<component-callbacks> <component-configuration> <local-ip> <local-port> <controller-url>`");
 		Preconditions.checkNotNull (classLoader);
 		Preconditions.checkNotNull (threading);
@@ -66,8 +64,7 @@ public final class BasicComponentLocalLauncher
 	}
 	
 	public static final void launch (final URL controllerBaseUrl, final InetSocketAddress channelAddress, final String componentCallbacks, final List<String> componentConfiguration)
-			throws Throwable
-	{
+				throws Throwable {
 		Preconditions.checkNotNull (controllerBaseUrl);
 		Preconditions.checkNotNull (channelAddress);
 		Preconditions.checkNotNull (componentCallbacks);
@@ -82,8 +79,7 @@ public final class BasicComponentLocalLauncher
 	}
 	
 	public static final void launch (final URL controllerBaseUrl, final InetSocketAddress channelAddress, final String componentCallbacks, final List<String> componentConfiguration, final ClassLoader classLoader, final ThreadingContext threading, final ExceptionTracer exceptions)
-			throws Throwable
-	{
+				throws Throwable {
 		Preconditions.checkNotNull (controllerBaseUrl);
 		Preconditions.checkNotNull (channelAddress);
 		Preconditions.checkNotNull (componentCallbacks);
@@ -112,42 +108,35 @@ public final class BasicComponentLocalLauncher
 		final AtomicReference<String> componentIdentifier = Atomics.newReference (null);
 		final Runnable run = new Runnable () {
 			@Override
-			public final void run ()
-			{
+			public final void run () {
 				final ArgumentsProvider argumentsProvider = new ArgumentsProvider () {
 					@Override
-					public final String getCallbacksClass ()
-					{
+					public final String getCallbacksClass () {
 						return (componentCallbacks);
 					}
 					
 					@Override
-					public final List<String> getCallbacksOptions ()
-					{
+					public final List<String> getCallbacksOptions () {
 						return (componentConfiguration);
 					}
 					
 					@Override
-					public final String getChannelEndpoint ()
-					{
+					public final String getChannelEndpoint () {
 						return (channelAddressEncoded);
 					}
 					
 					@Override
-					public final String getClasspath ()
-					{
+					public final String getClasspath () {
 						return (null);
 					}
 					
 					@Override
-					public final String getIdentifier ()
-					{
+					public final String getIdentifier () {
 						return (componentIdentifier.get ());
 					}
 					
 					@Override
-					public final String getLoggingEndpoint ()
-					{
+					public final String getLoggingEndpoint () {
 						return (null);
 					}
 				};

@@ -47,11 +47,10 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public class LoggingCloudlet
 {
 	public static final class AmqpConsumerCallback
-			extends DefaultAmqpQueueConsumerConnectorCallback<LoggingCloudletContext, LoggingData, Void>
+				extends DefaultAmqpQueueConsumerConnectorCallback<LoggingCloudletContext, LoggingData, Void>
 	{
 		@Override
-		public CallbackCompletion<Void> consume (final LoggingCloudletContext context, final AmqpQueueConsumeCallbackArguments<LoggingData> arguments)
-		{
+		public CallbackCompletion<Void> consume (final LoggingCloudletContext context, final AmqpQueueConsumeCallbackArguments<LoggingData> arguments) {
 			final LoggingData data = arguments.getMessage ();
 			this.logger.info ("LoggingCloudlet received logging message for user `{}`.", data.user);
 			final CallbackCompletion<String> result = context.kvStore.get (data.user, null);
@@ -72,51 +71,45 @@ public class LoggingCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final LoggingCloudletContext context, final CallbackArguments arguments)
-		{
+		public CallbackCompletion<Void> destroySucceeded (final LoggingCloudletContext context, final CallbackArguments arguments) {
 			this.logger.info ("LoggingCloudlet consumer destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final LoggingCloudletContext context, final CallbackArguments arguments)
-		{
+		public CallbackCompletion<Void> initializeSucceeded (final LoggingCloudletContext context, final CallbackArguments arguments) {
 			this.logger.info ("LoggingCloudlet consumer initialized successfully.");
 			return ICallback.SUCCESS;
 		}
 	}
 	
 	public static final class AmqpPublisherCallback
-			extends DefaultAmqpPublisherConnectorCallback<LoggingCloudletContext, AuthenticationToken, Void>
+				extends DefaultAmqpPublisherConnectorCallback<LoggingCloudletContext, AuthenticationToken, Void>
 	{
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final LoggingCloudletContext context, final CallbackArguments arguments)
-		{
+		public CallbackCompletion<Void> destroySucceeded (final LoggingCloudletContext context, final CallbackArguments arguments) {
 			this.logger.info ("LoggingCloudlet publisher destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final LoggingCloudletContext context, final CallbackArguments arguments)
-		{
+		public CallbackCompletion<Void> initializeSucceeded (final LoggingCloudletContext context, final CallbackArguments arguments) {
 			this.logger.info ("LoggingCloudlet publisher initialized successfully.");
 			return ICallback.SUCCESS;
 		}
 	}
 	
 	public static final class KeyValueCallback
-			extends DefaultKvStoreConnectorCallback<LoggingCloudletContext, String, Void>
+				extends DefaultKvStoreConnectorCallback<LoggingCloudletContext, String, Void>
 	{
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final LoggingCloudletContext context, final CallbackArguments arguments)
-		{
+		public CallbackCompletion<Void> destroySucceeded (final LoggingCloudletContext context, final CallbackArguments arguments) {
 			this.logger.info ("LoggingCloudlet store destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final LoggingCloudletContext context, final CallbackArguments arguments)
-		{
+		public CallbackCompletion<Void> initializeSucceeded (final LoggingCloudletContext context, final CallbackArguments arguments) {
 			this.logger.info ("LoggingCloudlet store initialized successfully.");
 			final String user = ConfigUtils.resolveParameter (arguments.getCloudlet ().getConfiguration (), "test.user", String.class, "error");
 			final String pass = ConfigUtils.resolveParameter (arguments.getCloudlet ().getConfiguration (), "test.password", String.class, "");
@@ -126,25 +119,22 @@ public class LoggingCloudlet
 	}
 	
 	public static final class LifeCycleHandler
-			extends DefaultCloudletCallback<LoggingCloudletContext>
+				extends DefaultCloudletCallback<LoggingCloudletContext>
 	{
 		@Override
-		public CallbackCompletion<Void> destroy (final LoggingCloudletContext context, final CloudletCallbackArguments<LoggingCloudletContext> arguments)
-		{
+		public CallbackCompletion<Void> destroy (final LoggingCloudletContext context, final CloudletCallbackArguments<LoggingCloudletContext> arguments) {
 			this.logger.info ("LoggingCloudlet destroying...");
 			return CallbackCompletion.createAndChained (context.kvStore.destroy (), context.consumer.destroy (), context.publisher.destroy ());
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final LoggingCloudletContext context, final CloudletCallbackCompletionArguments<LoggingCloudletContext> arguments)
-		{
+		public CallbackCompletion<Void> destroySucceeded (final LoggingCloudletContext context, final CloudletCallbackCompletionArguments<LoggingCloudletContext> arguments) {
 			this.logger.info ("LoggingCloudlet destroyed successfully.");
 			return ICallback.SUCCESS;
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initialize (final LoggingCloudletContext context, final CloudletCallbackArguments<LoggingCloudletContext> arguments)
-		{
+		public CallbackCompletion<Void> initialize (final LoggingCloudletContext context, final CloudletCallbackArguments<LoggingCloudletContext> arguments) {
 			this.logger.info ("LoggingCloudlet initializing...");
 			context.cloudlet = arguments.getCloudlet ();
 			final IConfiguration configuration = context.cloudlet.getConfiguration ();
@@ -158,8 +148,7 @@ public class LoggingCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final LoggingCloudletContext context, final CloudletCallbackCompletionArguments<LoggingCloudletContext> arguments)
-		{
+		public CallbackCompletion<Void> initializeSucceeded (final LoggingCloudletContext context, final CloudletCallbackCompletionArguments<LoggingCloudletContext> arguments) {
 			this.logger.info ("LoggingCloudlet initialized successfully.");
 			return ICallback.SUCCESS;
 		}

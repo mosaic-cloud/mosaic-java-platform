@@ -32,20 +32,17 @@ import org.slf4j.Logger;
  * Base class for driver response transmitter.
  * 
  * @author Georgiana Macariu
- * 
  */
 public class ResponseTransmitter
 {
-	public ResponseTransmitter ()
-	{
+	public ResponseTransmitter () {
 		this.logger = Transcript.create (this, true).adaptAs (Logger.class);
 	}
 	
 	/**
 	 * Destroys the transmitter.
 	 */
-	public void destroy ()
-	{
+	public void destroy () {
 		this.logger.trace ("ResponseTransmitter destroyed.");
 	}
 	
@@ -57,8 +54,7 @@ public class ResponseTransmitter
 	 * @param message
 	 *            the message
 	 */
-	protected void publishResponse (final Session session, final Message message)
-	{
+	protected void publishResponse (final Session session, final Message message) {
 		session.send (message);
 	}
 	

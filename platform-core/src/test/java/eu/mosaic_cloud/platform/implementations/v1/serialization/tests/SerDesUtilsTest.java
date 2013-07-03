@@ -32,14 +32,13 @@ public class SerDesUtilsTest
 {
 	@Test
 	public void testArray ()
-			throws Throwable
-	{
+				throws Throwable {
 		SerDesUtils.toObject (SerDesUtils.pojoToBytes (new SomeClass ()));
 	}
 	
 	public static class SomeClass
-			implements
-				Serializable
+				implements
+					Serializable
 	{
 		public Object[] someField = new Object[] {1, 2, true, ""};
 		private static final long serialVersionUID = 1L;

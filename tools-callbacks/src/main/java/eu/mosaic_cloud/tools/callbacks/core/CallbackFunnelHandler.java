@@ -25,8 +25,8 @@ import java.lang.reflect.Method;
 
 
 public interface CallbackFunnelHandler
-		extends
-			CallbackHandler
+			extends
+				CallbackHandler
 {
 	public CallbackCompletion<?> executeCallback (final Callbacks Proxy, final Method method, final Object[] arguments);
 }

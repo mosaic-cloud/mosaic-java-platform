@@ -29,35 +29,31 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 public class CloudletLifecycleTest
-		extends BaseCloudletTest<BaseCloudletTest.BaseScenario<VoidCloudletContext>>
+			extends BaseCloudletTest<BaseCloudletTest.BaseScenario<VoidCloudletContext>>
 {
 	@Override
-	public void setUp ()
-	{
+	public void setUp () {
 		this.scenario = new BaseScenario<VoidCloudletContext> ();
 		BaseCloudletTest.setUpScenario (this.getClass (), this.scenario, null, Callbacks.class, VoidCloudletContext.class);
 		this.cloudlet = Cloudlet.create (this.scenario.environment);
 	}
 	
 	@Override
-	public void test ()
-	{
+	public void test () {
 		this.awaitSuccess (this.cloudlet.initialize ());
 	}
 	
 	public static class Callbacks
-			extends DefaultCloudletCallback<VoidCloudletContext>
+				extends DefaultCloudletCallback<VoidCloudletContext>
 	{
 		@Override
-		public CallbackCompletion<Void> destroy (final VoidCloudletContext context, final CloudletCallbackArguments<VoidCloudletContext> arguments)
-		{
+		public CallbackCompletion<Void> destroy (final VoidCloudletContext context, final CloudletCallbackArguments<VoidCloudletContext> arguments) {
 			this.transcript.traceDebugging ("destroying...");
 			return (ICallback.SUCCESS);
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initialize (final VoidCloudletContext context, final CloudletCallbackArguments<VoidCloudletContext> arguments)
-		{
+		public CallbackCompletion<Void> initialize (final VoidCloudletContext context, final CloudletCallbackArguments<VoidCloudletContext> arguments) {
 			this.transcript.traceDebugging ("initializing...");
 			return (ICallback.SUCCESS);
 		}

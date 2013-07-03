@@ -26,27 +26,22 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 /**
- * Interface for AMQP queue publishers. This will be implemented by cloudlets
- * which need to send messages to an exchange.
+ * Interface for AMQP queue publishers. This will be implemented by cloudlets which need to send messages to an exchange.
  * 
  * @author Georgiana Macariu
- * 
  * @param <TContext>
  *            the type of the cloudlet context
  * @param <TMessage>
  *            the type of published data
  * @param <TExtra>
- *            the type of the extra data; as an example, this data can be used
- *            correlation
+ *            the type of the extra data; as an example, this data can be used correlation
  */
 public interface IAmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra>
-		extends
-			IAmqpQueueConnectorCallback<TContext>
+			extends
+				IAmqpQueueConnectorCallback<TContext>
 {
 	/**
-	 * Called when the publisher receives notification that the message
-	 * publishing could not be finished with success.
-	 * 
+	 * Called when the publisher receives notification that the message publishing could not be finished with success.
 	 * 
 	 * @param context
 	 *            the context of the cloudlet
@@ -56,8 +51,7 @@ public interface IAmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra
 	CallbackCompletion<Void> publishFailed (TContext context, GenericCallbackCompletionArguments<TExtra> arguments);
 	
 	/**
-	 * Called when the publisher receives confirmation that the message
-	 * publishing finished successfully.
+	 * Called when the publisher receives confirmation that the message publishing finished successfully.
 	 * 
 	 * @param <D>
 	 *            the type of the published message

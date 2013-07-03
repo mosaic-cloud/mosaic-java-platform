@@ -42,18 +42,16 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public class HttpgCloudlet
 {
 	public static final class Callbacks
-			extends DefaultCloudletCallback<Context>
+				extends DefaultCloudletCallback<Context>
 	{
 		@Override
-		public CallbackCompletion<Void> destroy (final Context context, final CloudletCallbackArguments<Context> arguments)
-		{
+		public CallbackCompletion<Void> destroy (final Context context, final CloudletCallbackArguments<Context> arguments) {
 			this.logger.info ("destroying cloudlet...");
 			return (context.gateway.destroy ());
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initialize (final Context context, final CloudletCallbackArguments<Context> arguments)
-		{
+		public CallbackCompletion<Void> initialize (final Context context, final CloudletCallbackArguments<Context> arguments) {
 			this.logger.info ("initializing cloudlet...");
 			context.identity = UUID.randomUUID ().toString ();
 			context.cloudlet = arguments.getCloudlet ();
@@ -72,11 +70,10 @@ public class HttpgCloudlet
 	}
 	
 	public static final class GatewayCallbacks
-			extends DefaultHttpgQueueConnectorCallback<Context, String, String, Void>
+				extends DefaultHttpgQueueConnectorCallback<Context, String, String, Void>
 	{
 		@Override
-		public CallbackCompletion<Void> requested (final Context context, final HttpgQueueRequestedCallbackArguments<String> arguments)
-		{
+		public CallbackCompletion<Void> requested (final Context context, final HttpgQueueRequestedCallbackArguments<String> arguments) {
 			final HttpgRequestMessage<String> request = arguments.getRequest ();
 			final StringBuilder responseBody = new StringBuilder ();
 			responseBody.append (String.format ("Cloudlet: %s\n", context.identity));

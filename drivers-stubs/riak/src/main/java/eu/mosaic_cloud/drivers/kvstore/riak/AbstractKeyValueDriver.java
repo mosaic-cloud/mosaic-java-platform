@@ -42,17 +42,14 @@ import com.google.common.base.Preconditions;
 
 
 /**
- * Base class for key-value store drivers. Implements only the basic set, get,
- * list and delete operations.
+ * Base class for key-value store drivers. Implements only the basic set, get, list and delete operations.
  * 
  * @author Georgiana Macariu
- * 
  */
 public abstract class AbstractKeyValueDriver
-		extends AbstractResourceDriver
+			extends AbstractResourceDriver
 {
-	protected AbstractKeyValueDriver (final ThreadingContext threading, final int noThreads)
-	{
+	protected AbstractKeyValueDriver (final ThreadingContext threading, final int noThreads) {
 		super (threading, noThreads);
 		this.bucketFactories = new HashMap<String, BucketData> ();
 		this.clientBucketMap = new HashMap<String, BucketData> ();
@@ -60,8 +57,7 @@ public abstract class AbstractKeyValueDriver
 	}
 	
 	@Override
-	public synchronized void destroy ()
-	{
+	public synchronized void destroy () {
 		super.destroy ();
 		for (final Map.Entry<String, BucketData> bucket : this.bucketFactories.entrySet ()) {
 			bucket.getValue ().destroy ();
@@ -70,29 +66,25 @@ public abstract class AbstractKeyValueDriver
 		this.bucketFactories.clear ();
 	}
 	
-	public IResult<Boolean> invokeDeleteOperation (final String clientId, final String key, final IOperationCompletionHandler<Boolean> complHandler)
-	{
+	public IResult<Boolean> invokeDeleteOperation (final String clientId, final String key, final IOperationCompletionHandler<Boolean> complHandler) {
 		final IOperationFactory opFactory = this.getOperationFactory (clientId);
 		@SuppressWarnings ("unchecked") final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) opFactory.getOperation (KeyValueOperations.DELETE, key);
 		return this.startOperation (operation, complHandler);
 	}
 	
-	public IResult<KeyValueMessage> invokeGetOperation (final String clientId, final String key, final EncodingMetadata expectedEncoding, final IOperationCompletionHandler<KeyValueMessage> complHandler)
-	{
+	public IResult<KeyValueMessage> invokeGetOperation (final String clientId, final String key, final EncodingMetadata expectedEncoding, final IOperationCompletionHandler<KeyValueMessage> complHandler) {
 		final IOperationFactory opFactory = this.getOperationFactory (clientId);
 		@SuppressWarnings ("unchecked") final GenericOperation<KeyValueMessage> operation = (GenericOperation<KeyValueMessage>) opFactory.getOperation (KeyValueOperations.GET, key, expectedEncoding);
 		return this.startOperation (operation, complHandler);
 	}
 	
-	public IResult<List<String>> invokeListOperation (final String clientId, final IOperationCompletionHandler<List<String>> complHandler)
-	{
+	public IResult<List<String>> invokeListOperation (final String clientId, final IOperationCompletionHandler<List<String>> complHandler) {
 		final IOperationFactory opFactory = this.getOperationFactory (clientId);
 		@SuppressWarnings ("unchecked") final GenericOperation<List<String>> operation = (GenericOperation<List<String>>) opFactory.getOperation (KeyValueOperations.LIST);
 		return this.startOperation (operation, complHandler);
 	}
 	
-	public IResult<Boolean> invokeSetOperation (final String clientId, final KeyValueMessage data, final IOperationCompletionHandler<Boolean> complHandler)
-	{
+	public IResult<Boolean> invokeSetOperation (final String clientId, final KeyValueMessage data, final IOperationCompletionHandler<Boolean> complHandler) {
 		final IOperationFactory opFactory = this.getOperationFactory (clientId);
 		@SuppressWarnings ("unchecked") final GenericOperation<Boolean> operation = (GenericOperation<Boolean>) opFactory.getOperation (KeyValueOperations.SET, data);
 		return this.startOperation (operation, complHandler);
@@ -106,8 +98,7 @@ public abstract class AbstractKeyValueDriver
 	 * @param bucket
 	 *            the bucket used by the client
 	 */
-	public synchronized void registerClient (final String clientId, final String bucket)
-	{
+	public synchronized void registerClient (final String clientId, final String bucket) {
 		Preconditions.checkArgument (!this.clientBucketMap.containsKey (clientId));
 		BucketData bucketData = this.bucketFactories.get (bucket);
 		if (bucketData == null) {
@@ -126,8 +117,7 @@ public abstract class AbstractKeyValueDriver
 	 * @param clientId
 	 *            the unique ID of the client
 	 */
-	public synchronized void unregisterClient (final String clientId)
-	{
+	public synchronized void unregisterClient (final String clientId) {
 		Preconditions.checkArgument (this.clientBucketMap.containsKey (clientId));
 		final BucketData bucketData = this.clientBucketMap.get (clientId);
 		final int noClients = bucketData.noClients.decrementAndGet ();
@@ -152,8 +142,7 @@ public abstract class AbstractKeyValueDriver
 	 *            the class object of the factory
 	 * @return the operation factory
 	 */
-	protected <T extends IOperationFactory> T getOperationFactory (final String clientId, final Class<T> factClass)
-	{
+	protected <T extends IOperationFactory> T getOperationFactory (final String clientId, final Class<T> factClass) {
 		T factory = null;
 		final BucketData bucket = this.clientBucketMap.get (clientId);
 		if (bucket != null) {
@@ -167,8 +156,7 @@ public abstract class AbstractKeyValueDriver
 	 * 
 	 * @return the operation factory
 	 */
-	private IOperationFactory getOperationFactory (final String clientId)
-	{
+	private IOperationFactory getOperationFactory (final String clientId) {
 		IOperationFactory factory = null;
 		final BucketData bucket = this.clientBucketMap.get (clientId);
 		if (bucket != null) {
@@ -178,8 +166,7 @@ public abstract class AbstractKeyValueDriver
 	}
 	
 	@SuppressWarnings ({"rawtypes", "unchecked"})
-	private <T extends Object> IResult<T> startOperation (final GenericOperation<T> operation, final IOperationCompletionHandler complHandler)
-	{
+	private <T extends Object> IResult<T> startOperation (final GenericOperation<T> operation, final IOperationCompletionHandler complHandler) {
 		final IResult<T> iResult = new GenericResult<T> (operation);
 		operation.setHandler (complHandler);
 		this.addPendingOperation (iResult);
@@ -199,15 +186,13 @@ public abstract class AbstractKeyValueDriver
 	
 	private class BucketData
 	{
-		public BucketData (final String bucket, final String clientId)
-		{
+		public BucketData (final String bucket, final String clientId) {
 			this.bucketName = bucket;
 			this.noClients = new AtomicInteger (0);
 			this.opFactory = AbstractKeyValueDriver.this.createOperationFactory (bucket, clientId);
 		}
 		
-		private void destroy ()
-		{
+		private void destroy () {
 			this.opFactory.destroy ();
 		}
 		

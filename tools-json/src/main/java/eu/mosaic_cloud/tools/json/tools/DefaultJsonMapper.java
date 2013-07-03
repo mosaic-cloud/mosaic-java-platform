@@ -47,18 +47,16 @@ import org.codehaus.jackson.util.TokenBuffer;
 
 
 public final class DefaultJsonMapper
-		extends Object
-		implements
-			JsonMapper
+			extends Object
+			implements
+				JsonMapper
 {
-	private DefaultJsonMapper ()
-	{
+	private DefaultJsonMapper () {
 		super ();
 	}
 	
 	@Override
-	public final <_Object_ extends Object> _Object_ decode (final Object data, final Class<_Object_> clasz)
-	{
+	public final <_Object_ extends Object> _Object_ decode (final Object data, final Class<_Object_> clasz) {
 		try {
 			final ObjectMapper mapper = new ObjectMapper ();
 			final JsonNode node = this.encode (data);
@@ -70,8 +68,7 @@ public final class DefaultJsonMapper
 	}
 	
 	@Override
-	public final <_Object_ extends Object> Object encode (final _Object_ object, final Class<_Object_> clasz)
-	{
+	public final <_Object_ extends Object> Object encode (final _Object_ object, final Class<_Object_> clasz) {
 		try {
 			final ObjectMapper mapper = new ObjectMapper ();
 			final TokenBuffer buffer = new TokenBuffer (mapper);
@@ -86,16 +83,14 @@ public final class DefaultJsonMapper
 		}
 	}
 	
-	public final ArrayNode encode (final List<?> data)
-	{
+	public final ArrayNode encode (final List<?> data) {
 		final ArrayNode node = new ArrayNode (JsonNodeFactory.instance);
 		for (final Object element : data)
 			node.add (this.encode (element));
 		return (node);
 	}
 	
-	public final JsonNode encode (final Object data)
-	{
+	public final JsonNode encode (final Object data) {
 		final JsonNode node;
 		if (data == null)
 			node = NullNode.instance;
@@ -122,8 +117,7 @@ public final class DefaultJsonMapper
 		return (node);
 	}
 	
-	public final List<? extends Object> transformFromNode (final ArrayNode node)
-	{
+	public final List<? extends Object> transformFromNode (final ArrayNode node) {
 		final ArrayList<Object> data = new ArrayList<Object> (node.size ());
 		final Iterator<JsonNode> iterator = node.getElements ();
 		while (iterator.hasNext ())
@@ -131,8 +125,7 @@ public final class DefaultJsonMapper
 		return (data);
 	}
 	
-	public final Object transformFromNode (final JsonNode node)
-	{
+	public final Object transformFromNode (final JsonNode node) {
 		final Object data;
 		if (node instanceof NullNode)
 			data = null;
@@ -151,8 +144,7 @@ public final class DefaultJsonMapper
 		return (data);
 	}
 	
-	public final Map<String, ? extends Object> transformFromNode (final ObjectNode node)
-	{
+	public final Map<String, ? extends Object> transformFromNode (final ObjectNode node) {
 		final HashMap<String, Object> data = new HashMap<String, Object> (node.size ());
 		final Iterator<Map.Entry<String, JsonNode>> iterator = node.getFields ();
 		while (iterator.hasNext ()) {
@@ -162,8 +154,7 @@ public final class DefaultJsonMapper
 		return (data);
 	}
 	
-	public final ObjectNode transformToNode (final Map<?, ?> data)
-	{
+	public final ObjectNode transformToNode (final Map<?, ?> data) {
 		final ObjectNode node = new ObjectNode (JsonNodeFactory.instance);
 		for (final Map.Entry<?, ?> entry : data.entrySet ()) {
 			final Object key = entry.getKey ();
@@ -174,8 +165,7 @@ public final class DefaultJsonMapper
 		return (node);
 	}
 	
-	public static final DefaultJsonMapper create ()
-	{
+	public static final DefaultJsonMapper create () {
 		return (new DefaultJsonMapper ());
 	}
 	

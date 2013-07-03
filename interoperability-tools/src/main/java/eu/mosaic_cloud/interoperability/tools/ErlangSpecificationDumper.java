@@ -30,15 +30,13 @@ import com.google.common.collect.Iterables;
 
 
 public final class ErlangSpecificationDumper
-		extends Object
+			extends Object
 {
-	private ErlangSpecificationDumper ()
-	{
+	private ErlangSpecificationDumper () {
 		throw (new IllegalAccessError ());
 	}
 	
-	public static final void dump (final MessageSpecification message, final StringBuilder builder, final int indent)
-	{
+	public static final void dump (final MessageSpecification message, final StringBuilder builder, final int indent) {
 		builder.append ("#message_specification{\n");
 		ErlangSpecificationDumper.indent (builder, indent + 1);
 		builder.append ("name = '").append (message.getQualifiedName ()).append ("',\n");
@@ -50,8 +48,7 @@ public final class ErlangSpecificationDumper
 		builder.append ("coder = undefined}");
 	}
 	
-	public static final void dump (final RoleSpecification role, final StringBuilder builder, final int indent)
-	{
+	public static final void dump (final RoleSpecification role, final StringBuilder builder, final int indent) {
 		builder.append ("#role_specification{\n");
 		ErlangSpecificationDumper.indent (builder, indent + 1);
 		builder.append ("name = '").append (role.getQualifiedName ()).append ("',\n");
@@ -59,8 +56,7 @@ public final class ErlangSpecificationDumper
 		builder.append ("identifier = <<\"").append (role.getIdentifier ()).append ("\">>}");
 	}
 	
-	public static final StringBuilder dump (final SessionSpecification ... sessions)
-	{
+	public static final StringBuilder dump (final SessionSpecification ... sessions) {
 		final StringBuilder builder = new StringBuilder ();
 		builder.append ("[\n");
 		for (int index = 0; index < sessions.length; index++) {
@@ -71,8 +67,7 @@ public final class ErlangSpecificationDumper
 		return (builder);
 	}
 	
-	public static final void dump (final SessionSpecification session, final StringBuilder builder, final int indent)
-	{
+	public static final void dump (final SessionSpecification session, final StringBuilder builder, final int indent) {
 		builder.append ("#session_specification{\n");
 		ErlangSpecificationDumper.indent (builder, indent + 1);
 		builder.append ("name = '").append (session.getQualifiedName ()).append ("',\n");
@@ -94,8 +89,7 @@ public final class ErlangSpecificationDumper
 		}
 	}
 	
-	public static final void main (final String[] arguments, final SessionSpecification ... sessions)
-	{
+	public static final void main (final String[] arguments, final SessionSpecification ... sessions) {
 		Preconditions.checkNotNull (arguments);
 		Preconditions.checkArgument (arguments.length == 0);
 		Preconditions.checkNotNull (sessions);
@@ -104,8 +98,7 @@ public final class ErlangSpecificationDumper
 		System.out.print (outcome.toString ());
 	}
 	
-	private static final void indent (final StringBuilder builder, final int indent)
-	{
+	private static final void indent (final StringBuilder builder, final int indent) {
 		for (int index = 0; index < indent; index++)
 			builder.append ('\t');
 	}

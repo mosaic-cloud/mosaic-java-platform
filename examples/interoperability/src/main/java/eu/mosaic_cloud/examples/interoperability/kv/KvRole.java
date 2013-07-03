@@ -26,25 +26,22 @@ import eu.mosaic_cloud.interoperability.tools.Identifiers;
 
 
 public enum KvRole
-		implements
-			RoleSpecification
+			implements
+				RoleSpecification
 {
 	Client (),
 	Server ();
-	private KvRole ()
-	{
+	private KvRole () {
 		this.identifier = Identifiers.generate (this);
 	}
 	
 	@Override
-	public String getIdentifier ()
-	{
+	public String getIdentifier () {
 		return (this.identifier);
 	}
 	
 	@Override
-	public String getQualifiedName ()
-	{
+	public String getQualifiedName () {
 		return (Identifiers.generateName (this));
 	}
 	

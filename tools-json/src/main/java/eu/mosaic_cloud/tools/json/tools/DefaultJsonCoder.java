@@ -35,20 +35,18 @@ import net.minidev.json.parser.ParseException;
 
 
 public final class DefaultJsonCoder
-		extends Object
-		implements
-			JsonCoder
+			extends Object
+			implements
+				JsonCoder
 {
-	private DefaultJsonCoder ()
-	{
+	private DefaultJsonCoder () {
 		super ();
 		this.metaDataCharset = Charset.forName ("utf-8");
 		this.style = new JSONStyle (-1 & ~JSONStyle.FLAG_PROTECT_KEYS & ~JSONStyle.FLAG_PROTECT_VALUES);
 	}
 	
 	@Override
-	public final Object decode (final ByteBuffer data_)
-	{
+	public final Object decode (final ByteBuffer data_) {
 		Preconditions.checkNotNull (data_);
 		final ByteBuffer data = data_.asReadOnlyBuffer ();
 		final byte[] dataBytes = new byte[data.remaining ()];
@@ -57,8 +55,7 @@ public final class DefaultJsonCoder
 		return (this.decodeFromString (dataString));
 	}
 	
-	public final Object decodeFromString (final String data)
-	{
+	public final Object decodeFromString (final String data) {
 		try {
 			Preconditions.checkNotNull (data);
 			final JSONParser parser = new JSONParser (JSONParser.MODE_RFC4627 & ~JSONParser.USE_HI_PRECISION_FLOAT);
@@ -70,25 +67,23 @@ public final class DefaultJsonCoder
 	}
 	
 	@Override
-	public final ByteBuffer encode (final Object structure)
-	{
+	public final ByteBuffer encode (final Object structure) {
 		final String dataString = this.encodeToString (structure);
 		final byte[] dataBytes = dataString.getBytes (this.metaDataCharset);
 		final ByteBuffer data = ByteBuffer.wrap (dataBytes);
 		return (data);
 	}
 	
-	public final String encodeToString (final Object structure)
-	{
+	public final String encodeToString (final Object structure) {
 		return (JSONValue.toJSONString (structure, this.style));
-	}
-	
-	public static final DefaultJsonCoder create ()
-	{
-		return (new DefaultJsonCoder ());
 	}
 	
 	private final Charset metaDataCharset;
 	private final JSONStyle style;
+	
+	public static final DefaultJsonCoder create () {
+		return (new DefaultJsonCoder ());
+	}
+	
 	public static final DefaultJsonCoder defaultInstance = DefaultJsonCoder.create ();
 }

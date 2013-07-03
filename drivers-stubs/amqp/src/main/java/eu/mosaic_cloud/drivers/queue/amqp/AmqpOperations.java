@@ -28,11 +28,10 @@ import eu.mosaic_cloud.drivers.ops.IOperationType;
  * Operations defined for the AMQP protocol.
  * 
  * @author Georgiana Macariu
- * 
  */
 public enum AmqpOperations
-		implements
-			IOperationType
+			implements
+				IOperationType
 {
 	ACK,
 	BIND_QUEUE,
@@ -49,8 +48,7 @@ public enum AmqpOperations
 	 *            name of operation
 	 * @return <code>true</code> if operation is supported
 	 */
-	public static boolean isOperation (final String operation)
-	{
+	public static boolean isOperation (final String operation) {
 		for (final AmqpOperations op : AmqpOperations.COPY_OF_VALUES) {
 			if (op.name ().equalsIgnoreCase (operation)) {
 				return true;

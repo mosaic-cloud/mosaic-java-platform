@@ -25,24 +25,21 @@ import eu.mosaic_cloud.components.implementations.basic.BasicComponentHarnessPre
 
 
 public final class CloudletComponentPreMain
-		extends Object
+			extends Object
 {
-	private CloudletComponentPreMain ()
-	{
+	private CloudletComponentPreMain () {
 		super ();
 		throw (new UnsupportedOperationException ());
 	}
 	
 	public static void main (final String descriptor, final String[] arguments)
-			throws Throwable
-	{
+				throws Throwable {
 		final String configuration = String.format ("{\"%s\":\"%s\"}", "descriptor", descriptor);
 		BasicComponentHarnessPreMain.main (CloudletComponentPreMain.class.getName ().replace ("PreMain", "$ComponentCallbacksProvider"), configuration, arguments);
 	}
 	
 	public static void main (final String[] arguments)
-			throws Throwable
-	{
+				throws Throwable {
 		BasicComponentHarnessPreMain.main (CloudletComponentPreMain.class.getName ().replace ("PreMain", "$ComponentCallbacksProvider"), arguments);
 	}
 }

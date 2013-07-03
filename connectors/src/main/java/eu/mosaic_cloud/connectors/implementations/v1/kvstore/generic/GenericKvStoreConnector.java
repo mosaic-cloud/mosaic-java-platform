@@ -34,10 +34,9 @@ import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
  *            type of stored data
  */
 public class GenericKvStoreConnector<TValue extends Object>
-		extends BaseKvStoreConnector<TValue, GenericKvStoreConnectorProxy<TValue>>
+			extends BaseKvStoreConnector<TValue, GenericKvStoreConnectorProxy<TValue>>
 {
-	protected GenericKvStoreConnector (final GenericKvStoreConnectorProxy<TValue> proxy)
-	{
+	protected GenericKvStoreConnector (final GenericKvStoreConnectorProxy<TValue> proxy) {
 		super (proxy);
 	}
 	
@@ -47,13 +46,11 @@ public class GenericKvStoreConnector<TValue extends Object>
 	 * @param configuration
 	 *            the execution environment of a connector
 	 * @param encoder
-	 *            encoder used for serializing and deserializing data stored in
-	 *            the key-value store
+	 *            encoder used for serializing and deserializing data stored in the key-value store
 	 * @param threading
 	 * @return the connector
 	 */
-	public static <T> GenericKvStoreConnector<T> create (final ConnectorConfiguration configuration, final DataEncoder<T> encoder)
-	{
+	public static <T> GenericKvStoreConnector<T> create (final ConnectorConfiguration configuration, final DataEncoder<T> encoder) {
 		final GenericKvStoreConnectorProxy<T> proxy = GenericKvStoreConnectorProxy.create (configuration, encoder);
 		return new GenericKvStoreConnector<T> (proxy);
 	}

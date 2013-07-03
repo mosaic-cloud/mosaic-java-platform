@@ -26,8 +26,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 public interface IHttpgQueueConnector<TRequestBody, TResponseBody>
-		extends
-			IQueueConnector
+			extends
+				IQueueConnector
 {
 	CallbackCompletion<Void> respond (HttpgResponseMessage<TResponseBody> response);
 }

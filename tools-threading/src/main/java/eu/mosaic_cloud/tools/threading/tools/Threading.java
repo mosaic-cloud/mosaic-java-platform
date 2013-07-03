@@ -55,26 +55,22 @@ import com.google.common.util.concurrent.Atomics;
 
 
 public final class Threading
-		extends Object
+			extends Object
 {
-	private Threading ()
-	{
+	private Threading () {
 		super ();
 		throw (new UnsupportedOperationException ());
 	}
 	
-	public static final boolean acquire (final Semaphore semaphore)
-	{
+	public static final boolean acquire (final Semaphore semaphore) {
 		return (Threading.acquire (semaphore, 1));
 	}
 	
-	public static final boolean acquire (final Semaphore semaphore, final int tokens)
-	{
+	public static final boolean acquire (final Semaphore semaphore, final int tokens) {
 		return (Threading.acquire (semaphore, tokens, -1));
 	}
 	
-	public static final boolean acquire (final Semaphore semaphore, final int tokens, final long timeout)
-	{
+	public static final boolean acquire (final Semaphore semaphore, final int tokens, final long timeout) {
 		Preconditions.checkNotNull (semaphore);
 		Preconditions.checkArgument (tokens >= 0);
 		Preconditions.checkArgument ((timeout >= 0) || (timeout == -1));
@@ -94,18 +90,15 @@ public final class Threading
 		}
 	}
 	
-	public static final boolean acquire (final Semaphore semaphore, final long timeout)
-	{
+	public static final boolean acquire (final Semaphore semaphore, final long timeout) {
 		return (Threading.acquire (semaphore, 1, timeout));
 	}
 	
-	public static final boolean await (final Condition condition)
-	{
+	public static final boolean await (final Condition condition) {
 		return (Threading.await (condition, -1));
 	}
 	
-	public static final boolean await (final Condition condition, final long timeout)
-	{
+	public static final boolean await (final Condition condition, final long timeout) {
 		Preconditions.checkNotNull (condition);
 		Preconditions.checkArgument ((timeout >= 0) || (timeout == -1));
 		try {
@@ -122,13 +115,11 @@ public final class Threading
 		}
 	}
 	
-	public static final boolean await (final CountDownLatch latch)
-	{
+	public static final boolean await (final CountDownLatch latch) {
 		return (Threading.await (latch, -1));
 	}
 	
-	public static final boolean await (final CountDownLatch latch, final long timeout)
-	{
+	public static final boolean await (final CountDownLatch latch, final long timeout) {
 		Preconditions.checkNotNull (latch);
 		Preconditions.checkArgument ((timeout >= 0) || (timeout == -1));
 		try {
@@ -145,13 +136,11 @@ public final class Threading
 		}
 	}
 	
-	public static final int await (final CyclicBarrier barrier)
-	{
+	public static final int await (final CyclicBarrier barrier) {
 		return (Threading.await (barrier, -1));
 	}
 	
-	public static final int await (final CyclicBarrier barrier, final long timeout)
-	{
+	public static final int await (final CyclicBarrier barrier, final long timeout) {
 		Preconditions.checkNotNull (barrier);
 		Preconditions.checkArgument ((timeout >= 0) || (timeout == -1));
 		try {
@@ -172,26 +161,22 @@ public final class Threading
 	}
 	
 	public static final <_Object_ extends Object> _Object_ await (final Future<_Object_> future)
-			throws ExecutionException
-	{
+				throws ExecutionException {
 		return (Threading.await (future, null));
 	}
 	
 	public static final <_Object_ extends Object> _Object_ await (final Future<_Object_> future, final _Object_ timeoutMarker)
-			throws ExecutionException
-	{
+				throws ExecutionException {
 		return (Threading.await (future, -1, timeoutMarker));
 	}
 	
 	public static final <_Object_ extends Object> _Object_ await (final Future<_Object_> future, final long timeout)
-			throws ExecutionException
-	{
+				throws ExecutionException {
 		return (Threading.await (future, timeout, null));
 	}
 	
 	public static final <_Object_ extends Object> _Object_ await (final Future<_Object_> future, final long timeout, final _Object_ timeoutMarker)
-			throws ExecutionException
-	{
+				throws ExecutionException {
 		Preconditions.checkNotNull (future);
 		Preconditions.checkArgument ((timeout >= 0) || (timeout == -1));
 		try {
@@ -211,23 +196,19 @@ public final class Threading
 		}
 	}
 	
-	public static final <_Object_ extends Object> _Object_ awaitOrCatch (final Future<_Object_> future)
-	{
+	public static final <_Object_ extends Object> _Object_ awaitOrCatch (final Future<_Object_> future) {
 		return (Threading.awaitOrCatch (future, null, null));
 	}
 	
-	public static final <_Object_ extends Object> _Object_ awaitOrCatch (final Future<_Object_> future, final _Object_ timeoutMarker, final _Object_ exceptionMarker)
-	{
+	public static final <_Object_ extends Object> _Object_ awaitOrCatch (final Future<_Object_> future, final _Object_ timeoutMarker, final _Object_ exceptionMarker) {
 		return (Threading.awaitOrCatch (future, -1, timeoutMarker, exceptionMarker));
 	}
 	
-	public static final <_Object_ extends Object> _Object_ awaitOrCatch (final Future<_Object_> future, final long timeout)
-	{
+	public static final <_Object_ extends Object> _Object_ awaitOrCatch (final Future<_Object_> future, final long timeout) {
 		return (Threading.awaitOrCatch (future, timeout, null, null));
 	}
 	
-	public static final <_Object_ extends Object> _Object_ awaitOrCatch (final Future<_Object_> future, final long timeout, final _Object_ timeoutMarker, final _Object_ exceptionMarker)
-	{
+	public static final <_Object_ extends Object> _Object_ awaitOrCatch (final Future<_Object_> future, final long timeout, final _Object_ timeoutMarker, final _Object_ exceptionMarker) {
 		try {
 			return (Threading.await (future, timeout, timeoutMarker));
 		} catch (final ExecutionException exception) {
@@ -235,58 +216,47 @@ public final class Threading
 		}
 	}
 	
-	public static final Thread createAndStartDaemonThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable)
-	{
+	public static final Thread createAndStartDaemonThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable) {
 		return (Threading.createAndStartThread (threading, threading.getThreadConfiguration ().override (owner, name, true), runnable));
 	}
 	
-	public static final Thread createAndStartDaemonThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable, final ExceptionTracer exceptions, final UncaughtExceptionHandler catcher)
-	{
+	public static final Thread createAndStartDaemonThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable, final ExceptionTracer exceptions, final UncaughtExceptionHandler catcher) {
 		return (Threading.createAndStartThread (threading, threading.getThreadConfiguration ().override (owner, name, true, exceptions, catcher), runnable));
 	}
 	
-	public static final Thread createAndStartNormalThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable)
-	{
+	public static final Thread createAndStartNormalThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable) {
 		return (Threading.createAndStartThread (threading, threading.getThreadConfiguration ().override (owner, name, false), runnable));
 	}
 	
-	public static final Thread createAndStartNormalThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable, final ExceptionTracer exceptions, final UncaughtExceptionHandler catcher)
-	{
+	public static final Thread createAndStartNormalThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable, final ExceptionTracer exceptions, final UncaughtExceptionHandler catcher) {
 		return (Threading.createAndStartThread (threading, threading.getThreadConfiguration ().override (owner, name, false, exceptions, catcher), runnable));
 	}
 	
-	public static final Thread createAndStartThread (final ThreadingContext context, final ThreadConfiguration configuration, final Runnable runnable)
-	{
+	public static final Thread createAndStartThread (final ThreadingContext context, final ThreadConfiguration configuration, final Runnable runnable) {
 		return (Threading.createThread (context, configuration, runnable, true));
 	}
 	
-	public static final Thread createDaemonThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable)
-	{
+	public static final Thread createDaemonThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable) {
 		return (Threading.createThread (threading, threading.getThreadConfiguration ().override (owner, name, true), runnable));
 	}
 	
-	public static final Thread createDaemonThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable, final ExceptionTracer exceptions, final UncaughtExceptionHandler catcher)
-	{
+	public static final Thread createDaemonThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable, final ExceptionTracer exceptions, final UncaughtExceptionHandler catcher) {
 		return (Threading.createThread (threading, threading.getThreadConfiguration ().override (owner, name, true, exceptions, catcher), runnable));
 	}
 	
-	public static final Thread createNormalThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable)
-	{
+	public static final Thread createNormalThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable) {
 		return (Threading.createThread (threading, threading.getThreadConfiguration ().override (owner, name, false), runnable));
 	}
 	
-	public static final Thread createNormalThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable, final ExceptionTracer exceptions, final UncaughtExceptionHandler catcher)
-	{
+	public static final Thread createNormalThread (final ThreadingContext threading, final Object owner, final String name, final Runnable runnable, final ExceptionTracer exceptions, final UncaughtExceptionHandler catcher) {
 		return (Threading.createThread (threading, threading.getThreadConfiguration ().override (owner, name, false, exceptions, catcher), runnable));
 	}
 	
-	public static final Thread createThread (final ThreadingContext context, final ThreadConfiguration configuration, final Runnable runnable)
-	{
+	public static final Thread createThread (final ThreadingContext context, final ThreadConfiguration configuration, final Runnable runnable) {
 		return (Threading.createThread (context, configuration, runnable, false));
 	}
 	
-	public static final Thread createThread (final ThreadingContext context, final ThreadConfiguration configuration, final Runnable runnable, final boolean start)
-	{
+	public static final Thread createThread (final ThreadingContext context, final ThreadConfiguration configuration, final Runnable runnable, final boolean start) {
 		Preconditions.checkNotNull (context);
 		Preconditions.checkNotNull (configuration);
 		Preconditions.checkNotNull (runnable);
@@ -296,13 +266,11 @@ public final class Threading
 		return (thread);
 	}
 	
-	public static final <_Object_ extends Object> _Object_ exchange (final Exchanger<_Object_> exchanger, final _Object_ sent)
-	{
+	public static final <_Object_ extends Object> _Object_ exchange (final Exchanger<_Object_> exchanger, final _Object_ sent) {
 		return (Threading.exchange (exchanger, sent, -1));
 	}
 	
-	public static final <_Object_ extends Object> _Object_ exchange (final Exchanger<_Object_> exchanger, final _Object_ sent, final long timeout)
-	{
+	public static final <_Object_ extends Object> _Object_ exchange (final Exchanger<_Object_> exchanger, final _Object_ sent, final long timeout) {
 		Preconditions.checkNotNull (exchanger);
 		Preconditions.checkNotNull (sent);
 		Preconditions.checkArgument ((timeout >= 0) || (timeout == -1));
@@ -325,8 +293,7 @@ public final class Threading
 	}
 	
 	public static final <_Outcome_ extends Object> _Outcome_ executeWithCurrentThreadClassLoader (final ClassLoader classLoader, final Callable<_Outcome_> operation)
-			throws Exception
-	{
+				throws Exception {
 		final ClassLoader originalClassLoader = Threading.getCurrentThreadClassLoader ();
 		Threading.setCurrentThreadClassLoader (classLoader);
 		try {
@@ -336,13 +303,11 @@ public final class Threading
 		}
 	}
 	
-	public static final void exit ()
-	{
+	public static final void exit () {
 		Threading.exit (Threading.defaultAbortExitCode);
 	}
 	
-	public static final void exit (final int exitCode)
-	{
+	public static final void exit (final int exitCode) {
 		final int finalExitCode;
 		if ((exitCode >= 0) && (exitCode <= 255))
 			finalExitCode = exitCode;
@@ -352,36 +317,30 @@ public final class Threading
 		Threading.loop ();
 	}
 	
-	public static final ThreadingContext getCurrentContext ()
-	{
+	public static final ThreadingContext getCurrentContext () {
 		return (CurrentContext.instance.get ());
 	}
 	
-	public static final Thread getCurrentThread ()
-	{
+	public static final Thread getCurrentThread () {
 		return (Thread.currentThread ());
 	}
 	
-	public static final ClassLoader getCurrentThreadClassLoader ()
-	{
+	public static final ClassLoader getCurrentThreadClassLoader () {
 		return (Threading.getCurrentThread ().getContextClassLoader ());
 	}
 	
-	public static final ThreadGroup getCurrentThreadGroup ()
-	{
+	public static final ThreadGroup getCurrentThreadGroup () {
 		return (Thread.currentThread ().getThreadGroup ());
 	}
 	
 	@Deprecated
-	public static final ThreadingContext getDefaultContext ()
-	{
+	public static final ThreadingContext getDefaultContext () {
 		final ThreadingContext context = Threading.defaultContext.get ();
 		Preconditions.checkState (context != null);
 		return (context);
 	}
 	
-	public static final ThreadGroup getRootThreadGroup ()
-	{
+	public static final ThreadGroup getRootThreadGroup () {
 		final ThreadGroup root;
 		for (ThreadGroup child = Thread.currentThread ().getThreadGroup (), parent = child.getParent (); true; child = parent, parent = child.getParent ())
 			if (parent == null) {
@@ -391,13 +350,11 @@ public final class Threading
 		return (root);
 	}
 	
-	public static final void halt ()
-	{
+	public static final void halt () {
 		Threading.halt (Threading.defaultHaltExitCode);
 	}
 	
-	public static final void halt (final int exitCode)
-	{
+	public static final void halt (final int exitCode) {
 		final int finalExitCode;
 		if ((exitCode >= 0) && (exitCode <= 255))
 			finalExitCode = exitCode;
@@ -407,53 +364,44 @@ public final class Threading
 		Threading.loop ();
 	}
 	
-	public static final void interrupt (final Iterable<? extends Thread> threads)
-	{
+	public static final void interrupt (final Iterable<? extends Thread> threads) {
 		Preconditions.checkNotNull (threads);
 		for (final Thread thread : threads)
 			Threading.interrupt (thread);
 	}
 	
-	public static final void interrupt (final Thread thread)
-	{
+	public static final void interrupt (final Thread thread) {
 		Preconditions.checkNotNull (thread);
 		thread.interrupt ();
 	}
 	
-	public static final void interruptCurrentThread ()
-	{
+	public static final void interruptCurrentThread () {
 		Threading.interrupt (Threading.getCurrentThread ());
 	}
 	
-	public static final boolean isCurrentContext (final ThreadingContext context)
-	{
+	public static final boolean isCurrentContext (final ThreadingContext context) {
 		return (context == Threading.getCurrentContext ());
 	}
 	
-	public static final boolean isCurrentThread (final Thread thread)
-	{
+	public static final boolean isCurrentThread (final Thread thread) {
 		Preconditions.checkNotNull (thread);
 		return (thread == Threading.getCurrentThread ());
 	}
 	
-	public static final boolean isCurrentThreadGroup (final ThreadGroup group)
-	{
+	public static final boolean isCurrentThreadGroup (final ThreadGroup group) {
 		Preconditions.checkNotNull (group);
 		return (group == Threading.getCurrentThreadGroup ());
 	}
 	
-	public static final boolean isCurrentThreadInterrupted ()
-	{
+	public static final boolean isCurrentThreadInterrupted () {
 		return (Threading.getCurrentThread ().isInterrupted ());
 	}
 	
-	public static final boolean join (final ExecutorService executor)
-	{
+	public static final boolean join (final ExecutorService executor) {
 		return (Threading.join (executor, -1));
 	}
 	
-	public static final boolean join (final ExecutorService executor, final long timeout)
-	{
+	public static final boolean join (final ExecutorService executor, final long timeout) {
 		Preconditions.checkNotNull (executor);
 		Preconditions.checkArgument ((timeout >= 0) || (timeout == -1));
 		try {
@@ -466,13 +414,11 @@ public final class Threading
 		}
 	}
 	
-	public static final boolean join (final Iterable<? extends Thread> threads)
-	{
+	public static final boolean join (final Iterable<? extends Thread> threads) {
 		return (Threading.join (threads, -1));
 	}
 	
-	public static final boolean join (final Iterable<? extends Thread> threads, final long timeout)
-	{
+	public static final boolean join (final Iterable<? extends Thread> threads, final long timeout) {
 		// NOTE: Mirrors the code from `java.lang.Thread.join(long)`.
 		Preconditions.checkNotNull (threads);
 		Preconditions.checkArgument ((timeout >= 0) || (timeout == -1));
@@ -505,8 +451,7 @@ public final class Threading
 		}
 	}
 	
-	public static final boolean join (final Process process)
-	{
+	public static final boolean join (final Process process) {
 		Preconditions.checkNotNull (process);
 		try {
 			process.waitFor ();
@@ -517,13 +462,11 @@ public final class Threading
 		}
 	}
 	
-	public static final boolean join (final Thread thread)
-	{
+	public static final boolean join (final Thread thread) {
 		return (Threading.join (thread, -1));
 	}
 	
-	public static final boolean join (final Thread thread, final long timeout)
-	{
+	public static final boolean join (final Thread thread, final long timeout) {
 		Preconditions.checkNotNull (thread);
 		Preconditions.checkArgument ((timeout >= 0) || (timeout == -1));
 		try {
@@ -549,13 +492,11 @@ public final class Threading
 		}
 	}
 	
-	public static final boolean lock (final Lock lock)
-	{
+	public static final boolean lock (final Lock lock) {
 		return (Threading.lock (lock, -1));
 	}
 	
-	public static final boolean lock (final Lock lock, final long timeout)
-	{
+	public static final boolean lock (final Lock lock, final long timeout) {
 		Preconditions.checkNotNull (lock);
 		Preconditions.checkArgument ((timeout >= 0) || (timeout == -1));
 		try {
@@ -574,29 +515,25 @@ public final class Threading
 		}
 	}
 	
-	public static final void notify (final Object monitor)
-	{
+	public static final void notify (final Object monitor) {
 		Preconditions.checkNotNull (monitor);
 		synchronized (monitor) {
 			monitor.notify ();
 		}
 	}
 	
-	public static final void notifyAll (final Object monitor)
-	{
+	public static final void notifyAll (final Object monitor) {
 		Preconditions.checkNotNull (monitor);
 		synchronized (monitor) {
 			monitor.notifyAll ();
 		}
 	}
 	
-	public static final <_Object_ extends Object> boolean offer (final BlockingQueue<_Object_> queue, final _Object_ object)
-	{
+	public static final <_Object_ extends Object> boolean offer (final BlockingQueue<_Object_> queue, final _Object_ object) {
 		return (Threading.offer (queue, object, -1));
 	}
 	
-	public static final <_Object_ extends Object> boolean offer (final BlockingQueue<_Object_> queue, final _Object_ object, final long timeout)
-	{
+	public static final <_Object_ extends Object> boolean offer (final BlockingQueue<_Object_> queue, final _Object_ object, final long timeout) {
 		Preconditions.checkNotNull (queue);
 		Preconditions.checkNotNull (object);
 		Preconditions.checkArgument ((timeout >= 0) || (timeout == -1));
@@ -616,13 +553,11 @@ public final class Threading
 		}
 	}
 	
-	public static final <_Object_ extends Object> _Object_ poll (final BlockingQueue<_Object_> queue)
-	{
+	public static final <_Object_ extends Object> _Object_ poll (final BlockingQueue<_Object_> queue) {
 		return (Threading.poll (queue, -1));
 	}
 	
-	public static final <_Object_ extends Object> _Object_ poll (final BlockingQueue<_Object_> queue, final long timeout)
-	{
+	public static final <_Object_ extends Object> _Object_ poll (final BlockingQueue<_Object_> queue, final long timeout) {
 		Preconditions.checkNotNull (queue);
 		Preconditions.checkArgument ((timeout >= 0) || (timeout == -1));
 		try {
@@ -640,21 +575,18 @@ public final class Threading
 		}
 	}
 	
-	public static final void registerExitCallback (final ThreadingContext context, final Object owner, final String name, final Runnable runnable)
-	{
+	public static final void registerExitCallback (final ThreadingContext context, final Object owner, final String name, final Runnable runnable) {
 		Preconditions.checkNotNull (context);
 		Preconditions.checkNotNull (owner);
 		Preconditions.checkNotNull (runnable);
 		Runtime.getRuntime ().addShutdownHook (context.createThread (context.getThreadConfiguration ().override (owner, name, true), runnable));
 	}
 	
-	public static final <_Object_ extends Object> Reference<? extends _Object_> remove (final ReferenceQueue<_Object_> queue)
-	{
+	public static final <_Object_ extends Object> Reference<? extends _Object_> remove (final ReferenceQueue<_Object_> queue) {
 		return (Threading.remove (queue, -1));
 	}
 	
-	public static final <_Object_ extends Object> Reference<? extends _Object_> remove (final ReferenceQueue<_Object_> queue, final long timeout)
-	{
+	public static final <_Object_ extends Object> Reference<? extends _Object_> remove (final ReferenceQueue<_Object_> queue, final long timeout) {
 		Preconditions.checkNotNull (queue);
 		Preconditions.checkArgument ((timeout >= 0) || (timeout == -1));
 		try {
@@ -672,19 +604,16 @@ public final class Threading
 		}
 	}
 	
-	public static final void setCurrentThreadClassLoader (final ClassLoader classLoader)
-	{
+	public static final void setCurrentThreadClassLoader (final ClassLoader classLoader) {
 		Preconditions.checkNotNull (classLoader);
 		Threading.getCurrentThread ().setContextClassLoader (classLoader);
 	}
 	
-	public static final void setDefaultContext (final ThreadingContext context)
-	{
+	public static final void setDefaultContext (final ThreadingContext context) {
 		Threading.defaultContext.set (context);
 	}
 	
-	public static final boolean sleep (final long timeout)
-	{
+	public static final boolean sleep (final long timeout) {
 		try {
 			Thread.sleep (timeout);
 			return (true);
@@ -694,8 +623,7 @@ public final class Threading
 		}
 	}
 	
-	public static final int start (final Iterable<? extends Thread> threads)
-	{
+	public static final int start (final Iterable<? extends Thread> threads) {
 		Preconditions.checkNotNull (threads);
 		int count = 0;
 		for (final Thread thread : threads) {
@@ -710,13 +638,11 @@ public final class Threading
 		return (count);
 	}
 	
-	public static final <_Object_ extends Object> boolean transfer (final TransferQueue<_Object_> queue, final _Object_ object)
-	{
+	public static final <_Object_ extends Object> boolean transfer (final TransferQueue<_Object_> queue, final _Object_ object) {
 		return (Threading.transfer (queue, object, -1));
 	}
 	
-	public static final <_Object_ extends Object> boolean transfer (final TransferQueue<_Object_> queue, final _Object_ object, final long timeout)
-	{
+	public static final <_Object_ extends Object> boolean transfer (final TransferQueue<_Object_> queue, final _Object_ object, final long timeout) {
 		Preconditions.checkNotNull (queue);
 		Preconditions.checkNotNull (object);
 		Preconditions.checkArgument ((timeout >= 0) || (timeout == -1));
@@ -736,13 +662,11 @@ public final class Threading
 		}
 	}
 	
-	public static final boolean wait (final Object monitor)
-	{
+	public static final boolean wait (final Object monitor) {
 		return (Threading.wait (monitor, -1));
 	}
 	
-	public static final boolean wait (final Object monitor, final long timeout)
-	{
+	public static final boolean wait (final Object monitor, final long timeout) {
 		Preconditions.checkNotNull (monitor);
 		Preconditions.checkArgument ((timeout >= 0) || (timeout == -1));
 		try {
@@ -763,8 +687,7 @@ public final class Threading
 		}
 	}
 	
-	private static final void loop ()
-	{
+	private static final void loop () {
 		while (true) {
 			final Object object = new Object ();
 			synchronized (object) {
@@ -782,17 +705,15 @@ public final class Threading
 	private static final AtomicReference<ThreadingContext> defaultContext = Atomics.newReference (null);
 	
 	private static final class CurrentContext
-			extends ThreadLocal<ThreadingContext>
+				extends ThreadLocal<ThreadingContext>
 	{
-		private CurrentContext ()
-		{
+		private CurrentContext () {
 			super ();
 			this.initialValueActive = false;
 		}
 		
 		@Override
-		public final ThreadingContext get ()
-		{
+		public final ThreadingContext get () {
 			synchronized (this) {
 				if (this.initialValueActive)
 					return (null);
@@ -801,20 +722,17 @@ public final class Threading
 		}
 		
 		@Override
-		public final void remove ()
-		{
+		public final void remove () {
 			throw (new UnsupportedOperationException ());
 		}
 		
 		@Override
-		public final void set (final ThreadingContext value)
-		{
+		public final void set (final ThreadingContext value) {
 			throw (new UnsupportedOperationException ());
 		}
 		
 		@Override
-		protected final ThreadingContext initialValue ()
-		{
+		protected final ThreadingContext initialValue () {
 			synchronized (this) {
 				try {
 					this.initialValueActive = true;

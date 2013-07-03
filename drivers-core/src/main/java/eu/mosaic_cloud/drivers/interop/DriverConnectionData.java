@@ -25,7 +25,6 @@ package eu.mosaic_cloud.drivers.interop;
  * Generic class holding connection information about a resource driver.
  * 
  * @author Georgiana Macariu
- * 
  */
 public class DriverConnectionData
 {
@@ -39,8 +38,7 @@ public class DriverConnectionData
 	 * @param driverName
 	 *            driver name
 	 */
-	public DriverConnectionData (final String host, final int port, final String driverName)
-	{
+	public DriverConnectionData (final String host, final int port, final String driverName) {
 		super ();
 		this.host = host;
 		this.port = port;
@@ -61,56 +59,46 @@ public class DriverConnectionData
 	 * @param password
 	 *            password for connecting to resource
 	 */
-	public DriverConnectionData (final String host, final int port, final String driverName, final String user, final String password)
-	{
+	public DriverConnectionData (final String host, final int port, final String driverName, final String user, final String password) {
 		this (host, port, driverName);
 		this.user = user;
 		this.password = password;
 	}
 	
 	@Override
-	public boolean equals (final Object obj)
-	{
+	public boolean equals (final Object obj) {
 		boolean isEqual;
 		isEqual = (this == obj);
 		if (!isEqual && (obj instanceof DriverConnectionData)) {
 			final DriverConnectionData other = (DriverConnectionData) obj;
-			isEqual =
-					(obj == null) || (this.getClass () != obj.getClass ()) || ((this.driverName == null) && (other.driverName != null)) || ((this.driverName != null) && (!this.driverName.equals (other.driverName))) || ((this.host == null) && (other.host != null)) || ((this.host != null) && (!this.host.equals (other.host))) || ((this.password == null) && (other.password != null)) || ((this.password != null) && (other.password == null))
-							|| ((this.password != null) && ((other.password != null) && !this.password.equals (other.password))) || ((this.user == null) && (other.user != null)) || ((this.user != null) && (!this.user.equals (other.user)));
+			isEqual = (obj == null) || (this.getClass () != obj.getClass ()) || ((this.driverName == null) && (other.driverName != null)) || ((this.driverName != null) && (!this.driverName.equals (other.driverName))) || ((this.host == null) && (other.host != null)) || ((this.host != null) && (!this.host.equals (other.host))) || ((this.password == null) && (other.password != null)) || ((this.password != null) && (other.password == null)) || ((this.password != null) && ((other.password != null) && !this.password.equals (other.password))) || ((this.user == null) && (other.user != null)) || ((this.user != null) && (!this.user.equals (other.user)));
 			isEqual ^= true;
 		}
 		return isEqual;
 	}
 	
-	public String getDriverName ()
-	{
+	public String getDriverName () {
 		return this.driverName;
 	}
 	
-	public String getHost ()
-	{
+	public String getHost () {
 		return this.host;
 	}
 	
-	public String getPassword ()
-	{
+	public String getPassword () {
 		return this.password;
 	}
 	
-	public int getPort ()
-	{
+	public int getPort () {
 		return this.port;
 	}
 	
-	public String getUser ()
-	{
+	public String getUser () {
 		return this.user;
 	}
 	
 	@Override
-	public int hashCode ()
-	{
+	public int hashCode () {
 		final int prime = 31;
 		int result = 1;
 		result = (prime * result) + ((this.driverName == null) ? 0 : this.driverName.hashCode ());

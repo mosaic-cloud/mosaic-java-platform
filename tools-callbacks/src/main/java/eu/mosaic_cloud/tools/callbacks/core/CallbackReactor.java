@@ -25,8 +25,8 @@ import eu.mosaic_cloud.tools.threading.core.Joinable;
 
 
 public interface CallbackReactor
-		extends
-			Joinable
+			extends
+				Joinable
 {
 	public abstract <_Callbacks_ extends Callbacks> CallbackCompletion<Void> assignDelegate (final _Callbacks_ proxy, _Callbacks_ delegate);
 	

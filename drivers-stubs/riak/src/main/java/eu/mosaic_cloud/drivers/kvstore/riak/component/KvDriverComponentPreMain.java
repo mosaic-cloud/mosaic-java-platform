@@ -25,17 +25,15 @@ import eu.mosaic_cloud.drivers.component.AbstractDriverComponentPreMain;
 
 
 public final class KvDriverComponentPreMain
-		extends Object
+			extends Object
 {
-	private KvDriverComponentPreMain ()
-	{
+	private KvDriverComponentPreMain () {
 		super ();
 		throw (new UnsupportedOperationException ());
 	}
 	
 	public static void main (final String[] arguments)
-			throws Throwable
-	{
+				throws Throwable {
 		AbstractDriverComponentPreMain.main (KvDriverComponentCallbacks.class.getName ().replace ("PreMain", "Callbacks"), arguments);
 	}
 }

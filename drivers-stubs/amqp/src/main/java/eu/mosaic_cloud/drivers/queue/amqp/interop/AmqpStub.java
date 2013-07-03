@@ -65,14 +65,12 @@ import com.rabbitmq.client.ConnectionFactory;
 
 
 /**
- * Stub for the driver for queuing systems implementing the AMQP protocol. This
- * is used for communicating with a AMQP driver.
+ * Stub for the driver for queuing systems implementing the AMQP protocol. This is used for communicating with a AMQP driver.
  * 
  * @author Georgiana Macariu
- * 
  */
 public class AmqpStub
-		extends AbstractDriverStub
+			extends AbstractDriverStub
 {
 	/**
 	 * Creates a new stub for the AMQP driver.
@@ -80,21 +78,18 @@ public class AmqpStub
 	 * @param config
 	 *            the configuration data for the stub and driver
 	 * @param transmitter
-	 *            the transmitter object which will send responses to requests
-	 *            submitted to this stub
+	 *            the transmitter object which will send responses to requests submitted to this stub
 	 * @param driver
 	 *            the driver used for processing requests submitted to this stub
 	 * @param commChannel
 	 *            the channel for communicating with connectors
 	 */
-	private AmqpStub (final IConfiguration config, final ResponseTransmitter transmitter, final IResourceDriver driver, final ZeroMqChannel commChannel)
-	{
+	private AmqpStub (final IConfiguration config, final ResponseTransmitter transmitter, final IResourceDriver driver, final ZeroMqChannel commChannel) {
 		super (config, transmitter, driver, commChannel);
 	}
 	
 	@Override
-	public synchronized void destroy ()
-	{
+	public synchronized void destroy () {
 		synchronized (AbstractDriverStub.MONITOR) {
 			final int ref = AbstractDriverStub.decDriverReference (this);
 			if ((ref == 0)) {
@@ -109,9 +104,7 @@ public class AmqpStub
 	@Override
 	@SuppressWarnings ("unchecked")
 	protected void startOperation (final Message message, final Session session)
-			throws IOException,
-				ClassNotFoundException
-	{
+				throws IOException, ClassNotFoundException {
 		Preconditions.checkArgument (message.specification instanceof AmqpMessage);
 		final AmqpMessage amqpMessage = (AmqpMessage) message.specification;
 		CompletionToken token;
@@ -246,7 +239,7 @@ public class AmqpStub
 				resultBool = driver.basicAck (token.getClientId (), delivery, multiple, ackHandler);
 				ackHandler.setDetails (AmqpOperations.ACK, resultBool);
 				break;
-			default:
+			default :
 				final DriverOperationFinishedHandler errHandler = new DriverOperationFinishedHandler (null, session);
 				driver.handleUnsupportedOperationError (amqpMessage.toString (), errHandler);
 				AmqpStub.logger.error ("Unknown amqp message: " + amqpMessage.toString ());
@@ -263,8 +256,7 @@ public class AmqpStub
 	 *            the channel for communicating with connectors
 	 * @return the AMQP driver stub
 	 */
-	public static AmqpStub create (final IConfiguration config, final ZeroMqChannel channel, final ThreadingContext threading)
-	{
+	public static AmqpStub create (final IConfiguration config, final ZeroMqChannel channel, final ThreadingContext threading) {
 		synchronized (AbstractDriverStub.MONITOR) {
 			AmqpStub stub = AmqpStub.stub;
 			if (stub == null) {
@@ -283,8 +275,7 @@ public class AmqpStub
 		return AmqpStub.stub;
 	}
 	
-	public static AmqpStub createDetached (final IConfiguration config, final ZeroMqChannel channel, final ThreadingContext threading)
-	{
+	public static AmqpStub createDetached (final IConfiguration config, final ZeroMqChannel channel, final ThreadingContext threading) {
 		synchronized (AbstractDriverStub.MONITOR) {
 			final AmqpResponseTransmitter transmitter = new AmqpResponseTransmitter ();
 			final AmqpDriver driver = AmqpDriver.create (config, threading);
@@ -303,8 +294,7 @@ public class AmqpStub
 	 *            the configuration data
 	 * @return resource connection data
 	 */
-	protected static DriverConnectionData readConnectionData (final IConfiguration config)
-	{
+	protected static DriverConnectionData readConnectionData (final IConfiguration config) {
 		final String resourceHost = ConfigUtils.resolveParameter (config, "", String.class, ConnectionFactory.DEFAULT_HOST);
 		final int resourcePort = ConfigUtils.resolveParameter (config, "", Integer.class, ConnectionFactory.DEFAULT_AMQP_PORT);
 		final String amqpServerUser = ConfigUtils.resolveParameter (config, "", String.class, ConnectionFactory.DEFAULT_USER);
@@ -322,18 +312,16 @@ public class AmqpStub
 	private static AmqpStub stub;
 	
 	final class ConsumerHandler
-			implements
-				IAmqpConsumer
+				implements
+					IAmqpConsumer
 	{
-		public ConsumerHandler (final Session session)
-		{
+		public ConsumerHandler (final Session session) {
 			super ();
 			this.session = session;
 		}
 		
 		@Override
-		public void handleCancel (final String consumerTag)
-		{
+		public void handleCancel (final String consumerTag) {
 			final AmqpResponseTransmitter transmitter = AmqpStub.this.getResponseTransmitter (AmqpResponseTransmitter.class);
 			transmitter.sendCancel (this.session, consumerTag);
 		}
@@ -352,8 +340,7 @@ public class AmqpStub
 		 * /interop/queue/amqp/AmqpStub.java
 		 */
 		@Override
-		public void handleCancelOk (final String consumerTag)
-		{
+		public void handleCancelOk (final String consumerTag) {
 			final AmqpResponseTransmitter transmitter = AmqpStub.this.getResponseTransmitter (AmqpResponseTransmitter.class);
 			transmitter.sendCancelOk (this.session, consumerTag);
 		}
@@ -372,8 +359,7 @@ public class AmqpStub
 		 * /interop/queue/amqp/AmqpStub.java
 		 */
 		@Override
-		public void handleConsumeOk (final String consumerTag)
-		{
+		public void handleConsumeOk (final String consumerTag) {
 			final AmqpResponseTransmitter transmitter = AmqpStub.this.getResponseTransmitter (AmqpResponseTransmitter.class);
 			transmitter.sendConsumeOk (this.session, consumerTag);
 		}
@@ -392,8 +378,7 @@ public class AmqpStub
 		 * /java/eu/mosaic_cloud/driver/interop/queue/amqp/AmqpStub.java
 		 */
 		@Override
-		public void handleDelivery (final AmqpInboundMessage message)
-		{
+		public void handleDelivery (final AmqpInboundMessage message) {
 			final AmqpResponseTransmitter transmitter = AmqpStub.this.getResponseTransmitter (AmqpResponseTransmitter.class);
 			transmitter.sendDelivery (this.session, message);
 		}
@@ -412,8 +397,7 @@ public class AmqpStub
 		 * mosaic_cloud/driver/interop/queue/amqp/AmqpStub.java
 		 */
 		@Override
-		public void handleShutdown (final String consumerTag, final String errorMessage)
-		{
+		public void handleShutdown (final String consumerTag, final String errorMessage) {
 			final AmqpResponseTransmitter transmitter = AmqpStub.this.getResponseTransmitter (AmqpResponseTransmitter.class);
 			transmitter.sendShutdownSignal (this.session, consumerTag, errorMessage);
 		}
@@ -422,19 +406,17 @@ public class AmqpStub
 	}
 	
 	/**
-	 * Handler for processing responses of the requests submitted to the stub.
-	 * This will basically call the transmitter associated with the stub.
+	 * Handler for processing responses of the requests submitted to the stub. This will basically call the transmitter
+	 * associated with the stub.
 	 * 
 	 * @author Georgiana Macariu
-	 * 
 	 */
 	@SuppressWarnings ("rawtypes")
 	final class DriverOperationFinishedHandler
-			implements
-				IOperationCompletionHandler
+				implements
+					IOperationCompletionHandler
 	{
-		public DriverOperationFinishedHandler (final CompletionToken complToken, final Session session)
-		{
+		public DriverOperationFinishedHandler (final CompletionToken complToken, final Session session) {
 			this.complToken = complToken;
 			this.signal = new CountDownLatch (1);
 			this.driver = AmqpStub.this.getDriver (AmqpDriver.class);
@@ -443,8 +425,7 @@ public class AmqpStub
 		}
 		
 		@Override
-		public void onFailure (final Throwable error)
-		{
+		public void onFailure (final Throwable error) {
 			try {
 				this.signal.await ();
 			} catch (final InterruptedException e) {
@@ -456,8 +437,7 @@ public class AmqpStub
 		}
 		
 		@Override
-		public void onSuccess (final Object response)
-		{
+		public void onSuccess (final Object response) {
 			try {
 				this.signal.await ();
 			} catch (final InterruptedException e) {
@@ -467,8 +447,7 @@ public class AmqpStub
 			this.transmitter.sendResponse (this.session, this.complToken, this.operation, response, false);
 		}
 		
-		public void setDetails (final AmqpOperations operation, final IResult<?> result)
-		{
+		public void setDetails (final AmqpOperations operation, final IResult<?> result) {
 			this.operation = operation;
 			this.result = result;
 			this.signal.countDown ();

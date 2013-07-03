@@ -29,11 +29,10 @@ import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
  * Factory for creating amqp queue publisher connectors.
  * 
  * @author Ciprian Craciun
- * 
  */
 public interface IAmqpQueuePublisherConnectorFactory
-		extends
-			IAmqpQueueConnectorFactory<IAmqpQueueConsumerConnector<?, ?>>
+			extends
+				IAmqpQueueConnectorFactory<IAmqpQueueConsumerConnector<?, ?>>
 {
 	<TContext, TMessage, TExtra> IAmqpQueuePublisherConnector<TMessage, TExtra> create (IConfiguration configuration, Class<TMessage> messageClass, DataEncoder<TMessage> messageEncoder, IAmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback, TContext callbackContext);
 }

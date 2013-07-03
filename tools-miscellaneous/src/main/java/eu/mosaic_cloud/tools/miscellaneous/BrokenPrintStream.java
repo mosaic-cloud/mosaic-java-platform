@@ -26,219 +26,183 @@ import java.util.Locale;
 
 
 public final class BrokenPrintStream
-		extends PrintStream
+			extends PrintStream
 {
-	private BrokenPrintStream ()
-	{
+	private BrokenPrintStream () {
 		super (BrokenOutputStream.defaultInstance);
 	}
 	
 	@Override
-	public PrintStream append (final char c)
-	{
+	public PrintStream append (final char c) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public PrintStream append (final CharSequence csq)
-	{
+	public PrintStream append (final CharSequence csq) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public PrintStream append (final CharSequence csq, final int start, final int end)
-	{
+	public PrintStream append (final CharSequence csq, final int start, final int end) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public boolean checkError ()
-	{
+	public boolean checkError () {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void close ()
-	{
+	public void close () {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void flush ()
-	{
+	public void flush () {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public PrintStream format (final Locale l, final String format, final Object ... args)
-	{
+	public PrintStream format (final Locale l, final String format, final Object ... args) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public PrintStream format (final String format, final Object ... args)
-	{
+	public PrintStream format (final String format, final Object ... args) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void print (final boolean b)
-	{
+	public void print (final boolean b) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void print (final char c)
-	{
+	public void print (final char c) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void print (final char[] s)
-	{
+	public void print (final char[] s) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void print (final double d)
-	{
+	public void print (final double d) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void print (final float f)
-	{
+	public void print (final float f) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void print (final int i)
-	{
+	public void print (final int i) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void print (final long l)
-	{
+	public void print (final long l) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void print (final Object obj)
-	{
+	public void print (final Object obj) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void print (final String s)
-	{
+	public void print (final String s) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public PrintStream printf (final Locale l, final String format, final Object ... args)
-	{
+	public PrintStream printf (final Locale l, final String format, final Object ... args) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public PrintStream printf (final String format, final Object ... args)
-	{
+	public PrintStream printf (final String format, final Object ... args) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void println ()
-	{
+	public void println () {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void println (final boolean x)
-	{
+	public void println (final boolean x) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void println (final char x)
-	{
+	public void println (final char x) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void println (final char[] x)
-	{
+	public void println (final char[] x) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void println (final double x)
-	{
+	public void println (final double x) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void println (final float x)
-	{
+	public void println (final float x) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void println (final int x)
-	{
+	public void println (final int x) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void println (final long x)
-	{
+	public void println (final long x) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void println (final Object x)
-	{
+	public void println (final Object x) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void println (final String x)
-	{
+	public void println (final String x) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void write (final byte[] b)
-	{
+	public void write (final byte[] b) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void write (final byte[] buf, final int off, final int len)
-	{
+	public void write (final byte[] buf, final int off, final int len) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	public void write (final int b)
-	{
+	public void write (final int b) {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	protected void clearError ()
-	{
+	protected void clearError () {
 		throw (new UnsupportedOperationException ());
 	}
 	
 	@Override
-	protected void setError ()
-	{
+	protected void setError () {
 		throw (new UnsupportedOperationException ());
 	}
 	
-	public static final BrokenPrintStream create ()
-	{
+	public static final BrokenPrintStream create () {
 		return (new BrokenPrintStream ());
 	}
 	

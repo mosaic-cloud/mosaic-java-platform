@@ -31,12 +31,11 @@ import com.google.common.base.Preconditions;
 
 
 public abstract class BaseConnectorFactory<TConnector extends IConnector>
-		extends eu.mosaic_cloud.connectors.implementations.v1.core.BaseConnectorFactory<TConnector>
-		implements
-			IConnectorFactory<TConnector>
+			extends eu.mosaic_cloud.connectors.implementations.v1.core.BaseConnectorFactory<TConnector>
+			implements
+				IConnectorFactory<TConnector>
 {
-	protected BaseConnectorFactory (final ICloudletController<?> cloudlet, final ConnectorEnvironment environment, final IConnectorsFactory delegate)
-	{
+	protected BaseConnectorFactory (final ICloudletController<?> cloudlet, final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
 		super (environment, delegate);
 		Preconditions.checkNotNull (cloudlet);
 		this.cloudlet = cloudlet;

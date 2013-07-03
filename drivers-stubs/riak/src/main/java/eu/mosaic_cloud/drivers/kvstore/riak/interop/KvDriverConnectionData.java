@@ -25,14 +25,12 @@ import eu.mosaic_cloud.drivers.interop.DriverConnectionData;
 
 
 /**
- * Generic class holding connection information about a key-value resource
- * driver.
+ * Generic class holding connection information about a key-value resource driver.
  * 
  * @author Georgiana Macariu
- * 
  */
 public class KvDriverConnectionData
-		extends DriverConnectionData
+			extends DriverConnectionData
 {
 	/**
 	 * Creates a new data class
@@ -46,8 +44,7 @@ public class KvDriverConnectionData
 	 * @param bucket
 	 *            bucket name
 	 */
-	public KvDriverConnectionData (final String host, final int port, final String driverName, final String bucket)
-	{
+	public KvDriverConnectionData (final String host, final int port, final String driverName, final String bucket) {
 		super (host, port, driverName);
 		this.bucket = bucket;
 	}
@@ -68,15 +65,13 @@ public class KvDriverConnectionData
 	 * @param bucket
 	 *            bucket name
 	 */
-	public KvDriverConnectionData (final String host, final int port, final String driverName, final String user, final String password, final String bucket)
-	{
+	public KvDriverConnectionData (final String host, final int port, final String driverName, final String user, final String password, final String bucket) {
 		super (host, port, driverName, user, password);
 		this.bucket = bucket;
 	}
 	
 	@Override
-	public boolean equals (final Object obj)
-	{
+	public boolean equals (final Object obj) {
 		boolean isEqual = (this == obj);
 		if (!isEqual) {
 			isEqual = (!super.equals (obj)) || (this.getClass () != obj.getClass ());
@@ -89,14 +84,12 @@ public class KvDriverConnectionData
 		return isEqual;
 	}
 	
-	public String getBucket ()
-	{
+	public String getBucket () {
 		return this.bucket;
 	}
 	
 	@Override
-	public int hashCode ()
-	{
+	public int hashCode () {
 		final int prime = 31;
 		int result = super.hashCode ();
 		result = (prime * result) + ((this.bucket == null) ? 0 : this.bucket.hashCode ());

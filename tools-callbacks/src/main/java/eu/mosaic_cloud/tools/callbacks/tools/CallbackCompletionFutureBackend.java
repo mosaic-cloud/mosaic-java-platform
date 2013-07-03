@@ -37,11 +37,10 @@ import com.google.common.util.concurrent.MoreExecutors;
 
 
 public final class CallbackCompletionFutureBackend<_Outcome_ extends Object>
-		implements
-			CallbackCompletionBackend
+			implements
+				CallbackCompletionBackend
 {
-	private CallbackCompletionFutureBackend (final ListenableFuture<_Outcome_> future, final Executor executor)
-	{
+	private CallbackCompletionFutureBackend (final ListenableFuture<_Outcome_> future, final Executor executor) {
 		super ();
 		Preconditions.checkNotNull (future);
 		Preconditions.checkNotNull (executor);
@@ -51,8 +50,7 @@ public final class CallbackCompletionFutureBackend<_Outcome_ extends Object>
 	}
 	
 	@Override
-	public final boolean awaitCompletion (final CallbackCompletion<?> completion, final long timeout)
-	{
+	public final boolean awaitCompletion (final CallbackCompletion<?> completion, final long timeout) {
 		Preconditions.checkArgument (completion == this.completion);
 		final Object outcome = Threading.awaitOrCatch ((ListenableFuture<Object>) this.future, timeout, CallbackCompletionFutureBackend.timeoutMarker, CallbackCompletionFutureBackend.exceptionMarker);
 		if (outcome == CallbackCompletionFutureBackend.timeoutMarker)
@@ -63,8 +61,7 @@ public final class CallbackCompletionFutureBackend<_Outcome_ extends Object>
 	}
 	
 	@Override
-	public final Throwable getCompletionException (final CallbackCompletion<?> completion)
-	{
+	public final Throwable getCompletionException (final CallbackCompletion<?> completion) {
 		Preconditions.checkArgument (completion == this.completion);
 		final Object outcome;
 		try {
@@ -78,8 +75,7 @@ public final class CallbackCompletionFutureBackend<_Outcome_ extends Object>
 	}
 	
 	@Override
-	public final Object getCompletionOutcome (final CallbackCompletion<?> completion)
-	{
+	public final Object getCompletionOutcome (final CallbackCompletion<?> completion) {
 		Preconditions.checkArgument (completion == this.completion);
 		final Object outcome = Threading.awaitOrCatch ((ListenableFuture<Object>) this.future, 0, CallbackCompletionFutureBackend.timeoutMarker, CallbackCompletionFutureBackend.exceptionMarker);
 		if (outcome == CallbackCompletionFutureBackend.timeoutMarker)
@@ -90,51 +86,46 @@ public final class CallbackCompletionFutureBackend<_Outcome_ extends Object>
 	}
 	
 	@Override
-	public final CallbackReactor getReactor ()
-	{
+	public final CallbackReactor getReactor () {
 		return (null);
 	}
 	
 	@Override
-	public final void observeCompletion (final CallbackCompletion<?> completion, final CallbackCompletionObserver observer)
-	{
+	public final void observeCompletion (final CallbackCompletion<?> completion, final CallbackCompletionObserver observer) {
 		Preconditions.checkArgument (completion == this.completion);
 		Preconditions.checkNotNull (observer);
 		this.future.addListener (new Observer (observer), this.executor);
 	}
 	
-	final void triggerObserver (final CallbackCompletionObserver observer)
-	{
+	final void triggerObserver (final CallbackCompletionObserver observer) {
 		CallbackCompletion.triggerObserver (this.completion, observer);
-	}
-	
-	public static final <_Outcome_ extends Object> CallbackCompletion<_Outcome_> createCompletion (final ListenableFuture<_Outcome_> future)
-	{
-		return (new CallbackCompletionFutureBackend<_Outcome_> (future, CallbackCompletionFutureBackend.inlineExecutor).completion);
 	}
 	
 	public final CallbackCompletion<_Outcome_> completion;
 	private final Executor executor;
 	private final ListenableFuture<_Outcome_> future;
+	
+	public static final <_Outcome_ extends Object> CallbackCompletion<_Outcome_> createCompletion (final ListenableFuture<_Outcome_> future) {
+		return (new CallbackCompletionFutureBackend<_Outcome_> (future, CallbackCompletionFutureBackend.inlineExecutor).completion);
+	}
+	
 	private static final Object exceptionMarker = new Object ();
 	private static final Executor inlineExecutor = MoreExecutors.sameThreadExecutor ();
 	private static final Object timeoutMarker = new Object ();
 	
 	private final class Observer
-			extends Object
-			implements
-				Runnable
+				extends Object
+				implements
+					Runnable
 	{
-		Observer (final CallbackCompletionObserver observer)
-		{
+		Observer (final CallbackCompletionObserver observer) {
 			super ();
 			this.observer = observer;
 			this.triggered = new AtomicBoolean (false);
 		}
 		
 		@Override
-		public final void run ()
-		{
+		public final void run () {
 			Preconditions.checkState (this.triggered.compareAndSet (false, true));
 			CallbackCompletionFutureBackend.this.triggerObserver (this.observer);
 		}

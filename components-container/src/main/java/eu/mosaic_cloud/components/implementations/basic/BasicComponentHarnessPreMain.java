@@ -41,30 +41,20 @@ import com.lexicalscope.jewel.cli.Option;
 
 
 public final class BasicComponentHarnessPreMain
-		extends Object
+			extends Object
 {
-	private BasicComponentHarnessPreMain ()
-	{
+	private BasicComponentHarnessPreMain () {
 		super ();
 		throw (new UnsupportedOperationException ());
 	}
 	
-	static {
-		stdin = System.in;
-		stdout = System.out;
-		System.setIn (BrokenInputStream.create ());
-		System.setOut (BrokenPrintStream.create ());
-	}
-	
 	public static final void main (final String callbacksClass, final String callbacksConfiguration, final String[] arguments)
-			throws Throwable
-	{
+				throws Throwable {
 		BasicComponentHarnessPreMain.main (callbacksClass, callbacksConfiguration, arguments, 0);
 	}
 	
 	public static final void main (final String callbacksClass, final String callbacksConfiguration, final String[] arguments, final int argumentsOffset)
-			throws Throwable
-	{
+				throws Throwable {
 		Preconditions.checkArgument (arguments != null, "invalid arguments; expected arguments");
 		Preconditions.checkArgument ((argumentsOffset >= 0) && (argumentsOffset <= arguments.length), "invalid arguments offset");
 		final String[] finalArguments = new String[(arguments.length + 4) - argumentsOffset];
@@ -77,14 +67,12 @@ public final class BasicComponentHarnessPreMain
 	}
 	
 	public static final void main (final String callbacksClass, final String[] arguments)
-			throws Throwable
-	{
+				throws Throwable {
 		BasicComponentHarnessPreMain.main (callbacksClass, arguments, 0);
 	}
 	
 	public static final void main (final String callbacksClass, final String[] arguments, final int argumentsOffset)
-			throws Throwable
-	{
+				throws Throwable {
 		Preconditions.checkArgument (arguments != null, "invalid arguments; expected arguments");
 		Preconditions.checkArgument ((argumentsOffset >= 0) && (argumentsOffset <= arguments.length), "invalid arguments offset");
 		final String[] finalArguments = new String[(arguments.length + 2) - argumentsOffset];
@@ -95,14 +83,12 @@ public final class BasicComponentHarnessPreMain
 	}
 	
 	public static final void main (final String callbacksClass, final String[] prefixArguments, final String[] suffixArguments, final String[] arguments)
-			throws Throwable
-	{
+				throws Throwable {
 		BasicComponentHarnessPreMain.main (callbacksClass, prefixArguments, suffixArguments, arguments, 0);
 	}
 	
 	public static final void main (final String callbacksClass, final String[] prefixArguments, final String[] suffixArguments, final String[] arguments, final int argumentsOffset)
-			throws Throwable
-	{
+				throws Throwable {
 		Preconditions.checkNotNull (prefixArguments);
 		Preconditions.checkNotNull (suffixArguments);
 		Preconditions.checkArgument (arguments != null, "invalid arguments; expected arguments");
@@ -119,8 +105,7 @@ public final class BasicComponentHarnessPreMain
 	}
 	
 	public static final void main (final String[] arguments)
-			throws Throwable
-	{
+				throws Throwable {
 		Preconditions.checkNotNull (arguments);
 		if (arguments.length > 0) {
 			boolean launch = false;
@@ -144,8 +129,7 @@ public final class BasicComponentHarnessPreMain
 	}
 	
 	private static final void mainLocal (final String[] argumentsList)
-			throws Throwable
-	{
+				throws Throwable {
 		final ArgumentsProvider arguments = CliFactory.parseArguments (ArgumentsProvider.class, argumentsList);
 		final Class<?> mainClass = ClassLoader.getSystemClassLoader ().loadClass (BasicComponentHarnessPreMain.class.getName ().replace ("HarnessPreMain", "LocalLauncher"));
 		final String componentCallbacks = arguments.getCallbacksClass ();
@@ -160,6 +144,12 @@ public final class BasicComponentHarnessPreMain
 		}
 	}
 	
+	static {
+		stdin = System.in;
+		stdout = System.out;
+		System.setIn (BrokenInputStream.create ());
+		System.setOut (BrokenPrintStream.create ());
+	}
 	static final InputStream stdin;
 	static final OutputStream stdout;
 	

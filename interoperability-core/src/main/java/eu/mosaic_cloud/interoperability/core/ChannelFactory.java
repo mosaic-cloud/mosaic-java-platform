@@ -26,8 +26,8 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
 
 public interface ChannelFactory
-		extends
-			Callbacks
+			extends
+				Callbacks
 {
 	@CallbackPassthrough
 	public abstract Channel create ();

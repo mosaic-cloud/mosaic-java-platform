@@ -20,21 +20,20 @@
 
 package eu.mosaic_cloud.cloudlets.v1.core;
 
+
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
 
 
 /**
- * Base class for clouldet callback arguments. This will hold a reference to the
- * cloudlet controller but also the result of the operation or the exception
- * thrown by the operation.
+ * Base class for clouldet callback arguments. This will hold a reference to the cloudlet controller but also the result of the
+ * operation or the exception thrown by the operation.
  * 
  * @author Georgiana Macariu
- * 
  * @param <TResult>
  *            the type of the result of the operation
  */
 public class GenericCallbackCompletionArguments<TResult>
-		extends CallbackCompletionArguments
+			extends CallbackCompletionArguments
 {
 	/**
 	 * Creates the operation callback argument.
@@ -44,8 +43,7 @@ public class GenericCallbackCompletionArguments<TResult>
 	 * @param error
 	 *            the exception thrown by the operation
 	 */
-	public GenericCallbackCompletionArguments (final ICloudletController<?> cloudlet, final Throwable error)
-	{
+	public GenericCallbackCompletionArguments (final ICloudletController<?> cloudlet, final Throwable error) {
 		super (cloudlet, error);
 		this.result = null;
 	}
@@ -58,8 +56,7 @@ public class GenericCallbackCompletionArguments<TResult>
 	 * @param result
 	 *            the result of the operation
 	 */
-	public GenericCallbackCompletionArguments (final ICloudletController<?> cloudlet, final TResult result)
-	{
+	public GenericCallbackCompletionArguments (final ICloudletController<?> cloudlet, final TResult result) {
 		super (cloudlet);
 		this.result = result;
 	}
@@ -69,8 +66,7 @@ public class GenericCallbackCompletionArguments<TResult>
 	 * 
 	 * @return the result of the operation
 	 */
-	public TResult getResult ()
-	{
+	public TResult getResult () {
 		return this.result;
 	}
 	

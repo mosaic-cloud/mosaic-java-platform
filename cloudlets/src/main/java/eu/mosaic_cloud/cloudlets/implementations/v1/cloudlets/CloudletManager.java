@@ -48,16 +48,13 @@ import com.google.common.base.Preconditions;
 
 
 /**
- * Implements a container holding a list of cloudlet instances. All instances
- * have the same cloudlet type.
+ * Implements a container holding a list of cloudlet instances. All instances have the same cloudlet type.
  * 
  * @author Georgiana Macariu
- * 
  */
 public final class CloudletManager
 {
-	private CloudletManager (final IConfiguration configuration, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final IComponentConnector componentConnector, final ChannelFactory channelFactory, final ChannelResolver channelResolver)
-	{
+	private CloudletManager (final IConfiguration configuration, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final IComponentConnector componentConnector, final ChannelFactory channelFactory, final ChannelResolver channelResolver) {
 		super ();
 		Preconditions.checkNotNull (configuration);
 		Preconditions.checkNotNull (classLoader);
@@ -87,8 +84,7 @@ public final class CloudletManager
 		this.transcript.traceDebugging ("using the interoperability channel resolver `%{object}`...", this.channelResolver);
 	}
 	
-	public final boolean createInstance ()
-	{
+	public final boolean createInstance () {
 		this.transcript.traceDebugging ("creating a new cloudlet...");
 		synchronized (this.monitor) {
 			final Cloudlet<?> cloudlet = this.createCloudletInstance ();
@@ -101,8 +97,7 @@ public final class CloudletManager
 		}
 	}
 	
-	public final void destroy ()
-	{
+	public final void destroy () {
 		this.transcript.traceDebugging ("destroying all cloudlets...");
 		synchronized (this.monitor) {
 			while (!this.cloudlets.isEmpty ()) {
@@ -111,8 +106,7 @@ public final class CloudletManager
 		}
 	}
 	
-	public final boolean destroyInstance ()
-	{
+	public final boolean destroyInstance () {
 		this.transcript.traceDebugging ("destroying a cloudlet...");
 		synchronized (this.monitor) {
 			final Iterator<Cloudlet<?>> cloudletIterator = this.cloudlets.keySet ().iterator ();
@@ -133,7 +127,7 @@ public final class CloudletManager
 					case ACTIVE :
 					case INITIALIZING :
 						break;
-					default:
+					default :
 						throw (new AssertionError ());
 				}
 				// FIXME: this should be done asynchronously and we should check
@@ -146,8 +140,7 @@ public final class CloudletManager
 		}
 	}
 	
-	private final Cloudlet<?> createCloudletInstance ()
-	{
+	private final Cloudlet<?> createCloudletInstance () {
 		final Class<?> cloudletCallbacksClass = this.resolveCloudletCallbacksClass ();
 		final Class<?> cloudletContextClass = this.resolveCloudletStateClass ();
 		final IConfiguration cloudletConfiguration = this.resolveCloudletConfiguration ();
@@ -161,8 +154,7 @@ public final class CloudletManager
 		return (cloudlet);
 	}
 	
-	private final Class<?> resolveCloudletCallbacksClass ()
-	{
+	private final Class<?> resolveCloudletCallbacksClass () {
 		this.transcript.traceDebugging ("resolving the cloudlet callbacks class name...");
 		final String className = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.CloudletComponent_8, String.class, null);
 		Preconditions.checkNotNull (className, "unknown cloudlet callbacks class");
@@ -178,8 +170,7 @@ public final class CloudletManager
 		return (clasz);
 	}
 	
-	private final IConfiguration resolveCloudletConfiguration ()
-	{
+	private final IConfiguration resolveCloudletConfiguration () {
 		this.transcript.traceDebugging ("resolving the cloudlet configuration...");
 		final String configurationDescriptor = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.CloudletComponent_10, String.class, null);
 		Preconditions.checkNotNull (configurationDescriptor, "unknown cloudlet configuration descriptor");
@@ -194,8 +185,7 @@ public final class CloudletManager
 		return (configuration);
 	}
 	
-	private final Class<?> resolveCloudletStateClass ()
-	{
+	private final Class<?> resolveCloudletStateClass () {
 		this.transcript.traceDebugging ("resolving the cloudlet state class name...");
 		final String className = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.CloudletComponent_9, String.class, null);
 		Preconditions.checkNotNull (className, "unknown cloudlet context class");
@@ -210,11 +200,6 @@ public final class CloudletManager
 		return (clasz);
 	}
 	
-	public static final CloudletManager create (final IConfiguration configuration, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final IComponentConnector componentConnector, final ChannelFactory channelFactory, final ChannelResolver channelResolver)
-	{
-		return (new CloudletManager (configuration, classLoader, reactor, threading, exceptions, componentConnector, channelFactory, channelResolver));
-	}
-	
 	private final ChannelFactory channelFactory;
 	private final ChannelResolver channelResolver;
 	private final ClassLoader classLoader;
@@ -227,49 +212,49 @@ public final class CloudletManager
 	private final ThreadingContext threading;
 	private final Transcript transcript;
 	
+	public static final CloudletManager create (final IConfiguration configuration, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final IComponentConnector componentConnector, final ChannelFactory channelFactory, final ChannelResolver channelResolver) {
+		return (new CloudletManager (configuration, classLoader, reactor, threading, exceptions, componentConnector, channelFactory, channelResolver));
+	}
+	
 	final class CloudletExceptionTracer
-			extends DelegatingExceptionTracer
+				extends DelegatingExceptionTracer
 	{
-		CloudletExceptionTracer ()
-		{
+		CloudletExceptionTracer () {
 			super (CloudletManager.this.exceptions);
 		}
 		
 		@Override
-		protected void trace_ (final ExceptionResolution resolution, final Throwable exception)
-		{
+		protected void trace_ (final ExceptionResolution resolution, final Throwable exception) {
 			switch (resolution) {
 				case Deferred :
 				case Ignored :
 					CloudletManager.this.transcript.trace (ExceptionResolution.Ignored, exception);
 					break;
-				default:
+				default :
 					break;
 			}
 		}
 		
 		@Override
-		protected void trace_ (final ExceptionResolution resolution, final Throwable exception, final String message)
-		{
+		protected void trace_ (final ExceptionResolution resolution, final Throwable exception, final String message) {
 			switch (resolution) {
 				case Deferred :
 				case Ignored :
 					CloudletManager.this.transcript.trace (ExceptionResolution.Ignored, exception, message);
 					break;
-				default:
+				default :
 					break;
 			}
 		}
 		
 		@Override
-		protected void trace_ (final ExceptionResolution resolution, final Throwable exception, final String format, final Object ... tokens)
-		{
+		protected void trace_ (final ExceptionResolution resolution, final Throwable exception, final String format, final Object ... tokens) {
 			switch (resolution) {
 				case Deferred :
 				case Ignored :
 					CloudletManager.this.transcript.trace (ExceptionResolution.Ignored, exception, format, tokens);
 					break;
-				default:
+				default :
 					break;
 			}
 		}
