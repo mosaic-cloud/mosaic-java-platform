@@ -24,7 +24,7 @@ package eu.mosaic_cloud.drivers.kvstore.riak;
 import eu.mosaic_cloud.drivers.ConfigProperties;
 import eu.mosaic_cloud.drivers.ops.IOperationFactory;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 
@@ -95,7 +95,7 @@ public final class RiakRestDriver
 	 * @return the driver
 	 * @throws IOException
 	 */
-	public static RiakRestDriver create (final IConfiguration config, final ThreadingContext threading) {
+	public static RiakRestDriver create (final Configuration config, final ThreadingContext threading) {
 		int port, noThreads;
 		final String host = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_0, String.class, "");
 		port = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_1, Integer.class, 0);

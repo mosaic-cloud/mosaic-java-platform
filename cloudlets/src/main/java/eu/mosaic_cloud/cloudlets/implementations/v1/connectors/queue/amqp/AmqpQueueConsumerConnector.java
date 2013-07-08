@@ -28,7 +28,7 @@ import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.IAmqpQueueConsumerConn
 import eu.mosaic_cloud.cloudlets.v1.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpMessageToken;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueConsumerCallback;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 
@@ -39,7 +39,7 @@ public class AmqpQueueConsumerConnector<TContext, TMessage, TExtra>
 				IAmqpQueueConsumerConnector<TMessage, TExtra>
 {
 	@SuppressWarnings ("synthetic-access")
-	public AmqpQueueConsumerConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueConsumerConnector<TMessage> connector, final IConfiguration configuration, final IAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, final TContext context, final Callback<TMessage> backingCallback) {
+	public AmqpQueueConsumerConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueConsumerConnector<TMessage> connector, final Configuration configuration, final IAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, final TContext context, final Callback<TMessage> backingCallback) {
 		super (cloudlet, connector, configuration, callback, context);
 		backingCallback.connector = this;
 	}

@@ -34,8 +34,8 @@ import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.KvStoreCallbackCompletion
 import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.core.ICallback;
 import eu.mosaic_cloud.platform.implementations.v1.serialization.PlainTextDataEncoder;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
@@ -81,8 +81,8 @@ public class StoringCloudlet
 			context.cloudlet = arguments.getCloudlet ();
 			context.logger = this.logger;
 			context.logger.info ("PublisherCloudlet initializing...");
-			final IConfiguration configuration = context.cloudlet.getConfiguration ();
-			final IConfiguration storeConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("store"));
+			final Configuration configuration = context.cloudlet.getConfiguration ();
+			final Configuration storeConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("store"));
 			context.store = context.cloudlet.getConnectorFactory (IKvStoreConnectorFactory.class).create (storeConfiguration, String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, new StoreCallback (), context);
 			return context.store.initialize ();
 		}

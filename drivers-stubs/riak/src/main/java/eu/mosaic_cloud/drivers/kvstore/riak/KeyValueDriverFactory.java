@@ -25,7 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import eu.mosaic_cloud.drivers.DriverNotFoundException;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
@@ -52,7 +52,7 @@ public final class KeyValueDriverFactory
 	 * @throws ConnectorNotFoundException
 	 *             if driver cannot be instantiated for any reason
 	 */
-	public static AbstractKeyValueDriver createDriver (final String driverName, final IConfiguration config, final ThreadingContext threadingContext)
+	public static AbstractKeyValueDriver createDriver (final String driverName, final Configuration config, final ThreadingContext threadingContext)
 				throws DriverNotFoundException {
 		DriverType type = null;
 		AbstractKeyValueDriver driver = null;
@@ -65,7 +65,7 @@ public final class KeyValueDriverFactory
 		if (type != null) {
 			try {
 				final Class<?> driverClass = type.getDriverClass ();
-				final Method createMethod = driverClass.getMethod ("create", IConfiguration.class, ThreadingContext.class);
+				final Method createMethod = driverClass.getMethod ("create", Configuration.class, ThreadingContext.class);
 				try {
 					driver = (AbstractKeyValueDriver) createMethod.invoke (null, config, threadingContext);
 				} catch (final InvocationTargetException wrapper) {

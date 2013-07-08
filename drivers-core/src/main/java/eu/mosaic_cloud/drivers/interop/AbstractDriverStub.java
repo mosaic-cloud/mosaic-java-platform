@@ -32,7 +32,7 @@ import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.interoperability.core.Session;
 import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
@@ -63,7 +63,7 @@ public abstract class AbstractDriverStub
 	 * @param commChannel
 	 *            the channel for communicating with connectors
 	 */
-	protected AbstractDriverStub (final IConfiguration config, final ResponseTransmitter transmitter, final IResourceDriver driver, final ZeroMqChannel commChannel) {
+	protected AbstractDriverStub (final Configuration config, final ResponseTransmitter transmitter, final IResourceDriver driver, final ZeroMqChannel commChannel) {
 		super ();
 		this.configuration = config;
 		this.sessions = new ArrayList<Session> ();
@@ -157,7 +157,7 @@ public abstract class AbstractDriverStub
 	protected abstract void startOperation (Message message, Session session)
 				throws IOException, ClassNotFoundException;
 	
-	protected final IConfiguration configuration;
+	protected final Configuration configuration;
 	protected final BaseExceptionTracer exceptions;
 	private final ZeroMqChannel commChannel;
 	private final IResourceDriver driver;

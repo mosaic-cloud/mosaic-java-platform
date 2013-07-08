@@ -29,7 +29,7 @@ import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutionFailedCallback
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutionSucceededCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.IExecutor;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.IExecutorCallback;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
@@ -48,7 +48,7 @@ public class Executor<TContext, TOutcome, TExtra>
 				IExecutor<TOutcome, TExtra>,
 				CallbackProxy
 {
-	public Executor (final ICloudletController<?> cloudlet, final ThreadingContext threading, final ExceptionTracer exceptions, final IConfiguration configuration, final IExecutorCallback<TContext, TOutcome, TExtra> callback, final TContext context) {
+	public Executor (final ICloudletController<?> cloudlet, final ThreadingContext threading, final ExceptionTracer exceptions, final Configuration configuration, final IExecutorCallback<TContext, TOutcome, TExtra> callback, final TContext context) {
 		super ();
 		Preconditions.checkNotNull (cloudlet);
 		Preconditions.checkNotNull (threading);
@@ -106,7 +106,7 @@ public class Executor<TContext, TOutcome, TExtra>
 	
 	protected final IExecutorCallback<TContext, TOutcome, TExtra> callback;
 	protected final ICloudletController<?> cloudlet;
-	protected final IConfiguration configuration;
+	protected final Configuration configuration;
 	protected final TContext context;
 	protected final ExecutorService executor;
 	protected final Transcript transcript;

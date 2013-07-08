@@ -29,7 +29,7 @@ import eu.mosaic_cloud.cloudlets.v1.connectors.components.IComponentConnectorFac
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
 import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.PropertyTypeConfiguration;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 
 import com.google.common.base.Preconditions;
 
@@ -47,7 +47,7 @@ public final class ComponentConnectorFactory
 	
 	@Override
 	public final <TConnectorContext, TExtra> IComponentConnector<TExtra> create (final IComponentConnectorCallbacks<TConnectorContext, TExtra> callbacks, final TConnectorContext callbacksContext) {
-		final IConfiguration configuration = PropertyTypeConfiguration.createEmpty ();
+		final Configuration configuration = PropertyTypeConfiguration.createEmpty ();
 		final IComponentConnector<TExtra> connector = new ComponentConnector<TConnectorContext, TExtra> (this.cloudlet, this.backingConnector, configuration, callbacks, callbacksContext);
 		return connector;
 	}

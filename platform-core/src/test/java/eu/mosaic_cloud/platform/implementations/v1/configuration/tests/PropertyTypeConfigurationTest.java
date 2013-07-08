@@ -25,8 +25,8 @@ import java.io.FileInputStream;
 
 import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.PropertyTypeConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -88,7 +88,7 @@ public class PropertyTypeConfigurationTest
 	
 	@Test
 	public void testSpliceConfiguration () {
-		final IConfiguration mConfiguration = PropertyTypeConfigurationTest.configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("mosaic"));
+		final Configuration mConfiguration = PropertyTypeConfigurationTest.configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("mosaic"));
 		final int intValue = ConfigUtils.resolveParameter (mConfiguration, "int", Integer.class, 0);
 		Assert.assertEquals (1, intValue);
 		final String strValue = ConfigUtils.resolveParameter (mConfiguration, "string", String.class, "");

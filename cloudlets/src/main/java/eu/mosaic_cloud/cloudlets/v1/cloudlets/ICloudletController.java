@@ -23,7 +23,7 @@ package eu.mosaic_cloud.cloudlets.v1.cloudlets;
 
 import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorsFactory;
 import eu.mosaic_cloud.connectors.v1.core.IConnectorFactory;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackPassthrough;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
@@ -44,7 +44,7 @@ public interface ICloudletController<Context>
 	CallbackCompletion<Void> destroy ();
 	
 	@CallbackPassthrough
-	IConfiguration getConfiguration ();
+	Configuration getConfiguration ();
 	
 	@Override
 	@CallbackPassthrough

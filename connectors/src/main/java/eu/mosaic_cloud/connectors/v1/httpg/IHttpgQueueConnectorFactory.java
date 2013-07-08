@@ -22,7 +22,7 @@ package eu.mosaic_cloud.connectors.v1.httpg;
 
 
 import eu.mosaic_cloud.connectors.v1.queue.IQueueConnectorFactory;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 
 
@@ -30,5 +30,5 @@ public interface IHttpgQueueConnectorFactory
 			extends
 				IQueueConnectorFactory<IHttpgQueueConnector<?, ?>>
 {
-	<TRequestBody, TResponseBody> IHttpgQueueConnector<TRequestBody, TResponseBody> create (IConfiguration configuration, Class<TRequestBody> requestBodyClass, DataEncoder<TRequestBody> requestBodyEncoder, Class<TResponseBody> responseBodyClass, DataEncoder<TResponseBody> responseBodyEncoder, IHttpgQueueCallback<TRequestBody, TResponseBody> callback);
+	<TRequestBody, TResponseBody> IHttpgQueueConnector<TRequestBody, TResponseBody> create (Configuration configuration, Class<TRequestBody> requestBodyClass, DataEncoder<TRequestBody> requestBodyEncoder, Class<TResponseBody> responseBodyClass, DataEncoder<TResponseBody> responseBodyEncoder, IHttpgQueueCallback<TRequestBody, TResponseBody> callback);
 }

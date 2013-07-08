@@ -35,7 +35,7 @@ import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder.EncodeOutcome;
 import eu.mosaic_cloud.platform.v1.core.serialization.EncodingException;
@@ -76,7 +76,7 @@ public class AmqpQueueRawConnectorTest
 	
 	public void testConsume ()
 				throws InterruptedException, ExecutionException {
-		final IConfiguration configuration = this.scenario.getConfiguration ();
+		final Configuration configuration = this.scenario.getConfiguration ();
 		final String queue = ConfigUtils.resolveParameter (configuration, "consumer.amqp.queue", String.class, "");
 		final boolean autoAck = ConfigUtils.resolveParameter (configuration, "consumer.amqp.auto_ack", Boolean.class, true);
 		final boolean exclusive = ConfigUtils.resolveParameter (configuration, "consumer.amqp.exclusive", Boolean.class, true);
@@ -93,7 +93,7 @@ public class AmqpQueueRawConnectorTest
 	
 	public void testPublish ()
 				throws EncodingException, InterruptedException, ExecutionException {
-		final IConfiguration configuration = this.scenario.getConfiguration ();
+		final Configuration configuration = this.scenario.getConfiguration ();
 		final String exchange = ConfigUtils.resolveParameter (configuration, "publisher.amqp.exchange", String.class, "");
 		final String routingKey = ConfigUtils.resolveParameter (configuration, "publisher.amqp.routing_key", String.class, "");
 		final boolean manadatory = ConfigUtils.resolveParameter (configuration, "publisher.amqp.manadatory", Boolean.class, true);
@@ -105,7 +105,7 @@ public class AmqpQueueRawConnectorTest
 	}
 	
 	protected void testBindQueue () {
-		final IConfiguration configuration = this.scenario.getConfiguration ();
+		final Configuration configuration = this.scenario.getConfiguration ();
 		final String exchange = ConfigUtils.resolveParameter (configuration, "publisher.amqp.exchange", String.class, "");
 		final String routingKey = ConfigUtils.resolveParameter (configuration, "publisher.amqp.routing_key", String.class, "");
 		final String queue = ConfigUtils.resolveParameter (configuration, "consumer.amqp.queue", String.class, "");
@@ -131,7 +131,7 @@ public class AmqpQueueRawConnectorTest
 	public static void setUpBeforeClass () {
 		final String host = System.getProperty (AmqpQueueRawConnectorTest.MOSAIC_AMQP_HOST, AmqpQueueRawConnectorTest.MOSAIC_AMQP_HOST_DEFAULT);
 		final Integer port = Integer.valueOf (System.getProperty (AmqpQueueRawConnectorTest.MOSAIC_AMQP_PORT, AmqpQueueRawConnectorTest.MOSAIC_AMQP_PORT_DEFAULT));
-		final IConfiguration configuration = PropertyTypeConfiguration.create ();
+		final Configuration configuration = PropertyTypeConfiguration.create ();
 		configuration.addParameter ("interop.driver.endpoint", "inproc://f4c74dc5-b548-4ec4-a6a6-ef97c79bf55d");
 		configuration.addParameter ("interop.driver.identity", "f4c74dc5-b548-4ec4-a6a6-ef97c79bf55d");
 		configuration.addParameter ("amqp.host", host);

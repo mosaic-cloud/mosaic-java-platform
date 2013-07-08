@@ -54,7 +54,7 @@ import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.GetRequest;
 import eu.mosaic_cloud.platform.interop.idl.amqp.AmqpPayloads.PublishRequest;
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpMessage;
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 
@@ -84,7 +84,7 @@ public class AmqpStub
 	 * @param commChannel
 	 *            the channel for communicating with connectors
 	 */
-	private AmqpStub (final IConfiguration config, final ResponseTransmitter transmitter, final IResourceDriver driver, final ZeroMqChannel commChannel) {
+	private AmqpStub (final Configuration config, final ResponseTransmitter transmitter, final IResourceDriver driver, final ZeroMqChannel commChannel) {
 		super (config, transmitter, driver, commChannel);
 	}
 	
@@ -256,7 +256,7 @@ public class AmqpStub
 	 *            the channel for communicating with connectors
 	 * @return the AMQP driver stub
 	 */
-	public static AmqpStub create (final IConfiguration config, final ZeroMqChannel channel, final ThreadingContext threading) {
+	public static AmqpStub create (final Configuration config, final ZeroMqChannel channel, final ThreadingContext threading) {
 		synchronized (AbstractDriverStub.MONITOR) {
 			AmqpStub stub = AmqpStub.stub;
 			if (stub == null) {
@@ -275,7 +275,7 @@ public class AmqpStub
 		return AmqpStub.stub;
 	}
 	
-	public static AmqpStub createDetached (final IConfiguration config, final ZeroMqChannel channel, final ThreadingContext threading) {
+	public static AmqpStub createDetached (final Configuration config, final ZeroMqChannel channel, final ThreadingContext threading) {
 		synchronized (AbstractDriverStub.MONITOR) {
 			final AmqpResponseTransmitter transmitter = new AmqpResponseTransmitter ();
 			final AmqpDriver driver = AmqpDriver.create (config, threading);
@@ -294,7 +294,7 @@ public class AmqpStub
 	 *            the configuration data
 	 * @return resource connection data
 	 */
-	protected static DriverConnectionData readConnectionData (final IConfiguration config) {
+	protected static DriverConnectionData readConnectionData (final Configuration config) {
 		final String resourceHost = ConfigUtils.resolveParameter (config, "", String.class, ConnectionFactory.DEFAULT_HOST);
 		final int resourcePort = ConfigUtils.resolveParameter (config, "", Integer.class, ConnectionFactory.DEFAULT_AMQP_PORT);
 		final String amqpServerUser = ConfigUtils.resolveParameter (config, "", String.class, ConnectionFactory.DEFAULT_USER);

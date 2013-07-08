@@ -35,7 +35,7 @@ import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
@@ -69,7 +69,7 @@ public class AmqpDriver
 	 * @param noThreads
 	 *            number of threads to be used for serving requests
 	 */
-	private AmqpDriver (final IConfiguration configuration, final ThreadingContext threading, final int noThreads) {
+	private AmqpDriver (final Configuration configuration, final ThreadingContext threading, final int noThreads) {
 		super (threading, noThreads);
 		this.configuration = configuration;
 		this.connected = false;
@@ -329,7 +329,7 @@ public class AmqpDriver
 	
 	protected final ConcurrentHashMap<String, IAmqpConsumer> consumers;
 	private ConcurrentHashMap<String, Channel> channels;
-	private final IConfiguration configuration;
+	private final Configuration configuration;
 	private boolean connected;
 	private Connection connection;
 	private final BaseExceptionTracer exceptions;
@@ -344,7 +344,7 @@ public class AmqpDriver
 	 *            configuration data required for starting the driver
 	 * @return an AMQP driver
 	 */
-	public static AmqpDriver create (final IConfiguration configuration, final ThreadingContext threading) {
+	public static AmqpDriver create (final Configuration configuration, final ThreadingContext threading) {
 		final int noThreads = ConfigUtils.resolveParameter (configuration, ConfigProperties.AmqpDriver_0, Integer.class, 1);
 		AmqpDriver driver = new AmqpDriver (configuration, threading, noThreads);
 		// NOTE: open connection - moved to the stub

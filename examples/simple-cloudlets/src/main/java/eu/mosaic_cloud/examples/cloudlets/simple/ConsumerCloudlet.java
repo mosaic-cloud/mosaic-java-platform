@@ -33,8 +33,8 @@ import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.v1.core.ICallback;
 import eu.mosaic_cloud.platform.implementations.v1.serialization.PlainTextDataEncoder;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
@@ -109,8 +109,8 @@ public class ConsumerCloudlet
 			context.cloudlet = arguments.getCloudlet ();
 			context.logger = this.logger;
 			context.logger.info ("ConsumerCloudlet initializing...");
-			final IConfiguration configuration = context.cloudlet.getConfiguration ();
-			final IConfiguration queueConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("consumer"));
+			final Configuration configuration = context.cloudlet.getConfiguration ();
+			final Configuration queueConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("consumer"));
 			context.consumer = context.cloudlet.getConnectorFactory (IAmqpQueueConsumerConnectorFactory.class).create (queueConfiguration, String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, new AmqpConsumerCallback (), context);
 			return context.consumer.initialize ();
 		}

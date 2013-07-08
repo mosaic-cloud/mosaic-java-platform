@@ -34,8 +34,8 @@ import eu.mosaic_cloud.connectors.v1.httpg.HttpgRequestMessage;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgResponseMessage;
 import eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueConnector;
 import eu.mosaic_cloud.platform.implementations.v1.serialization.PlainTextDataEncoder;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -55,8 +55,8 @@ public class HttpgCloudlet
 			this.logger.info ("initializing cloudlet...");
 			context.identity = UUID.randomUUID ().toString ();
 			context.cloudlet = arguments.getCloudlet ();
-			final IConfiguration cloudletConfiguration = context.cloudlet.getConfiguration ();
-			final IConfiguration gatewayConfiguration = cloudletConfiguration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("gateway"));
+			final Configuration cloudletConfiguration = context.cloudlet.getConfiguration ();
+			final Configuration gatewayConfiguration = cloudletConfiguration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("gateway"));
 			context.gateway = context.cloudlet.getConnectorFactory (IHttpgQueueConnectorFactory.class).create (gatewayConfiguration, String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, new GatewayCallbacks (), context);
 			return (context.gateway.initialize ());
 		}

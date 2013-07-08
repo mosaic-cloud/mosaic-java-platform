@@ -34,8 +34,8 @@ import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.v1.core.ICallback;
 import eu.mosaic_cloud.platform.implementations.v1.serialization.PlainTextDataEncoder;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
@@ -101,8 +101,8 @@ public class PublisherCloudlet
 			context.cloudlet = arguments.getCloudlet ();
 			context.logger = this.logger;
 			context.logger.info ("PublisherCloudlet initializing...");
-			final IConfiguration configuration = context.cloudlet.getConfiguration ();
-			final IConfiguration queueConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("publisher"));
+			final Configuration configuration = context.cloudlet.getConfiguration ();
+			final Configuration queueConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("publisher"));
 			context.publisher = context.cloudlet.getConnectorFactory (IAmqpQueuePublisherConnectorFactory.class).create (queueConfiguration, String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, new AmqpPublisherCallback (), context);
 			return context.publisher.initialize ();
 		}

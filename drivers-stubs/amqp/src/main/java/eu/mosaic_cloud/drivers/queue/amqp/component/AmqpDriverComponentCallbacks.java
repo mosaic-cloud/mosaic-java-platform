@@ -42,8 +42,8 @@ import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 import com.google.common.base.Preconditions;
@@ -64,7 +64,7 @@ public final class AmqpDriverComponentCallbacks
 	public AmqpDriverComponentCallbacks (final ComponentEnvironment context) {
 		super (context);
 		try {
-			final IConfiguration configuration = PropertyTypeConfiguration.create (AmqpDriverComponentCallbacks.class.getResourceAsStream ("driver-component.properties"));
+			final Configuration configuration = PropertyTypeConfiguration.create (AmqpDriverComponentCallbacks.class.getResourceAsStream ("driver-component.properties"));
 			this.setDriverConfiguration (configuration);
 			this.resourceGroup = ComponentIdentifier.resolve (ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.AmqpDriverComponentCallbacks_0, String.class, ""));
 			this.selfGroup = ComponentIdentifier.resolve (ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.AmqpDriverComponentCallbacks_1, String.class, ""));

@@ -34,7 +34,7 @@ import eu.mosaic_cloud.interoperability.core.ChannelFactory;
 import eu.mosaic_cloud.interoperability.core.ChannelResolver;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.PropertyTypeConfiguration;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
@@ -54,7 +54,7 @@ import com.google.common.base.Preconditions;
  */
 public final class CloudletManager
 {
-	private CloudletManager (final IConfiguration configuration, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final IComponentConnector componentConnector, final ChannelFactory channelFactory, final ChannelResolver channelResolver) {
+	private CloudletManager (final Configuration configuration, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final IComponentConnector componentConnector, final ChannelFactory channelFactory, final ChannelResolver channelResolver) {
 		super ();
 		Preconditions.checkNotNull (configuration);
 		Preconditions.checkNotNull (classLoader);
@@ -143,7 +143,7 @@ public final class CloudletManager
 	private final Cloudlet<?> createCloudletInstance () {
 		final Class<?> cloudletCallbacksClass = this.resolveCloudletCallbacksClass ();
 		final Class<?> cloudletContextClass = this.resolveCloudletStateClass ();
-		final IConfiguration cloudletConfiguration = this.resolveCloudletConfiguration ();
+		final Configuration cloudletConfiguration = this.resolveCloudletConfiguration ();
 		// FIXME: Currently exceptions from cloudlets are not deferred anywhere.
 		//-- Thus any deferred exception should be treated as an ignored one.
 		final ExceptionTracer exceptions = new CloudletExceptionTracer ();
@@ -170,12 +170,12 @@ public final class CloudletManager
 		return (clasz);
 	}
 	
-	private final IConfiguration resolveCloudletConfiguration () {
+	private final Configuration resolveCloudletConfiguration () {
 		this.transcript.traceDebugging ("resolving the cloudlet configuration...");
 		final String configurationDescriptor = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.CloudletComponent_10, String.class, null);
 		Preconditions.checkNotNull (configurationDescriptor, "unknown cloudlet configuration descriptor");
 		this.transcript.traceDebugging ("resolving the cloudlet configuration `%s`...", configurationDescriptor);
-		final IConfiguration configuration;
+		final Configuration configuration;
 		try {
 			configuration = PropertyTypeConfiguration.create (this.classLoader, configurationDescriptor);
 		} catch (final Throwable exception) {
@@ -205,14 +205,14 @@ public final class CloudletManager
 	private final ClassLoader classLoader;
 	private final ConcurrentHashMap<Cloudlet<?>, Cloudlet<?>> cloudlets;
 	private final IComponentConnector componentConnector;
-	private final IConfiguration configuration;
+	private final Configuration configuration;
 	private final TranscriptExceptionTracer exceptions;
 	private final Monitor monitor = Monitor.create (this);
 	private final CallbackReactor reactor;
 	private final ThreadingContext threading;
 	private final Transcript transcript;
 	
-	public static final CloudletManager create (final IConfiguration configuration, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final IComponentConnector componentConnector, final ChannelFactory channelFactory, final ChannelResolver channelResolver) {
+	public static final CloudletManager create (final Configuration configuration, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final IComponentConnector componentConnector, final ChannelFactory channelFactory, final ChannelResolver channelResolver) {
 		return (new CloudletManager (configuration, classLoader, reactor, threading, exceptions, componentConnector, channelFactory, channelResolver));
 	}
 	

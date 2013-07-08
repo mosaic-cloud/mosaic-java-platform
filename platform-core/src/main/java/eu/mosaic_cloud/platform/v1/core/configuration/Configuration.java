@@ -26,7 +26,7 @@ package eu.mosaic_cloud.platform.v1.core.configuration;
  * 
  * @author Ciprian Craciun, Georgiana Macariu
  */
-public interface IConfiguration
+public interface Configuration
 {
 	/**
 	 * Adds a parameter to the configuration.
@@ -59,7 +59,7 @@ public interface IConfiguration
 	 *            the class object representing the type of the configuration parameter
 	 * @return the configuration parameter
 	 */
-	<T extends Object> IConfigurationParameter<T> getParameter (final ConfigurationIdentifier identifier, final Class<T> valueClass);
+	<T extends Object> ConfigurationParameter<T> getParameter (final ConfigurationIdentifier identifier, final Class<T> valueClass);
 	
 	/**
 	 * Returns the root identifier.
@@ -75,5 +75,5 @@ public interface IConfiguration
 	 *            the root identifier
 	 * @return the configuration object
 	 */
-	IConfiguration spliceConfiguration (final ConfigurationIdentifier relative);
+	Configuration spliceConfiguration (final ConfigurationIdentifier relative);
 }

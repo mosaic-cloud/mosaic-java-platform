@@ -32,7 +32,7 @@ import eu.mosaic_cloud.interoperability.core.SessionSpecification;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.implementations.basic.BasicCallbackReactor;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
@@ -45,7 +45,7 @@ import org.junit.Assert;
 
 public class BaseScenario
 {
-	public BaseScenario (final Class<? extends BaseConnectorTest<?, ? extends BaseScenario>> owner, final IConfiguration configuration) {
+	public BaseScenario (final Class<? extends BaseConnectorTest<?, ? extends BaseScenario>> owner, final Configuration configuration) {
 		this.configuration = configuration;
 		this.transcript = Transcript.create (owner);
 		this.exceptionsQueue = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
@@ -88,7 +88,7 @@ public class BaseScenario
 		Assert.assertNull (this.exceptionsQueue.queue.poll ());
 	}
 	
-	public IConfiguration getConfiguration () {
+	public Configuration getConfiguration () {
 		return this.configuration;
 	}
 	
@@ -114,7 +114,7 @@ public class BaseScenario
 	
 	private BasicCallbackReactor callbacks;
 	private ChannelResolver channelResolver;
-	private IConfiguration configuration;
+	private Configuration configuration;
 	private ZeroMqChannel connectorChannel;
 	private ZeroMqChannel driverChannel;
 	private ConnectorEnvironment environment;

@@ -36,8 +36,8 @@ import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.v1.core.ICallback;
 import eu.mosaic_cloud.platform.implementations.v1.serialization.JsonDataEncoder;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -113,9 +113,9 @@ public class PongCloudlet
 		public CallbackCompletion<Void> initialize (final PongCloudletContext context, final CloudletCallbackArguments<PongCloudletContext> arguments) {
 			this.logger.info ("initializing cloudlet...");
 			context.cloudlet = arguments.getCloudlet ();
-			final IConfiguration configuration = context.cloudlet.getConfiguration ();
-			final IConfiguration consumerConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("consumer"));
-			final IConfiguration publisherConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("publisher"));
+			final Configuration configuration = context.cloudlet.getConfiguration ();
+			final Configuration consumerConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("consumer"));
+			final Configuration publisherConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("publisher"));
 			this.logger.info ("creating queue connectors...");
 			context.consumer = context.cloudlet.getConnectorFactory (IAmqpQueueConsumerConnectorFactory.class).create (consumerConfiguration, PingMessage.class, JsonDataEncoder.create (PingMessage.class), new AmqpConsumerCallback (), context);
 			context.publisher = context.cloudlet.getConnectorFactory (IAmqpQueuePublisherConnectorFactory.class).create (publisherConfiguration, PongMessage.class, JsonDataEncoder.create (PongMessage.class), new AmqpPublisherCallback (), context);

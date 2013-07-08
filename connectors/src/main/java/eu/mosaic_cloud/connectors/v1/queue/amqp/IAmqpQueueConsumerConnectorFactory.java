@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.connectors.v1.queue.amqp;
 
 
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 
 
@@ -29,5 +29,5 @@ public interface IAmqpQueueConsumerConnectorFactory
 			extends
 				IAmqpQueueConnectorFactory<IAmqpQueueConsumerConnector<?>>
 {
-	<TMessage> IAmqpQueueConsumerConnector<TMessage> create (IConfiguration configuration, Class<TMessage> messageClass, DataEncoder<TMessage> messageEncoder, IAmqpQueueConsumerCallback<TMessage> callback);
+	<TMessage> IAmqpQueueConsumerConnector<TMessage> create (Configuration configuration, Class<TMessage> messageClass, DataEncoder<TMessage> messageEncoder, IAmqpQueueConsumerCallback<TMessage> callback);
 }

@@ -25,7 +25,7 @@ import eu.mosaic_cloud.cloudlets.implementations.v1.connectors.core.BaseConnecto
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.IAmqpQueueConnector;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.IAmqpQueueConnectorCallback;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 
 
 /**
@@ -44,7 +44,7 @@ public abstract class BaseAmqpQueueConnector<TConnector extends eu.mosaic_cloud.
 			implements
 				IAmqpQueueConnector
 {
-	protected BaseAmqpQueueConnector (final ICloudletController<?> cloudlet, final TConnector connector, final IConfiguration configuration, final TCallback callback, final TContext context) {
+	protected BaseAmqpQueueConnector (final ICloudletController<?> cloudlet, final TConnector connector, final Configuration configuration, final TCallback callback, final TContext context) {
 		super (cloudlet, connector, configuration, callback, context);
 	}
 }

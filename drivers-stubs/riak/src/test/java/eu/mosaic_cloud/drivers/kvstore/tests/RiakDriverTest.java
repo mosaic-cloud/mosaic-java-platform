@@ -34,7 +34,7 @@ import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.implementations.v1.serialization.PlainTextDataEncoder;
 import eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 import eu.mosaic_cloud.platform.v1.core.serialization.EncodingException;
 import eu.mosaic_cloud.platform.v1.core.serialization.EncodingMetadata;
@@ -198,7 +198,7 @@ public abstract class RiakDriverTest
 		}
 	}
 	
-	protected final IConfiguration configuration;
+	protected final Configuration configuration;
 	private DataEncoder<String> encoder;
 	private final BaseExceptionTracer exceptions;
 	private final BasicThreadingContext threadingContext;

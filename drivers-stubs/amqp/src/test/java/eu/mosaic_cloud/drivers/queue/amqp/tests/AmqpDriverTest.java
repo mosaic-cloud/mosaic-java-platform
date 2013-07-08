@@ -35,7 +35,7 @@ import eu.mosaic_cloud.platform.implementations.v1.serialization.PlainTextDataEn
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder.EncodeOutcome;
 import eu.mosaic_cloud.platform.v1.core.serialization.EncodingException;
@@ -176,7 +176,7 @@ public class AmqpDriverTest
 		AmqpDriverTest.configuration.addParameter ("publisher.amqp.durable", false);
 	}
 	
-	private static IConfiguration configuration;
+	private static Configuration configuration;
 	private static final String MOSAIC_AMQP_HOST = "mosaic.tests.resources.amqp.host";
 	private static final String MOSAIC_AMQP_HOST_DEFAULT = "127.0.0.1";
 	private static final String MOSAIC_AMQP_PORT = "mosaic.tests.resources.amqp.port";

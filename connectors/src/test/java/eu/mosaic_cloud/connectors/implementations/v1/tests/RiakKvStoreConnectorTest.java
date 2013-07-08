@@ -27,7 +27,7 @@ import eu.mosaic_cloud.drivers.kvstore.riak.interop.KeyValueStub;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.implementations.v1.serialization.PlainTextDataEncoder;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -47,7 +47,7 @@ public class RiakKvStoreConnectorTest
 	public static void setUpBeforeClass () {
 		final String host = System.getProperty (RiakKvStoreConnectorTest.MOSAIC_RIAK_HOST, RiakKvStoreConnectorTest.MOSAIC_RIAK_HOST_DEFAULT);
 		final Integer port = Integer.valueOf (System.getProperty (RiakKvStoreConnectorTest.MOSAIC_RIAK_PORT, RiakKvStoreConnectorTest.MOSAIC_RIAK_PORT_DEFAULT));
-		final IConfiguration configuration = PropertyTypeConfiguration.create ();
+		final Configuration configuration = PropertyTypeConfiguration.create ();
 		configuration.addParameter ("interop.driver.endpoint", "inproc://fb012d6b-c238-4b31-b889-4121a318b2cb");
 		configuration.addParameter ("interop.driver.identity", "fb012d6b-c238-4b31-b889-4121a318b2cb");
 		configuration.addParameter ("kvstore.host", host);

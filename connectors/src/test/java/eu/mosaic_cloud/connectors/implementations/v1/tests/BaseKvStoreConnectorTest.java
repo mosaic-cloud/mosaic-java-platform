@@ -24,7 +24,7 @@ package eu.mosaic_cloud.connectors.implementations.v1.tests;
 import java.util.UUID;
 
 import eu.mosaic_cloud.connectors.implementations.v1.kvstore.BaseKvStoreConnector;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.serialization.EncodingMetadata;
 
 import org.junit.Assert;
@@ -70,7 +70,7 @@ public abstract class BaseKvStoreConnectorTest<TConnector extends BaseKvStoreCon
 	public static class Scenario
 				extends BaseScenario
 	{
-		public <C extends BaseKvStoreConnector<String, ?>> Scenario (final Class<? extends BaseKvStoreConnectorTest<C>> owner, final IConfiguration configuration) {
+		public <C extends BaseKvStoreConnector<String, ?>> Scenario (final Class<? extends BaseKvStoreConnectorTest<C>> owner, final Configuration configuration) {
 			super (owner, configuration);
 		}
 		

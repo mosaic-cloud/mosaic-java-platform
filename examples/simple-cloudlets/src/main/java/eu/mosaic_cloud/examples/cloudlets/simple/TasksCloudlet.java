@@ -34,8 +34,8 @@ import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutionSucceededCallb
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.IExecutor;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.IExecutorFactory;
 import eu.mosaic_cloud.cloudlets.v1.core.ICallback;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -64,9 +64,9 @@ public class TasksCloudlet
 			context.executorCallback = new ExecutorCallback ();
 			context.workflow = new Workflow ();
 			context.cloudlet = arguments.getCloudlet ();
-			final IConfiguration configuration = context.cloudlet.getConfiguration ();
+			final Configuration configuration = context.cloudlet.getConfiguration ();
 			context.logger.info ("creating executor...");
-			final IConfiguration executorConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("executor"));
+			final Configuration executorConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("executor"));
 			context.executor = context.cloudlet.getConnectorFactory (IExecutorFactory.class).create (executorConfiguration, context.executorCallback, context);
 			context.logger.info ("initializing queue connectors...");
 			return context.executor.initialize ();

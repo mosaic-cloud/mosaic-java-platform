@@ -25,9 +25,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfigurationParameter;
+import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationParameter;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 
 
@@ -38,7 +38,7 @@ import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
  */
 public final class PropertyTypeConfiguration
 			implements
-				IConfiguration
+				Configuration
 {
 	private PropertyTypeConfiguration (final Properties properties) {
 		super ();
@@ -250,7 +250,7 @@ public final class PropertyTypeConfiguration
 	 */
 	public final class PropertyTypeParameter<T>
 				implements
-					IConfigurationParameter<T>
+					ConfigurationParameter<T>
 	{
 		public PropertyTypeParameter (final ConfigurationIdentifier identifier, final Class<T> valueClass) {
 			super ();
@@ -267,7 +267,7 @@ public final class PropertyTypeConfiguration
 		public T getValue (final T defaultValue) {
 			T value;
 			if (this.value == null) {
-				if (this.valueClass == IConfiguration.class) {
+				if (this.valueClass == Configuration.class) {
 					this.value = this.valueClass.cast (PropertyTypeConfiguration.this.spliceConfiguration (this.identifier));
 				} else {
 					final String encodedValue = PropertyTypeConfiguration.this.selectEncodedValue (this.identifier);

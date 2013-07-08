@@ -22,7 +22,7 @@ package eu.mosaic_cloud.connectors.v1.kvstore;
 
 
 import eu.mosaic_cloud.connectors.v1.core.IConnectorFactory;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 
 
@@ -30,5 +30,5 @@ public interface IKvStoreConnectorFactory
 			extends
 				IConnectorFactory<IKvStoreConnector<?>>
 {
-	<TValue> IKvStoreConnector<TValue> create (IConfiguration configuration, Class<TValue> valueClass, DataEncoder<TValue> valueEncoder);
+	<TValue> IKvStoreConnector<TValue> create (Configuration configuration, Class<TValue> valueClass, DataEncoder<TValue> valueEncoder);
 }

@@ -29,7 +29,7 @@ import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.IHttpgQueueConnectorCallbac
 import eu.mosaic_cloud.cloudlets.v1.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgRequestMessage;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgResponseMessage;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 
@@ -40,7 +40,7 @@ public class HttpgQueueConnector<TContext, TRequestBody, TResponseBody, TExtra>
 				IHttpgQueueConnector<TRequestBody, TResponseBody, TExtra>
 {
 	@SuppressWarnings ("synthetic-access")
-	public HttpgQueueConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueConnector<TRequestBody, TResponseBody> connector, final IConfiguration configuration, final IHttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra> callback, final TContext context, final Callback<TRequestBody, TResponseBody> backingCallback) {
+	public HttpgQueueConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueConnector<TRequestBody, TResponseBody> connector, final Configuration configuration, final IHttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra> callback, final TContext context, final Callback<TRequestBody, TResponseBody> backingCallback) {
 		super (cloudlet, connector, configuration, callback, context);
 		backingCallback.connector = this;
 	}

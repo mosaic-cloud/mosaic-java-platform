@@ -22,14 +22,14 @@ package eu.mosaic_cloud.connectors.implementations.v1.core;
 
 
 import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 
 import com.google.common.base.Preconditions;
 
 
 public final class ConnectorConfiguration
 {
-	private ConnectorConfiguration (final IConfiguration configuration, final ConnectorEnvironment environment) {
+	private ConnectorConfiguration (final Configuration configuration, final ConnectorEnvironment environment) {
 		super ();
 		Preconditions.checkNotNull (configuration);
 		Preconditions.checkNotNull (environment);
@@ -41,7 +41,7 @@ public final class ConnectorConfiguration
 		return ConfigUtils.resolveParameter (this.configuration, identifier, valueClass, defaultValue);
 	}
 	
-	public IConfiguration getConfiguration () {
+	public Configuration getConfiguration () {
 		return this.configuration;
 	}
 	
@@ -52,13 +52,13 @@ public final class ConnectorConfiguration
 	/**
 	 * Configuration settings private to a single connector.
 	 */
-	private final IConfiguration configuration;
+	private final Configuration configuration;
 	/**
 	 * Configuration settings which can be applied to one or more connectors (shared).
 	 */
 	private final ConnectorEnvironment environment;
 	
-	public static ConnectorConfiguration create (final IConfiguration configuration, final ConnectorEnvironment environment) {
+	public static ConnectorConfiguration create (final Configuration configuration, final ConnectorEnvironment environment) {
 		return new ConnectorConfiguration (configuration, environment);
 	}
 }

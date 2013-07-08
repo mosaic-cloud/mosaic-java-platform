@@ -36,7 +36,7 @@ import eu.mosaic_cloud.interoperability.core.ChannelFactory;
 import eu.mosaic_cloud.interoperability.core.ChannelResolver;
 import eu.mosaic_cloud.interoperability.core.ResolverCallbacks;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.PropertyTypeConfiguration;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.implementations.basic.BasicCallbackReactor;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
@@ -177,7 +177,7 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
 	public static class BaseScenario<Context extends Object>
 	{
 		public Class<? extends ICloudletCallback<Context>> callbacksClass;
-		public IConfiguration configuration;
+		public Configuration configuration;
 		public IConnectorsFactory connectors;
 		public Class<Context> contextClass;
 		public CloudletEnvironment environment;

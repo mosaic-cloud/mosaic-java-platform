@@ -36,8 +36,8 @@ import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.core.ICallback;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.implementations.v1.serialization.SerializedDataEncoder;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -106,10 +106,10 @@ public class SimpleLoggingCloudlet
 		public CallbackCompletion<Void> initialize (final LoggingCloudletContext context, final CloudletCallbackArguments<LoggingCloudletContext> arguments) {
 			this.logger.info ("LoggingCloudlet initializing...");
 			context.cloudlet = arguments.getCloudlet ();
-			final IConfiguration configuration = context.cloudlet.getConfiguration ();
-			final IConfiguration consumerConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("consumer"));
+			final Configuration configuration = context.cloudlet.getConfiguration ();
+			final Configuration consumerConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("consumer"));
 			context.consumer = context.cloudlet.getConnectorFactory (IAmqpQueueConsumerConnectorFactory.class).create (consumerConfiguration, LoggingData.class, SerializedDataEncoder.create (LoggingData.class), new AmqpConsumerCallback (), context);
-			final IConfiguration publisherConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("publisher"));
+			final Configuration publisherConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("publisher"));
 			context.publisher = context.cloudlet.getConnectorFactory (IAmqpQueuePublisherConnectorFactory.class).create (publisherConfiguration, AuthenticationToken.class, SerializedDataEncoder.create (AuthenticationToken.class), new AmqpPublisherCallback (), context);
 			return CallbackCompletion.createAndChained (context.consumer.initialize (), context.publisher.initialize ());
 		}

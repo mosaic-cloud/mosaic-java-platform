@@ -31,7 +31,7 @@ import eu.mosaic_cloud.cloudlets.v1.connectors.components.IComponentConnectorCal
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
 import eu.mosaic_cloud.components.core.ComponentResourceSpecification;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 
@@ -41,7 +41,7 @@ public class ComponentConnector<TContext, TExtra>
 			implements
 				IComponentConnector<TExtra>
 {
-	public ComponentConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.components.IComponentConnector connector, final IConfiguration configuration, final IComponentConnectorCallbacks<TContext, TExtra> callback, final TContext context) {
+	public ComponentConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.components.IComponentConnector connector, final Configuration configuration, final IComponentConnectorCallbacks<TContext, TExtra> callback, final TContext context) {
 		super (cloudlet, connector, configuration, callback, context);
 	}
 	

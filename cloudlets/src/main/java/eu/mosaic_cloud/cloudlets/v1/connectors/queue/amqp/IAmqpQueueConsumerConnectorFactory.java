@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp;
 
 
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 
 
@@ -34,5 +34,5 @@ public interface IAmqpQueueConsumerConnectorFactory
 			extends
 				IAmqpQueueConnectorFactory<IAmqpQueueConsumerConnector<?, ?>>
 {
-	<TContext, TMessage, TExtra> IAmqpQueueConsumerConnector<TMessage, TExtra> create (IConfiguration configuration, Class<TMessage> messageClass, DataEncoder<TMessage> messageEncoder, IAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, TContext callbackContext);
+	<TContext, TMessage, TExtra> IAmqpQueueConsumerConnector<TMessage, TExtra> create (Configuration configuration, Class<TMessage> messageClass, DataEncoder<TMessage> messageEncoder, IAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, TContext callbackContext);
 }

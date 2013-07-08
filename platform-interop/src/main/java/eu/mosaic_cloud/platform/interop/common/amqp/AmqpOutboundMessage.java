@@ -27,8 +27,6 @@ package eu.mosaic_cloud.platform.interop.common.amqp;
  * @author Georgiana Macariu
  */
 public class AmqpOutboundMessage
-			implements
-				IAmqpMessage
 {
 	/**
 	 * @param exchange

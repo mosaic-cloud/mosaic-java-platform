@@ -28,7 +28,7 @@ package eu.mosaic_cloud.platform.v1.core.configuration;
  * @param <T>
  *            the type of the value of the parameter
  */
-public interface IConfigurationParameter<T extends Object>
+public interface ConfigurationParameter<T extends Object>
 {
 	/**
 	 * Returns the configuration identifier of the parameter.

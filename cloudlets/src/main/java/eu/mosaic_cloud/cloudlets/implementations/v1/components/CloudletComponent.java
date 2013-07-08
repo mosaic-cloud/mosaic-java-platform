@@ -49,7 +49,7 @@ import eu.mosaic_cloud.interoperability.core.ResolverCallbacks;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.PropertyTypeConfiguration;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
@@ -228,12 +228,12 @@ public final class CloudletComponent
 		}.trigger ();
 	}
 	
-	private final IConfiguration resolveConfiguration () {
+	private final Configuration resolveConfiguration () {
 		this.transcript.traceDebugging ("resolving the cloudlet component configuration...");
 		final String configurationDescriptor = this.componentEnvironment.supplementary.get ("descriptor", String.class, null);
 		Preconditions.checkNotNull (configurationDescriptor, "unknown cloudlet component configuration descriptor");
 		this.transcript.traceDebugging ("resolving the cloudlet component configuration `%s`...", configurationDescriptor);
-		final IConfiguration configuration;
+		final Configuration configuration;
 		try {
 			configuration = PropertyTypeConfiguration.create (this.classLoader, configurationDescriptor);
 		} catch (final Throwable exception) {
@@ -264,7 +264,7 @@ public final class CloudletComponent
 	final ComponentEnvironment componentEnvironment;
 	final IdentityHashMap<ComponentCallReference, Trigger<ComponentAcquireReply>> componentPendingAcquires;
 	final IdentityHashMap<ComponentCallReference, Trigger<ComponentCallReply>> componentPendingOutboundCalls;
-	final IConfiguration configuration;
+	final Configuration configuration;
 	final TranscriptExceptionTracer exceptions;
 	final CloudletComponentFsm fsm;
 	final CallbackIsolate isolate;

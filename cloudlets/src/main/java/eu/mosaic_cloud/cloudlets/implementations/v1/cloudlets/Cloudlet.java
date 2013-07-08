@@ -49,7 +49,7 @@ import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
 import eu.mosaic_cloud.connectors.v1.core.IConnector;
 import eu.mosaic_cloud.connectors.v1.core.IConnectorFactory;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.v1.core.configuration.IConfiguration;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackFunnelHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
@@ -845,11 +845,11 @@ public final class Cloudlet<TContext extends Object>
 		}
 		
 		@Override
-		public final IConfiguration getConfiguration () {
+		public final Configuration getConfiguration () {
 			try {
-				return Cloudlet.this.fsm.new FsmAccess<Void, IConfiguration> () {
+				return Cloudlet.this.fsm.new FsmAccess<Void, Configuration> () {
 					@Override
-					protected final IConfiguration execute (final Void input) {
+					protected final Configuration execute (final Void input) {
 						return Cloudlet.this.environment.getConfiguration ();
 					}
 				}.trigger (null);
