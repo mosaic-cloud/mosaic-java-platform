@@ -21,8 +21,6 @@
 package eu.mosaic_cloud.connectors.implementations.v1.kvstore;
 
 
-import java.util.List;
-
 import eu.mosaic_cloud.connectors.implementations.v1.core.BaseConnector;
 import eu.mosaic_cloud.connectors.v1.kvstore.IKvStoreConnector;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -54,11 +52,6 @@ public abstract class BaseKvStoreConnector<TValue extends Object, TProxy extends
 	@Override
 	public CallbackCompletion<TValue> get (final String key) {
 		return this.proxy.get (key);
-	}
-	
-	@Override
-	public CallbackCompletion<List<String>> list () {
-		return this.proxy.list ();
 	}
 	
 	@Override

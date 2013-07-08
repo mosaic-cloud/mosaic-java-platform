@@ -21,8 +21,6 @@
 package eu.mosaic_cloud.cloudlets.implementations.v1.connectors.kvstore;
 
 
-import java.util.List;
-
 import eu.mosaic_cloud.cloudlets.implementations.v1.connectors.core.BaseConnector;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.IKvStoreConnector;
@@ -90,33 +88,6 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
 					}
 					BaseKvStoreConnector.this.transcript.traceDebugging ("triggering the callback for get success for key `%s` and extra `%{object}`...", key, extra);
 					return BaseKvStoreConnector.this.callback.getSucceeded (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<TValue, TExtra> (BaseKvStoreConnector.this.cloudlet, key, completion.getOutcome (), extra));
-				}
-			});
-		}
-		return completion;
-	}
-	
-	@Override
-	public CallbackCompletion<List<String>> list () {
-		return this.list (null);
-	}
-	
-	@Override
-	public CallbackCompletion<List<String>> list (final TExtra extra) {
-		this.transcript.traceDebugging ("listing the record keys with extra `%{object}`...", extra);
-		final CallbackCompletion<List<String>> completion = this.connector.list ();
-		if (this.callback != null) {
-			completion.observe (new CallbackCompletionObserver () {
-				@SuppressWarnings ("synthetic-access")
-				@Override
-				public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_) {
-					assert (completion_ == completion);
-					if (completion.getException () != null) {
-						BaseKvStoreConnector.this.transcript.traceDebugging ("triggering the callback for list failure for extra `%{object}`...", extra);
-						return BaseKvStoreConnector.this.callback.listFailed (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<List<String>, TExtra> (BaseKvStoreConnector.this.cloudlet, (String) null, completion.getException (), extra));
-					}
-					BaseKvStoreConnector.this.transcript.traceDebugging ("triggering the callback for list success for extra `%{object}`...", extra);
-					return BaseKvStoreConnector.this.callback.listSucceeded (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<List<String>, TExtra> (BaseKvStoreConnector.this.cloudlet, (String) null, completion.getOutcome (), extra));
 				}
 			});
 		}

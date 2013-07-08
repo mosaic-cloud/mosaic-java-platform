@@ -40,7 +40,6 @@ public abstract class BaseKvStoreConnectorTest<TConnector extends BaseKvStoreCon
 		this.testConnector ();
 		this.testSet ();
 		this.testGet ();
-		this.testList ();
 		this.testDelete ();
 	}
 	
@@ -59,10 +58,6 @@ public abstract class BaseKvStoreConnectorTest<TConnector extends BaseKvStoreCon
 		final String k1 = this.scenario.keyPrefix + "_key_fantastic";
 		final EncodingMetadata encoding1 = new EncodingMetadata ("text/plain", "identity");
 		Assert.assertEquals ("fantastic", this.awaitOutcome (this.connector.get (k1)));
-	}
-	
-	protected void testList () {
-		Assert.assertNotNull (this.awaitOutcome (this.connector.list ()));
 	}
 	
 	protected void testSet () {

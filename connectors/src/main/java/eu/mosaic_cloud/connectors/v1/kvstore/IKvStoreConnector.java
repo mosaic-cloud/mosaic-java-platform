@@ -21,8 +21,6 @@
 package eu.mosaic_cloud.connectors.v1.kvstore;
 
 
-import java.util.List;
-
 import eu.mosaic_cloud.connectors.v1.core.IConnector;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -55,13 +53,6 @@ public interface IKvStoreConnector<TValue extends Object>
 	 * @return a result handle for the operation
 	 */
 	CallbackCompletion<TValue> get (String key);
-	
-	/**
-	 * Lists the keys of the bucket used by the connector.
-	 * 
-	 * @return a result handle for the operation
-	 */
-	CallbackCompletion<List<String>> list ();
 	
 	/**
 	 * Stores the given data and associates it with the specified key.

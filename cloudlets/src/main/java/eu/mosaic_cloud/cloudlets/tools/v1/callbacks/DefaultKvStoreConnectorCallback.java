@@ -21,8 +21,6 @@
 package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
-import java.util.List;
-
 import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.IKvStoreConnectorCallback;
 import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.KvStoreCallbackCompletionArguments;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -62,16 +60,6 @@ public class DefaultKvStoreConnectorCallback<TContext, TValue, TExtra>
 	@Override
 	public CallbackCompletion<Void> getSucceeded (final TContext context, final KvStoreCallbackCompletionArguments<TValue, TExtra> arguments) {
 		return this.handleUnhandledCallback (arguments, "Get Succeeded", true, false);
-	}
-	
-	@Override
-	public CallbackCompletion<Void> listFailed (final TContext context, final KvStoreCallbackCompletionArguments<List<String>, TExtra> arguments) {
-		return this.handleUnhandledCallback (arguments, "Set Failed", false, false);
-	}
-	
-	@Override
-	public CallbackCompletion<Void> listSucceeded (final TContext context, final KvStoreCallbackCompletionArguments<List<String>, TExtra> arguments) {
-		return this.handleUnhandledCallback (arguments, "Set Succeeded", true, false);
 	}
 	
 	@Override

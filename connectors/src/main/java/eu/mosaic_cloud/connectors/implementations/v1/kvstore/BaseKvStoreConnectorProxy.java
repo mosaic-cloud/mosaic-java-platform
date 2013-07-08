@@ -42,8 +42,6 @@ import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.DeleteReque
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetReply;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.GetRequest;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.KVEntry;
-import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListReply;
-import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest;
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueMessage;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
@@ -99,17 +97,6 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 		return this.sendGetRequest (Arrays.asList (key), (Class<TValue>) Object.class);
 	}
 	
-	@Override
-	@SuppressWarnings ("unchecked")
-	public CallbackCompletion<List<String>> list () {
-		final CompletionToken token = this.generateToken ();
-		this.transcript.traceDebugging ("listing the keys (with request token `%s`)...", token.getMessageId ());
-		final ListRequest.Builder requestBuilder = ListRequest.newBuilder ();
-		requestBuilder.setToken (token);
-		final Message message = new Message (KeyValueMessage.LIST_REQUEST, requestBuilder.build ());
-		return ((CallbackCompletion<List<String>>) ((CallbackCompletion<?>) this.sendRequest (message, token, List.class)));
-	}
-	
 	public CallbackCompletion<Void> set (final String key, final int exp, final TValue data) {
 		return this.sendSetRequest (key, data, exp);
 	}
@@ -145,10 +132,7 @@ public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 			}
 				break;
 			case LIST_REPLY : {
-				final KeyValuePayloads.ListReply listPayload = (ListReply) message.payload;
-				final CompletionToken token = listPayload.getToken ();
-				this.transcript.traceDebugging ("processing the success (list reply) response for pending request with token `%s`...", token.getMessageId ());
-				this.pendingRequests.succeed (token.getMessageId (), listPayload.getKeysList ());
+				this.transcript.traceWarning ("processing unexpected message of type `%s`; ignoring...", message.specification);
 			}
 				break;
 			case GET_REPLY : {

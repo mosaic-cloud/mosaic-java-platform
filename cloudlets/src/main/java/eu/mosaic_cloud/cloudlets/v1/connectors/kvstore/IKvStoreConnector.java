@@ -21,8 +21,6 @@
 package eu.mosaic_cloud.cloudlets.v1.connectors.kvstore;
 
 
-import java.util.List;
-
 import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnector;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -62,15 +60,6 @@ public interface IKvStoreConnector<TValue, TExtra>
 	 * @return a result handle for the operation
 	 */
 	CallbackCompletion<TValue> get (String key, TExtra extra);
-	
-	/**
-	 * Lists the keys in the bucket associated with the connector.
-	 * 
-	 * @param extra
-	 *            some application specific data
-	 * @return a result handle for the operation
-	 */
-	CallbackCompletion<List<String>> list (TExtra extra);
 	
 	/**
 	 * Stores the given data and associates it with the specified key.

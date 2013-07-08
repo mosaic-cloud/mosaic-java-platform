@@ -21,8 +21,6 @@
 package eu.mosaic_cloud.cloudlets.v1.connectors.kvstore;
 
 
-import java.util.List;
-
 import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorCallback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -84,27 +82,6 @@ public interface IKvStoreConnectorCallback<TContext, TValue, TExtra>
 	 *            callback arguments
 	 */
 	CallbackCompletion<Void> getSucceeded (TContext context, KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
-	
-	/**
-	 * Called when the list operation completed unsuccessfully. The error can be retrieved from the <i>arguments</i> parameter.
-	 * 
-	 * @param context
-	 *            cloudlet context
-	 * @param arguments
-	 *            callback arguments
-	 */
-	CallbackCompletion<Void> listFailed (TContext context, KvStoreCallbackCompletionArguments<List<String>, TExtra> arguments);
-	
-	/**
-	 * Called when the list operation completed successfully. The result of the get operation can be retrieved from the
-	 * <i>arguments</i> parameter.
-	 * 
-	 * @param context
-	 *            cloudlet context
-	 * @param arguments
-	 *            callback arguments
-	 */
-	CallbackCompletion<Void> listSucceeded (TContext context, KvStoreCallbackCompletionArguments<List<String>, TExtra> arguments);
 	
 	/**
 	 * Called when the set operation completed unsuccessfully. The error can be retrieved from the <i>arguments</i> parameter.
