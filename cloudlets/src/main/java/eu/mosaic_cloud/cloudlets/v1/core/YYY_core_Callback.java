@@ -18,15 +18,21 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.v1.connectors.core;
+package eu.mosaic_cloud.cloudlets.v1.core;
+
+
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
 
 /**
- * Interface for all resource connectors used by cloudlets.
+ * Marker interface for cloudlet callbacks.
  * 
  * @author Georgiana Macariu
  */
-public interface IConnector
+public interface YYY_core_Callback<TContext>
 			extends
-				eu.mosaic_cloud.connectors.v1.core.Connector
-{}
+				Callbacks
+{
+	public static final CallbackCompletion<Void> SUCCESS = CallbackCompletion.createOutcome ();
+}

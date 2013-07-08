@@ -18,23 +18,23 @@
  * #L%
  */
 
-package eu.mosaic_cloud.connectors.v1.components;
+package eu.mosaic_cloud.cloudlets.v1.connectors.components;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnector;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
 import eu.mosaic_cloud.components.core.ComponentResourceSpecification;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-public interface IComponentConnector
+public interface YYY_comp_ComponentConnector<TExtra>
 			extends
-				IConnector
+				eu.mosaic_cloud.connectors.v1.components.ZZZ_comp_ComponentConnector
 {
-	CallbackCompletion<ComponentResourceDescriptor> acquire (final ComponentResourceSpecification resource);
+	CallbackCompletion<ComponentResourceDescriptor> acquire (final ComponentResourceSpecification resource, final TExtra extra);
 	
-	<TInputs, TOutputs> CallbackCompletion<TOutputs> call (final ComponentIdentifier component, final String operation, final TInputs inputs, final Class<TOutputs> outputs);
+	<TInputs, TOutputs> CallbackCompletion<TOutputs> call (final ComponentIdentifier component, final String operation, final TInputs inputs, final Class<TOutputs> outputs, final TExtra extra);
 	
+	@Override
 	<TInputs> CallbackCompletion<Void> cast (final ComponentIdentifier component, final String operation, final TInputs inputs);
 }

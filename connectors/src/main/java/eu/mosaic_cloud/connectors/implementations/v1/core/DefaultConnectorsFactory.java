@@ -25,7 +25,7 @@ import eu.mosaic_cloud.connectors.implementations.v1.httpg.HttpgQueueConnectorFa
 import eu.mosaic_cloud.connectors.implementations.v1.kvstore.generic.GenericKvStoreConnectorFactoryInitializer;
 import eu.mosaic_cloud.connectors.implementations.v1.queue.amqp.AmqpQueueConnectorFactoryInitializer;
 import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactoryInitializer;
-import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
+import eu.mosaic_cloud.connectors.v1.core.ZZZ_core_ConnectorsFactory;
 
 import com.google.common.base.Preconditions;
 
@@ -33,7 +33,7 @@ import com.google.common.base.Preconditions;
 public class DefaultConnectorsFactory
 			extends BaseConnectorsFactory
 {
-	protected DefaultConnectorsFactory (final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
+	protected DefaultConnectorsFactory (final ConnectorEnvironment environment, final ZZZ_core_ConnectorsFactory delegate) {
 		super (environment, delegate);
 	}
 	
@@ -41,7 +41,7 @@ public class DefaultConnectorsFactory
 		return DefaultConnectorsFactory.create (environment, null);
 	}
 	
-	public static final DefaultConnectorsFactory create (final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
+	public static final DefaultConnectorsFactory create (final ConnectorEnvironment environment, final ZZZ_core_ConnectorsFactory delegate) {
 		return DefaultConnectorsFactory.Builder.create (environment, delegate).build ();
 	}
 	
@@ -66,7 +66,7 @@ public class DefaultConnectorsFactory
 			this.initialize (HttpgQueueConnectorFactoryInitializer.defaultInstance);
 		}
 		
-		public static final Builder create (final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
+		public static final Builder create (final ConnectorEnvironment environment, final ZZZ_core_ConnectorsFactory delegate) {
 			final DefaultConnectorsFactory factory = new DefaultConnectorsFactory (environment, delegate);
 			final Builder builder = new Builder (factory);
 			return (builder);

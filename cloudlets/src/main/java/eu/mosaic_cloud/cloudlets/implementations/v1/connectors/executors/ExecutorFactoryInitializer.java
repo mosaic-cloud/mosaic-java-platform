@@ -25,10 +25,10 @@ import eu.mosaic_cloud.cloudlets.implementations.v1.connectors.core.BaseConnecto
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutorCallback;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutorFactory;
-import eu.mosaic_cloud.cloudlets.v1.connectors.executors.IExecutor;
+import eu.mosaic_cloud.cloudlets.v1.connectors.executors.YYY_exec_Executor;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
 import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactoryBuilder;
-import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
+import eu.mosaic_cloud.connectors.v1.core.ZZZ_core_ConnectorsFactory;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 
 
@@ -36,10 +36,10 @@ public final class ExecutorFactoryInitializer
 			extends BaseConnectorsFactoryInitializer
 {
 	@Override
-	protected void initialize_1 (final ConnectorsFactoryBuilder builder, final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
+	protected void initialize_1 (final ConnectorsFactoryBuilder builder, final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final ZZZ_core_ConnectorsFactory delegate) {
 		builder.register (ExecutorFactory.class, new ExecutorFactory () {
 			@Override
-			public <TContext, TOutcome, TExtra> IExecutor<TOutcome, TExtra> create (final Configuration configuration, final ExecutorCallback<TContext, TOutcome, TExtra> callback, final TContext callbackContext) {
+			public <TContext, TOutcome, TExtra> YYY_exec_Executor<TOutcome, TExtra> create (final Configuration configuration, final ExecutorCallback<TContext, TOutcome, TExtra> callback, final TContext callbackContext) {
 				return new Executor<TContext, TOutcome, TExtra> (cloudlet, environment.getThreading (), environment.getExceptions (), configuration, callback, callbackContext);
 			}
 		});

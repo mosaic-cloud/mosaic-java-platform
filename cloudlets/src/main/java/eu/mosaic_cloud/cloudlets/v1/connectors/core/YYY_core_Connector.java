@@ -18,18 +18,15 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.v1.connectors.executors;
+package eu.mosaic_cloud.cloudlets.v1.connectors.core;
 
 
-import java.util.concurrent.Callable;
-
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnector;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-
-
-public interface IExecutor<TOutcome, TExtra>
+/**
+ * Interface for all resource connectors used by cloudlets.
+ * 
+ * @author Georgiana Macariu
+ */
+public interface YYY_core_Connector
 			extends
-				IConnector
-{
-	CallbackCompletion<TOutcome> execute (Callable<TOutcome> callable, TExtra extra);
-}
+				eu.mosaic_cloud.connectors.v1.core.Connector
+{}

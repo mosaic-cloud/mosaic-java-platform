@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-cloudlets
+ * mosaic-connectors
  * %%
  * Copyright (C) 2010 - 2013 Institute e-Austria Timisoara (Romania)
  * %%
@@ -18,15 +18,30 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.v1.connectors.components;
+package eu.mosaic_cloud.connectors.v1.queue.amqp;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorFactory;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-public interface IComponentConnectorFactory
+/**
+ * Interface for registering and using for an AMQP resource as a publisher.
+ * 
+ * @author Georgiana Macariu
+ * @param <Context>
+ *            the type of the context of the cloudlet using this accessor
+ * @param <Message>
+ *            the type of the published data
+ */
+public interface ZZZ_amqp_AmqpQueuePublisherConnector<Message>
 			extends
-				ConnectorFactory<IComponentConnector<?>>
+				ZZZ_amqp_AmqpQueueConnector
 {
-	<TContext, TExtra> IComponentConnector<TExtra> create (ComponentConnectorCallbacks<TContext, TExtra> callbacks, TContext callbacksContext);
+	/**
+	 * Publishes a message to a queue.
+	 * 
+	 * @param data
+	 *            the data to publish
+	 */
+	CallbackCompletion<Void> publish (Message data);
 }

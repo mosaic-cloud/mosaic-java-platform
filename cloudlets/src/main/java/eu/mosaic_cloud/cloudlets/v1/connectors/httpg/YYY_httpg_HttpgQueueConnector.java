@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-connectors
+ * mosaic-cloudlets
  * %%
  * Copyright (C) 2010 - 2013 Institute e-Austria Timisoara (Romania)
  * %%
@@ -18,18 +18,18 @@
  * #L%
  */
 
-package eu.mosaic_cloud.connectors.v1.queue.amqp;
+package eu.mosaic_cloud.cloudlets.v1.connectors.httpg;
 
 
-import eu.mosaic_cloud.connectors.v1.queue.QueueConnector;
+import eu.mosaic_cloud.cloudlets.v1.connectors.queue.QueueConnector;
+import eu.mosaic_cloud.connectors.v1.httpg.HttpgResponseMessage;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-/**
- * Interface for working with AMQP compatible queueing systems.
- * 
- * @author Georgiana Macariu
- */
-public interface IAmqpQueueConnector
+public interface YYY_httpg_HttpgQueueConnector<TRequestBody, TResponseBody, TExtra>
 			extends
-				QueueConnector
-{}
+				QueueConnector,
+				eu.mosaic_cloud.connectors.v1.httpg.ZZZ_httpg_HttpgQueueConnector<TRequestBody, TResponseBody>
+{
+	CallbackCompletion<Void> respond (HttpgResponseMessage<TResponseBody> response, TExtra extra);
+}

@@ -27,7 +27,7 @@ import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 
 public interface AmqpQueueConsumerConnectorFactory
 			extends
-				AmqpQueueConnectorFactory<IAmqpQueueConsumerConnector<?>>
+				AmqpQueueConnectorFactory<ZZZ_amqp_AmqpQueueConsumerConnector<?>>
 {
-	<TMessage> IAmqpQueueConsumerConnector<TMessage> create (Configuration configuration, Class<TMessage> messageClass, DataEncoder<TMessage> messageEncoder, AmqpQueueConsumerCallback<TMessage> callback);
+	<TMessage> ZZZ_amqp_AmqpQueueConsumerConnector<TMessage> create (Configuration configuration, Class<TMessage> messageClass, DataEncoder<TMessage> messageEncoder, AmqpQueueConsumerCallback<TMessage> callback);
 }

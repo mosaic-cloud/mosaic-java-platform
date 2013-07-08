@@ -18,17 +18,21 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.v1.connectors.httpg;
+package eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.queue.QueueConnectorFactory;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 
 
-public interface IHttpgQueueConnectorFactory
+/**
+ * Factory for creating amqp queue consumer connectors.
+ * 
+ * @author Ciprian Craciun
+ */
+public interface YYY_amqp_AmqpQueueConsumerConnectorFactory
 			extends
-				QueueConnectorFactory<IHttpgQueueConnector<?, ?, ?>>
+				AmqpQueueConnectorFactory<YYY_amqp_AmqpQueueConsumerConnector<?, ?>>
 {
-	<TContext, TRequestBody, TResponseBody, TExtra> IHttpgQueueConnector<TRequestBody, TResponseBody, TExtra> create (final Configuration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, HttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra> callback, TContext callbackContext);
+	<TContext, TMessage, TExtra> YYY_amqp_AmqpQueueConsumerConnector<TMessage, TExtra> create (Configuration configuration, Class<TMessage> messageClass, DataEncoder<TMessage> messageEncoder, AmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, TContext callbackContext);
 }

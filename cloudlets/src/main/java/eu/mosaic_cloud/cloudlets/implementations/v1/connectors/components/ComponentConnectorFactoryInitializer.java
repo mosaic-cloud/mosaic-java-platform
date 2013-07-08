@@ -23,10 +23,10 @@ package eu.mosaic_cloud.cloudlets.implementations.v1.connectors.components;
 
 import eu.mosaic_cloud.cloudlets.implementations.v1.connectors.core.BaseConnectorsFactoryInitializer;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
-import eu.mosaic_cloud.cloudlets.v1.connectors.components.IComponentConnectorFactory;
+import eu.mosaic_cloud.cloudlets.v1.connectors.components.YYY_comp_ComponentConnectorFactory;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
 import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactoryBuilder;
-import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
+import eu.mosaic_cloud.connectors.v1.core.ZZZ_core_ConnectorsFactory;
 
 import com.google.common.base.Preconditions;
 
@@ -34,16 +34,16 @@ import com.google.common.base.Preconditions;
 public final class ComponentConnectorFactoryInitializer
 			extends BaseConnectorsFactoryInitializer
 {
-	public ComponentConnectorFactoryInitializer (final eu.mosaic_cloud.connectors.v1.components.IComponentConnector backingConnector) {
+	public ComponentConnectorFactoryInitializer (final eu.mosaic_cloud.connectors.v1.components.ZZZ_comp_ComponentConnector backingConnector) {
 		super ();
 		Preconditions.checkNotNull (backingConnector);
 		this.backingConnector = backingConnector;
 	}
 	
 	@Override
-	protected void initialize_1 (final ConnectorsFactoryBuilder builder, final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
-		builder.register (IComponentConnectorFactory.class, new ComponentConnectorFactory (cloudlet, this.backingConnector, environment, delegate));
+	protected void initialize_1 (final ConnectorsFactoryBuilder builder, final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final ZZZ_core_ConnectorsFactory delegate) {
+		builder.register (YYY_comp_ComponentConnectorFactory.class, new ComponentConnectorFactory (cloudlet, this.backingConnector, environment, delegate));
 	}
 	
-	private final eu.mosaic_cloud.connectors.v1.components.IComponentConnector backingConnector;
+	private final eu.mosaic_cloud.connectors.v1.components.ZZZ_comp_ComponentConnector backingConnector;
 }

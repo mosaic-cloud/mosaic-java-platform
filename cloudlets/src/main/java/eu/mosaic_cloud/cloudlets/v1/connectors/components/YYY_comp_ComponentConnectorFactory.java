@@ -18,16 +18,15 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.v1.connectors.core;
+package eu.mosaic_cloud.cloudlets.v1.connectors.components;
 
 
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
-import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
-import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactoryBuilder;
-import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorFactory;
 
 
-public interface IConnectorsFactoryInitializer
+public interface YYY_comp_ComponentConnectorFactory
+			extends
+				ConnectorFactory<YYY_comp_ComponentConnector<?>>
 {
-	public abstract void initialize (final ConnectorsFactoryBuilder builder, final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final IConnectorsFactory delegate);
+	<TContext, TExtra> YYY_comp_ComponentConnector<TExtra> create (ComponentConnectorCallbacks<TContext, TExtra> callbacks, TContext callbacksContext);
 }

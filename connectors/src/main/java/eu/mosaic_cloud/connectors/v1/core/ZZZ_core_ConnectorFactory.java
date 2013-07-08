@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-cloudlets
+ * mosaic-connectors
  * %%
  * Copyright (C) 2010 - 2013 Institute e-Austria Timisoara (Romania)
  * %%
@@ -18,15 +18,15 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.v1.connectors.core;
+package eu.mosaic_cloud.connectors.v1.core;
 
 
 /**
- * Interface for the factory of connector factories class.
+ * Interface for custom connector factory. For each connector type an implementation of this interface should be implemented.
  * 
  * @author Ciprian Craciun
+ * @param <TConnector>
+ *            the type of the connector created by this factory
  */
-public interface IConnectorsFactory
-			extends
-				eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory
+public interface ZZZ_core_ConnectorFactory<TConnector extends Connector>
 {}

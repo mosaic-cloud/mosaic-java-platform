@@ -28,11 +28,11 @@ import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
-import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.IAmqpQueuePublisherConnector;
-import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.IAmqpQueuePublisherConnectorFactory;
+import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.YYY_amqp_AmqpQueuePublisherConnector;
+import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.YYY_amqp_AmqpQueuePublisherConnectorFactory;
 import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.core.GenericCallbackCompletionArguments;
-import eu.mosaic_cloud.cloudlets.v1.core.ICallback;
+import eu.mosaic_cloud.cloudlets.v1.core.YYY_core_Callback;
 import eu.mosaic_cloud.platform.implementations.v1.serialization.PlainTextDataEncoder;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
@@ -57,7 +57,7 @@ public class PublisherCloudlet
 		} else {
 			context.cloudlet.destroy ();
 		}
-		return ICallback.SUCCESS;
+		return YYY_core_Callback.SUCCESS;
 	}
 	
 	public static final class AmqpPublisherCallback
@@ -66,13 +66,13 @@ public class PublisherCloudlet
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final PublisherCloudletContext context, final CallbackArguments arguments) {
 			context.logger.info ("PublisherCloudlet publisher destroyed successfully.");
-			return ICallback.SUCCESS;
+			return YYY_core_Callback.SUCCESS;
 		}
 		
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded (final PublisherCloudletContext context, final CallbackArguments arguments) {
 			context.logger.info ("PublisherCloudlet publisher initialized successfully.");
-			return ICallback.SUCCESS;
+			return YYY_core_Callback.SUCCESS;
 		}
 		
 		@Override
@@ -93,7 +93,7 @@ public class PublisherCloudlet
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final PublisherCloudletContext context, final CloudletCallbackCompletionArguments<PublisherCloudletContext> arguments) {
 			context.logger.info ("PublisherCloudlet destroyed successfully.");
-			return ICallback.SUCCESS;
+			return YYY_core_Callback.SUCCESS;
 		}
 		
 		@Override
@@ -103,7 +103,7 @@ public class PublisherCloudlet
 			context.logger.info ("PublisherCloudlet initializing...");
 			final Configuration configuration = context.cloudlet.getConfiguration ();
 			final Configuration queueConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("publisher"));
-			context.publisher = context.cloudlet.getConnectorFactory (IAmqpQueuePublisherConnectorFactory.class).create (queueConfiguration, String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, new AmqpPublisherCallback (), context);
+			context.publisher = context.cloudlet.getConnectorFactory (YYY_amqp_AmqpQueuePublisherConnectorFactory.class).create (queueConfiguration, String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, new AmqpPublisherCallback (), context);
 			return context.publisher.initialize ();
 		}
 		
@@ -121,6 +121,6 @@ public class PublisherCloudlet
 		int delay = 100;
 		int limit = 1000;
 		Logger logger;
-		IAmqpQueuePublisherConnector<String, Void> publisher;
+		YYY_amqp_AmqpQueuePublisherConnector<String, Void> publisher;
 	}
 }

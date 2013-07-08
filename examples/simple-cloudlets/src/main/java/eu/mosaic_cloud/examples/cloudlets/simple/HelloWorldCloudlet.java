@@ -25,7 +25,7 @@ import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
-import eu.mosaic_cloud.cloudlets.v1.core.ICallback;
+import eu.mosaic_cloud.cloudlets.v1.core.YYY_core_Callback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -42,27 +42,27 @@ public class HelloWorldCloudlet
 		@Override
 		public CallbackCompletion<Void> destroy (final HelloCloudletContext context, final CloudletCallbackArguments<HelloCloudletContext> arguments) {
 			this.logger.info ("HelloWorldCloudlet destroying...");
-			return ICallback.SUCCESS;
+			return YYY_core_Callback.SUCCESS;
 		}
 		
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final HelloCloudletContext context, final CloudletCallbackCompletionArguments<HelloCloudletContext> arguments) {
 			this.logger.info ("HelloWorldCloudlet destroyed successfully.");
-			return ICallback.SUCCESS;
+			return YYY_core_Callback.SUCCESS;
 		}
 		
 		@Override
 		public CallbackCompletion<Void> initialize (final HelloCloudletContext context, final CloudletCallbackArguments<HelloCloudletContext> arguments) {
 			this.logger.info ("HelloWorldCloudlet initializing...");
 			context.cloudlet = arguments.getCloudlet ();
-			return ICallback.SUCCESS;
+			return YYY_core_Callback.SUCCESS;
 		}
 		
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded (final HelloCloudletContext context, final CloudletCallbackCompletionArguments<HelloCloudletContext> arguments) {
 			this.logger.info ("HelloWorldCloudlet initialized successfully.");
 			context.cloudlet.destroy ();
-			return ICallback.SUCCESS;
+			return YYY_core_Callback.SUCCESS;
 		}
 	}
 }

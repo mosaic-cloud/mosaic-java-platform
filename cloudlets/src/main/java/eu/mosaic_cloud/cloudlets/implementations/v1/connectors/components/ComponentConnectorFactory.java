@@ -24,10 +24,10 @@ package eu.mosaic_cloud.cloudlets.implementations.v1.connectors.components;
 import eu.mosaic_cloud.cloudlets.implementations.v1.connectors.core.BaseConnectorFactory;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentConnectorCallbacks;
-import eu.mosaic_cloud.cloudlets.v1.connectors.components.IComponentConnector;
-import eu.mosaic_cloud.cloudlets.v1.connectors.components.IComponentConnectorFactory;
+import eu.mosaic_cloud.cloudlets.v1.connectors.components.YYY_comp_ComponentConnector;
+import eu.mosaic_cloud.cloudlets.v1.connectors.components.YYY_comp_ComponentConnectorFactory;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
-import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
+import eu.mosaic_cloud.connectors.v1.core.ZZZ_core_ConnectorsFactory;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 
@@ -35,22 +35,22 @@ import com.google.common.base.Preconditions;
 
 
 public final class ComponentConnectorFactory
-			extends BaseConnectorFactory<IComponentConnector<?>>
+			extends BaseConnectorFactory<YYY_comp_ComponentConnector<?>>
 			implements
-				IComponentConnectorFactory
+				YYY_comp_ComponentConnectorFactory
 {
-	public ComponentConnectorFactory (final CloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.components.IComponentConnector backingConnector, final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
+	public ComponentConnectorFactory (final CloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.components.ZZZ_comp_ComponentConnector backingConnector, final ConnectorEnvironment environment, final ZZZ_core_ConnectorsFactory delegate) {
 		super (cloudlet, environment, delegate);
 		Preconditions.checkNotNull (backingConnector);
 		this.backingConnector = backingConnector;
 	}
 	
 	@Override
-	public final <TConnectorContext, TExtra> IComponentConnector<TExtra> create (final ComponentConnectorCallbacks<TConnectorContext, TExtra> callbacks, final TConnectorContext callbacksContext) {
+	public final <TConnectorContext, TExtra> YYY_comp_ComponentConnector<TExtra> create (final ComponentConnectorCallbacks<TConnectorContext, TExtra> callbacks, final TConnectorContext callbacksContext) {
 		final Configuration configuration = PropertyTypeConfiguration.createEmpty ();
-		final IComponentConnector<TExtra> connector = new ComponentConnector<TConnectorContext, TExtra> (this.cloudlet, this.backingConnector, configuration, callbacks, callbacksContext);
+		final YYY_comp_ComponentConnector<TExtra> connector = new ComponentConnector<TConnectorContext, TExtra> (this.cloudlet, this.backingConnector, configuration, callbacks, callbacksContext);
 		return connector;
 	}
 	
-	private final eu.mosaic_cloud.connectors.v1.components.IComponentConnector backingConnector;
+	private final eu.mosaic_cloud.connectors.v1.components.ZZZ_comp_ComponentConnector backingConnector;
 }

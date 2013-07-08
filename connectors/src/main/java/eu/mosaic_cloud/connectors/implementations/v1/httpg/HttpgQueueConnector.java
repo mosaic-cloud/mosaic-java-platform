@@ -24,7 +24,7 @@ package eu.mosaic_cloud.connectors.implementations.v1.httpg;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgQueueCallback;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgResponseMessage;
-import eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueConnector;
+import eu.mosaic_cloud.connectors.v1.httpg.ZZZ_httpg_HttpgQueueConnector;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
@@ -34,7 +34,7 @@ import com.google.common.base.Preconditions;
 
 public class HttpgQueueConnector<TRequestBody, TResponseBody>
 			implements
-				IHttpgQueueConnector<TRequestBody, TResponseBody>
+				ZZZ_httpg_HttpgQueueConnector<TRequestBody, TResponseBody>
 {
 	protected HttpgQueueConnector (final HttpgQueueConnectorProxy<TRequestBody, TResponseBody> proxy) {
 		super ();

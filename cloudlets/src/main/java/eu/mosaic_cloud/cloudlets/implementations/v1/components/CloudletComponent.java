@@ -42,7 +42,7 @@ import eu.mosaic_cloud.components.core.ComponentEnvironment;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
 import eu.mosaic_cloud.components.core.ComponentResourceSpecification;
-import eu.mosaic_cloud.connectors.v1.components.IComponentConnector;
+import eu.mosaic_cloud.connectors.v1.components.ZZZ_comp_ComponentConnector;
 import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.core.ChannelFactoryAndResolver;
 import eu.mosaic_cloud.interoperability.core.ResolverCallbacks;
@@ -103,7 +103,7 @@ public final class CloudletComponent
 				this.isolate = this.reactor.createIsolate ();
 				this.componentCallbacksProxy = this.reactor.createProxy (ComponentCallbacks.class);
 				this.componentControllerProxy = this.reactor.createProxy (ComponentController.class);
-				this.componentConnectorProxy = this.reactor.createProxy (IComponentConnector.class);
+				this.componentConnectorProxy = this.reactor.createProxy (ZZZ_comp_ComponentConnector.class);
 				this.channelFactoryProxy = this.reactor.createProxy (ChannelFactoryAndResolver.class);
 				this.transcript.traceDebugging ("using the callbacks isolate `%{object:identity}`...", this.isolate);
 				this.transcript.traceDebugging ("using the component callbacks proxy `%{object:identity}`...", this.componentCallbacksProxy);
@@ -259,7 +259,7 @@ public final class CloudletComponent
 	final ComponentCallbacksHandler componentCallbacksHandler;
 	final ComponentCallbacks componentCallbacksProxy;
 	final ComponentConnectorHandler componentConnectorHandler;
-	final IComponentConnector componentConnectorProxy;
+	final ZZZ_comp_ComponentConnector componentConnectorProxy;
 	final ComponentController componentControllerProxy;
 	final ComponentEnvironment componentEnvironment;
 	final IdentityHashMap<ComponentCallReference, Trigger<ComponentAcquireReply>> componentPendingAcquires;
@@ -583,7 +583,7 @@ public final class CloudletComponent
 	final class ComponentConnectorHandler
 				extends Object
 				implements
-					IComponentConnector,
+					ZZZ_comp_ComponentConnector,
 					CallbackHandler
 	{
 		@Override

@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-connectors
+ * mosaic-cloudlets
  * %%
  * Copyright (C) 2010 - 2013 Institute e-Austria Timisoara (Romania)
  * %%
@@ -18,30 +18,18 @@
  * #L%
  */
 
-package eu.mosaic_cloud.connectors.v1.queue.amqp;
+package eu.mosaic_cloud.cloudlets.v1.connectors.executors;
 
 
+import java.util.concurrent.Callable;
+
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.YYY_core_Connector;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-/**
- * Interface for registering and using for an AMQP resource as a publisher.
- * 
- * @author Georgiana Macariu
- * @param <Context>
- *            the type of the context of the cloudlet using this accessor
- * @param <Message>
- *            the type of the published data
- */
-public interface IAmqpQueuePublisherConnector<Message>
+public interface YYY_exec_Executor<TOutcome, TExtra>
 			extends
-				IAmqpQueueConnector
+				YYY_core_Connector
 {
-	/**
-	 * Publishes a message to a queue.
-	 * 
-	 * @param data
-	 *            the data to publish
-	 */
-	CallbackCompletion<Void> publish (Message data);
+	CallbackCompletion<TOutcome> execute (Callable<TOutcome> callable, TExtra extra);
 }

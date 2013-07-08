@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.connectors.implementations.v1.queue.amqp;
 
 
-import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueConnector;
+import eu.mosaic_cloud.connectors.v1.queue.amqp.ZZZ_amqp_AmqpQueueConnector;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 
@@ -30,7 +30,7 @@ import com.google.common.base.Preconditions;
 
 public abstract class AmqpQueueConnector<TProxy extends AmqpQueueConnectorProxy<?>>
 			implements
-				IAmqpQueueConnector
+				ZZZ_amqp_AmqpQueueConnector
 {
 	protected AmqpQueueConnector (final TProxy proxy) {
 		super ();

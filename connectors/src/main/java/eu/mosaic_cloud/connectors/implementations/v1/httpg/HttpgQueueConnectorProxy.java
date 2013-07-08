@@ -35,7 +35,7 @@ import eu.mosaic_cloud.connectors.v1.httpg.HttpgMessageToken;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgQueueCallback;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgRequestMessage;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgResponseMessage;
-import eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueConnector;
+import eu.mosaic_cloud.connectors.v1.httpg.ZZZ_httpg_HttpgQueueConnector;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueRawConsumerCallback;
 import eu.mosaic_cloud.platform.implementations.v1.serialization.SerDesUtils;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
@@ -62,7 +62,7 @@ import com.google.common.collect.ImmutableSet;
 
 public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 			implements
-				IHttpgQueueConnector<TRequestBody, TResponseBody>
+				ZZZ_httpg_HttpgQueueConnector<TRequestBody, TResponseBody>
 {
 	private HttpgQueueConnectorProxy (final AmqpQueueRawConnectorProxy raw, final ConnectorConfiguration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final HttpgQueueCallback<TRequestBody, TResponseBody> callback) {
 		super ();

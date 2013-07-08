@@ -27,7 +27,7 @@ import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 
 public interface AmqpQueueRawConnectorFactory
 			extends
-				QueueConnectorFactory<IAmqpQueueRawConnector>
+				QueueConnectorFactory<ZZZ_amqp_AmqpQueueRawConnector>
 {
-	IAmqpQueueRawConnector create (Configuration configuration);
+	ZZZ_amqp_AmqpQueueRawConnector create (Configuration configuration);
 }

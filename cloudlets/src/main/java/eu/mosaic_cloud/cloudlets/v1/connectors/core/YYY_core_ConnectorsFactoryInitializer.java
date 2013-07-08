@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-connectors
+ * mosaic-cloudlets
  * %%
  * Copyright (C) 2010 - 2013 Institute e-Austria Timisoara (Romania)
  * %%
@@ -18,28 +18,16 @@
  * #L%
  */
 
-package eu.mosaic_cloud.connectors.v1.queue.amqp;
+package eu.mosaic_cloud.cloudlets.v1.connectors.core;
 
 
-import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
+import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactoryBuilder;
+import eu.mosaic_cloud.connectors.v1.core.ZZZ_core_ConnectorsFactory;
 
 
-/**
- * Interface for using for an AMQP resource as a consumer.
- * 
- * @author Georgiana Macariu
- * @param <TMessage>
- *            the type of the consumed data
- */
-public interface IAmqpQueueConsumerConnector<TMessage>
-			extends
-				IAmqpQueueConnector
+public interface YYY_core_ConnectorsFactoryInitializer
 {
-	/**
-	 * Acknowledges a message.
-	 * 
-	 * @param message
-	 *            the message to acknowledge
-	 */
-	CallbackCompletion<Void> acknowledge (AmqpMessageToken token);
+	public abstract void initialize (final ConnectorsFactoryBuilder builder, final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final ZZZ_core_ConnectorsFactory delegate);
 }

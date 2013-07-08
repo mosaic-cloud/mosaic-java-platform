@@ -26,5 +26,5 @@ import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
 
 public interface ConnectorsFactoryInitializer
 {
-	public abstract void initialize (final ConnectorsFactoryBuilder builder, final ConnectorEnvironment environment, final IConnectorsFactory delegate);
+	public abstract void initialize (final ConnectorsFactoryBuilder builder, final ConnectorEnvironment environment, final ZZZ_core_ConnectorsFactory delegate);
 }

@@ -22,11 +22,11 @@ package eu.mosaic_cloud.connectors.v1.core;
 
 
 /**
- * Interface for custom connector factory. For each connector type an implementation of this interface should be implemented.
+ * Interface for the factory of connector factories class.
  * 
  * @author Ciprian Craciun
- * @param <TConnector>
- *            the type of the connector created by this factory
  */
-public interface IConnectorFactory<TConnector extends Connector>
-{}
+public interface ZZZ_core_ConnectorsFactory
+{
+	<TFactory extends ZZZ_core_ConnectorFactory<?>> TFactory getConnectorFactory (Class<TFactory> factory);
+}

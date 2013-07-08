@@ -18,21 +18,21 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.v1.core;
+package eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp;
 
 
-import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
+import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 
 
 /**
- * Marker interface for cloudlet callbacks.
+ * Factory for creating amqp queue publisher connectors.
  * 
- * @author Georgiana Macariu
+ * @author Ciprian Craciun
  */
-public interface ICallback<TContext>
+public interface YYY_amqp_AmqpQueuePublisherConnectorFactory
 			extends
-				Callbacks
+				AmqpQueueConnectorFactory<YYY_amqp_AmqpQueueConsumerConnector<?, ?>>
 {
-	public static final CallbackCompletion<Void> SUCCESS = CallbackCompletion.createOutcome ();
+	<TContext, TMessage, TExtra> YYY_amqp_AmqpQueuePublisherConnector<TMessage, TExtra> create (Configuration configuration, Class<TMessage> messageClass, DataEncoder<TMessage> messageEncoder, AmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback, TContext callbackContext);
 }

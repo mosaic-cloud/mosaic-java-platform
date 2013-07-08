@@ -28,8 +28,8 @@ import eu.mosaic_cloud.cloudlets.implementations.v1.tools.ConfigProperties;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallback;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
 import eu.mosaic_cloud.connectors.implementations.v1.core.DefaultConnectorsFactory;
-import eu.mosaic_cloud.connectors.v1.components.IComponentConnector;
-import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
+import eu.mosaic_cloud.connectors.v1.components.ZZZ_comp_ComponentConnector;
+import eu.mosaic_cloud.connectors.v1.core.ZZZ_core_ConnectorsFactory;
 import eu.mosaic_cloud.interoperability.core.ChannelFactory;
 import eu.mosaic_cloud.interoperability.core.ChannelResolver;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
@@ -54,7 +54,7 @@ import com.google.common.base.Preconditions;
  */
 public final class CloudletManager
 {
-	private CloudletManager (final Configuration configuration, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final IComponentConnector componentConnector, final ChannelFactory channelFactory, final ChannelResolver channelResolver) {
+	private CloudletManager (final Configuration configuration, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ZZZ_comp_ComponentConnector componentConnector, final ChannelFactory channelFactory, final ChannelResolver channelResolver) {
 		super ();
 		Preconditions.checkNotNull (configuration);
 		Preconditions.checkNotNull (classLoader);
@@ -148,7 +148,7 @@ public final class CloudletManager
 		//-- Thus any deferred exception should be treated as an ignored one.
 		final ExceptionTracer exceptions = new CloudletExceptionTracer ();
 		final ConnectorEnvironment connectorEnvironment = ConnectorEnvironment.create (this.reactor, this.threading, exceptions, this.channelFactory, this.channelResolver);
-		final IConnectorsFactory connectorFactory = DefaultConnectorsFactory.create (connectorEnvironment, null);
+		final ZZZ_core_ConnectorsFactory connectorFactory = DefaultConnectorsFactory.create (connectorEnvironment, null);
 		final CloudletEnvironment environment = CloudletEnvironment.create (cloudletConfiguration, cloudletCallbacksClass, cloudletContextClass, this.classLoader, connectorFactory, connectorEnvironment, this.componentConnector, this.reactor, this.threading, exceptions);
 		final Cloudlet<?> cloudlet = Cloudlet.create (environment);
 		return (cloudlet);
@@ -204,7 +204,7 @@ public final class CloudletManager
 	private final ChannelResolver channelResolver;
 	private final ClassLoader classLoader;
 	private final ConcurrentHashMap<Cloudlet<?>, Cloudlet<?>> cloudlets;
-	private final IComponentConnector componentConnector;
+	private final ZZZ_comp_ComponentConnector componentConnector;
 	private final Configuration configuration;
 	private final TranscriptExceptionTracer exceptions;
 	private final Monitor monitor = Monitor.create (this);
@@ -212,7 +212,7 @@ public final class CloudletManager
 	private final ThreadingContext threading;
 	private final Transcript transcript;
 	
-	public static final CloudletManager create (final Configuration configuration, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final IComponentConnector componentConnector, final ChannelFactory channelFactory, final ChannelResolver channelResolver) {
+	public static final CloudletManager create (final Configuration configuration, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ZZZ_comp_ComponentConnector componentConnector, final ChannelFactory channelFactory, final ChannelResolver channelResolver) {
 		return (new CloudletManager (configuration, classLoader, reactor, threading, exceptions, componentConnector, channelFactory, channelResolver));
 	}
 	

@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-cloudlets
+ * mosaic-connectors
  * %%
  * Copyright (C) 2010 - 2013 Institute e-Austria Timisoara (Romania)
  * %%
@@ -18,33 +18,28 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp;
+package eu.mosaic_cloud.connectors.v1.queue.amqp;
 
 
-import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpMessageToken;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 /**
- * Interface for registering and using for an AMQP resource as a consumer.
+ * Interface for using for an AMQP resource as a consumer.
  * 
  * @author Georgiana Macariu
  * @param <TMessage>
  *            the type of the consumed data
- * @param <TExtra>
- *            the type of the extra data; as an example, this data can be used correlation
  */
-public interface IAmqpQueueConsumerConnector<TMessage, TExtra>
+public interface ZZZ_amqp_AmqpQueueConsumerConnector<TMessage>
 			extends
-				AmqpQueueConnector,
-				eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueConsumerConnector<TMessage>
+				ZZZ_amqp_AmqpQueueConnector
 {
 	/**
 	 * Acknowledges a message.
 	 * 
-	 * @param token
-	 *            the delivery token in the received message
-	 * @param extra
+	 * @param message
+	 *            the message to acknowledge
 	 */
-	CallbackCompletion<Void> acknowledge (AmqpMessageToken token, TExtra extra);
+	CallbackCompletion<Void> acknowledge (AmqpMessageToken token);
 }

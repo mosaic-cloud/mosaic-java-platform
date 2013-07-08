@@ -26,7 +26,7 @@ public interface ConnectorsFactoryBuilder
 				eu.mosaic_cloud.connectors.v1.core.ConnectorsFactoryBuilder
 {
 	@Override
-	public abstract IConnectorsFactory build ();
+	public abstract YYY_core_ConnectorsFactory build ();
 	
-	public abstract void initialize (final IConnectorsFactoryInitializer initializer);
+	public abstract void initialize (final YYY_core_ConnectorsFactoryInitializer initializer);
 }

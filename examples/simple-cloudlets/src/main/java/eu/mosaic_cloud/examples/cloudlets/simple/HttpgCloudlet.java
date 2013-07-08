@@ -28,11 +28,11 @@ import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultHttpgQueueConnectorCa
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.HttpgQueueRequestedCallbackArguments;
-import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.IHttpgQueueConnectorFactory;
-import eu.mosaic_cloud.cloudlets.v1.core.ICallback;
+import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.YYY_httpg_HttpgQueueConnectorFactory;
+import eu.mosaic_cloud.cloudlets.v1.core.YYY_core_Callback;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgRequestMessage;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgResponseMessage;
-import eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueConnector;
+import eu.mosaic_cloud.connectors.v1.httpg.ZZZ_httpg_HttpgQueueConnector;
 import eu.mosaic_cloud.platform.implementations.v1.serialization.PlainTextDataEncoder;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
@@ -57,7 +57,7 @@ public class HttpgCloudlet
 			context.cloudlet = arguments.getCloudlet ();
 			final Configuration cloudletConfiguration = context.cloudlet.getConfiguration ();
 			final Configuration gatewayConfiguration = cloudletConfiguration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("gateway"));
-			context.gateway = context.cloudlet.getConnectorFactory (IHttpgQueueConnectorFactory.class).create (gatewayConfiguration, String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, new GatewayCallbacks (), context);
+			context.gateway = context.cloudlet.getConnectorFactory (YYY_httpg_HttpgQueueConnectorFactory.class).create (gatewayConfiguration, String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, new GatewayCallbacks (), context);
 			return (context.gateway.initialize ());
 		}
 	}
@@ -65,7 +65,7 @@ public class HttpgCloudlet
 	public static final class Context
 	{
 		CloudletController<Context> cloudlet;
-		IHttpgQueueConnector<String, String> gateway;
+		ZZZ_httpg_HttpgQueueConnector<String, String> gateway;
 		String identity;
 	}
 	
@@ -87,7 +87,7 @@ public class HttpgCloudlet
 				responseBody.append ("HTTP body: empty\n");
 			final HttpgResponseMessage<String> response = HttpgResponseMessage.create200 (request, responseBody.toString ());
 			context.gateway.respond (response);
-			return (ICallback.SUCCESS);
+			return (YYY_core_Callback.SUCCESS);
 		}
 	}
 }

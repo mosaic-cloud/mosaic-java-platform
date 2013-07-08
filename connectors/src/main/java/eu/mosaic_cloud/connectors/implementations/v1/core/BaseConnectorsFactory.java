@@ -23,8 +23,8 @@ package eu.mosaic_cloud.connectors.implementations.v1.core;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-import eu.mosaic_cloud.connectors.v1.core.IConnectorFactory;
-import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
+import eu.mosaic_cloud.connectors.v1.core.ZZZ_core_ConnectorFactory;
+import eu.mosaic_cloud.connectors.v1.core.ZZZ_core_ConnectorsFactory;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
 
 import com.google.common.base.Preconditions;
@@ -33,19 +33,19 @@ import com.google.common.base.Preconditions;
 public abstract class BaseConnectorsFactory
 			extends Object
 			implements
-				IConnectorsFactory
+				ZZZ_core_ConnectorsFactory
 {
-	protected BaseConnectorsFactory (final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
+	protected BaseConnectorsFactory (final ConnectorEnvironment environment, final ZZZ_core_ConnectorsFactory delegate) {
 		super ();
 		Preconditions.checkNotNull (environment);
 		this.monitor = Monitor.create (this);
 		this.environment = environment;
 		this.delegate = delegate;
-		this.factories = new ConcurrentHashMap<Class<? extends IConnectorFactory<?>>, IConnectorFactory<?>> ();
+		this.factories = new ConcurrentHashMap<Class<? extends ZZZ_core_ConnectorFactory<?>>, ZZZ_core_ConnectorFactory<?>> ();
 	}
 	
 	@Override
-	public <Factory extends IConnectorFactory<?>> Factory getConnectorFactory (final Class<Factory> factoryClass) {
+	public <Factory extends ZZZ_core_ConnectorFactory<?>> Factory getConnectorFactory (final Class<Factory> factoryClass) {
 		Factory factory = factoryClass.cast (this.factories.get (factoryClass));
 		if ((factory == null) && (this.delegate != null)) {
 			factory = this.delegate.getConnectorFactory (factoryClass);
@@ -53,10 +53,10 @@ public abstract class BaseConnectorsFactory
 		return factory;
 	}
 	
-	protected final <Factory extends IConnectorFactory<?>> void registerFactory (final Class<Factory> factoryClass, final Factory factory) {
+	protected final <Factory extends ZZZ_core_ConnectorFactory<?>> void registerFactory (final Class<Factory> factoryClass, final Factory factory) {
 		Preconditions.checkNotNull (factoryClass);
 		Preconditions.checkArgument (factoryClass.isInterface ());
-		Preconditions.checkArgument (IConnectorFactory.class.isAssignableFrom (factoryClass));
+		Preconditions.checkArgument (ZZZ_core_ConnectorFactory.class.isAssignableFrom (factoryClass));
 		Preconditions.checkNotNull (factory);
 		Preconditions.checkArgument (factoryClass.isInstance (factory));
 		synchronized (this.monitor) {
@@ -65,8 +65,8 @@ public abstract class BaseConnectorsFactory
 		}
 	}
 	
-	protected final IConnectorsFactory delegate;
+	protected final ZZZ_core_ConnectorsFactory delegate;
 	protected final ConnectorEnvironment environment;
-	protected final ConcurrentHashMap<Class<? extends IConnectorFactory<?>>, IConnectorFactory<?>> factories;
+	protected final ConcurrentHashMap<Class<? extends ZZZ_core_ConnectorFactory<?>>, ZZZ_core_ConnectorFactory<?>> factories;
 	protected final Monitor monitor;
 }

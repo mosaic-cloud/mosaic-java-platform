@@ -21,8 +21,8 @@
 package eu.mosaic_cloud.cloudlets.v1.cloudlets;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorsFactory;
-import eu.mosaic_cloud.connectors.v1.core.IConnectorFactory;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.YYY_core_ConnectorsFactory;
+import eu.mosaic_cloud.connectors.v1.core.ZZZ_core_ConnectorFactory;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackPassthrough;
@@ -39,7 +39,7 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 public interface CloudletController<Context>
 			extends
 				Callbacks,
-				IConnectorsFactory
+				YYY_core_ConnectorsFactory
 {
 	CallbackCompletion<Void> destroy ();
 	
@@ -48,7 +48,7 @@ public interface CloudletController<Context>
 	
 	@Override
 	@CallbackPassthrough
-	<Factory extends IConnectorFactory<?>> Factory getConnectorFactory (Class<Factory> factory);
+	<Factory extends ZZZ_core_ConnectorFactory<?>> Factory getConnectorFactory (Class<Factory> factory);
 	
 	@CallbackPassthrough
 	CloudletState getState ();

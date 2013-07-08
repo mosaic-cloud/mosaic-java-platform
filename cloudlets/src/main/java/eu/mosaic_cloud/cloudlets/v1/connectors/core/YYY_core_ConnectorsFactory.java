@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-connectors
+ * mosaic-cloudlets
  * %%
  * Copyright (C) 2010 - 2013 Institute e-Austria Timisoara (Romania)
  * %%
@@ -18,16 +18,15 @@
  * #L%
  */
 
-package eu.mosaic_cloud.connectors.v1.httpg;
+package eu.mosaic_cloud.cloudlets.v1.connectors.core;
 
 
-import eu.mosaic_cloud.connectors.v1.queue.QueueConnector;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-
-
-public interface IHttpgQueueConnector<TRequestBody, TResponseBody>
+/**
+ * Interface for the factory of connector factories class.
+ * 
+ * @author Ciprian Craciun
+ */
+public interface YYY_core_ConnectorsFactory
 			extends
-				QueueConnector
-{
-	CallbackCompletion<Void> respond (HttpgResponseMessage<TResponseBody> response);
-}
+				eu.mosaic_cloud.connectors.v1.core.ZZZ_core_ConnectorsFactory
+{}

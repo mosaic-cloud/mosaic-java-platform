@@ -24,7 +24,7 @@ package eu.mosaic_cloud.cloudlets.implementations.v1.connectors.queue.amqp;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueueConsumerConnectorCallback;
-import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.IAmqpQueueConsumerConnector;
+import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.YYY_amqp_AmqpQueueConsumerConnector;
 import eu.mosaic_cloud.cloudlets.v1.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpMessageToken;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueConsumerCallback;
@@ -34,12 +34,12 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 
 
 public class AmqpQueueConsumerConnector<TContext, TMessage, TExtra>
-			extends BaseAmqpQueueConnector<eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueConsumerConnector<TMessage>, AmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra>, TContext>
+			extends BaseAmqpQueueConnector<eu.mosaic_cloud.connectors.v1.queue.amqp.ZZZ_amqp_AmqpQueueConsumerConnector<TMessage>, AmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra>, TContext>
 			implements
-				IAmqpQueueConsumerConnector<TMessage, TExtra>
+				YYY_amqp_AmqpQueueConsumerConnector<TMessage, TExtra>
 {
 	@SuppressWarnings ("synthetic-access")
-	public AmqpQueueConsumerConnector (final CloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueConsumerConnector<TMessage> connector, final Configuration configuration, final AmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, final TContext context, final Callback<TMessage> backingCallback) {
+	public AmqpQueueConsumerConnector (final CloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.queue.amqp.ZZZ_amqp_AmqpQueueConsumerConnector<TMessage> connector, final Configuration configuration, final AmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, final TContext context, final Callback<TMessage> backingCallback) {
 		super (cloudlet, connector, configuration, callback, context);
 		backingCallback.connector = this;
 	}

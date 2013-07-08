@@ -24,8 +24,8 @@ package eu.mosaic_cloud.connectors.implementations.v1.core;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactoryBuilder;
-import eu.mosaic_cloud.connectors.v1.core.IConnectorFactory;
-import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
+import eu.mosaic_cloud.connectors.v1.core.ZZZ_core_ConnectorFactory;
+import eu.mosaic_cloud.connectors.v1.core.ZZZ_core_ConnectorsFactory;
 
 import com.google.common.base.Preconditions;
 
@@ -52,11 +52,11 @@ public abstract class BaseConnectorsFactoryBuilder<TFactory extends BaseConnecto
 	}
 	
 	@Override
-	public final <TConnectorFactory extends IConnectorFactory<?>> void register (final Class<TConnectorFactory> factoryClass, final TConnectorFactory factory) {
+	public final <TConnectorFactory extends ZZZ_core_ConnectorFactory<?>> void register (final Class<TConnectorFactory> factoryClass, final TConnectorFactory factory) {
 		Preconditions.checkState (!this.built.get ());
 		Preconditions.checkNotNull (factoryClass);
 		Preconditions.checkArgument (factoryClass.isInterface ());
-		Preconditions.checkArgument (IConnectorFactory.class.isAssignableFrom (factoryClass));
+		Preconditions.checkArgument (ZZZ_core_ConnectorFactory.class.isAssignableFrom (factoryClass));
 		Preconditions.checkNotNull (factory);
 		Preconditions.checkArgument (factoryClass.isInstance (factory));
 		this.factory.registerFactory (factoryClass, factory);
@@ -70,11 +70,11 @@ public abstract class BaseConnectorsFactoryBuilder<TFactory extends BaseConnecto
 	
 	protected void initialize_1 () {}
 	
-	protected <TConnectorFactory extends IConnectorFactory<?>> void register_1 (final Class<TConnectorFactory> factoryClass, final TConnectorFactory factory) {
+	protected <TConnectorFactory extends ZZZ_core_ConnectorFactory<?>> void register_1 (final Class<TConnectorFactory> factoryClass, final TConnectorFactory factory) {
 		this.factory.registerFactory (factoryClass, factory);
 	}
 	
-	protected final IConnectorsFactory delegate;
+	protected final ZZZ_core_ConnectorsFactory delegate;
 	protected final ConnectorEnvironment environment;
 	protected final TFactory factory;
 	private final AtomicBoolean built;

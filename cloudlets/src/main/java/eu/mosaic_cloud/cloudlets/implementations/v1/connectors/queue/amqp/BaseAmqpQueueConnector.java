@@ -39,7 +39,7 @@ import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
  * @param <TContext>
  *            the type of the context of the cloudlet using the connector
  */
-public abstract class BaseAmqpQueueConnector<TConnector extends eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueConnector, TCallback extends AmqpQueueConnectorCallback<TContext>, TContext>
+public abstract class BaseAmqpQueueConnector<TConnector extends eu.mosaic_cloud.connectors.v1.queue.amqp.ZZZ_amqp_AmqpQueueConnector, TCallback extends AmqpQueueConnectorCallback<TContext>, TContext>
 			extends BaseConnector<TConnector, TCallback, TContext>
 			implements
 				AmqpQueueConnector

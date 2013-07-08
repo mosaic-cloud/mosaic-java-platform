@@ -28,11 +28,11 @@ import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultKvStoreConnectorCallb
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
-import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.IKvStoreConnector;
-import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.IKvStoreConnectorFactory;
 import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.KvStoreCallbackCompletionArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.YYY_kv_KvStoreConnector;
+import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.YYY_kv_KvStoreConnectorFactory;
 import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
-import eu.mosaic_cloud.cloudlets.v1.core.ICallback;
+import eu.mosaic_cloud.cloudlets.v1.core.YYY_core_Callback;
 import eu.mosaic_cloud.platform.implementations.v1.serialization.PlainTextDataEncoder;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
@@ -58,7 +58,7 @@ public class StoringCloudlet
 		} else {
 			context.cloudlet.destroy ();
 		}
-		return ICallback.SUCCESS;
+		return YYY_core_Callback.SUCCESS;
 	}
 	
 	public static final class LifeCycleHandler
@@ -73,7 +73,7 @@ public class StoringCloudlet
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final StoringCloudletContext context, final CloudletCallbackCompletionArguments<StoringCloudletContext> arguments) {
 			context.logger.info ("PublisherCloudlet destroyed successfully.");
-			return ICallback.SUCCESS;
+			return YYY_core_Callback.SUCCESS;
 		}
 		
 		@Override
@@ -83,7 +83,7 @@ public class StoringCloudlet
 			context.logger.info ("PublisherCloudlet initializing...");
 			final Configuration configuration = context.cloudlet.getConfiguration ();
 			final Configuration storeConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("store"));
-			context.store = context.cloudlet.getConnectorFactory (IKvStoreConnectorFactory.class).create (storeConfiguration, String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, new StoreCallback (), context);
+			context.store = context.cloudlet.getConnectorFactory (YYY_kv_KvStoreConnectorFactory.class).create (storeConfiguration, String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, new StoreCallback (), context);
 			return context.store.initialize ();
 		}
 		
@@ -100,7 +100,7 @@ public class StoringCloudlet
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final StoringCloudletContext context, final CallbackArguments arguments) {
 			context.logger.info ("PublisherCloudlet publisher destroyed successfully.");
-			return ICallback.SUCCESS;
+			return YYY_core_Callback.SUCCESS;
 		}
 		
 		@Override
@@ -114,7 +114,7 @@ public class StoringCloudlet
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded (final StoringCloudletContext context, final CallbackArguments arguments) {
 			context.logger.info ("PublisherCloudlet publisher initialized successfully.");
-			return ICallback.SUCCESS;
+			return YYY_core_Callback.SUCCESS;
 		}
 		
 		@Override
@@ -122,7 +122,7 @@ public class StoringCloudlet
 			final String key = arguments.getExtra ();
 			context.logger.info ("StoringCloudlet getting value `{}`.", key);
 			context.store.get (key, key);
-			return ICallback.SUCCESS;
+			return YYY_core_Callback.SUCCESS;
 		}
 	}
 	
@@ -133,6 +133,6 @@ public class StoringCloudlet
 		int delay = 100;
 		int limit = 1000;
 		Logger logger;
-		IKvStoreConnector<String, String> store;
+		YYY_kv_KvStoreConnector<String, String> store;
 	}
 }
