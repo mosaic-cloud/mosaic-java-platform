@@ -18,18 +18,16 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.v1.connectors.httpg;
+package eu.mosaic_cloud.cloudlets.v1.connectors.core;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.queue.QueueConnector;
-import eu.mosaic_cloud.connectors.v1.httpg.HttpgResponseMessage;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
+import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactory;
+import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactoryBuilder;
 
 
-public interface YYY_httpg_HttpgQueueConnector<TRequestBody, TResponseBody, TExtra>
-			extends
-				QueueConnector,
-				eu.mosaic_cloud.connectors.v1.httpg.HttpgQueueConnector<TRequestBody, TResponseBody>
+public interface ConnectorsFactoryInitializer
 {
-	CallbackCompletion<Void> respond (HttpgResponseMessage<TResponseBody> response, TExtra extra);
+	public abstract void initialize (final ConnectorsFactoryBuilder builder, final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final ConnectorsFactory delegate);
 }

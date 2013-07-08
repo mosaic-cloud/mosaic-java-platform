@@ -28,7 +28,7 @@ import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallback;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
 import eu.mosaic_cloud.components.core.ComponentResourceSpecification;
-import eu.mosaic_cloud.connectors.v1.components.ZZZ_comp_ComponentConnector;
+import eu.mosaic_cloud.connectors.v1.components.ComponentConnector;
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
 import eu.mosaic_cloud.drivers.kvstore.riak.interop.KeyValueStub;
 import eu.mosaic_cloud.drivers.queue.amqp.interop.AmqpStub;
@@ -103,7 +103,7 @@ public abstract class BaseCloudletTest
 				return (scenario.connectorsChannel);
 			}
 		};
-		final ZZZ_comp_ComponentConnector componentConnector = new ZZZ_comp_ComponentConnector () {
+		final ComponentConnector componentConnector = new ComponentConnector () {
 			@Override
 			public CallbackCompletion<ComponentResourceDescriptor> acquire (final ComponentResourceSpecification resource) {
 				throw (new UnsupportedOperationException ());

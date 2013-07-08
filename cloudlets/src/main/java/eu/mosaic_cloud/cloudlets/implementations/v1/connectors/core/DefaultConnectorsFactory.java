@@ -39,7 +39,7 @@ import com.google.common.base.Preconditions;
 public class DefaultConnectorsFactory
 			extends BaseConnectorsFactory
 			implements
-				eu.mosaic_cloud.cloudlets.v1.connectors.core.YYY_core_ConnectorsFactory
+				eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorsFactory
 {
 	protected DefaultConnectorsFactory (final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final ConnectorsFactory delegate) {
 		super (environment, delegate);
@@ -79,7 +79,7 @@ public class DefaultConnectorsFactory
 		}
 		
 		@Override
-		public void initialize (final eu.mosaic_cloud.cloudlets.v1.connectors.core.YYY_core_ConnectorsFactoryInitializer initializer) {
+		public void initialize (final eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorsFactoryInitializer initializer) {
 			Preconditions.checkNotNull (initializer);
 			initializer.initialize (this, this.cloudlet, this.environment, this.factory);
 		}

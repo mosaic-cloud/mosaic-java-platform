@@ -34,7 +34,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <TExtra>
  *            the type of the extra data; as an example, this data can be used correlation
  */
-public interface YYY_amqp_AmqpQueueConsumerConnector<TMessage, TExtra>
+public interface AmqpQueueConsumerConnector<TMessage, TExtra>
 			extends
 				AmqpQueueConnector,
 				eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueConsumerConnector<TMessage>

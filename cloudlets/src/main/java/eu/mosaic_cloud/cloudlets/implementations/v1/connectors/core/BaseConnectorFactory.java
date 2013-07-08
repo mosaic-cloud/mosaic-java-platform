@@ -22,15 +22,15 @@ package eu.mosaic_cloud.cloudlets.implementations.v1.connectors.core;
 
 
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.Connector;
 import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorFactory;
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.YYY_core_Connector;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
 import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactory;
 
 import com.google.common.base.Preconditions;
 
 
-public abstract class BaseConnectorFactory<TConnector extends YYY_core_Connector>
+public abstract class BaseConnectorFactory<TConnector extends Connector>
 			extends eu.mosaic_cloud.connectors.implementations.v1.core.BaseConnectorFactory<TConnector>
 			implements
 				ConnectorFactory<TConnector>

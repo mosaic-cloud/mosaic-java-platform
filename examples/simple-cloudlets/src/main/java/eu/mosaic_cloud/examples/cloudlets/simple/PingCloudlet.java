@@ -30,13 +30,13 @@ import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
-import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.YYY_amqp_AmqpQueueConsumerConnector;
-import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.YYY_amqp_AmqpQueueConsumerConnectorFactory;
-import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.YYY_amqp_AmqpQueuePublisherConnector;
-import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.YYY_amqp_AmqpQueuePublisherConnectorFactory;
+import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueueConsumerConnector;
+import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueueConsumerConnectorFactory;
+import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueuePublisherConnector;
+import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueuePublisherConnectorFactory;
+import eu.mosaic_cloud.cloudlets.v1.core.Callback;
 import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.core.GenericCallbackCompletionArguments;
-import eu.mosaic_cloud.cloudlets.v1.core.YYY_core_Callback;
 import eu.mosaic_cloud.platform.implementations.v1.serialization.JsonDataEncoder;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
@@ -52,7 +52,7 @@ public class PingCloudlet
 		public CallbackCompletion<Void> acknowledgeSucceeded (final PingCloudletContext context, final GenericCallbackCompletionArguments<Void> arguments) {
 			this.logger.info ("ackowledge succeeded; exiting...");
 			context.cloudlet.destroy ();
-			return YYY_core_Callback.SUCCESS;
+			return Callback.SUCCESS;
 		}
 		
 		@Override
@@ -60,19 +60,19 @@ public class PingCloudlet
 			final PongMessage pong = arguments.getMessage ();
 			this.logger.info ("received pong message with key `{}`; acknowledging...", pong.getKey ());
 			context.consumer.acknowledge (arguments.getToken ());
-			return YYY_core_Callback.SUCCESS;
+			return Callback.SUCCESS;
 		}
 		
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final PingCloudletContext context, final CallbackArguments arguments) {
 			this.logger.info ("queue consumer connector destroyed successfully.");
-			return YYY_core_Callback.SUCCESS;
+			return Callback.SUCCESS;
 		}
 		
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded (final PingCloudletContext context, final CallbackArguments arguments) {
 			this.logger.info ("queue consumer connector initialized successfully.");
-			return YYY_core_Callback.SUCCESS;
+			return Callback.SUCCESS;
 		}
 	}
 	
@@ -82,13 +82,13 @@ public class PingCloudlet
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final PingCloudletContext context, final CallbackArguments arguments) {
 			this.logger.info ("queue publisher connector destroyed successfully.");
-			return YYY_core_Callback.SUCCESS;
+			return Callback.SUCCESS;
 		}
 		
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded (final PingCloudletContext context, final CallbackArguments arguments) {
 			this.logger.info ("queue publisher connector initialized successfully.");
-			return YYY_core_Callback.SUCCESS;
+			return Callback.SUCCESS;
 		}
 	}
 	
@@ -105,7 +105,7 @@ public class PingCloudlet
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final PingCloudletContext context, final CloudletCallbackCompletionArguments<PingCloudletContext> arguments) {
 			this.logger.info ("cloudlet destroyed successfully.");
-			return YYY_core_Callback.SUCCESS;
+			return Callback.SUCCESS;
 		}
 		
 		@Override
@@ -116,8 +116,8 @@ public class PingCloudlet
 			final Configuration consumerConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("consumer"));
 			final Configuration publisherConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("publisher"));
 			this.logger.info ("creating queue connectors...");
-			context.consumer = context.cloudlet.getConnectorFactory (YYY_amqp_AmqpQueueConsumerConnectorFactory.class).create (consumerConfiguration, PongMessage.class, JsonDataEncoder.create (PongMessage.class), new AmqpConsumerCallback (), context);
-			context.publisher = context.cloudlet.getConnectorFactory (YYY_amqp_AmqpQueuePublisherConnectorFactory.class).create (publisherConfiguration, PingMessage.class, JsonDataEncoder.create (PingMessage.class), new AmqpPublisherCallback (), context);
+			context.consumer = context.cloudlet.getConnectorFactory (AmqpQueueConsumerConnectorFactory.class).create (consumerConfiguration, PongMessage.class, JsonDataEncoder.create (PongMessage.class), new AmqpConsumerCallback (), context);
+			context.publisher = context.cloudlet.getConnectorFactory (AmqpQueuePublisherConnectorFactory.class).create (publisherConfiguration, PingMessage.class, JsonDataEncoder.create (PingMessage.class), new AmqpPublisherCallback (), context);
 			this.logger.info ("initializing queue connectors...");
 			return CallbackCompletion.createAndChained (context.consumer.initialize (), context.publisher.initialize ());
 		}
@@ -128,15 +128,15 @@ public class PingCloudlet
 			final PingMessage ping = new PingMessage (context.pingPongKey);
 			this.logger.info ("sending ping message with key `{}`...", ping.getKey ());
 			context.publisher.publish (ping, null);
-			return YYY_core_Callback.SUCCESS;
+			return Callback.SUCCESS;
 		}
 	}
 	
 	public static final class PingCloudletContext
 	{
 		CloudletController<PingCloudletContext> cloudlet;
-		YYY_amqp_AmqpQueueConsumerConnector<PongMessage, Void> consumer;
+		AmqpQueueConsumerConnector<PongMessage, Void> consumer;
 		final String pingPongKey = UUID.randomUUID ().toString ();
-		YYY_amqp_AmqpQueuePublisherConnector<PingMessage, Void> publisher;
+		AmqpQueuePublisherConnector<PingMessage, Void> publisher;
 	}
 }

@@ -31,9 +31,9 @@ import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutionSucceededCallbackArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.executors.Executor;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutorFactory;
-import eu.mosaic_cloud.cloudlets.v1.connectors.executors.YYY_exec_Executor;
-import eu.mosaic_cloud.cloudlets.v1.core.YYY_core_Callback;
+import eu.mosaic_cloud.cloudlets.v1.core.Callback;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -54,7 +54,7 @@ public class TasksCloudlet
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final Context context, final CloudletCallbackCompletionArguments<Context> arguments) {
 			context.logger.info ("cloudlet destroyed successfully.");
-			return YYY_core_Callback.SUCCESS;
+			return Callback.SUCCESS;
 		}
 		
 		@Override
@@ -85,7 +85,7 @@ public class TasksCloudlet
 		CloudletController<Context> cloudlet;
 		CloudletCallback cloudletCallback;
 		int counter;
-		YYY_exec_Executor<String, String> executor;
+		Executor<String, String> executor;
 		ExecutorCallback executorCallback;
 		Workflow workflow;
 	}
@@ -126,7 +126,7 @@ public class TasksCloudlet
 			context.counter++;
 			if (context.counter == 10) {
 				context.cloudlet.destroy ();
-				return YYY_core_Callback.SUCCESS;
+				return Callback.SUCCESS;
 			}
 			return (context.workflow.submitExecution (context));
 		}
@@ -135,7 +135,7 @@ public class TasksCloudlet
 			final String input = UUID.randomUUID ().toString ();
 			context.logger.info ("scheduling task with input `{}`...", input);
 			context.executor.execute (new TimeConsumingOperation (context, input), input);
-			return YYY_core_Callback.SUCCESS;
+			return Callback.SUCCESS;
 		}
 	}
 }

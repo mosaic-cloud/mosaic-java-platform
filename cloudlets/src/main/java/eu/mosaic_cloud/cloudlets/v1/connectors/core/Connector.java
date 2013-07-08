@@ -18,15 +18,15 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.v1.connectors.components;
+package eu.mosaic_cloud.cloudlets.v1.connectors.core;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorFactory;
-
-
-public interface YYY_comp_ComponentConnectorFactory
+/**
+ * Interface for all resource connectors used by cloudlets.
+ * 
+ * @author Georgiana Macariu
+ */
+public interface Connector
 			extends
-				ConnectorFactory<YYY_comp_ComponentConnector<?>>
-{
-	<TContext, TExtra> YYY_comp_ComponentConnector<TExtra> create (ComponentConnectorCallbacks<TContext, TExtra> callbacks, TContext callbacksContext);
-}
+				eu.mosaic_cloud.connectors.v1.core.Connector
+{}

@@ -18,18 +18,15 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.v1.connectors.executors;
+package eu.mosaic_cloud.cloudlets.v1.connectors.components;
 
 
-import java.util.concurrent.Callable;
-
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.YYY_core_Connector;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorFactory;
 
 
-public interface YYY_exec_Executor<TOutcome, TExtra>
+public interface ComponentConnectorFactory
 			extends
-				YYY_core_Connector
+				ConnectorFactory<ComponentConnector<?>>
 {
-	CallbackCompletion<TOutcome> execute (Callable<TOutcome> callable, TExtra extra);
+	<TContext, TExtra> ComponentConnector<TExtra> create (ComponentConnectorCallbacks<TContext, TExtra> callbacks, TContext callbacksContext);
 }

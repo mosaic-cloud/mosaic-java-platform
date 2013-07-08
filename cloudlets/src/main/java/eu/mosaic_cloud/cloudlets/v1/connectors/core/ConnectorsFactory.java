@@ -18,21 +18,15 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp;
-
-
-import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
-import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
+package eu.mosaic_cloud.cloudlets.v1.connectors.core;
 
 
 /**
- * Factory for creating amqp queue consumer connectors.
+ * Interface for the factory of connector factories class.
  * 
  * @author Ciprian Craciun
  */
-public interface YYY_amqp_AmqpQueueConsumerConnectorFactory
+public interface ConnectorsFactory
 			extends
-				AmqpQueueConnectorFactory<YYY_amqp_AmqpQueueConsumerConnector<?, ?>>
-{
-	<TContext, TMessage, TExtra> YYY_amqp_AmqpQueueConsumerConnector<TMessage, TExtra> create (Configuration configuration, Class<TMessage> messageClass, DataEncoder<TMessage> messageEncoder, AmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, TContext callbackContext);
-}
+				eu.mosaic_cloud.connectors.v1.core.ConnectorsFactory
+{}

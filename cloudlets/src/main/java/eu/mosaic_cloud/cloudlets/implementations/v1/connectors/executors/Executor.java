@@ -28,7 +28,6 @@ import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutionFailedCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutionSucceededCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutorCallback;
-import eu.mosaic_cloud.cloudlets.v1.connectors.executors.YYY_exec_Executor;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
@@ -45,7 +44,7 @@ import com.google.common.util.concurrent.ListenableFutureTask;
 
 public class Executor<TContext, TOutcome, TExtra>
 			implements
-				YYY_exec_Executor<TOutcome, TExtra>,
+				eu.mosaic_cloud.cloudlets.v1.connectors.executors.Executor<TOutcome, TExtra>,
 				CallbackProxy
 {
 	public Executor (final CloudletController<?> cloudlet, final ThreadingContext threading, final ExceptionTracer exceptions, final Configuration configuration, final ExecutorCallback<TContext, TOutcome, TExtra> callback, final TContext context) {

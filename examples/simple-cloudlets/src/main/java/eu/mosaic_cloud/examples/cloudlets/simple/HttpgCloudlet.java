@@ -27,9 +27,9 @@ import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultHttpgQueueConnectorCallback;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
+import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.HttpgQueueConnectorFactory;
 import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.HttpgQueueRequestedCallbackArguments;
-import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.YYY_httpg_HttpgQueueConnectorFactory;
-import eu.mosaic_cloud.cloudlets.v1.core.YYY_core_Callback;
+import eu.mosaic_cloud.cloudlets.v1.core.Callback;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgQueueConnector;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgRequestMessage;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgResponseMessage;
@@ -57,7 +57,7 @@ public class HttpgCloudlet
 			context.cloudlet = arguments.getCloudlet ();
 			final Configuration cloudletConfiguration = context.cloudlet.getConfiguration ();
 			final Configuration gatewayConfiguration = cloudletConfiguration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("gateway"));
-			context.gateway = context.cloudlet.getConnectorFactory (YYY_httpg_HttpgQueueConnectorFactory.class).create (gatewayConfiguration, String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, new GatewayCallbacks (), context);
+			context.gateway = context.cloudlet.getConnectorFactory (HttpgQueueConnectorFactory.class).create (gatewayConfiguration, String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, new GatewayCallbacks (), context);
 			return (context.gateway.initialize ());
 		}
 	}
@@ -87,7 +87,7 @@ public class HttpgCloudlet
 				responseBody.append ("HTTP body: empty\n");
 			final HttpgResponseMessage<String> response = HttpgResponseMessage.create200 (request, responseBody.toString ());
 			context.gateway.respond (response);
-			return (YYY_core_Callback.SUCCESS);
+			return (Callback.SUCCESS);
 		}
 	}
 }

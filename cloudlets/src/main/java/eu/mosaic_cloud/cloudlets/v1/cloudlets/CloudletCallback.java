@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.cloudlets.v1.cloudlets;
 
 
-import eu.mosaic_cloud.cloudlets.v1.core.YYY_core_Callback;
+import eu.mosaic_cloud.cloudlets.v1.core.Callback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -34,7 +34,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  */
 public interface CloudletCallback<TContext>
 			extends
-				YYY_core_Callback<TContext>
+				Callback<TContext>
 {
 	/**
 	 * Destroys the user cloudlet.

@@ -24,8 +24,6 @@ package eu.mosaic_cloud.cloudlets.implementations.v1.connectors.components;
 import eu.mosaic_cloud.cloudlets.implementations.v1.connectors.core.BaseConnectorFactory;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentConnectorCallbacks;
-import eu.mosaic_cloud.cloudlets.v1.connectors.components.YYY_comp_ComponentConnector;
-import eu.mosaic_cloud.cloudlets.v1.connectors.components.YYY_comp_ComponentConnectorFactory;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
 import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactory;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.PropertyTypeConfiguration;
@@ -35,22 +33,22 @@ import com.google.common.base.Preconditions;
 
 
 public final class ComponentConnectorFactory
-			extends BaseConnectorFactory<YYY_comp_ComponentConnector<?>>
+			extends BaseConnectorFactory<eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentConnector<?>>
 			implements
-				YYY_comp_ComponentConnectorFactory
+				eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentConnectorFactory
 {
-	public ComponentConnectorFactory (final CloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.components.ZZZ_comp_ComponentConnector backingConnector, final ConnectorEnvironment environment, final ConnectorsFactory delegate) {
+	public ComponentConnectorFactory (final CloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.components.ComponentConnector backingConnector, final ConnectorEnvironment environment, final ConnectorsFactory delegate) {
 		super (cloudlet, environment, delegate);
 		Preconditions.checkNotNull (backingConnector);
 		this.backingConnector = backingConnector;
 	}
 	
 	@Override
-	public final <TConnectorContext, TExtra> YYY_comp_ComponentConnector<TExtra> create (final ComponentConnectorCallbacks<TConnectorContext, TExtra> callbacks, final TConnectorContext callbacksContext) {
+	public final <TConnectorContext, TExtra> ComponentConnector<TConnectorContext, TExtra> create (final ComponentConnectorCallbacks<TConnectorContext, TExtra> callbacks, final TConnectorContext callbacksContext) {
 		final Configuration configuration = PropertyTypeConfiguration.createEmpty ();
-		final YYY_comp_ComponentConnector<TExtra> connector = new ComponentConnector<TConnectorContext, TExtra> (this.cloudlet, this.backingConnector, configuration, callbacks, callbacksContext);
+		final ComponentConnector<TConnectorContext, TExtra> connector = new ComponentConnector<TConnectorContext, TExtra> (this.cloudlet, this.backingConnector, configuration, callbacks, callbacksContext);
 		return connector;
 	}
 	
-	private final eu.mosaic_cloud.connectors.v1.components.ZZZ_comp_ComponentConnector backingConnector;
+	private final eu.mosaic_cloud.connectors.v1.components.ComponentConnector backingConnector;
 }

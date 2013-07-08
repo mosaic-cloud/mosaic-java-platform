@@ -18,16 +18,21 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.v1.connectors.core;
+package eu.mosaic_cloud.cloudlets.v1.core;
 
 
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
-import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
-import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactory;
-import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactoryBuilder;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
 
-public interface YYY_core_ConnectorsFactoryInitializer
+/**
+ * Marker interface for cloudlet callbacks.
+ * 
+ * @author Georgiana Macariu
+ */
+public interface Callback<TContext>
+			extends
+				Callbacks
 {
-	public abstract void initialize (final ConnectorsFactoryBuilder builder, final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final ConnectorsFactory delegate);
+	public static final CallbackCompletion<Void> SUCCESS = CallbackCompletion.createOutcome ();
 }

@@ -27,9 +27,9 @@ import eu.mosaic_cloud.components.core.ComponentResourceSpecification;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-public interface YYY_comp_ComponentConnector<TExtra>
+public interface ComponentConnector<TExtra>
 			extends
-				eu.mosaic_cloud.connectors.v1.components.ZZZ_comp_ComponentConnector
+				eu.mosaic_cloud.connectors.v1.components.ComponentConnector
 {
 	CallbackCompletion<ComponentResourceDescriptor> acquire (final ComponentResourceSpecification resource, final TExtra extra);
 	

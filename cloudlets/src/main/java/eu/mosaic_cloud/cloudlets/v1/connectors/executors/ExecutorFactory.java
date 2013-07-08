@@ -27,7 +27,7 @@ import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 
 public interface ExecutorFactory
 			extends
-				ConnectorFactory<YYY_exec_Executor<?, ?>>
+				ConnectorFactory<Executor<?, ?>>
 {
-	<TContext, TOutcome, TExtra> YYY_exec_Executor<TOutcome, TExtra> create (final Configuration configuration, ExecutorCallback<TContext, TOutcome, TExtra> callback, TContext callbackContext);
+	<TContext, TOutcome, TExtra> Executor<TOutcome, TExtra> create (final Configuration configuration, ExecutorCallback<TContext, TOutcome, TExtra> callback, TContext callbackContext);
 }

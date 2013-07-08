@@ -18,21 +18,18 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.v1.core;
+package eu.mosaic_cloud.cloudlets.v1.connectors.executors;
 
 
+import java.util.concurrent.Callable;
+
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.Connector;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
 
-/**
- * Marker interface for cloudlet callbacks.
- * 
- * @author Georgiana Macariu
- */
-public interface YYY_core_Callback<TContext>
+public interface Executor<TOutcome, TExtra>
 			extends
-				Callbacks
+				Connector
 {
-	public static final CallbackCompletion<Void> SUCCESS = CallbackCompletion.createOutcome ();
+	CallbackCompletion<TOutcome> execute (Callable<TOutcome> callable, TExtra extra);
 }

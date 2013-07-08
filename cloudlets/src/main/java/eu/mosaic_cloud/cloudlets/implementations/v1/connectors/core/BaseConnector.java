@@ -22,8 +22,8 @@ package eu.mosaic_cloud.cloudlets.implementations.v1.connectors.core;
 
 
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.Connector;
 import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorCallback;
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.YYY_core_Connector;
 import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -48,7 +48,7 @@ import com.google.common.base.Preconditions;
  */
 public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connectors.v1.core.Connector, TCallback extends ConnectorCallback<TContext>, TContext extends Object>
 			implements
-				YYY_core_Connector,
+				Connector,
 				CallbackProxy
 {
 	protected BaseConnector (final CloudletController<?> cloudlet, final TConnector connector, final Configuration configuration, final TCallback callback, final TContext context) {

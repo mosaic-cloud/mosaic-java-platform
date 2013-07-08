@@ -22,7 +22,7 @@ package eu.mosaic_cloud.cloudlets.implementations.v1.connectors.core;
 
 
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.YYY_core_ConnectorsFactoryInitializer;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorsFactoryInitializer;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
 import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactory;
 import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactoryBuilder;
@@ -33,7 +33,7 @@ import com.google.common.base.Preconditions;
 public abstract class BaseConnectorsFactoryInitializer
 			extends Object
 			implements
-				YYY_core_ConnectorsFactoryInitializer
+				ConnectorsFactoryInitializer
 {
 	protected BaseConnectorsFactoryInitializer () {
 		super ();

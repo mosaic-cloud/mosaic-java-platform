@@ -23,7 +23,6 @@ package eu.mosaic_cloud.cloudlets.implementations.v1.connectors.components;
 
 import eu.mosaic_cloud.cloudlets.implementations.v1.connectors.core.BaseConnectorsFactoryInitializer;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
-import eu.mosaic_cloud.cloudlets.v1.connectors.components.YYY_comp_ComponentConnectorFactory;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
 import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactory;
 import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactoryBuilder;
@@ -34,7 +33,7 @@ import com.google.common.base.Preconditions;
 public final class ComponentConnectorFactoryInitializer
 			extends BaseConnectorsFactoryInitializer
 {
-	public ComponentConnectorFactoryInitializer (final eu.mosaic_cloud.connectors.v1.components.ZZZ_comp_ComponentConnector backingConnector) {
+	public ComponentConnectorFactoryInitializer (final eu.mosaic_cloud.connectors.v1.components.ComponentConnector backingConnector) {
 		super ();
 		Preconditions.checkNotNull (backingConnector);
 		this.backingConnector = backingConnector;
@@ -42,8 +41,8 @@ public final class ComponentConnectorFactoryInitializer
 	
 	@Override
 	protected void initialize_1 (final ConnectorsFactoryBuilder builder, final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final ConnectorsFactory delegate) {
-		builder.register (YYY_comp_ComponentConnectorFactory.class, new ComponentConnectorFactory (cloudlet, this.backingConnector, environment, delegate));
+		builder.register (eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentConnectorFactory.class, new ComponentConnectorFactory (cloudlet, this.backingConnector, environment, delegate));
 	}
 	
-	private final eu.mosaic_cloud.connectors.v1.components.ZZZ_comp_ComponentConnector backingConnector;
+	private final eu.mosaic_cloud.connectors.v1.components.ComponentConnector backingConnector;
 }

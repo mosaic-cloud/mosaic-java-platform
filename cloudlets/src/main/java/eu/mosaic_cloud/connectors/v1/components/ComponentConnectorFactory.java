@@ -26,7 +26,7 @@ import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorFactory;
 
 public interface ComponentConnectorFactory
 			extends
-				ConnectorFactory<ZZZ_comp_ComponentConnector>
+				ConnectorFactory<ComponentConnector>
 {
-	ZZZ_comp_ComponentConnector create ();
+	ComponentConnector create ();
 }

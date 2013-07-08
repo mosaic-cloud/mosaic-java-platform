@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.cloudlets.v1.connectors.kvstore;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.YYY_core_Connector;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.Connector;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -34,9 +34,9 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <TExtra>
  *            the type of the extra data; as an example, this data can be used correlation
  */
-public interface YYY_kv_KvStoreConnector<TValue, TExtra>
+public interface KvStoreConnector<TValue, TExtra>
 			extends
-				YYY_core_Connector,
+				Connector,
 				eu.mosaic_cloud.connectors.v1.kvstore.KvStoreConnector<TValue>
 {
 	/**

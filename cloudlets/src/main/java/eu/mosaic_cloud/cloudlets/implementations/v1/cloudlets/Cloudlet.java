@@ -41,10 +41,8 @@ import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletState;
-import eu.mosaic_cloud.cloudlets.v1.connectors.components.YYY_comp_ComponentConnectorFactory;
 import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorsFactoryBuilder;
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.YYY_core_ConnectorsFactory;
-import eu.mosaic_cloud.cloudlets.v1.core.YYY_core_Callback;
+import eu.mosaic_cloud.cloudlets.v1.core.Callback;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
 import eu.mosaic_cloud.connectors.v1.core.Connector;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
@@ -159,17 +157,17 @@ public final class Cloudlet<TContext extends Object>
 		return this.isolate.enqueue (task);
 	}
 	
-	private final <Callback extends YYY_core_Callback<?>> Callback createGenericCallbacksProxy (final Class<Callback> callbacksClass, final Callback callbacksDelegate) {
+	private final <TCallback extends Callback<?>> TCallback createGenericCallbacksProxy (final Class<TCallback> callbacksClass, final TCallback callbacksDelegate) {
 		{
 			// FIXME: the same callback should be allowed to be used twice
-			final Callback callbackProxy = callbacksClass.cast (this.genericCallbacksDelegates.get (callbacksDelegate));
+			final TCallback callbackProxy = callbacksClass.cast (this.genericCallbacksDelegates.get (callbacksDelegate));
 			if (callbackProxy != null) {
 				return callbackProxy;
 			}
 		}
 		{
-			final Callback callbacksProxy = this.reactor.createProxy (callbacksClass);
-			final Callback callbacksProxy1 = callbacksClass.cast (this.genericCallbacksDelegates.putIfAbsent (callbacksDelegate, (CallbackProxy) callbacksProxy));
+			final TCallback callbacksProxy = this.reactor.createProxy (callbacksClass);
+			final TCallback callbacksProxy1 = callbacksClass.cast (this.genericCallbacksDelegates.putIfAbsent (callbacksDelegate, (CallbackProxy) callbacksProxy));
 			Preconditions.checkState (callbacksProxy1 == null);
 			this.genericCallbacksProxies.put ((CallbackProxy) callbacksProxy, callbacksDelegate);
 			this.reactor.assignHandler (callbacksProxy, this.genericCallbacksHandler, this.isolate);
@@ -251,13 +249,13 @@ public final class Cloudlet<TContext extends Object>
 		}.trigger ();
 	}
 	
-	private final YYY_core_ConnectorsFactory provideConnectorsFactory () {
+	private final eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorsFactory provideConnectorsFactory () {
 		final ConnectorsFactoryBuilder builder = this.provideConnectorsFactoryBuilder ();
 		final List<?> initializers = this.provideConnectorsFactoryInitializers ();
 		for (final Object initializer : initializers) {
-			if (initializer instanceof eu.mosaic_cloud.cloudlets.v1.connectors.core.YYY_core_ConnectorsFactoryInitializer) {
+			if (initializer instanceof eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorsFactoryInitializer) {
 				try {
-					builder.initialize ((eu.mosaic_cloud.cloudlets.v1.connectors.core.YYY_core_ConnectorsFactoryInitializer) initializer);
+					builder.initialize ((eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorsFactoryInitializer) initializer);
 				} catch (final Throwable exception) {
 					this.exceptions.traceHandledException (exception);
 					throw (new IllegalArgumentException ("error encountered while initializing cloudlet connectors factory", exception));
@@ -273,7 +271,7 @@ public final class Cloudlet<TContext extends Object>
 				throw (new IllegalArgumentException (ExtendedFormatter.defaultInstance.format ("error encountered while initializing cloudlet connectors factory, unexpected initializer class `%{object:class}`", initializer)));
 			}
 		}
-		final YYY_core_ConnectorsFactory factory;
+		final eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorsFactory factory;
 		try {
 			factory = builder.build ();
 		} catch (final Throwable exception) {
@@ -383,7 +381,7 @@ public final class Cloudlet<TContext extends Object>
 	private final CallbacksHandler callbacksHandler;
 	private final CloudletCallback<TContext> callbacksProxy;
 	private final ConnectorsFactory connectorsFactory;
-	private final YYY_core_ConnectorsFactory connectorsFactoryDelegate;
+	private final eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorsFactory connectorsFactoryDelegate;
 	private final TContext controllerContext;
 	private final ControllerHandler controllerHandler;
 	private final CloudletController<TContext> controllerProxy;
@@ -675,8 +673,8 @@ public final class Cloudlet<TContext extends Object>
 								final Class<?> argumentType = argumentTypes[index];
 								final Object oldArgument = oldArguments[index];
 								final Object newArgument;
-								if ((oldArgument != null) && argumentType.isInterface () && YYY_core_Callback.class.isAssignableFrom (argumentType)) {
-									newArgument = Cloudlet.this.createGenericCallbacksProxy ((Class<YYY_core_Callback<?>>) argumentType, (YYY_core_Callback<?>) argumentType.cast (oldArgument));
+								if ((oldArgument != null) && argumentType.isInterface () && Callback.class.isAssignableFrom (argumentType)) {
+									newArgument = Cloudlet.this.createGenericCallbacksProxy ((Class<Callback<?>>) argumentType, (Callback<?>) argumentType.cast (oldArgument));
 								} else {
 									newArgument = oldArgument;
 								}
@@ -713,13 +711,13 @@ public final class Cloudlet<TContext extends Object>
 	
 	final class ConnectorsFactory
 				implements
-					YYY_core_ConnectorsFactory
+					eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorsFactory
 	{
 		ConnectorsFactory () {
 			super ();
 			this.factories = new ConcurrentHashMap<Class<? extends eu.mosaic_cloud.connectors.v1.core.ConnectorFactory<?>>, ConnectorFactory<? extends eu.mosaic_cloud.connectors.v1.core.ConnectorFactory<?>>> ();
 			this.componentConnectorFactory = new ComponentConnectorFactory (Cloudlet.this.controllerProxy, Cloudlet.this.environment.getComponentConnector (), Cloudlet.this.environment.getConnectorEnvironment (), Cloudlet.this.environment.getConnectors ());
-			this.factories.put (YYY_comp_ComponentConnectorFactory.class, new ConnectorFactory<YYY_comp_ComponentConnectorFactory> (YYY_comp_ComponentConnectorFactory.class, this.componentConnectorFactory));
+			this.factories.put (eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentConnectorFactory.class, new ConnectorFactory<eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentConnectorFactory> (eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentConnectorFactory.class, this.componentConnectorFactory));
 		}
 		
 		@Override
@@ -755,7 +753,7 @@ public final class Cloudlet<TContext extends Object>
 			}
 		}
 		
-		private final YYY_comp_ComponentConnectorFactory componentConnectorFactory;
+		private final eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentConnectorFactory componentConnectorFactory;
 		private final ConcurrentHashMap<Class<? extends eu.mosaic_cloud.connectors.v1.core.ConnectorFactory<?>>, ConnectorFactory<? extends eu.mosaic_cloud.connectors.v1.core.ConnectorFactory<?>>> factories;
 	}
 	

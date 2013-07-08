@@ -21,18 +21,29 @@
 package eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp;
 
 
-import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
-import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 /**
- * Factory for creating amqp queue publisher connectors.
+ * Interface for registering and using for an AMQP resource as a publisher.
  * 
- * @author Ciprian Craciun
+ * @author Georgiana Macariu
+ * @param <TMessage>
+ *            the type of the published data
+ * @param <TExtra>
+ *            the type of the extra data; as an example, this data can be used correlation
  */
-public interface YYY_amqp_AmqpQueuePublisherConnectorFactory
+public interface AmqpQueuePublisherConnector<TMessage, TExtra>
 			extends
-				AmqpQueueConnectorFactory<YYY_amqp_AmqpQueueConsumerConnector<?, ?>>
+				AmqpQueueConnector,
+				eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueuePublisherConnector<TMessage>
 {
-	<TContext, TMessage, TExtra> YYY_amqp_AmqpQueuePublisherConnector<TMessage, TExtra> create (Configuration configuration, Class<TMessage> messageClass, DataEncoder<TMessage> messageEncoder, AmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback, TContext callbackContext);
+	/**
+	 * Publishes a message to a queue.
+	 * 
+	 * @param data
+	 *            the data to publish
+	 * @param extra
+	 */
+	CallbackCompletion<Void> publish (TMessage data, TExtra extra);
 }

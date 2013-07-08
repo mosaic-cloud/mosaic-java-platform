@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.cloudlets.v1.cloudlets;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.YYY_core_ConnectorsFactory;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorsFactory;
 import eu.mosaic_cloud.connectors.v1.core.ConnectorFactory;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -39,7 +39,7 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 public interface CloudletController<Context>
 			extends
 				Callbacks,
-				YYY_core_ConnectorsFactory
+				ConnectorsFactory
 {
 	CallbackCompletion<Void> destroy ();
 	

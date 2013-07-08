@@ -21,8 +21,8 @@
 package eu.mosaic_cloud.cloudlets.v1.connectors.core;
 
 
+import eu.mosaic_cloud.cloudlets.v1.core.Callback;
 import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
-import eu.mosaic_cloud.cloudlets.v1.core.YYY_core_Callback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -35,7 +35,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  */
 public interface ConnectorCallback<TContext>
 			extends
-				YYY_core_Callback<TContext>
+				Callback<TContext>
 {
 	/**
 	 * Called when resource connector destruction failed.

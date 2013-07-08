@@ -21,16 +21,16 @@
 package eu.mosaic_cloud.connectors.v1.components;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.YYY_core_Connector;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.Connector;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
 import eu.mosaic_cloud.components.core.ComponentResourceSpecification;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-public interface ZZZ_comp_ComponentConnector
+public interface ComponentConnector
 			extends
-				YYY_core_Connector
+				Connector
 {
 	CallbackCompletion<ComponentResourceDescriptor> acquire (final ComponentResourceSpecification resource);
 	

@@ -21,11 +21,11 @@
 package eu.mosaic_cloud.cloudlets.v1.connectors.queue;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.YYY_core_Connector;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.Connector;
 
 
 public interface QueueConnector
 			extends
-				YYY_core_Connector,
+				Connector,
 				eu.mosaic_cloud.connectors.v1.queue.QueueConnector
 {}

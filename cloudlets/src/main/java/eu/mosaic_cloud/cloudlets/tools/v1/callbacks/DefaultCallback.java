@@ -21,8 +21,8 @@
 package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
+import eu.mosaic_cloud.cloudlets.v1.core.Callback;
 import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
-import eu.mosaic_cloud.cloudlets.v1.core.YYY_core_Callback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
@@ -40,7 +40,7 @@ import org.slf4j.Logger;
  */
 public class DefaultCallback<TContext>
 			implements
-				YYY_core_Callback<TContext>
+				Callback<TContext>
 {
 	protected DefaultCallback () {
 		super ();
