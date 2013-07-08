@@ -22,12 +22,12 @@ package eu.mosaic_cloud.cloudlets.implementations.v1.connectors.components;
 
 
 import eu.mosaic_cloud.cloudlets.implementations.v1.connectors.core.BaseConnector;
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentAcquireSucceededCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentCallSucceededCallbackArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentConnectorCallbacks;
 import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentRequestFailedCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.connectors.components.IComponentConnector;
-import eu.mosaic_cloud.cloudlets.v1.connectors.components.IComponentConnectorCallbacks;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
 import eu.mosaic_cloud.components.core.ComponentResourceSpecification;
@@ -37,11 +37,11 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 
 
 public class ComponentConnector<TContext, TExtra>
-			extends BaseConnector<eu.mosaic_cloud.connectors.v1.components.IComponentConnector, IComponentConnectorCallbacks<TContext, TExtra>, TContext>
+			extends BaseConnector<eu.mosaic_cloud.connectors.v1.components.IComponentConnector, ComponentConnectorCallbacks<TContext, TExtra>, TContext>
 			implements
 				IComponentConnector<TExtra>
 {
-	public ComponentConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.components.IComponentConnector connector, final Configuration configuration, final IComponentConnectorCallbacks<TContext, TExtra> callback, final TContext context) {
+	public ComponentConnector (final CloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.components.IComponentConnector connector, final Configuration configuration, final ComponentConnectorCallbacks<TContext, TExtra> callback, final TContext context) {
 		super (cloudlet, connector, configuration, callback, context);
 	}
 	

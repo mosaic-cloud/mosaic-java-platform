@@ -21,14 +21,14 @@
 package eu.mosaic_cloud.cloudlets.v1.connectors.executors;
 
 
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
 
 
 public class ExecutionSucceededCallbackArguments<TOutcome, TExtra>
 			extends CallbackArguments
 {
-	public ExecutionSucceededCallbackArguments (final ICloudletController<?> cloudlet, final TOutcome outcome, final TExtra extra) {
+	public ExecutionSucceededCallbackArguments (final CloudletController<?> cloudlet, final TOutcome outcome, final TExtra extra) {
 		super (cloudlet);
 		this.outcome = outcome;
 		this.extra = extra;

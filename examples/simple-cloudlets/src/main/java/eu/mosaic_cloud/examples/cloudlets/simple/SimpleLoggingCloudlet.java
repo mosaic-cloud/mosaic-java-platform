@@ -26,7 +26,7 @@ import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultAmqpQueueConsumerConn
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackCompletionArguments;
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.IAmqpQueueConsumerConnector;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.IAmqpQueueConsumerConnectorFactory;
@@ -123,7 +123,7 @@ public class SimpleLoggingCloudlet
 	
 	public static final class LoggingCloudletContext
 	{
-		ICloudletController<LoggingCloudletContext> cloudlet;
+		CloudletController<LoggingCloudletContext> cloudlet;
 		IAmqpQueueConsumerConnector<LoggingData, Void> consumer;
 		IAmqpQueuePublisherConnector<AuthenticationToken, Void> publisher;
 	}

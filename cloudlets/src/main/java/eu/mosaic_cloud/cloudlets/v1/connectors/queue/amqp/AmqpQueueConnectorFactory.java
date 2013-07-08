@@ -18,15 +18,13 @@
  * #L%
  */
 
-package eu.mosaic_cloud.connectors.v1.components;
+package eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorFactory;
+import eu.mosaic_cloud.cloudlets.v1.connectors.queue.QueueConnectorFactory;
 
 
-public interface IComponentConnectorFactory
+public interface AmqpQueueConnectorFactory<TConnector extends AmqpQueueConnector>
 			extends
-				IConnectorFactory<IComponentConnector>
-{
-	IComponentConnector create ();
-}
+				QueueConnectorFactory<TConnector>
+{}

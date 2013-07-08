@@ -28,7 +28,7 @@ import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultAmqpQueueConsumerConn
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackCompletionArguments;
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.IAmqpQueueConsumerConnector;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.IAmqpQueueConsumerConnectorFactory;
@@ -134,7 +134,7 @@ public class PingCloudlet
 	
 	public static final class PingCloudletContext
 	{
-		ICloudletController<PingCloudletContext> cloudlet;
+		CloudletController<PingCloudletContext> cloudlet;
 		IAmqpQueueConsumerConnector<PongMessage, Void> consumer;
 		final String pingPongKey = UUID.randomUUID ().toString ();
 		IAmqpQueuePublisherConnector<PingMessage, Void> publisher;

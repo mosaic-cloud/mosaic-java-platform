@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.cloudlets.v1.core;
 
 
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 
 
 /**
@@ -43,7 +43,7 @@ public class GenericCallbackCompletionArguments<TResult>
 	 * @param error
 	 *            the exception thrown by the operation
 	 */
-	public GenericCallbackCompletionArguments (final ICloudletController<?> cloudlet, final Throwable error) {
+	public GenericCallbackCompletionArguments (final CloudletController<?> cloudlet, final Throwable error) {
 		super (cloudlet, error);
 		this.result = null;
 	}
@@ -56,7 +56,7 @@ public class GenericCallbackCompletionArguments<TResult>
 	 * @param result
 	 *            the result of the operation
 	 */
-	public GenericCallbackCompletionArguments (final ICloudletController<?> cloudlet, final TResult result) {
+	public GenericCallbackCompletionArguments (final CloudletController<?> cloudlet, final TResult result) {
 		super (cloudlet);
 		this.result = result;
 	}

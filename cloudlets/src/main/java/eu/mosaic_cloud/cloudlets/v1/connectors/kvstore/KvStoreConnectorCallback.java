@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.cloudlets.v1.connectors.kvstore;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorCallback;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorCallback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -37,9 +37,9 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <TExtra>
  *            the type of the extra data; as an example, this data can be used correlation
  */
-public interface IKvStoreConnectorCallback<TContext, TValue, TExtra>
+public interface KvStoreConnectorCallback<TContext, TValue, TExtra>
 			extends
-				IConnectorCallback<TContext>
+				ConnectorCallback<TContext>
 {
 	/**
 	 * Called when the delete operation completed unsuccessfully. The error can be retrieved from the <i>arguments</i>

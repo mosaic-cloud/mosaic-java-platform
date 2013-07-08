@@ -23,15 +23,15 @@ package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentAcquireSucceededCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentCallSucceededCallbackArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentConnectorCallbacks;
 import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentRequestFailedCallbackArguments;
-import eu.mosaic_cloud.cloudlets.v1.connectors.components.IComponentConnectorCallbacks;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 public class DefaultComponentConnectorCallback<TContext, TExtra>
 			extends DefaultConnectorCallback<TContext>
 			implements
-				IComponentConnectorCallbacks<TContext, TExtra>
+				ComponentConnectorCallbacks<TContext, TExtra>
 {
 	@Override
 	public CallbackCompletion<Void> acquireFailed (final TContext context, final ComponentRequestFailedCallbackArguments<TExtra> arguments) {

@@ -18,20 +18,16 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp;
+package eu.mosaic_cloud.cloudlets.v1.connectors.executors;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.queue.IQueueConnectorCallback;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorFactory;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 
 
-/**
- * Basic interface for AMQP connector callbacks.
- * 
- * @author Georgiana Macariu
- * @param <TContext>
- *            the type of the cloudlet context
- */
-public interface IAmqpQueueConnectorCallback<TContext>
+public interface ExecutorFactory
 			extends
-				IQueueConnectorCallback<TContext>
-{}
+				ConnectorFactory<IExecutor<?, ?>>
+{
+	<TContext, TOutcome, TExtra> IExecutor<TOutcome, TExtra> create (final Configuration configuration, ExecutorCallback<TContext, TOutcome, TExtra> callback, TContext callbackContext);
+}

@@ -22,8 +22,8 @@ package eu.mosaic_cloud.cloudlets.implementations.v1.connectors.kvstore.generic;
 
 
 import eu.mosaic_cloud.cloudlets.implementations.v1.connectors.kvstore.BaseKvStoreConnector;
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
-import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.IKvStoreConnectorCallback;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
+import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.KvStoreConnectorCallback;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 
 
@@ -40,9 +40,9 @@ import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
  *            the type of the extra data; as an example, this data can be used correlation
  */
 public class GenericKvStoreConnector<TContext, TValue, TExtra>
-			extends BaseKvStoreConnector<eu.mosaic_cloud.connectors.implementations.v1.kvstore.generic.GenericKvStoreConnector<TValue>, IKvStoreConnectorCallback<TContext, TValue, TExtra>, TContext, TValue, TExtra>
+			extends BaseKvStoreConnector<eu.mosaic_cloud.connectors.implementations.v1.kvstore.generic.GenericKvStoreConnector<TValue>, KvStoreConnectorCallback<TContext, TValue, TExtra>, TContext, TValue, TExtra>
 {
-	public GenericKvStoreConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.implementations.v1.kvstore.generic.GenericKvStoreConnector<TValue> connector, final Configuration config, final IKvStoreConnectorCallback<TContext, TValue, TExtra> callback, final TContext context) {
+	public GenericKvStoreConnector (final CloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.implementations.v1.kvstore.generic.GenericKvStoreConnector<TValue> connector, final Configuration config, final KvStoreConnectorCallback<TContext, TValue, TExtra> callback, final TContext context) {
 		super (cloudlet, connector, config, callback, context);
 	}
 }

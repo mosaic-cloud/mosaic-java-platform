@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp;
 
 
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpMessageToken;
 
@@ -46,7 +46,7 @@ public class AmqpQueueConsumeCallbackArguments<TMessage>
 	 * @param message
 	 *            information about the consume request
 	 */
-	public AmqpQueueConsumeCallbackArguments (final ICloudletController<?> cloudlet, final AmqpMessageToken token, final TMessage message) {
+	public AmqpQueueConsumeCallbackArguments (final CloudletController<?> cloudlet, final AmqpMessageToken token, final TMessage message) {
 		super (cloudlet);
 		this.message = message;
 		this.token = token;

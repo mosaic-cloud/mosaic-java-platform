@@ -22,10 +22,10 @@ package eu.mosaic_cloud.cloudlets.implementations.v1.connectors.httpg;
 
 
 import eu.mosaic_cloud.cloudlets.implementations.v1.connectors.core.BaseConnector;
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
+import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.HttpgQueueConnectorCallback;
 import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.HttpgQueueRequestedCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.IHttpgQueueConnector;
-import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.IHttpgQueueConnectorCallback;
 import eu.mosaic_cloud.cloudlets.v1.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgRequestMessage;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgResponseMessage;
@@ -35,12 +35,12 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 
 
 public class HttpgQueueConnector<TContext, TRequestBody, TResponseBody, TExtra>
-			extends BaseConnector<eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueConnector<TRequestBody, TResponseBody>, IHttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra>, TContext>
+			extends BaseConnector<eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueConnector<TRequestBody, TResponseBody>, HttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra>, TContext>
 			implements
 				IHttpgQueueConnector<TRequestBody, TResponseBody, TExtra>
 {
 	@SuppressWarnings ("synthetic-access")
-	public HttpgQueueConnector (final ICloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueConnector<TRequestBody, TResponseBody> connector, final Configuration configuration, final IHttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra> callback, final TContext context, final Callback<TRequestBody, TResponseBody> backingCallback) {
+	public HttpgQueueConnector (final CloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueConnector<TRequestBody, TResponseBody> connector, final Configuration configuration, final HttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra> callback, final TContext context, final Callback<TRequestBody, TResponseBody> backingCallback) {
 		super (cloudlet, connector, configuration, callback, context);
 		backingCallback.connector = this;
 	}

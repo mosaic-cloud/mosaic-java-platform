@@ -18,13 +18,15 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.v1.connectors.queue;
+package eu.mosaic_cloud.cloudlets.v1.connectors.core;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorCallback;
-
-
-public interface IQueueConnectorCallback<TContext>
+public interface ConnectorsFactoryBuilder
 			extends
-				IConnectorCallback<TContext>
-{}
+				eu.mosaic_cloud.connectors.v1.core.ConnectorsFactoryBuilder
+{
+	@Override
+	public abstract IConnectorsFactory build ();
+	
+	public abstract void initialize (final IConnectorsFactoryInitializer initializer);
+}

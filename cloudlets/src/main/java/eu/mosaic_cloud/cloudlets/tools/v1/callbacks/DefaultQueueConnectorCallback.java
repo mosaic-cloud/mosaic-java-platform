@@ -21,13 +21,13 @@
 package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.queue.IQueueConnectorCallback;
+import eu.mosaic_cloud.cloudlets.v1.connectors.queue.QueueConnectorCallback;
 
 
 public class DefaultQueueConnectorCallback<TContext>
 			extends DefaultConnectorCallback<TContext>
 			implements
-				IQueueConnectorCallback<TContext>
+				QueueConnectorCallback<TContext>
 {
 	protected DefaultQueueConnectorCallback () {
 		super ();

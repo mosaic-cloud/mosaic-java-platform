@@ -21,12 +21,12 @@
 package eu.mosaic_cloud.cloudlets.v1.connectors.components;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorFactory;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorFactory;
 
 
 public interface IComponentConnectorFactory
 			extends
-				IConnectorFactory<IComponentConnector<?>>
+				ConnectorFactory<IComponentConnector<?>>
 {
-	<TContext, TExtra> IComponentConnector<TExtra> create (IComponentConnectorCallbacks<TContext, TExtra> callbacks, TContext callbacksContext);
+	<TContext, TExtra> IComponentConnector<TExtra> create (ComponentConnectorCallbacks<TContext, TExtra> callbacks, TContext callbacksContext);
 }

@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorCallback;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorCallback;
 import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -36,7 +36,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public class DefaultConnectorCallback<TContext>
 			extends DefaultCallback<TContext>
 			implements
-				IConnectorCallback<TContext>
+				ConnectorCallback<TContext>
 {
 	@Override
 	public CallbackCompletion<Void> destroyFailed (final TContext context, final CallbackArguments arguments) {

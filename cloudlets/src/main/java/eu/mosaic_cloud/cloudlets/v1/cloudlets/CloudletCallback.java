@@ -32,7 +32,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <TContext>
  *            The type of the object encoding the context of the cloudlet.
  */
-public interface ICloudletCallback<TContext>
+public interface CloudletCallback<TContext>
 			extends
 				ICallback<TContext>
 {

@@ -36,14 +36,14 @@ import eu.mosaic_cloud.cloudlets.implementations.v1.cloudlets.CloudletFsm.FsmTra
 import eu.mosaic_cloud.cloudlets.implementations.v1.connectors.components.ComponentConnectorFactory;
 import eu.mosaic_cloud.cloudlets.implementations.v1.connectors.core.DefaultConnectorsFactory;
 import eu.mosaic_cloud.cloudlets.implementations.v1.tools.ConfigProperties;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallback;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackCompletionArguments;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletState;
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletCallback;
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.components.IComponentConnectorFactory;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorsFactoryBuilder;
 import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorsFactory;
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorsFactoryBuilder;
 import eu.mosaic_cloud.cloudlets.v1.core.ICallback;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
 import eu.mosaic_cloud.connectors.v1.core.Connector;
@@ -85,9 +85,9 @@ public final class Cloudlet<TContext extends Object>
 		this.failures = QueueingExceptionTracer.create (this.exceptions);
 		this.reactor = this.environment.getReactor ();
 		try {
-			ICloudletCallback<TContext> controllerCallbacksDelegate;
+			CloudletCallback<TContext> controllerCallbacksDelegate;
 			try {
-				controllerCallbacksDelegate = (ICloudletCallback<TContext>) this.environment.getCloudletCallbackClass ().newInstance ();
+				controllerCallbacksDelegate = (CloudletCallback<TContext>) this.environment.getCloudletCallbackClass ().newInstance ();
 			} catch (final Throwable exception) {
 				controllerCallbacksDelegate = null;
 				this.handleInternalFailure (null, exception);
@@ -106,8 +106,8 @@ public final class Cloudlet<TContext extends Object>
 			this.genericCallbacksHandler = new GenericCallbacksHandler ();
 			this.genericCallbacksDelegates = new ConcurrentHashMap<Callbacks, CallbackProxy> ();
 			this.isolate = this.reactor.createIsolate ();
-			this.controllerProxy = this.reactor.createProxy (ICloudletController.class);
-			this.callbacksProxy = this.reactor.createProxy (ICloudletCallback.class);
+			this.controllerProxy = this.reactor.createProxy (CloudletController.class);
+			this.callbacksProxy = this.reactor.createProxy (CloudletCallback.class);
 			this.genericCallbacksProxies = new ConcurrentHashMap<CallbackProxy, Callbacks> ();
 			this.connectorsFactory = new ConnectorsFactory ();
 			this.connectorsFactoryDelegate = this.provideConnectorsFactory ();
@@ -253,7 +253,7 @@ public final class Cloudlet<TContext extends Object>
 	}
 	
 	private final IConnectorsFactory provideConnectorsFactory () {
-		final IConnectorsFactoryBuilder builder = this.provideConnectorsFactoryBuilder ();
+		final ConnectorsFactoryBuilder builder = this.provideConnectorsFactoryBuilder ();
 		final List<?> initializers = this.provideConnectorsFactoryInitializers ();
 		for (final Object initializer : initializers) {
 			if (initializer instanceof eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorsFactoryInitializer) {
@@ -284,10 +284,10 @@ public final class Cloudlet<TContext extends Object>
 		return factory;
 	}
 	
-	private final IConnectorsFactoryBuilder provideConnectorsFactoryBuilder () {
+	private final ConnectorsFactoryBuilder provideConnectorsFactoryBuilder () {
 		final String className = ConfigUtils.resolveParameter (this.environment.getConfiguration (), ConfigProperties.Cloudlet_1, String.class, DefaultConnectorsFactory.Builder.class.getName ());
 		Preconditions.checkNotNull (className, "unknown cloudlet connectors factory builder class");
-		final IConnectorsFactoryBuilder builder = this.provideConnectorsFactoryObject (IConnectorsFactoryBuilder.class, className, new Class<?>[] {ICloudletController.class, ConnectorEnvironment.class, eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory.class}, new Object[] {this.controllerProxy, this.environment.getConnectorEnvironment (), this.environment.getConnectors ()});
+		final ConnectorsFactoryBuilder builder = this.provideConnectorsFactoryObject (ConnectorsFactoryBuilder.class, className, new Class<?>[] {CloudletController.class, ConnectorEnvironment.class, eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory.class}, new Object[] {this.controllerProxy, this.environment.getConnectorEnvironment (), this.environment.getConnectors ()});
 		return builder;
 	}
 	
@@ -380,14 +380,14 @@ public final class Cloudlet<TContext extends Object>
 		return (object);
 	}
 	
-	private final ICloudletCallback<TContext> callbacksDelegate;
+	private final CloudletCallback<TContext> callbacksDelegate;
 	private final CallbacksHandler callbacksHandler;
-	private final ICloudletCallback<TContext> callbacksProxy;
+	private final CloudletCallback<TContext> callbacksProxy;
 	private final ConnectorsFactory connectorsFactory;
 	private final IConnectorsFactory connectorsFactoryDelegate;
 	private final TContext controllerContext;
 	private final ControllerHandler controllerHandler;
-	private final ICloudletController<TContext> controllerProxy;
+	private final CloudletController<TContext> controllerProxy;
 	private CallbackCompletionDeferredFuture<Void> destroyFuture;
 	private final CloudletEnvironment environment;
 	private final TranscriptExceptionTracer exceptions;
@@ -407,7 +407,7 @@ public final class Cloudlet<TContext extends Object>
 	
 	final class CallbacksHandler
 				implements
-					ICloudletCallback<TContext>,
+					CloudletCallback<TContext>,
 					CallbackHandler
 	{
 		@Override
@@ -762,7 +762,7 @@ public final class Cloudlet<TContext extends Object>
 	
 	final class ControllerHandler
 				implements
-					ICloudletController<TContext>,
+					CloudletController<TContext>,
 					CallbackHandler
 	{
 		@Override

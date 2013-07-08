@@ -36,7 +36,7 @@ import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
  * 
  * @author Georgiana Macariu
  */
-public interface ICloudletController<Context>
+public interface CloudletController<Context>
 			extends
 				Callbacks,
 				IConnectorsFactory

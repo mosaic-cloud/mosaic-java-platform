@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.IAmqpQueueConnectorCallback;
+import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueueConnectorCallback;
 
 
 /**
@@ -34,5 +34,5 @@ import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.IAmqpQueueConnectorCal
 public class DefaultAmqpQueueConnectorCallback<TContext>
 			extends DefaultQueueConnectorCallback<TContext>
 			implements
-				IAmqpQueueConnectorCallback<TContext>
+				AmqpQueueConnectorCallback<TContext>
 {}

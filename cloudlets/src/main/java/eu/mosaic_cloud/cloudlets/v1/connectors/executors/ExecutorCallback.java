@@ -18,17 +18,18 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.v1.connectors.core;
+package eu.mosaic_cloud.cloudlets.v1.connectors.executors;
 
 
-/**
- * Interface for custom connector factory. For each connector type an implementation of this interface should be implemented.
- * 
- * @author Ciprian Craciun
- * @param <TConnector>
- *            the type of the connector created by this factory
- */
-public interface IConnectorFactory<TConnector extends IConnector>
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorCallback;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+
+
+public interface ExecutorCallback<TContext, TOutcome, TExtra>
 			extends
-				eu.mosaic_cloud.connectors.v1.core.IConnectorFactory<TConnector>
-{}
+				ConnectorCallback<TContext>
+{
+	CallbackCompletion<Void> executionFailed (TContext context, ExecutionFailedCallbackArguments<TExtra> arguments);
+	
+	CallbackCompletion<Void> executionSucceeded (TContext context, ExecutionSucceededCallbackArguments<TOutcome, TExtra> arguments);
+}

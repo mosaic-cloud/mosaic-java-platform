@@ -18,13 +18,17 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp;
+package eu.mosaic_cloud.cloudlets.v1.connectors.core;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.queue.IQueueConnectorFactory;
-
-
-public interface IAmqpQueueConnectorFactory<TConnector extends IAmqpQueueConnector>
+/**
+ * Interface for custom connector factory. For each connector type an implementation of this interface should be implemented.
+ * 
+ * @author Ciprian Craciun
+ * @param <TConnector>
+ *            the type of the connector created by this factory
+ */
+public interface ConnectorFactory<TConnector extends IConnector>
 			extends
-				IQueueConnectorFactory<TConnector>
+				eu.mosaic_cloud.connectors.v1.core.IConnectorFactory<TConnector>
 {}

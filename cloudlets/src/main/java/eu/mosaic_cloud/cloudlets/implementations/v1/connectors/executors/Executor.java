@@ -24,11 +24,11 @@ package eu.mosaic_cloud.cloudlets.implementations.v1.connectors.executors;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutionFailedCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutionSucceededCallbackArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutorCallback;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.IExecutor;
-import eu.mosaic_cloud.cloudlets.v1.connectors.executors.IExecutorCallback;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
@@ -48,7 +48,7 @@ public class Executor<TContext, TOutcome, TExtra>
 				IExecutor<TOutcome, TExtra>,
 				CallbackProxy
 {
-	public Executor (final ICloudletController<?> cloudlet, final ThreadingContext threading, final ExceptionTracer exceptions, final Configuration configuration, final IExecutorCallback<TContext, TOutcome, TExtra> callback, final TContext context) {
+	public Executor (final CloudletController<?> cloudlet, final ThreadingContext threading, final ExceptionTracer exceptions, final Configuration configuration, final ExecutorCallback<TContext, TOutcome, TExtra> callback, final TContext context) {
 		super ();
 		Preconditions.checkNotNull (cloudlet);
 		Preconditions.checkNotNull (threading);
@@ -104,8 +104,8 @@ public class Executor<TContext, TOutcome, TExtra>
 		return (CallbackCompletion.createOutcome ());
 	}
 	
-	protected final IExecutorCallback<TContext, TOutcome, TExtra> callback;
-	protected final ICloudletController<?> cloudlet;
+	protected final ExecutorCallback<TContext, TOutcome, TExtra> callback;
+	protected final CloudletController<?> cloudlet;
 	protected final Configuration configuration;
 	protected final TContext context;
 	protected final ExecutorService executor;

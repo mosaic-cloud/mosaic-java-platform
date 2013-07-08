@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.IAmqpQueuePublisherConnectorCallback;
+import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueuePublisherConnectorCallback;
 import eu.mosaic_cloud.cloudlets.v1.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -40,7 +40,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public class DefaultAmqpPublisherConnectorCallback<TContext, TValue, TExtra>
 			extends DefaultAmqpQueueConnectorCallback<TContext>
 			implements
-				IAmqpQueuePublisherConnectorCallback<TContext, TValue, TExtra>
+				AmqpQueuePublisherConnectorCallback<TContext, TValue, TExtra>
 {
 	@Override
 	public CallbackCompletion<Void> publishFailed (final TContext context, final GenericCallbackCompletionArguments<TExtra> arguments) {

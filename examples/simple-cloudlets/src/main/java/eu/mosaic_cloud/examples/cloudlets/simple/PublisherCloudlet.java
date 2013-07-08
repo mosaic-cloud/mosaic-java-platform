@@ -27,7 +27,7 @@ import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultAmqpPublisherConnecto
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackCompletionArguments;
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.IAmqpQueuePublisherConnector;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.IAmqpQueuePublisherConnectorFactory;
 import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
@@ -116,7 +116,7 @@ public class PublisherCloudlet
 	
 	public static final class PublisherCloudletContext
 	{
-		ICloudletController<PublisherCloudletContext> cloudlet;
+		CloudletController<PublisherCloudletContext> cloudlet;
 		int count = 0;
 		int delay = 100;
 		int limit = 1000;

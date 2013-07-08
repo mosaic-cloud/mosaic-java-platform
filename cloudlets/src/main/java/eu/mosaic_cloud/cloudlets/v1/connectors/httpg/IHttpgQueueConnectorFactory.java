@@ -21,14 +21,14 @@
 package eu.mosaic_cloud.cloudlets.v1.connectors.httpg;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.queue.IQueueConnectorFactory;
+import eu.mosaic_cloud.cloudlets.v1.connectors.queue.QueueConnectorFactory;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 
 
 public interface IHttpgQueueConnectorFactory
 			extends
-				IQueueConnectorFactory<IHttpgQueueConnector<?, ?, ?>>
+				QueueConnectorFactory<IHttpgQueueConnector<?, ?, ?>>
 {
-	<TContext, TRequestBody, TResponseBody, TExtra> IHttpgQueueConnector<TRequestBody, TResponseBody, TExtra> create (final Configuration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, IHttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra> callback, TContext callbackContext);
+	<TContext, TRequestBody, TResponseBody, TExtra> IHttpgQueueConnector<TRequestBody, TResponseBody, TExtra> create (final Configuration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, HttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra> callback, TContext callbackContext);
 }

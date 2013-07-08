@@ -18,18 +18,15 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.v1.connectors.executors;
+package eu.mosaic_cloud.connectors.v1.components;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorCallback;
-import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorFactory;
 
 
-public interface IExecutorCallback<TContext, TOutcome, TExtra>
+public interface ComponentConnectorFactory
 			extends
-				IConnectorCallback<TContext>
+				ConnectorFactory<IComponentConnector>
 {
-	CallbackCompletion<Void> executionFailed (TContext context, ExecutionFailedCallbackArguments<TExtra> arguments);
-	
-	CallbackCompletion<Void> executionSucceeded (TContext context, ExecutionSucceededCallbackArguments<TOutcome, TExtra> arguments);
+	IComponentConnector create ();
 }

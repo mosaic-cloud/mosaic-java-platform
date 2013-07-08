@@ -21,8 +21,8 @@
 package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallback;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackCompletionArguments;
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletCallback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -37,7 +37,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public abstract class DefaultCloudletCallback<TContext>
 			extends DefaultCallback<TContext>
 			implements
-				ICloudletCallback<TContext>
+				CloudletCallback<TContext>
 {
 	@Override
 	public CallbackCompletion<Void> destroyFailed (final TContext context, final CloudletCallbackCompletionArguments<TContext> arguments) {

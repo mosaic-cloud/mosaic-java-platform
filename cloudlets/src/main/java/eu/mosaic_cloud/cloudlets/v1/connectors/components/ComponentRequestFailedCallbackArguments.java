@@ -21,14 +21,14 @@
 package eu.mosaic_cloud.cloudlets.v1.connectors.components;
 
 
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
 
 
 public final class ComponentRequestFailedCallbackArguments<TExtra>
 			extends CallbackArguments
 {
-	public ComponentRequestFailedCallbackArguments (final ICloudletController<?> cloudlet, final Throwable exception, final TExtra extra) {
+	public ComponentRequestFailedCallbackArguments (final CloudletController<?> cloudlet, final Throwable exception, final TExtra extra) {
 		super (cloudlet);
 		this.exception = exception;
 		this.extra = extra;

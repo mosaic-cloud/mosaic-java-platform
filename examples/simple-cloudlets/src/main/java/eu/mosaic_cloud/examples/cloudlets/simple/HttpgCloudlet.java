@@ -26,7 +26,7 @@ import java.util.UUID;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultHttpgQueueConnectorCallback;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.HttpgQueueRequestedCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.IHttpgQueueConnectorFactory;
 import eu.mosaic_cloud.cloudlets.v1.core.ICallback;
@@ -64,7 +64,7 @@ public class HttpgCloudlet
 	
 	public static final class Context
 	{
-		ICloudletController<Context> cloudlet;
+		CloudletController<Context> cloudlet;
 		IHttpgQueueConnector<String, String> gateway;
 		String identity;
 	}

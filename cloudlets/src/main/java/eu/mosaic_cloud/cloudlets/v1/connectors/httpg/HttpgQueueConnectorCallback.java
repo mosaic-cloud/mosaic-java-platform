@@ -21,14 +21,14 @@
 package eu.mosaic_cloud.cloudlets.v1.connectors.httpg;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.queue.IQueueConnectorCallback;
+import eu.mosaic_cloud.cloudlets.v1.connectors.queue.QueueConnectorCallback;
 import eu.mosaic_cloud.cloudlets.v1.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-public interface IHttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra>
+public interface HttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra>
 			extends
-				IQueueConnectorCallback<TContext>
+				QueueConnectorCallback<TContext>
 {
 	CallbackCompletion<Void> requested (TContext context, HttpgQueueRequestedCallbackArguments<TRequestBody> arguments);
 	

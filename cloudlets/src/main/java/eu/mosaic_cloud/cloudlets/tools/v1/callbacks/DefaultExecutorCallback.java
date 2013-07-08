@@ -23,14 +23,14 @@ package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutionFailedCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutionSucceededCallbackArguments;
-import eu.mosaic_cloud.cloudlets.v1.connectors.executors.IExecutorCallback;
+import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutorCallback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 public class DefaultExecutorCallback<TContext, TOutcome, TExtra>
 			extends DefaultConnectorCallback<TContext>
 			implements
-				IExecutorCallback<TContext, TOutcome, TExtra>
+				ExecutorCallback<TContext, TOutcome, TExtra>
 {
 	@Override
 	public CallbackCompletion<Void> executionFailed (final TContext context, final ExecutionFailedCallbackArguments<TExtra> arguments) {

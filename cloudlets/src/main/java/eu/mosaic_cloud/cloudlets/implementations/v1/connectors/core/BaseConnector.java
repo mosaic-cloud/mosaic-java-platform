@@ -21,9 +21,9 @@
 package eu.mosaic_cloud.cloudlets.implementations.v1.connectors.core;
 
 
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorCallback;
 import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnector;
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorCallback;
 import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -46,12 +46,12 @@ import com.google.common.base.Preconditions;
  * @param <TContext>
  *            cloudlet callback context
  */
-public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connectors.v1.core.Connector, TCallback extends IConnectorCallback<TContext>, TContext extends Object>
+public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connectors.v1.core.Connector, TCallback extends ConnectorCallback<TContext>, TContext extends Object>
 			implements
 				IConnector,
 				CallbackProxy
 {
-	protected BaseConnector (final ICloudletController<?> cloudlet, final TConnector connector, final Configuration configuration, final TCallback callback, final TContext context) {
+	protected BaseConnector (final CloudletController<?> cloudlet, final TConnector connector, final Configuration configuration, final TCallback callback, final TContext context) {
 		super ();
 		Preconditions.checkNotNull (cloudlet);
 		Preconditions.checkNotNull (connector);
@@ -129,7 +129,7 @@ public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connector
 	}
 	
 	protected final TCallback callback;
-	protected final ICloudletController<?> cloudlet;
+	protected final CloudletController<?> cloudlet;
 	protected final Configuration configuration;
 	protected final TConnector connector;
 	protected final TContext context;

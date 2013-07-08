@@ -22,10 +22,10 @@ package eu.mosaic_cloud.cloudlets.implementations.v1.connectors.executors;
 
 
 import eu.mosaic_cloud.cloudlets.implementations.v1.connectors.core.BaseConnectorsFactoryInitializer;
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
+import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutorCallback;
+import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutorFactory;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.IExecutor;
-import eu.mosaic_cloud.cloudlets.v1.connectors.executors.IExecutorCallback;
-import eu.mosaic_cloud.cloudlets.v1.connectors.executors.IExecutorFactory;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
 import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactoryBuilder;
 import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
@@ -36,10 +36,10 @@ public final class ExecutorFactoryInitializer
 			extends BaseConnectorsFactoryInitializer
 {
 	@Override
-	protected void initialize_1 (final ConnectorsFactoryBuilder builder, final ICloudletController<?> cloudlet, final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
-		builder.register (IExecutorFactory.class, new IExecutorFactory () {
+	protected void initialize_1 (final ConnectorsFactoryBuilder builder, final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
+		builder.register (ExecutorFactory.class, new ExecutorFactory () {
 			@Override
-			public <TContext, TOutcome, TExtra> IExecutor<TOutcome, TExtra> create (final Configuration configuration, final IExecutorCallback<TContext, TOutcome, TExtra> callback, final TContext callbackContext) {
+			public <TContext, TOutcome, TExtra> IExecutor<TOutcome, TExtra> create (final Configuration configuration, final ExecutorCallback<TContext, TOutcome, TExtra> callback, final TContext callbackContext) {
 				return new Executor<TContext, TOutcome, TExtra> (cloudlet, environment.getThreading (), environment.getExceptions (), configuration, callback, callbackContext);
 			}
 		});

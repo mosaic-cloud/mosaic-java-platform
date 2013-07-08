@@ -25,7 +25,7 @@ import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
 import eu.mosaic_cloud.cloudlets.implementations.v1.tools.ConfigProperties;
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletCallback;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallback;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
 import eu.mosaic_cloud.connectors.implementations.v1.core.DefaultConnectorsFactory;
 import eu.mosaic_cloud.connectors.v1.components.IComponentConnector;
@@ -166,7 +166,7 @@ public final class CloudletManager
 			this.exceptions.traceHandledException (exception);
 			throw (new IllegalArgumentException ("error encountered while loading cloudlet callbacks class", exception));
 		}
-		Preconditions.checkArgument (ICloudletCallback.class.isAssignableFrom (clasz), "invalid cloudlet callbacks class (must implement `ICloudletCallback`)");
+		Preconditions.checkArgument (CloudletCallback.class.isAssignableFrom (clasz), "invalid cloudlet callbacks class (must implement `CloudletCallback`)");
 		return (clasz);
 	}
 	

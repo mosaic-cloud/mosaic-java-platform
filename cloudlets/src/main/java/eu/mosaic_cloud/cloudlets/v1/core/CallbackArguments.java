@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.cloudlets.v1.core;
 
 
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 
 
 /**
@@ -38,7 +38,7 @@ public class CallbackArguments
 	 * @param cloudlet
 	 *            the cloudlet controller
 	 */
-	public CallbackArguments (final ICloudletController<?> cloudlet) {
+	public CallbackArguments (final CloudletController<?> cloudlet) {
 		super ();
 		this.cloudlet = cloudlet;
 	}
@@ -48,9 +48,9 @@ public class CallbackArguments
 	 * 
 	 * @return the cloudlet controller
 	 */
-	public ICloudletController<?> getCloudlet () {
+	public CloudletController<?> getCloudlet () {
 		return this.cloudlet;
 	}
 	
-	protected final ICloudletController<?> cloudlet;
+	protected final CloudletController<?> cloudlet;
 }

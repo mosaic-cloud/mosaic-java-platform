@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.cloudlets.v1.connectors.kvstore;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorFactory;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorFactory;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 
@@ -33,7 +33,7 @@ import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
  */
 public interface IKvStoreConnectorFactory
 			extends
-				IConnectorFactory<IKvStoreConnector<?, ?>>
+				ConnectorFactory<IKvStoreConnector<?, ?>>
 {
 	/**
 	 * Creates a key-value store connector.
@@ -45,5 +45,5 @@ public interface IKvStoreConnectorFactory
 	 * @param callbackContext
 	 * @return
 	 */
-	<TContext, TValue, TExtra> IKvStoreConnector<TValue, TExtra> create (Configuration configuration, Class<TValue> valueClass, DataEncoder<TValue> valueEncoder, IKvStoreConnectorCallback<TContext, TValue, TExtra> callback, TContext callbackContext);
+	<TContext, TValue, TExtra> IKvStoreConnector<TValue, TExtra> create (Configuration configuration, Class<TValue> valueClass, DataEncoder<TValue> valueEncoder, KvStoreConnectorCallback<TContext, TValue, TExtra> callback, TContext callbackContext);
 }

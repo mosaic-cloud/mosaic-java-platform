@@ -21,8 +21,8 @@
 package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.IKvStoreConnectorCallback;
 import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.KvStoreCallbackCompletionArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.KvStoreConnectorCallback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -40,7 +40,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public class DefaultKvStoreConnectorCallback<TContext, TValue, TExtra>
 			extends DefaultConnectorCallback<TContext>
 			implements
-				IKvStoreConnectorCallback<TContext, TValue, TExtra>
+				KvStoreConnectorCallback<TContext, TValue, TExtra>
 {
 	@Override
 	public CallbackCompletion<Void> deleteFailed (final TContext context, final KvStoreCallbackCompletionArguments<TValue, TExtra> arguments) {

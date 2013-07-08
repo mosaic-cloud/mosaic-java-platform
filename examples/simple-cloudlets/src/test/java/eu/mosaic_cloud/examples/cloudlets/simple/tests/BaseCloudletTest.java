@@ -24,7 +24,7 @@ package eu.mosaic_cloud.examples.cloudlets.simple.tests;
 import java.util.UUID;
 
 import eu.mosaic_cloud.cloudlets.implementations.v1.cloudlets.Cloudlet;
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletCallback;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallback;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
 import eu.mosaic_cloud.components.core.ComponentResourceSpecification;
@@ -89,7 +89,7 @@ public abstract class BaseCloudletTest
 		this.cloudlet = null;
 	}
 	
-	protected <Context> void setUp (final Class<? extends ICloudletCallback<Context>> callbacksClass, final Class<Context> contextClass, final String configuration) {
+	protected <Context> void setUp (final Class<? extends CloudletCallback<Context>> callbacksClass, final Class<Context> contextClass, final String configuration) {
 		if (!this.doRun) {
 			return;
 		}

@@ -18,16 +18,13 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.v1.connectors.executors;
+package eu.mosaic_cloud.cloudlets.v1.connectors.queue;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorFactory;
-import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorFactory;
 
 
-public interface IExecutorFactory
+public interface QueueConnectorFactory<TConnector extends QueueConnector>
 			extends
-				IConnectorFactory<IExecutor<?, ?>>
-{
-	<TContext, TOutcome, TExtra> IExecutor<TOutcome, TExtra> create (final Configuration configuration, IExecutorCallback<TContext, TOutcome, TExtra> callback, TContext callbackContext);
-}
+				ConnectorFactory<TConnector>
+{}

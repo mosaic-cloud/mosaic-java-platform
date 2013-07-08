@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.cloudlets.v1.connectors.httpg;
 
 
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgRequestMessage;
 
@@ -29,7 +29,7 @@ import eu.mosaic_cloud.connectors.v1.httpg.HttpgRequestMessage;
 public class HttpgQueueRequestedCallbackArguments<TRequestBody>
 			extends CallbackArguments
 {
-	public HttpgQueueRequestedCallbackArguments (final ICloudletController<?> cloudlet, final HttpgRequestMessage<TRequestBody> request) {
+	public HttpgQueueRequestedCallbackArguments (final CloudletController<?> cloudlet, final HttpgRequestMessage<TRequestBody> request) {
 		super (cloudlet);
 		this.request = request;
 	}

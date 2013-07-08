@@ -23,7 +23,7 @@ package eu.mosaic_cloud.cloudlets.implementations.v1.tests;
 
 import eu.mosaic_cloud.cloudlets.implementations.v1.cloudlets.Cloudlet;
 import eu.mosaic_cloud.cloudlets.implementations.v1.cloudlets.CloudletEnvironment;
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletCallback;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallback;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
 import eu.mosaic_cloud.components.core.ComponentResourceSpecification;
@@ -106,7 +106,7 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
 	protected Cloudlet<?> cloudlet;
 	protected Scenario scenario;
 	
-	protected static <Scenario extends BaseScenario<Context>, Context extends Object> void setUpScenario (final Class<? extends BaseCloudletTest<?>> owner, final Scenario scenario, final String configuration, final Class<? extends ICloudletCallback<Context>> callbacksClass, final Class<Context> contextClass) {
+	protected static <Scenario extends BaseScenario<Context>, Context extends Object> void setUpScenario (final Class<? extends BaseCloudletTest<?>> owner, final Scenario scenario, final String configuration, final Class<? extends CloudletCallback<Context>> callbacksClass, final Class<Context> contextClass) {
 		final IComponentConnector componentConnector = new IComponentConnector () {
 			@Override
 			public CallbackCompletion<ComponentResourceDescriptor> acquire (final ComponentResourceSpecification resource) {
@@ -148,7 +148,7 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
 		BaseCloudletTest.setUpScenario (owner, scenario, configuration, callbacksClass, contextClass, componentConnector, connectorChannelFactory, connectorChannelResolver);
 	}
 	
-	protected static <Scenario extends BaseScenario<Context>, Context extends Object> void setUpScenario (final Class<? extends BaseCloudletTest<?>> owner, final Scenario scenario, final String configuration, final Class<? extends ICloudletCallback<Context>> callbacksClass, final Class<Context> contextClass, final IComponentConnector componentConnector, final ChannelFactory connectorChannelFactory, final ChannelResolver connectorChannelResolver) {
+	protected static <Scenario extends BaseScenario<Context>, Context extends Object> void setUpScenario (final Class<? extends BaseCloudletTest<?>> owner, final Scenario scenario, final String configuration, final Class<? extends CloudletCallback<Context>> callbacksClass, final Class<Context> contextClass, final IComponentConnector componentConnector, final ChannelFactory connectorChannelFactory, final ChannelResolver connectorChannelResolver) {
 		BasicThreadingSecurityManager.initialize ();
 		scenario.transcript = Transcript.create (owner);
 		scenario.exceptionsQueue = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
@@ -176,7 +176,7 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
 	
 	public static class BaseScenario<Context extends Object>
 	{
-		public Class<? extends ICloudletCallback<Context>> callbacksClass;
+		public Class<? extends CloudletCallback<Context>> callbacksClass;
 		public Configuration configuration;
 		public IConnectorsFactory connectors;
 		public Class<Context> contextClass;

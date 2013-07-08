@@ -18,13 +18,19 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.v1.connectors.queue;
+package eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorFactory;
+import eu.mosaic_cloud.cloudlets.v1.connectors.queue.QueueConnector;
 
 
-public interface IQueueConnectorFactory<TConnector extends IQueueConnector>
+/**
+ * Interface for registering and using an AMQP resources as a consumer or a publisher.
+ * 
+ * @author Georgiana Macariu
+ */
+public interface AmqpQueueConnector
 			extends
-				IConnectorFactory<TConnector>
+				QueueConnector,
+				eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueConnector
 {}

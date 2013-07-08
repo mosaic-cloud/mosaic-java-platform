@@ -27,7 +27,7 @@ import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultKvStoreConnectorCallback;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackCompletionArguments;
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.IKvStoreConnector;
 import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.IKvStoreConnectorFactory;
 import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.KvStoreCallbackCompletionArguments;
@@ -128,7 +128,7 @@ public class StoringCloudlet
 	
 	public static final class StoringCloudletContext
 	{
-		ICloudletController<StoringCloudletContext> cloudlet;
+		CloudletController<StoringCloudletContext> cloudlet;
 		int count = 0;
 		int delay = 100;
 		int limit = 1000;

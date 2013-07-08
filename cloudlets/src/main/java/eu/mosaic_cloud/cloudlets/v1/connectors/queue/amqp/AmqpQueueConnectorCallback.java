@@ -18,15 +18,20 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.v1.connectors.core;
+package eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp;
 
 
-public interface IConnectorsFactoryBuilder
+import eu.mosaic_cloud.cloudlets.v1.connectors.queue.QueueConnectorCallback;
+
+
+/**
+ * Basic interface for AMQP connector callbacks.
+ * 
+ * @author Georgiana Macariu
+ * @param <TContext>
+ *            the type of the cloudlet context
+ */
+public interface AmqpQueueConnectorCallback<TContext>
 			extends
-				eu.mosaic_cloud.connectors.v1.core.ConnectorsFactoryBuilder
-{
-	@Override
-	public abstract IConnectorsFactory build ();
-	
-	public abstract void initialize (final IConnectorsFactoryInitializer initializer);
-}
+				QueueConnectorCallback<TContext>
+{}

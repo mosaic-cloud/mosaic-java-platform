@@ -36,9 +36,9 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <TExtra>
  *            the type of the extra data; as an example, this data can be used correlation
  */
-public interface IAmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra>
+public interface AmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra>
 			extends
-				IAmqpQueueConnectorCallback<TContext>
+				AmqpQueueConnectorCallback<TContext>
 {
 	/**
 	 * Called when the publisher receives notification that the message publishing could not be finished with success.

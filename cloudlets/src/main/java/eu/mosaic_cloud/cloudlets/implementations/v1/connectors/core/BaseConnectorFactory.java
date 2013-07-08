@@ -21,9 +21,9 @@
 package eu.mosaic_cloud.cloudlets.implementations.v1.connectors.core;
 
 
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorFactory;
 import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnector;
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorFactory;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
 import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
 
@@ -33,13 +33,13 @@ import com.google.common.base.Preconditions;
 public abstract class BaseConnectorFactory<TConnector extends IConnector>
 			extends eu.mosaic_cloud.connectors.implementations.v1.core.BaseConnectorFactory<TConnector>
 			implements
-				IConnectorFactory<TConnector>
+				ConnectorFactory<TConnector>
 {
-	protected BaseConnectorFactory (final ICloudletController<?> cloudlet, final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
+	protected BaseConnectorFactory (final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
 		super (environment, delegate);
 		Preconditions.checkNotNull (cloudlet);
 		this.cloudlet = cloudlet;
 	}
 	
-	protected final ICloudletController<?> cloudlet;
+	protected final CloudletController<?> cloudlet;
 }

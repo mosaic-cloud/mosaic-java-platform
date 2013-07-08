@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.cloudlets.v1.connectors.components;
 
 
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
 import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
 
@@ -29,7 +29,7 @@ import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
 public class ComponentAcquireSucceededCallbackArguments<TExtra>
 			extends CallbackArguments
 {
-	public ComponentAcquireSucceededCallbackArguments (final ICloudletController<?> cloudlet, final ComponentResourceDescriptor descriptor, final TExtra extra) {
+	public ComponentAcquireSucceededCallbackArguments (final CloudletController<?> cloudlet, final ComponentResourceDescriptor descriptor, final TExtra extra) {
 		super (cloudlet);
 		this.descriptor = descriptor;
 		this.extra = extra;
