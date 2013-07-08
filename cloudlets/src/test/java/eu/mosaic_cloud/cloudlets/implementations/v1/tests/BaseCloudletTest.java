@@ -30,7 +30,7 @@ import eu.mosaic_cloud.components.core.ComponentResourceSpecification;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
 import eu.mosaic_cloud.connectors.implementations.v1.core.DefaultConnectorsFactory;
 import eu.mosaic_cloud.connectors.v1.components.ZZZ_comp_ComponentConnector;
-import eu.mosaic_cloud.connectors.v1.core.ZZZ_core_ConnectorsFactory;
+import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactory;
 import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.core.ChannelFactory;
 import eu.mosaic_cloud.interoperability.core.ChannelResolver;
@@ -178,7 +178,7 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
 	{
 		public Class<? extends CloudletCallback<Context>> callbacksClass;
 		public Configuration configuration;
-		public ZZZ_core_ConnectorsFactory connectors;
+		public ConnectorsFactory connectors;
 		public Class<Context> contextClass;
 		public CloudletEnvironment environment;
 		public TranscriptExceptionTracer exceptions;

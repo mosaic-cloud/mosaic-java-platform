@@ -26,8 +26,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import eu.mosaic_cloud.connectors.implementations.v1.core.BaseConnectorProxy;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration;
 import eu.mosaic_cloud.connectors.implementations.v1.tools.ConfigProperties;
+import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueRawConnector;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueRawConsumerCallback;
-import eu.mosaic_cloud.connectors.v1.queue.amqp.ZZZ_amqp_AmqpQueueRawConnector;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
@@ -64,7 +64,7 @@ import com.google.protobuf.ByteString;
 public final class AmqpQueueRawConnectorProxy
 			extends BaseConnectorProxy
 			implements
-				ZZZ_amqp_AmqpQueueRawConnector
+				AmqpQueueRawConnector
 {
 	protected AmqpQueueRawConnectorProxy (final ConnectorConfiguration configuration) {
 		super (configuration);

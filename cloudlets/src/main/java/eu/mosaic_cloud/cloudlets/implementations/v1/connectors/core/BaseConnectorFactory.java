@@ -25,7 +25,7 @@ import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorFactory;
 import eu.mosaic_cloud.cloudlets.v1.connectors.core.YYY_core_Connector;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
-import eu.mosaic_cloud.connectors.v1.core.ZZZ_core_ConnectorsFactory;
+import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactory;
 
 import com.google.common.base.Preconditions;
 
@@ -35,7 +35,7 @@ public abstract class BaseConnectorFactory<TConnector extends YYY_core_Connector
 			implements
 				ConnectorFactory<TConnector>
 {
-	protected BaseConnectorFactory (final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final ZZZ_core_ConnectorsFactory delegate) {
+	protected BaseConnectorFactory (final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final ConnectorsFactory delegate) {
 		super (environment, delegate);
 		Preconditions.checkNotNull (cloudlet);
 		this.cloudlet = cloudlet;

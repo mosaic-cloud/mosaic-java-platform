@@ -30,9 +30,9 @@ import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.HttpgQueueRequestedCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.YYY_httpg_HttpgQueueConnectorFactory;
 import eu.mosaic_cloud.cloudlets.v1.core.YYY_core_Callback;
+import eu.mosaic_cloud.connectors.v1.httpg.HttpgQueueConnector;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgRequestMessage;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgResponseMessage;
-import eu.mosaic_cloud.connectors.v1.httpg.ZZZ_httpg_HttpgQueueConnector;
 import eu.mosaic_cloud.platform.implementations.v1.serialization.PlainTextDataEncoder;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
@@ -65,7 +65,7 @@ public class HttpgCloudlet
 	public static final class Context
 	{
 		CloudletController<Context> cloudlet;
-		ZZZ_httpg_HttpgQueueConnector<String, String> gateway;
+		HttpgQueueConnector<String, String> gateway;
 		String identity;
 	}
 	

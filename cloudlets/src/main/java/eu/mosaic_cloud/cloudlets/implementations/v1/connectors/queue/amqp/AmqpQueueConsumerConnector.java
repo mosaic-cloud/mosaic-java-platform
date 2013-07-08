@@ -34,12 +34,12 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 
 
 public class AmqpQueueConsumerConnector<TContext, TMessage, TExtra>
-			extends BaseAmqpQueueConnector<eu.mosaic_cloud.connectors.v1.queue.amqp.ZZZ_amqp_AmqpQueueConsumerConnector<TMessage>, AmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra>, TContext>
+			extends BaseAmqpQueueConnector<eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueConsumerConnector<TMessage>, AmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra>, TContext>
 			implements
 				YYY_amqp_AmqpQueueConsumerConnector<TMessage, TExtra>
 {
 	@SuppressWarnings ("synthetic-access")
-	public AmqpQueueConsumerConnector (final CloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.queue.amqp.ZZZ_amqp_AmqpQueueConsumerConnector<TMessage> connector, final Configuration configuration, final AmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, final TContext context, final Callback<TMessage> backingCallback) {
+	public AmqpQueueConsumerConnector (final CloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueConsumerConnector<TMessage> connector, final Configuration configuration, final AmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, final TContext context, final Callback<TMessage> backingCallback) {
 		super (cloudlet, connector, configuration, callback, context);
 		backingCallback.connector = this;
 	}

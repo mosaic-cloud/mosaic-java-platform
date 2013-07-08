@@ -27,8 +27,8 @@ import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.KvStoreConnectorCallback;
 import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.YYY_kv_KvStoreConnector;
 import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.YYY_kv_KvStoreConnectorFactory;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactory;
 import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactoryBuilder;
-import eu.mosaic_cloud.connectors.v1.core.ZZZ_core_ConnectorsFactory;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 
@@ -39,7 +39,7 @@ public final class GenericKvStoreConnectorFactoryInitializer
 			extends BaseConnectorsFactoryInitializer
 {
 	@Override
-	protected void initialize_1 (final ConnectorsFactoryBuilder builder, final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final ZZZ_core_ConnectorsFactory delegate) {
+	protected void initialize_1 (final ConnectorsFactoryBuilder builder, final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final ConnectorsFactory delegate) {
 		Preconditions.checkNotNull (delegate);
 		builder.register (YYY_kv_KvStoreConnectorFactory.class, new YYY_kv_KvStoreConnectorFactory () {
 			@Override

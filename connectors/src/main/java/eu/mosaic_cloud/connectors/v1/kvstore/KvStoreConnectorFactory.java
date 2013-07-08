@@ -21,14 +21,14 @@
 package eu.mosaic_cloud.connectors.v1.kvstore;
 
 
-import eu.mosaic_cloud.connectors.v1.core.ZZZ_core_ConnectorFactory;
+import eu.mosaic_cloud.connectors.v1.core.ConnectorFactory;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 
 
 public interface KvStoreConnectorFactory
 			extends
-				ZZZ_core_ConnectorFactory<KvStoreConnector<?>>
+				ConnectorFactory<KvStoreConnector<?>>
 {
 	<TValue> KvStoreConnector<TValue> create (Configuration configuration, Class<TValue> valueClass, DataEncoder<TValue> valueEncoder);
 }

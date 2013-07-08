@@ -21,10 +21,10 @@
 package eu.mosaic_cloud.connectors.v1.queue;
 
 
-import eu.mosaic_cloud.connectors.v1.core.ZZZ_core_ConnectorFactory;
+import eu.mosaic_cloud.connectors.v1.core.ConnectorFactory;
 
 
 public interface QueueConnectorFactory<TConnector extends QueueConnector>
 			extends
-				ZZZ_core_ConnectorFactory<TConnector>
+				ConnectorFactory<TConnector>
 {}

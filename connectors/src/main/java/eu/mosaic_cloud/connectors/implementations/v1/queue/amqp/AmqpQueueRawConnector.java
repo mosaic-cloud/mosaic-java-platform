@@ -24,7 +24,6 @@ package eu.mosaic_cloud.connectors.implementations.v1.queue.amqp;
 import eu.mosaic_cloud.connectors.implementations.v1.core.BaseConnector;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueRawConsumerCallback;
-import eu.mosaic_cloud.connectors.v1.queue.amqp.ZZZ_amqp_AmqpQueueRawConnector;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -38,7 +37,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public class AmqpQueueRawConnector
 			extends BaseConnector<AmqpQueueRawConnectorProxy>
 			implements
-				ZZZ_amqp_AmqpQueueRawConnector
+				eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueRawConnector
 {
 	protected AmqpQueueRawConnector (final AmqpQueueRawConnectorProxy proxy) {
 		super (proxy);

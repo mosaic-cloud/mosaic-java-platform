@@ -22,8 +22,8 @@ package eu.mosaic_cloud.connectors.implementations.v1.core;
 
 
 import eu.mosaic_cloud.connectors.v1.core.Connector;
-import eu.mosaic_cloud.connectors.v1.core.ZZZ_core_ConnectorFactory;
-import eu.mosaic_cloud.connectors.v1.core.ZZZ_core_ConnectorsFactory;
+import eu.mosaic_cloud.connectors.v1.core.ConnectorFactory;
+import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactory;
 
 import com.google.common.base.Preconditions;
 
@@ -31,15 +31,15 @@ import com.google.common.base.Preconditions;
 public abstract class BaseConnectorFactory<TConnector extends Connector>
 			extends Object
 			implements
-				ZZZ_core_ConnectorFactory<TConnector>
+				ConnectorFactory<TConnector>
 {
-	protected BaseConnectorFactory (final ConnectorEnvironment environment, final ZZZ_core_ConnectorsFactory delegate) {
+	protected BaseConnectorFactory (final ConnectorEnvironment environment, final ConnectorsFactory delegate) {
 		super ();
 		Preconditions.checkNotNull (environment);
 		this.environment = environment;
 		this.delegate = delegate;
 	}
 	
-	protected final ZZZ_core_ConnectorsFactory delegate;
+	protected final ConnectorsFactory delegate;
 	protected final ConnectorEnvironment environment;
 }

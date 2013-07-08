@@ -27,8 +27,8 @@ import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration
 import eu.mosaic_cloud.connectors.implementations.v1.tools.ConfigProperties;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpMessageToken;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueConsumerCallback;
+import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueConsumerConnector;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueRawConsumerCallback;
-import eu.mosaic_cloud.connectors.v1.queue.amqp.ZZZ_amqp_AmqpQueueConsumerConnector;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
@@ -43,7 +43,7 @@ import com.google.common.base.Preconditions;
 public final class AmqpQueueConsumerConnectorProxy<TMessage>
 			extends AmqpQueueConnectorProxy<TMessage>
 			implements
-				ZZZ_amqp_AmqpQueueConsumerConnector<TMessage>
+				AmqpQueueConsumerConnector<TMessage>
 {
 	private AmqpQueueConsumerConnectorProxy (final AmqpQueueRawConnectorProxy rawProxy, final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final AmqpQueueConsumerCallback<TMessage> callback) {
 		super (rawProxy, configuration, messageClass, messageEncoder);

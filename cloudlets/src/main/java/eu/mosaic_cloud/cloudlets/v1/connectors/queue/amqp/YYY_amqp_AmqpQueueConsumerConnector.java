@@ -37,7 +37,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public interface YYY_amqp_AmqpQueueConsumerConnector<TMessage, TExtra>
 			extends
 				AmqpQueueConnector,
-				eu.mosaic_cloud.connectors.v1.queue.amqp.ZZZ_amqp_AmqpQueueConsumerConnector<TMessage>
+				eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueConsumerConnector<TMessage>
 {
 	/**
 	 * Acknowledges a message.

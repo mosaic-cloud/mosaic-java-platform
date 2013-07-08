@@ -29,7 +29,7 @@ import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallback;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
 import eu.mosaic_cloud.connectors.implementations.v1.core.DefaultConnectorsFactory;
 import eu.mosaic_cloud.connectors.v1.components.ZZZ_comp_ComponentConnector;
-import eu.mosaic_cloud.connectors.v1.core.ZZZ_core_ConnectorsFactory;
+import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactory;
 import eu.mosaic_cloud.interoperability.core.ChannelFactory;
 import eu.mosaic_cloud.interoperability.core.ChannelResolver;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
@@ -148,7 +148,7 @@ public final class CloudletManager
 		//-- Thus any deferred exception should be treated as an ignored one.
 		final ExceptionTracer exceptions = new CloudletExceptionTracer ();
 		final ConnectorEnvironment connectorEnvironment = ConnectorEnvironment.create (this.reactor, this.threading, exceptions, this.channelFactory, this.channelResolver);
-		final ZZZ_core_ConnectorsFactory connectorFactory = DefaultConnectorsFactory.create (connectorEnvironment, null);
+		final ConnectorsFactory connectorFactory = DefaultConnectorsFactory.create (connectorEnvironment, null);
 		final CloudletEnvironment environment = CloudletEnvironment.create (cloudletConfiguration, cloudletCallbacksClass, cloudletContextClass, this.classLoader, connectorFactory, connectorEnvironment, this.componentConnector, this.reactor, this.threading, exceptions);
 		final Cloudlet<?> cloudlet = Cloudlet.create (environment);
 		return (cloudlet);

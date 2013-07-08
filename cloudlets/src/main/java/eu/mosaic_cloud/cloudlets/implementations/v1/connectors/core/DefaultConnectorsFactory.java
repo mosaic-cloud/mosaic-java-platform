@@ -30,8 +30,8 @@ import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorsFactoryBuilder;
 import eu.mosaic_cloud.connectors.implementations.v1.core.BaseConnectorsFactory;
 import eu.mosaic_cloud.connectors.implementations.v1.core.BaseConnectorsFactoryBuilder;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactory;
 import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactoryInitializer;
-import eu.mosaic_cloud.connectors.v1.core.ZZZ_core_ConnectorsFactory;
 
 import com.google.common.base.Preconditions;
 
@@ -41,7 +41,7 @@ public class DefaultConnectorsFactory
 			implements
 				eu.mosaic_cloud.cloudlets.v1.connectors.core.YYY_core_ConnectorsFactory
 {
-	protected DefaultConnectorsFactory (final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final ZZZ_core_ConnectorsFactory delegate) {
+	protected DefaultConnectorsFactory (final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final ConnectorsFactory delegate) {
 		super (environment, delegate);
 		Preconditions.checkNotNull (delegate);
 		Preconditions.checkNotNull (cloudlet);
@@ -55,7 +55,7 @@ public class DefaultConnectorsFactory
 		return DefaultConnectorsFactory.create (cloudlet, environment, delegate);
 	}
 	
-	public static final DefaultConnectorsFactory create (final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final ZZZ_core_ConnectorsFactory delegate) {
+	public static final DefaultConnectorsFactory create (final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final ConnectorsFactory delegate) {
 		return DefaultConnectorsFactory.Builder.create (cloudlet, environment, delegate).build ();
 	}
 	
@@ -94,7 +94,7 @@ public class DefaultConnectorsFactory
 		
 		protected final CloudletController<?> cloudlet;
 		
-		public static final Builder create (final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final ZZZ_core_ConnectorsFactory delegate) {
+		public static final Builder create (final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final ConnectorsFactory delegate) {
 			final DefaultConnectorsFactory factory = new DefaultConnectorsFactory (cloudlet, environment, delegate);
 			final Builder builder = new Builder (factory, cloudlet);
 			return (builder);

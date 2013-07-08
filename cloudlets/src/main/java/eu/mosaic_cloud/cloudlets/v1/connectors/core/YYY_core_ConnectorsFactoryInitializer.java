@@ -23,11 +23,11 @@ package eu.mosaic_cloud.cloudlets.v1.connectors.core;
 
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactory;
 import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactoryBuilder;
-import eu.mosaic_cloud.connectors.v1.core.ZZZ_core_ConnectorsFactory;
 
 
 public interface YYY_core_ConnectorsFactoryInitializer
 {
-	public abstract void initialize (final ConnectorsFactoryBuilder builder, final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final ZZZ_core_ConnectorsFactory delegate);
+	public abstract void initialize (final ConnectorsFactoryBuilder builder, final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final ConnectorsFactory delegate);
 }

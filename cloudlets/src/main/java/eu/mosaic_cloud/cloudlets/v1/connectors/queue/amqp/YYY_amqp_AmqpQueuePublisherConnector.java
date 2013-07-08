@@ -36,7 +36,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public interface YYY_amqp_AmqpQueuePublisherConnector<TMessage, TExtra>
 			extends
 				AmqpQueueConnector,
-				eu.mosaic_cloud.connectors.v1.queue.amqp.ZZZ_amqp_AmqpQueuePublisherConnector<TMessage>
+				eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueuePublisherConnector<TMessage>
 {
 	/**
 	 * Publishes a message to a queue.

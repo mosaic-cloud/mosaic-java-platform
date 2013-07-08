@@ -18,15 +18,16 @@
  * #L%
  */
 
-package eu.mosaic_cloud.connectors.v1.core;
+package eu.mosaic_cloud.connectors.v1.httpg;
 
 
-/**
- * Interface for the factory of connector factories class.
- * 
- * @author Ciprian Craciun
- */
-public interface ZZZ_core_ConnectorsFactory
+import eu.mosaic_cloud.connectors.v1.queue.QueueConnector;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+
+
+public interface HttpgQueueConnector<TRequestBody, TResponseBody>
+			extends
+				QueueConnector
 {
-	<TFactory extends ZZZ_core_ConnectorFactory<?>> TFactory getConnectorFactory (Class<TFactory> factory);
+	CallbackCompletion<Void> respond (HttpgResponseMessage<TResponseBody> response);
 }

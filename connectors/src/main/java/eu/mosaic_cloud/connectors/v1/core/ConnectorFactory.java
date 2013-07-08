@@ -18,30 +18,15 @@
  * #L%
  */
 
-package eu.mosaic_cloud.connectors.v1.queue.amqp;
-
-
-import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+package eu.mosaic_cloud.connectors.v1.core;
 
 
 /**
- * Interface for registering and using for an AMQP resource as a publisher.
+ * Interface for custom connector factory. For each connector type an implementation of this interface should be implemented.
  * 
- * @author Georgiana Macariu
- * @param <Context>
- *            the type of the context of the cloudlet using this accessor
- * @param <Message>
- *            the type of the published data
+ * @author Ciprian Craciun
+ * @param <TConnector>
+ *            the type of the connector created by this factory
  */
-public interface ZZZ_amqp_AmqpQueuePublisherConnector<Message>
-			extends
-				ZZZ_amqp_AmqpQueueConnector
-{
-	/**
-	 * Publishes a message to a queue.
-	 * 
-	 * @param data
-	 *            the data to publish
-	 */
-	CallbackCompletion<Void> publish (Message data);
-}
+public interface ConnectorFactory<TConnector extends Connector>
+{}

@@ -25,7 +25,7 @@ import java.util.concurrent.Callable;
 
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration;
 import eu.mosaic_cloud.connectors.implementations.v1.tools.ConfigProperties;
-import eu.mosaic_cloud.connectors.v1.queue.amqp.ZZZ_amqp_AmqpQueuePublisherConnector;
+import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueuePublisherConnector;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
@@ -41,7 +41,7 @@ import com.google.common.base.Preconditions;
 public final class AmqpQueuePublisherConnectorProxy<TMessage>
 			extends AmqpQueueConnectorProxy<TMessage>
 			implements
-				ZZZ_amqp_AmqpQueuePublisherConnector<TMessage>
+				AmqpQueuePublisherConnector<TMessage>
 {
 	private AmqpQueuePublisherConnectorProxy (final AmqpQueueRawConnectorProxy rawProxy, final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder) {
 		super (rawProxy, configuration, messageClass, messageEncoder);

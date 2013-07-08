@@ -29,7 +29,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public interface YYY_httpg_HttpgQueueConnector<TRequestBody, TResponseBody, TExtra>
 			extends
 				QueueConnector,
-				eu.mosaic_cloud.connectors.v1.httpg.ZZZ_httpg_HttpgQueueConnector<TRequestBody, TResponseBody>
+				eu.mosaic_cloud.connectors.v1.httpg.HttpgQueueConnector<TRequestBody, TResponseBody>
 {
 	CallbackCompletion<Void> respond (HttpgResponseMessage<TResponseBody> response, TExtra extra);
 }

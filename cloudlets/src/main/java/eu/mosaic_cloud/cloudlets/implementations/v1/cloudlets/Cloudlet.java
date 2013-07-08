@@ -47,7 +47,6 @@ import eu.mosaic_cloud.cloudlets.v1.connectors.core.YYY_core_ConnectorsFactory;
 import eu.mosaic_cloud.cloudlets.v1.core.YYY_core_Callback;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
 import eu.mosaic_cloud.connectors.v1.core.Connector;
-import eu.mosaic_cloud.connectors.v1.core.ZZZ_core_ConnectorFactory;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -287,7 +286,7 @@ public final class Cloudlet<TContext extends Object>
 	private final ConnectorsFactoryBuilder provideConnectorsFactoryBuilder () {
 		final String className = ConfigUtils.resolveParameter (this.environment.getConfiguration (), ConfigProperties.Cloudlet_1, String.class, DefaultConnectorsFactory.Builder.class.getName ());
 		Preconditions.checkNotNull (className, "unknown cloudlet connectors factory builder class");
-		final ConnectorsFactoryBuilder builder = this.provideConnectorsFactoryObject (ConnectorsFactoryBuilder.class, className, new Class<?>[] {CloudletController.class, ConnectorEnvironment.class, eu.mosaic_cloud.connectors.v1.core.ZZZ_core_ConnectorsFactory.class}, new Object[] {this.controllerProxy, this.environment.getConnectorEnvironment (), this.environment.getConnectors ()});
+		final ConnectorsFactoryBuilder builder = this.provideConnectorsFactoryObject (ConnectorsFactoryBuilder.class, className, new Class<?>[] {CloudletController.class, ConnectorEnvironment.class, eu.mosaic_cloud.connectors.v1.core.ConnectorsFactory.class}, new Object[] {this.controllerProxy, this.environment.getConnectorEnvironment (), this.environment.getConnectors ()});
 		return builder;
 	}
 	
@@ -375,7 +374,7 @@ public final class Cloudlet<TContext extends Object>
 			throw (new AssertionError ());
 		}
 		Preconditions.checkArgument (objectRaw != null, "invalid cloudlet connectors factory (is null)");
-		Preconditions.checkArgument (classExpected.isInstance (objectRaw), "invalid cloudlet connectors factory `%s` (not an instance of `ZZZ_core_ConnectorsFactory` (from `eu.mosaic_cloud.cloudlets` package))", providerClass.getName ());
+		Preconditions.checkArgument (classExpected.isInstance (objectRaw), "invalid cloudlet connectors factory `%s` (not an instance of `ConnectorsFactory` (from `eu.mosaic_cloud.cloudlets` package))", providerClass.getName ());
 		final TObject object = classExpected.cast (objectRaw);
 		return (object);
 	}
@@ -645,7 +644,7 @@ public final class Cloudlet<TContext extends Object>
 		}
 	}
 	
-	final class ConnectorFactory<TFactory extends ZZZ_core_ConnectorFactory<?>>
+	final class ConnectorFactory<TFactory extends eu.mosaic_cloud.connectors.v1.core.ConnectorFactory<?>>
 				implements
 					InvocationHandler
 	{
@@ -718,16 +717,16 @@ public final class Cloudlet<TContext extends Object>
 	{
 		ConnectorsFactory () {
 			super ();
-			this.factories = new ConcurrentHashMap<Class<? extends ZZZ_core_ConnectorFactory<?>>, ConnectorFactory<? extends ZZZ_core_ConnectorFactory<?>>> ();
+			this.factories = new ConcurrentHashMap<Class<? extends eu.mosaic_cloud.connectors.v1.core.ConnectorFactory<?>>, ConnectorFactory<? extends eu.mosaic_cloud.connectors.v1.core.ConnectorFactory<?>>> ();
 			this.componentConnectorFactory = new ComponentConnectorFactory (Cloudlet.this.controllerProxy, Cloudlet.this.environment.getComponentConnector (), Cloudlet.this.environment.getConnectorEnvironment (), Cloudlet.this.environment.getConnectors ());
 			this.factories.put (YYY_comp_ComponentConnectorFactory.class, new ConnectorFactory<YYY_comp_ComponentConnectorFactory> (YYY_comp_ComponentConnectorFactory.class, this.componentConnectorFactory));
 		}
 		
 		@Override
-		public final <Factory extends ZZZ_core_ConnectorFactory<?>> Factory getConnectorFactory (final Class<Factory> factoryClass) {
+		public final <Factory extends eu.mosaic_cloud.connectors.v1.core.ConnectorFactory<?>> Factory getConnectorFactory (final Class<Factory> factoryClass) {
 			Preconditions.checkNotNull (factoryClass);
 			Preconditions.checkArgument (factoryClass.isInterface ());
-			Preconditions.checkArgument (ZZZ_core_ConnectorFactory.class.isAssignableFrom (factoryClass));
+			Preconditions.checkArgument (eu.mosaic_cloud.connectors.v1.core.ConnectorFactory.class.isAssignableFrom (factoryClass));
 			try {
 				return Cloudlet.this.fsm.new FsmAccess<Void, Factory> () {
 					@Override
@@ -757,7 +756,7 @@ public final class Cloudlet<TContext extends Object>
 		}
 		
 		private final YYY_comp_ComponentConnectorFactory componentConnectorFactory;
-		private final ConcurrentHashMap<Class<? extends ZZZ_core_ConnectorFactory<?>>, ConnectorFactory<? extends ZZZ_core_ConnectorFactory<?>>> factories;
+		private final ConcurrentHashMap<Class<? extends eu.mosaic_cloud.connectors.v1.core.ConnectorFactory<?>>, ConnectorFactory<? extends eu.mosaic_cloud.connectors.v1.core.ConnectorFactory<?>>> factories;
 	}
 	
 	final class ControllerHandler
@@ -861,7 +860,7 @@ public final class Cloudlet<TContext extends Object>
 		}
 		
 		@Override
-		public final <Factory extends ZZZ_core_ConnectorFactory<?>> Factory getConnectorFactory (final Class<Factory> factory) {
+		public final <Factory extends eu.mosaic_cloud.connectors.v1.core.ConnectorFactory<?>> Factory getConnectorFactory (final Class<Factory> factory) {
 			try {
 				return Cloudlet.this.fsm.new FsmAccess<Void, Factory> () {
 					@Override

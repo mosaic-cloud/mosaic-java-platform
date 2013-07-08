@@ -24,7 +24,6 @@ package eu.mosaic_cloud.connectors.implementations.v1.queue.amqp;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpMessageToken;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueConsumerCallback;
-import eu.mosaic_cloud.connectors.v1.queue.amqp.ZZZ_amqp_AmqpQueueConsumerConnector;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -32,7 +31,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public class AmqpQueueConsumerConnector<TMessage>
 			extends AmqpQueueConnector<AmqpQueueConsumerConnectorProxy<TMessage>>
 			implements
-				ZZZ_amqp_AmqpQueueConsumerConnector<TMessage>
+				eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueConsumerConnector<TMessage>
 {
 	protected AmqpQueueConsumerConnector (final AmqpQueueConsumerConnectorProxy<TMessage> proxy) {
 		super (proxy);

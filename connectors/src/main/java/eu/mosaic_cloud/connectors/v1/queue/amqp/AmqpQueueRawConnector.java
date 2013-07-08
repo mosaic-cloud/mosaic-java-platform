@@ -27,7 +27,7 @@ import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-public interface ZZZ_amqp_AmqpQueueRawConnector
+public interface AmqpQueueRawConnector
 			extends
 				QueueConnector
 {

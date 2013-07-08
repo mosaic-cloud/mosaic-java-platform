@@ -27,7 +27,7 @@ import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentConnectorCall
 import eu.mosaic_cloud.cloudlets.v1.connectors.components.YYY_comp_ComponentConnector;
 import eu.mosaic_cloud.cloudlets.v1.connectors.components.YYY_comp_ComponentConnectorFactory;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
-import eu.mosaic_cloud.connectors.v1.core.ZZZ_core_ConnectorsFactory;
+import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactory;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 
@@ -39,7 +39,7 @@ public final class ComponentConnectorFactory
 			implements
 				YYY_comp_ComponentConnectorFactory
 {
-	public ComponentConnectorFactory (final CloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.components.ZZZ_comp_ComponentConnector backingConnector, final ConnectorEnvironment environment, final ZZZ_core_ConnectorsFactory delegate) {
+	public ComponentConnectorFactory (final CloudletController<?> cloudlet, final eu.mosaic_cloud.connectors.v1.components.ZZZ_comp_ComponentConnector backingConnector, final ConnectorEnvironment environment, final ConnectorsFactory delegate) {
 		super (cloudlet, environment, delegate);
 		Preconditions.checkNotNull (backingConnector);
 		this.backingConnector = backingConnector;

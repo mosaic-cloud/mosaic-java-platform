@@ -22,7 +22,6 @@ package eu.mosaic_cloud.connectors.implementations.v1.queue.amqp;
 
 
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration;
-import eu.mosaic_cloud.connectors.v1.queue.amqp.ZZZ_amqp_AmqpQueuePublisherConnector;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -30,7 +29,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public class AmqpQueuePublisherConnector<TMessage>
 			extends AmqpQueueConnector<AmqpQueuePublisherConnectorProxy<TMessage>>
 			implements
-				ZZZ_amqp_AmqpQueuePublisherConnector<TMessage>
+				eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueuePublisherConnector<TMessage>
 {
 	protected AmqpQueuePublisherConnector (final AmqpQueuePublisherConnectorProxy<TMessage> proxy) {
 		super (proxy);
