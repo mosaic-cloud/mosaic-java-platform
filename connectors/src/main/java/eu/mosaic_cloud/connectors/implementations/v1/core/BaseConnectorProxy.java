@@ -24,7 +24,7 @@ package eu.mosaic_cloud.connectors.implementations.v1.core;
 import java.util.UUID;
 
 import eu.mosaic_cloud.connectors.implementations.v1.tools.ConfigProperties;
-import eu.mosaic_cloud.connectors.v1.core.IConnector;
+import eu.mosaic_cloud.connectors.v1.core.Connector;
 import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.core.ChannelResolver;
 import eu.mosaic_cloud.interoperability.core.Message;
@@ -53,7 +53,7 @@ import com.google.common.base.Preconditions;
 public abstract class BaseConnectorProxy
 			implements
 				SessionCallbacks,
-				IConnector
+				Connector
 {
 	/**
 	 * Creates a proxy for a resource.

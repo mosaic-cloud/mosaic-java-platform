@@ -18,8 +18,13 @@
  * #L%
  */
 
-package eu.mosaic_cloud.connectors.v1.httpg;
+package eu.mosaic_cloud.connectors.v1.core;
 
 
-public interface IHttpgMessageToken
-{}
+import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
+
+
+public interface ConnectorsFactoryInitializer
+{
+	public abstract void initialize (final ConnectorsFactoryBuilder builder, final ConnectorEnvironment environment, final IConnectorsFactory delegate);
+}

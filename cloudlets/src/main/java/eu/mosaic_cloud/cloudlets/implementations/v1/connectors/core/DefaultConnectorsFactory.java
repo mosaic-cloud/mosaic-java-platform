@@ -30,8 +30,8 @@ import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorsFactoryBuilder;
 import eu.mosaic_cloud.connectors.implementations.v1.core.BaseConnectorsFactory;
 import eu.mosaic_cloud.connectors.implementations.v1.core.BaseConnectorsFactoryBuilder;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactoryInitializer;
 import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
-import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactoryInitializer;
 
 import com.google.common.base.Preconditions;
 
@@ -73,15 +73,15 @@ public class DefaultConnectorsFactory
 		}
 		
 		@Override
-		public void initialize (final eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorsFactoryInitializer initializer) {
+		public void initialize (final ConnectorsFactoryInitializer initializer) {
 			Preconditions.checkNotNull (initializer);
-			initializer.initialize (this, this.cloudlet, this.environment, this.factory);
+			initializer.initialize (this, this.environment, this.factory);
 		}
 		
 		@Override
-		public void initialize (final IConnectorsFactoryInitializer initializer) {
+		public void initialize (final eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorsFactoryInitializer initializer) {
 			Preconditions.checkNotNull (initializer);
-			initializer.initialize (this, this.environment, this.factory);
+			initializer.initialize (this, this.cloudlet, this.environment, this.factory);
 		}
 		
 		@Override

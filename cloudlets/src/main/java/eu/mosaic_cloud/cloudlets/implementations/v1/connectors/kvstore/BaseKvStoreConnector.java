@@ -31,7 +31,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 
 
-public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.connectors.v1.kvstore.IKvStoreConnector<TValue>, TCallback extends IKvStoreConnectorCallback<TContext, TValue, TExtra>, TContext, TValue, TExtra>
+public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.connectors.v1.kvstore.KvStoreConnector<TValue>, TCallback extends IKvStoreConnectorCallback<TContext, TValue, TExtra>, TContext, TValue, TExtra>
 			extends BaseConnector<TConnector, TCallback, TContext>
 			implements
 				IKvStoreConnector<TValue, TExtra>

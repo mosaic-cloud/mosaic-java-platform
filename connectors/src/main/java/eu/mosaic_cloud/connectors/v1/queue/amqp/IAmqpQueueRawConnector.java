@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.connectors.v1.queue.amqp;
 
 
-import eu.mosaic_cloud.connectors.v1.queue.IQueueConnector;
+import eu.mosaic_cloud.connectors.v1.queue.QueueConnector;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -29,7 +29,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 public interface IAmqpQueueRawConnector
 			extends
-				IQueueConnector
+				QueueConnector
 {
 	/**
 	 * Acknowledge one or several received messages.
@@ -81,7 +81,7 @@ public interface IAmqpQueueRawConnector
 	 *            the consumer callback (this will called when the queuing system will send Consume messages)
 	 * @return a handle to be used in order to know when and how the operation completes
 	 */
-	CallbackCompletion<Void> consume (final String queue, final String consumer, final boolean exclusive, final boolean autoAck, final IAmqpQueueRawConsumerCallback consumerCallback);
+	CallbackCompletion<Void> consume (final String queue, final String consumer, final boolean exclusive, final boolean autoAck, final AmqpQueueRawConsumerCallback consumerCallback);
 	
 	/**
 	 * Declares an exchange and creates a channel for it.

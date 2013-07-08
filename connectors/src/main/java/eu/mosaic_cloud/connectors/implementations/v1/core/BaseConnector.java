@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.connectors.implementations.v1.core;
 
 
-import eu.mosaic_cloud.connectors.v1.core.IConnector;
+import eu.mosaic_cloud.connectors.v1.core.Connector;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
@@ -39,7 +39,7 @@ import com.google.common.base.Preconditions;
  */
 public abstract class BaseConnector<TProxy extends BaseConnectorProxy>
 			implements
-				IConnector,
+				Connector,
 				CallbackProxy
 {
 	protected BaseConnector (final TProxy proxy) {

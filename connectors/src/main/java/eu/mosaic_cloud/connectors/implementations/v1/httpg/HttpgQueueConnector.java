@@ -22,8 +22,8 @@ package eu.mosaic_cloud.connectors.implementations.v1.httpg;
 
 
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration;
+import eu.mosaic_cloud.connectors.v1.httpg.HttpgQueueCallback;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgResponseMessage;
-import eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueCallback;
 import eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueConnector;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -63,7 +63,7 @@ public class HttpgQueueConnector<TRequestBody, TResponseBody>
 	protected final HttpgQueueConnectorProxy<TRequestBody, TResponseBody> proxy;
 	protected final Transcript transcript;
 	
-	public static <TRequestBody, TResponseBody> HttpgQueueConnector<TRequestBody, TResponseBody> create (final ConnectorConfiguration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final IHttpgQueueCallback<TRequestBody, TResponseBody> callback) {
+	public static <TRequestBody, TResponseBody> HttpgQueueConnector<TRequestBody, TResponseBody> create (final ConnectorConfiguration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final HttpgQueueCallback<TRequestBody, TResponseBody> callback) {
 		final HttpgQueueConnectorProxy<TRequestBody, TResponseBody> proxy = HttpgQueueConnectorProxy.create (configuration, requestBodyClass, requestBodyEncoder, responseBodyClass, responseBodyEncoder, callback);
 		return (new HttpgQueueConnector<TRequestBody, TResponseBody> (proxy));
 	}

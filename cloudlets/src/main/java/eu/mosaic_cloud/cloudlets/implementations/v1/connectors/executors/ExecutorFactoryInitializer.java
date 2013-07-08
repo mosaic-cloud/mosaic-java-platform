@@ -27,8 +27,8 @@ import eu.mosaic_cloud.cloudlets.v1.connectors.executors.IExecutor;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.IExecutorCallback;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.IExecutorFactory;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactoryBuilder;
 import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
-import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactoryBuilder;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 
 
@@ -36,7 +36,7 @@ public final class ExecutorFactoryInitializer
 			extends BaseConnectorsFactoryInitializer
 {
 	@Override
-	protected void initialize_1 (final IConnectorsFactoryBuilder builder, final ICloudletController<?> cloudlet, final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
+	protected void initialize_1 (final ConnectorsFactoryBuilder builder, final ICloudletController<?> cloudlet, final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
 		builder.register (IExecutorFactory.class, new IExecutorFactory () {
 			@Override
 			public <TContext, TOutcome, TExtra> IExecutor<TOutcome, TExtra> create (final Configuration configuration, final IExecutorCallback<TContext, TOutcome, TExtra> callback, final TContext callbackContext) {

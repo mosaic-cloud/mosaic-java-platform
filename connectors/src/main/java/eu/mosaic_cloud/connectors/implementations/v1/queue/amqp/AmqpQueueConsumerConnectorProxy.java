@@ -25,10 +25,10 @@ import java.util.concurrent.Callable;
 
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration;
 import eu.mosaic_cloud.connectors.implementations.v1.tools.ConfigProperties;
-import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpMessageToken;
-import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueConsumerCallback;
+import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpMessageToken;
+import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueConsumerCallback;
+import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueRawConsumerCallback;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueConsumerConnector;
-import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueRawConsumerCallback;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
@@ -45,7 +45,7 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 			implements
 				IAmqpQueueConsumerConnector<TMessage>
 {
-	private AmqpQueueConsumerConnectorProxy (final AmqpQueueRawConnectorProxy rawProxy, final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final IAmqpQueueConsumerCallback<TMessage> callback) {
+	private AmqpQueueConsumerConnectorProxy (final AmqpQueueRawConnectorProxy rawProxy, final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final AmqpQueueConsumerCallback<TMessage> callback) {
 		super (rawProxy, configuration, messageClass, messageEncoder);
 		final String identifier = this.raw.getIdentifier ();
 		this.exchange = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_0, String.class, identifier);
@@ -69,7 +69,7 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 	}
 	
 	@Override
-	public CallbackCompletion<Void> acknowledge (final IAmqpMessageToken token_) {
+	public CallbackCompletion<Void> acknowledge (final AmqpMessageToken token_) {
 		final DeliveryToken token = (DeliveryToken) token_;
 		Preconditions.checkNotNull (token);
 		Preconditions.checkArgument (token.proxy == this);
@@ -153,7 +153,7 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 	private final boolean queueDurable;
 	private final boolean queueExclusive;
 	
-	public static <TMessage> AmqpQueueConsumerConnectorProxy<TMessage> create (final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final IAmqpQueueConsumerCallback<TMessage> callback) {
+	public static <TMessage> AmqpQueueConsumerConnectorProxy<TMessage> create (final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final AmqpQueueConsumerCallback<TMessage> callback) {
 		final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create (configuration);
 		// FIXME: the splice below will be done when creating the environment
 		//# final Configuration subConfiguration = configuration.spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
@@ -163,9 +163,9 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 	
 	private final class AmqpConsumerCallback
 				implements
-					IAmqpQueueRawConsumerCallback
+					AmqpQueueRawConsumerCallback
 	{
-		AmqpConsumerCallback (final IAmqpQueueConsumerCallback<TMessage> delegate) {
+		AmqpConsumerCallback (final AmqpQueueConsumerCallback<TMessage> delegate) {
 			super ();
 			this.delegate = delegate;
 		}
@@ -209,12 +209,12 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 			return (CallbackCompletion.createOutcome ());
 		}
 		
-		final IAmqpQueueConsumerCallback<TMessage> delegate;
+		final AmqpQueueConsumerCallback<TMessage> delegate;
 	}
 	
 	private static final class DeliveryToken
 				implements
-					IAmqpMessageToken
+					AmqpMessageToken
 	{
 		DeliveryToken (final AmqpQueueConsumerConnectorProxy<?> proxy, final long token) {
 			super ();

@@ -26,7 +26,7 @@ import java.util.concurrent.ExecutionException;
 
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration;
 import eu.mosaic_cloud.connectors.implementations.v1.queue.amqp.AmqpQueueRawConnector;
-import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueRawConsumerCallback;
+import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueRawConsumerCallback;
 import eu.mosaic_cloud.drivers.queue.amqp.interop.AmqpStub;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.PropertyTypeConfiguration;
@@ -80,7 +80,7 @@ public class AmqpQueueRawConnectorTest
 		final String queue = ConfigUtils.resolveParameter (configuration, "consumer.amqp.queue", String.class, "");
 		final boolean autoAck = ConfigUtils.resolveParameter (configuration, "consumer.amqp.auto_ack", Boolean.class, true);
 		final boolean exclusive = ConfigUtils.resolveParameter (configuration, "consumer.amqp.exclusive", Boolean.class, true);
-		final IAmqpQueueRawConsumerCallback consumerCallback = new ConsumerHandler ();
+		final AmqpQueueRawConsumerCallback consumerCallback = new ConsumerHandler ();
 		Assert.assertTrue (this.awaitSuccess (this.connector.consume (queue, this.clientId, exclusive, autoAck, consumerCallback)));
 	}
 	
@@ -165,7 +165,7 @@ public class AmqpQueueRawConnectorTest
 	
 	final class ConsumerHandler
 				implements
-					IAmqpQueueRawConsumerCallback
+					AmqpQueueRawConsumerCallback
 	{
 		@Override
 		public CallbackCompletion<Void> handleCancelOk (final String consumerTag) {

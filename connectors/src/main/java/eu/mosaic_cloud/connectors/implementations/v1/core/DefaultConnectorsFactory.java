@@ -24,8 +24,8 @@ package eu.mosaic_cloud.connectors.implementations.v1.core;
 import eu.mosaic_cloud.connectors.implementations.v1.httpg.HttpgQueueConnectorFactoryInitializer;
 import eu.mosaic_cloud.connectors.implementations.v1.kvstore.generic.GenericKvStoreConnectorFactoryInitializer;
 import eu.mosaic_cloud.connectors.implementations.v1.queue.amqp.AmqpQueueConnectorFactoryInitializer;
+import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactoryInitializer;
 import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
-import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactoryInitializer;
 
 import com.google.common.base.Preconditions;
 
@@ -54,7 +54,7 @@ public class DefaultConnectorsFactory
 		}
 		
 		@Override
-		public void initialize (final IConnectorsFactoryInitializer initializer) {
+		public void initialize (final ConnectorsFactoryInitializer initializer) {
 			Preconditions.checkNotNull (initializer);
 			initializer.initialize (this, this.environment, this.factory);
 		}

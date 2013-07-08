@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.connectors.v1.queue.amqp;
 
 
-import eu.mosaic_cloud.connectors.v1.queue.IQueueConnector;
+import eu.mosaic_cloud.connectors.v1.queue.QueueConnector;
 
 
 /**
@@ -31,5 +31,5 @@ import eu.mosaic_cloud.connectors.v1.queue.IQueueConnector;
  */
 public interface IAmqpQueueConnector
 			extends
-				IQueueConnector
+				QueueConnector
 {}

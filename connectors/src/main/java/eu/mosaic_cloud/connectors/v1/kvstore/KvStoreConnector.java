@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.connectors.v1.kvstore;
 
 
-import eu.mosaic_cloud.connectors.v1.core.IConnector;
+import eu.mosaic_cloud.connectors.v1.core.Connector;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -32,9 +32,9 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
  * @param <TValue>
  *            type of stored data
  */
-public interface IKvStoreConnector<TValue extends Object>
+public interface KvStoreConnector<TValue extends Object>
 			extends
-				IConnector
+				Connector
 {
 	/**
 	 * Deletes the given key.

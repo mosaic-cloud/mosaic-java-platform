@@ -21,14 +21,14 @@
 package eu.mosaic_cloud.connectors.implementations.v1.core;
 
 
-import eu.mosaic_cloud.connectors.v1.core.IConnector;
+import eu.mosaic_cloud.connectors.v1.core.Connector;
 import eu.mosaic_cloud.connectors.v1.core.IConnectorFactory;
 import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
 
 import com.google.common.base.Preconditions;
 
 
-public abstract class BaseConnectorFactory<TConnector extends IConnector>
+public abstract class BaseConnectorFactory<TConnector extends Connector>
 			extends Object
 			implements
 				IConnectorFactory<TConnector>

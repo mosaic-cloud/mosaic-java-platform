@@ -18,13 +18,13 @@
  * #L%
  */
 
-package eu.mosaic_cloud.connectors.v1.queue;
+package eu.mosaic_cloud.connectors.v1.queue.amqp;
 
 
-import eu.mosaic_cloud.connectors.v1.core.IConnectorFactory;
+import eu.mosaic_cloud.connectors.v1.queue.QueueConnectorFactory;
 
 
-public interface IQueueConnectorFactory<TConnector extends IQueueConnector>
+public interface AmqpQueueConnectorFactory<Connector extends IAmqpQueueConnector>
 			extends
-				IConnectorFactory<TConnector>
+				QueueConnectorFactory<Connector>
 {}

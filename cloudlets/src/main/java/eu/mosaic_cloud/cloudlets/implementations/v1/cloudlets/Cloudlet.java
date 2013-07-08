@@ -46,7 +46,7 @@ import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorsFactory;
 import eu.mosaic_cloud.cloudlets.v1.connectors.core.IConnectorsFactoryBuilder;
 import eu.mosaic_cloud.cloudlets.v1.core.ICallback;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
-import eu.mosaic_cloud.connectors.v1.core.IConnector;
+import eu.mosaic_cloud.connectors.v1.core.Connector;
 import eu.mosaic_cloud.connectors.v1.core.IConnectorFactory;
 import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
@@ -263,9 +263,9 @@ public final class Cloudlet<TContext extends Object>
 					this.exceptions.traceHandledException (exception);
 					throw (new IllegalArgumentException ("error encountered while initializing cloudlet connectors factory", exception));
 				}
-			} else if (initializer instanceof eu.mosaic_cloud.connectors.v1.core.IConnectorsFactoryInitializer) {
+			} else if (initializer instanceof eu.mosaic_cloud.connectors.v1.core.ConnectorsFactoryInitializer) {
 				try {
-					builder.initialize ((eu.mosaic_cloud.connectors.v1.core.IConnectorsFactoryInitializer) initializer);
+					builder.initialize ((eu.mosaic_cloud.connectors.v1.core.ConnectorsFactoryInitializer) initializer);
 				} catch (final Throwable exception) {
 					this.exceptions.traceHandledException (exception);
 					throw (new IllegalArgumentException ("error encountered while initializing cloudlet connectors factory", exception));
@@ -669,7 +669,7 @@ public final class Cloudlet<TContext extends Object>
 					@Override
 					protected final Object execute (final Void input) {
 						final Object[] newArguments;
-						if (IConnector.class.isAssignableFrom (method.getReturnType ())) {
+						if (Connector.class.isAssignableFrom (method.getReturnType ())) {
 							final Class<?>[] argumentTypes = method.getParameterTypes ();
 							newArguments = new Object[oldArguments.length];
 							for (int index = 0; index < oldArguments.length; index++) {

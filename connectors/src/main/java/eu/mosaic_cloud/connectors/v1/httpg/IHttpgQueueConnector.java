@@ -21,13 +21,13 @@
 package eu.mosaic_cloud.connectors.v1.httpg;
 
 
-import eu.mosaic_cloud.connectors.v1.queue.IQueueConnector;
+import eu.mosaic_cloud.connectors.v1.queue.QueueConnector;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 public interface IHttpgQueueConnector<TRequestBody, TResponseBody>
 			extends
-				IQueueConnector
+				QueueConnector
 {
 	CallbackCompletion<Void> respond (HttpgResponseMessage<TResponseBody> response);
 }

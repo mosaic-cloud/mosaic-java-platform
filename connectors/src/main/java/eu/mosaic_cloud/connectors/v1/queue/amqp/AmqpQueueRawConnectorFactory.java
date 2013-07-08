@@ -18,29 +18,16 @@
  * #L%
  */
 
-package eu.mosaic_cloud.connectors.v1.core;
+package eu.mosaic_cloud.connectors.v1.queue.amqp;
 
 
-import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
+import eu.mosaic_cloud.connectors.v1.queue.QueueConnectorFactory;
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 
 
-/**
- * Generic interface that should be implemented by all resource connectors.
- * 
- * @author Georgiana Macariu
- */
-public interface IConnector
+public interface AmqpQueueRawConnectorFactory
 			extends
-				Callbacks
+				QueueConnectorFactory<IAmqpQueueRawConnector>
 {
-	/**
-	 * Destroy the connection with the resource.
-	 */
-	CallbackCompletion<Void> destroy ();
-	
-	/**
-	 * Initialize the connection with the resource.
-	 */
-	CallbackCompletion<Void> initialize ();
+	IAmqpQueueRawConnector create (Configuration configuration);
 }

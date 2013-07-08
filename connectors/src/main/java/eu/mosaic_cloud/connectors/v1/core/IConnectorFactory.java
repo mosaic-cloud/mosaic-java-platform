@@ -28,5 +28,5 @@ package eu.mosaic_cloud.connectors.v1.core;
  * @param <TConnector>
  *            the type of the connector created by this factory
  */
-public interface IConnectorFactory<TConnector extends IConnector>
+public interface IConnectorFactory<TConnector extends Connector>
 {}

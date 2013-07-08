@@ -21,10 +21,19 @@
 package eu.mosaic_cloud.connectors.v1.queue.amqp;
 
 
-import eu.mosaic_cloud.connectors.v1.queue.IQueueConnectorFactory;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
 
-public interface IAmqpQueueConnectorFactory<Connector extends IAmqpQueueConnector>
+public interface AmqpQueueConsumerCallback<TMessage>
 			extends
-				IQueueConnectorFactory<Connector>
-{}
+				Callbacks
+{
+	/**
+	 * Handles a delivered message.
+	 * 
+	 * @param message
+	 *            the message and all its properties
+	 */
+	CallbackCompletion<Void> consume (AmqpMessageToken token, TMessage message);
+}

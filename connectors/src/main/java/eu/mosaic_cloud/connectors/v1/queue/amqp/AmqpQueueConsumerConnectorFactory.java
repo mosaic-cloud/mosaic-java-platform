@@ -18,17 +18,16 @@
  * #L%
  */
 
-package eu.mosaic_cloud.connectors.v1.httpg;
+package eu.mosaic_cloud.connectors.v1.queue.amqp;
 
 
-import eu.mosaic_cloud.connectors.v1.queue.IQueueConnectorFactory;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 
 
-public interface IHttpgQueueConnectorFactory
+public interface AmqpQueueConsumerConnectorFactory
 			extends
-				IQueueConnectorFactory<IHttpgQueueConnector<?, ?>>
+				AmqpQueueConnectorFactory<IAmqpQueueConsumerConnector<?>>
 {
-	<TRequestBody, TResponseBody> IHttpgQueueConnector<TRequestBody, TResponseBody> create (Configuration configuration, Class<TRequestBody> requestBodyClass, DataEncoder<TRequestBody> requestBodyEncoder, Class<TResponseBody> responseBodyClass, DataEncoder<TResponseBody> responseBodyEncoder, IHttpgQueueCallback<TRequestBody, TResponseBody> callback);
+	<TMessage> IAmqpQueueConsumerConnector<TMessage> create (Configuration configuration, Class<TMessage> messageClass, DataEncoder<TMessage> messageEncoder, AmqpQueueConsumerCallback<TMessage> callback);
 }

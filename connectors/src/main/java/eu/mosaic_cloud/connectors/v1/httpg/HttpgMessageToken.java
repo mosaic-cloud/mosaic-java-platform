@@ -18,22 +18,8 @@
  * #L%
  */
 
-package eu.mosaic_cloud.connectors.v1.queue.amqp;
+package eu.mosaic_cloud.connectors.v1.httpg;
 
 
-import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
-
-
-public interface IAmqpQueueConsumerCallback<TMessage>
-			extends
-				Callbacks
-{
-	/**
-	 * Handles a delivered message.
-	 * 
-	 * @param message
-	 *            the message and all its properties
-	 */
-	CallbackCompletion<Void> consume (IAmqpMessageToken token, TMessage message);
-}
+public interface HttpgMessageToken
+{}

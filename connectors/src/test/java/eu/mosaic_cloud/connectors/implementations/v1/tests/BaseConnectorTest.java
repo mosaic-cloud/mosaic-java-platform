@@ -23,7 +23,7 @@ package eu.mosaic_cloud.connectors.implementations.v1.tests;
 
 import java.util.concurrent.ExecutionException;
 
-import eu.mosaic_cloud.connectors.v1.core.IConnector;
+import eu.mosaic_cloud.connectors.v1.core.Connector;
 import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
 import eu.mosaic_cloud.platform.v1.core.serialization.EncodingException;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -35,7 +35,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 
-public abstract class BaseConnectorTest<TConnector extends IConnector, TScenario extends BaseScenario>
+public abstract class BaseConnectorTest<TConnector extends Connector, TScenario extends BaseScenario>
 {
 	@Before
 	public abstract void setUp ();

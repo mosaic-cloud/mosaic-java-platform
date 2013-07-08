@@ -18,17 +18,18 @@
  * #L%
  */
 
-package eu.mosaic_cloud.connectors.v1.kvstore;
+package eu.mosaic_cloud.connectors.v1.queue;
 
 
-import eu.mosaic_cloud.connectors.v1.core.IConnectorFactory;
-import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
-import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
+import eu.mosaic_cloud.connectors.v1.core.Connector;
 
 
-public interface IKvStoreConnectorFactory
+/**
+ * Interface for working with queueing systems.
+ * 
+ * @author Georgiana Macariu
+ */
+public interface QueueConnector
 			extends
-				IConnectorFactory<IKvStoreConnector<?>>
-{
-	<TValue> IKvStoreConnector<TValue> create (Configuration configuration, Class<TValue> valueClass, DataEncoder<TValue> valueEncoder);
-}
+				Connector
+{}

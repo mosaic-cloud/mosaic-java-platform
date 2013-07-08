@@ -84,7 +84,7 @@ public class HttpgQueueConnector<TContext, TRequestBody, TResponseBody, TExtra>
 	
 	public static final class Callback<TRequestBody, TResponseBody>
 				implements
-					eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueCallback<TRequestBody, TResponseBody>
+					eu.mosaic_cloud.connectors.v1.httpg.HttpgQueueCallback<TRequestBody, TResponseBody>
 	{
 		@Override
 		public CallbackCompletion<Void> requested (final HttpgRequestMessage<TRequestBody> request) {

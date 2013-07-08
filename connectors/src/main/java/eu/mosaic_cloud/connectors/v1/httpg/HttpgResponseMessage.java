@@ -29,7 +29,7 @@ import com.google.common.collect.ImmutableMap;
 
 public final class HttpgResponseMessage<TBody extends Object>
 {
-	private HttpgResponseMessage (final String version, final int status, final ImmutableMap<String, String> headers, final TBody body, final IHttpgMessageToken token) {
+	private HttpgResponseMessage (final String version, final int status, final ImmutableMap<String, String> headers, final TBody body, final HttpgMessageToken token) {
 		super ();
 		Preconditions.checkNotNull (version);
 		Preconditions.checkArgument ((status >= 100) && (status <= 599));
@@ -45,18 +45,18 @@ public final class HttpgResponseMessage<TBody extends Object>
 	public final TBody body;
 	public final ImmutableMap<String, String> headers;
 	public final int status;
-	public final IHttpgMessageToken token;
+	public final HttpgMessageToken token;
 	public final String version;
 	
-	public static final <TBody extends Object> HttpgResponseMessage<TBody> create (final String version, final int status, final ImmutableMap<String, String> headers, final TBody body, final IHttpgMessageToken token) {
+	public static final <TBody extends Object> HttpgResponseMessage<TBody> create (final String version, final int status, final ImmutableMap<String, String> headers, final TBody body, final HttpgMessageToken token) {
 		return (new HttpgResponseMessage<TBody> (version, status, headers, body, token));
 	}
 	
-	public static final <TBody extends Object> HttpgResponseMessage<TBody> create (final String version, final int status, final Map<String, String> headers, final TBody body, final IHttpgMessageToken token) {
+	public static final <TBody extends Object> HttpgResponseMessage<TBody> create (final String version, final int status, final Map<String, String> headers, final TBody body, final HttpgMessageToken token) {
 		return (new HttpgResponseMessage<TBody> (version, status, ImmutableMap.copyOf (headers), body, token));
 	}
 	
-	public static final <TBody extends Object> HttpgResponseMessage<TBody> create (final String version, final int status, final TBody body, final IHttpgMessageToken token) {
+	public static final <TBody extends Object> HttpgResponseMessage<TBody> create (final String version, final int status, final TBody body, final HttpgMessageToken token) {
 		return (new HttpgResponseMessage<TBody> (version, status, ImmutableMap.<String, String> of (), body, token));
 	}
 	

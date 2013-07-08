@@ -26,8 +26,8 @@ import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueueConsumeCallba
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.IAmqpQueueConsumerConnector;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.IAmqpQueueConsumerConnectorCallback;
 import eu.mosaic_cloud.cloudlets.v1.core.GenericCallbackCompletionArguments;
-import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpMessageToken;
-import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueConsumerCallback;
+import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpMessageToken;
+import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueConsumerCallback;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
@@ -45,12 +45,12 @@ public class AmqpQueueConsumerConnector<TContext, TMessage, TExtra>
 	}
 	
 	@Override
-	public CallbackCompletion<Void> acknowledge (final IAmqpMessageToken token) {
+	public CallbackCompletion<Void> acknowledge (final AmqpMessageToken token) {
 		return this.acknowledge (token, null);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> acknowledge (final IAmqpMessageToken token, final TExtra extra) {
+	public CallbackCompletion<Void> acknowledge (final AmqpMessageToken token, final TExtra extra) {
 		final CallbackCompletion<Void> completion = this.connector.acknowledge (token);
 		if (this.callback != null) {
 			completion.observe (new CallbackCompletionObserver () {
@@ -71,7 +71,7 @@ public class AmqpQueueConsumerConnector<TContext, TMessage, TExtra>
 		return completion;
 	}
 	
-	protected CallbackCompletion<Void> consume (final IAmqpMessageToken token, final TMessage message) {
+	protected CallbackCompletion<Void> consume (final AmqpMessageToken token, final TMessage message) {
 		CallbackCompletion<Void> result;
 		if (this.callback == null) {
 			result = CallbackCompletion.createFailure (new IllegalStateException ());
@@ -83,10 +83,10 @@ public class AmqpQueueConsumerConnector<TContext, TMessage, TExtra>
 	
 	public static final class Callback<Message>
 				implements
-					IAmqpQueueConsumerCallback<Message>
+					AmqpQueueConsumerCallback<Message>
 	{
 		@Override
-		public CallbackCompletion<Void> consume (final IAmqpMessageToken token, final Message message) {
+		public CallbackCompletion<Void> consume (final AmqpMessageToken token, final Message message) {
 			return this.connector.consume (token, message);
 		}
 		

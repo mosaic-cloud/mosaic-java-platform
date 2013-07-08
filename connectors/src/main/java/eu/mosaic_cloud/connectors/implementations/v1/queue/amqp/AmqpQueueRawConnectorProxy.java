@@ -26,8 +26,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import eu.mosaic_cloud.connectors.implementations.v1.core.BaseConnectorProxy;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration;
 import eu.mosaic_cloud.connectors.implementations.v1.tools.ConfigProperties;
+import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueRawConsumerCallback;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueRawConnector;
-import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueRawConsumerCallback;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
@@ -68,7 +68,7 @@ public final class AmqpQueueRawConnectorProxy
 {
 	protected AmqpQueueRawConnectorProxy (final ConnectorConfiguration configuration) {
 		super (configuration);
-		this.pendingConsumers = new ConcurrentHashMap<String, IAmqpQueueRawConsumerCallback> ();
+		this.pendingConsumers = new ConcurrentHashMap<String, AmqpQueueRawConsumerCallback> ();
 		this.transcript.traceDebugging ("created queue raw connector proxy.");
 	}
 	
@@ -116,7 +116,7 @@ public final class AmqpQueueRawConnectorProxy
 	}
 	
 	@Override
-	public CallbackCompletion<Void> consume (final String queue, final String consumer, final boolean exclusive, final boolean autoAck, final IAmqpQueueRawConsumerCallback consumerCallback) {
+	public CallbackCompletion<Void> consume (final String queue, final String consumer, final boolean exclusive, final boolean autoAck, final AmqpQueueRawConsumerCallback consumerCallback) {
 		Preconditions.checkNotNull (queue);
 		Preconditions.checkNotNull (consumer);
 		Preconditions.checkNotNull (consumerCallback);
@@ -279,7 +279,7 @@ public final class AmqpQueueRawConnectorProxy
 				final AmqpPayloads.CancelOkMessage cancelOkPayload = (CancelOkMessage) message.payload;
 				final String consumerIdentifier = cancelOkPayload.getConsumerTag ();
 				this.transcript.traceDebugging ("processing the cancelation of the consumer `%s` (by the client)...", consumerIdentifier);
-				final IAmqpQueueRawConsumerCallback consumerCallback = this.pendingConsumers.remove (consumerIdentifier);
+				final AmqpQueueRawConsumerCallback consumerCallback = this.pendingConsumers.remove (consumerIdentifier);
 				Preconditions.checkNotNull (consumerCallback);
 				consumerCallback.handleCancelOk (consumerIdentifier);
 				this.pendingRequests.succeed (consumerIdentifier + "//cancel", null);
@@ -289,7 +289,7 @@ public final class AmqpQueueRawConnectorProxy
 				final AmqpPayloads.ServerCancelRequest scancelPayload = (ServerCancelRequest) message.payload;
 				final String consumerIdentifier = scancelPayload.getConsumerTag ();
 				this.transcript.traceDebugging ("processing the cancelation of the consumer `%s` (by the server)...", consumerIdentifier);
-				final IAmqpQueueRawConsumerCallback consumerCallback = this.pendingConsumers.remove (consumerIdentifier);
+				final AmqpQueueRawConsumerCallback consumerCallback = this.pendingConsumers.remove (consumerIdentifier);
 				Preconditions.checkNotNull (consumerCallback);
 				consumerCallback.handleCancelOk (consumerIdentifier);
 				if (this.pendingRequests.peekMaybe (consumerIdentifier + "//consume") != null) {
@@ -306,7 +306,7 @@ public final class AmqpQueueRawConnectorProxy
 				// # final CompletionToken token = cancelOkPayload.getToken ();
 				final String consumerIdentifier = consumeOkPayload.getConsumerTag ();
 				this.transcript.traceDebugging ("processing the registration for the consumer `%s` for pending request with token `%s`...", consumerIdentifier, null);
-				final IAmqpQueueRawConsumerCallback consumerCallback = this.pendingConsumers.get (consumerIdentifier);
+				final AmqpQueueRawConsumerCallback consumerCallback = this.pendingConsumers.get (consumerIdentifier);
 				consumerCallback.handleConsumeOk (consumerIdentifier);
 				this.pendingRequests.succeed (consumerIdentifier + "//consume", null);
 			}
@@ -325,7 +325,7 @@ public final class AmqpQueueRawConnectorProxy
 				final String correlation = delivery.hasCorrelationId () ? delivery.getCorrelationId () : null;
 				final String callback = delivery.hasReplyTo () ? delivery.getReplyTo () : null;
 				this.transcript.traceDebugging ("processing a message delivery (of size `%d`) for the consumer `%s` from exchange `%s` with routing key `%s` (with content-type `%s`, content-encoding `%s`, durable `%b`, correlation `%s`, callback `%s`)...", Integer.valueOf (data.length), consumerIdentifier, exchange, routingKey, contentType, contentEncoding, Boolean.valueOf (durable), correlation, callback);
-				final IAmqpQueueRawConsumerCallback consumerCallback = this.pendingConsumers.get (consumerIdentifier);
+				final AmqpQueueRawConsumerCallback consumerCallback = this.pendingConsumers.get (consumerIdentifier);
 				Preconditions.checkNotNull (consumerIdentifier);
 				final AmqpInboundMessage inboundMessage = new AmqpInboundMessage (consumerIdentifier, deliveryTag, exchange, routingKey, data, durable, callback, contentEncoding, contentType, correlation, null);
 				consumerCallback.handleDelivery (inboundMessage);
@@ -336,7 +336,7 @@ public final class AmqpQueueRawConnectorProxy
 				final String consumerIdentifier = downPayload.getConsumerTag ();
 				final String shutdownSignal = downPayload.getMessage ();
 				this.transcript.traceDebugging ("processing the cancelation of the consumer `%s` (by the server shutdown with signal `%s`)...", consumerIdentifier, shutdownSignal);
-				final IAmqpQueueRawConsumerCallback consumerCallback = this.pendingConsumers.remove (consumerIdentifier);
+				final AmqpQueueRawConsumerCallback consumerCallback = this.pendingConsumers.remove (consumerIdentifier);
 				Preconditions.checkNotNull (consumerCallback);
 				consumerCallback.handleShutdownSignal (consumerIdentifier, shutdownSignal);
 				if (this.pendingRequests.peekMaybe (consumerIdentifier + "//consume") != null) {
@@ -354,7 +354,7 @@ public final class AmqpQueueRawConnectorProxy
 		}
 	}
 	
-	private final ConcurrentHashMap<String, IAmqpQueueRawConsumerCallback> pendingConsumers;
+	private final ConcurrentHashMap<String, AmqpQueueRawConsumerCallback> pendingConsumers;
 	
 	/**
 	 * Returns a proxy for AMQP queuing systems.

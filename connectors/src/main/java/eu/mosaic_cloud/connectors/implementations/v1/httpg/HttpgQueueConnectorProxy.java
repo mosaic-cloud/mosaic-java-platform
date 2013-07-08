@@ -31,12 +31,12 @@ import java.util.concurrent.Callable;
 
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration;
 import eu.mosaic_cloud.connectors.implementations.v1.queue.amqp.AmqpQueueRawConnectorProxy;
+import eu.mosaic_cloud.connectors.v1.httpg.HttpgMessageToken;
+import eu.mosaic_cloud.connectors.v1.httpg.HttpgQueueCallback;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgRequestMessage;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgResponseMessage;
-import eu.mosaic_cloud.connectors.v1.httpg.IHttpgMessageToken;
-import eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueCallback;
 import eu.mosaic_cloud.connectors.v1.httpg.IHttpgQueueConnector;
-import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpQueueRawConsumerCallback;
+import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueRawConsumerCallback;
 import eu.mosaic_cloud.platform.implementations.v1.serialization.SerDesUtils;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
@@ -64,7 +64,7 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 			implements
 				IHttpgQueueConnector<TRequestBody, TResponseBody>
 {
-	private HttpgQueueConnectorProxy (final AmqpQueueRawConnectorProxy raw, final ConnectorConfiguration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final IHttpgQueueCallback<TRequestBody, TResponseBody> callback) {
+	private HttpgQueueConnectorProxy (final AmqpQueueRawConnectorProxy raw, final ConnectorConfiguration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final HttpgQueueCallback<TRequestBody, TResponseBody> callback) {
 		super ();
 		Preconditions.checkNotNull (raw);
 		Preconditions.checkNotNull (configuration);
@@ -390,7 +390,7 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 	private final boolean responseExchangeDurable;
 	private final AmqpExchangeType responseExchangeType;
 	
-	public static <TRequestBody, TResponseBody> HttpgQueueConnectorProxy<TRequestBody, TResponseBody> create (final ConnectorConfiguration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final IHttpgQueueCallback<TRequestBody, TResponseBody> callback) {
+	public static <TRequestBody, TResponseBody> HttpgQueueConnectorProxy<TRequestBody, TResponseBody> create (final ConnectorConfiguration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final HttpgQueueCallback<TRequestBody, TResponseBody> callback) {
 		final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create (configuration);
 		final HttpgQueueConnectorProxy<TRequestBody, TResponseBody> proxy = new HttpgQueueConnectorProxy<TRequestBody, TResponseBody> (rawProxy, configuration, requestBodyClass, requestBodyEncoder, responseBodyClass, responseBodyEncoder, callback);
 		return (proxy);
@@ -402,9 +402,9 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 	
 	private final class AmqpConsumerCallback
 				implements
-					IAmqpQueueRawConsumerCallback
+					AmqpQueueRawConsumerCallback
 	{
-		AmqpConsumerCallback (final IHttpgQueueCallback<TRequestBody, TResponseBody> delegate) {
+		AmqpConsumerCallback (final HttpgQueueCallback<TRequestBody, TResponseBody> delegate) {
 			super ();
 			this.delegate = delegate;
 		}
@@ -441,12 +441,12 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 			return (CallbackCompletion.createOutcome ());
 		}
 		
-		final IHttpgQueueCallback<TRequestBody, TResponseBody> delegate;
+		final HttpgQueueCallback<TRequestBody, TResponseBody> delegate;
 	}
 	
 	private static final class DeliveryToken
 				implements
-					IHttpgMessageToken
+					HttpgMessageToken
 	{
 		DeliveryToken (final HttpgQueueConnectorProxy<?, ?> proxy, final long acknowledgeToken, final String callbackExchange, final String callbackRoutingKey, final String callbackIdentifier) {
 			super ();

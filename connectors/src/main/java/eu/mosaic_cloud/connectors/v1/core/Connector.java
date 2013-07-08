@@ -18,16 +18,29 @@
  * #L%
  */
 
-package eu.mosaic_cloud.connectors.v1.httpg;
+package eu.mosaic_cloud.connectors.v1.core;
 
 
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
 
-public interface IHttpgQueueCallback<TRequestBody, TResponseBody>
+/**
+ * Generic interface that should be implemented by all resource connectors.
+ * 
+ * @author Georgiana Macariu
+ */
+public interface Connector
 			extends
 				Callbacks
 {
-	CallbackCompletion<Void> requested (HttpgRequestMessage<TRequestBody> request);
+	/**
+	 * Destroy the connection with the resource.
+	 */
+	CallbackCompletion<Void> destroy ();
+	
+	/**
+	 * Initialize the connection with the resource.
+	 */
+	CallbackCompletion<Void> initialize ();
 }

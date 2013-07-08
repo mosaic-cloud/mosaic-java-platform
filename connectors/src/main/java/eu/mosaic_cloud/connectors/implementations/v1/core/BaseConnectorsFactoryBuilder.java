@@ -23,9 +23,9 @@ package eu.mosaic_cloud.connectors.implementations.v1.core;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactoryBuilder;
 import eu.mosaic_cloud.connectors.v1.core.IConnectorFactory;
 import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
-import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactoryBuilder;
 
 import com.google.common.base.Preconditions;
 
@@ -33,7 +33,7 @@ import com.google.common.base.Preconditions;
 public abstract class BaseConnectorsFactoryBuilder<TFactory extends BaseConnectorsFactory>
 			extends Object
 			implements
-				IConnectorsFactoryBuilder
+				ConnectorsFactoryBuilder
 {
 	protected BaseConnectorsFactoryBuilder (final TFactory factory) {
 		super ();

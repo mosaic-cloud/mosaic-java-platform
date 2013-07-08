@@ -18,16 +18,17 @@
  * #L%
  */
 
-package eu.mosaic_cloud.connectors.v1.queue.amqp;
+package eu.mosaic_cloud.connectors.v1.kvstore;
 
 
+import eu.mosaic_cloud.connectors.v1.core.IConnectorFactory;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 
 
-public interface IAmqpQueuePublisherConnectorFactory
+public interface KvStoreConnectorFactory
 			extends
-				IAmqpQueueConnectorFactory<IAmqpQueueConsumerConnector<?>>
+				IConnectorFactory<KvStoreConnector<?>>
 {
-	<TMessage> IAmqpQueuePublisherConnector<TMessage> create (Configuration configuration, Class<TMessage> messageClass, DataEncoder<TMessage> messageEncoder);
+	<TValue> KvStoreConnector<TValue> create (Configuration configuration, Class<TValue> valueClass, DataEncoder<TValue> valueEncoder);
 }

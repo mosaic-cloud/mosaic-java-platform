@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp;
 
 
-import eu.mosaic_cloud.connectors.v1.queue.amqp.IAmqpMessageToken;
+import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpMessageToken;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -46,5 +46,5 @@ public interface IAmqpQueueConsumerConnector<TMessage, TExtra>
 	 *            the delivery token in the received message
 	 * @param extra
 	 */
-	CallbackCompletion<Void> acknowledge (IAmqpMessageToken token, TExtra extra);
+	CallbackCompletion<Void> acknowledge (AmqpMessageToken token, TExtra extra);
 }

@@ -18,18 +18,16 @@
  * #L%
  */
 
-package eu.mosaic_cloud.connectors.v1.queue;
+package eu.mosaic_cloud.connectors.v1.httpg;
 
 
-import eu.mosaic_cloud.connectors.v1.core.IConnector;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
 
-/**
- * Interface for working with queueing systems.
- * 
- * @author Georgiana Macariu
- */
-public interface IQueueConnector
+public interface HttpgQueueCallback<TRequestBody, TResponseBody>
 			extends
-				IConnector
-{}
+				Callbacks
+{
+	CallbackCompletion<Void> requested (HttpgRequestMessage<TRequestBody> request);
+}

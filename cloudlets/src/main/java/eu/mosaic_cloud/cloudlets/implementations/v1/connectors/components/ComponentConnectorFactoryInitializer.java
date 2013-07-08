@@ -25,8 +25,8 @@ import eu.mosaic_cloud.cloudlets.implementations.v1.connectors.core.BaseConnecto
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.ICloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.components.IComponentConnectorFactory;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
+import eu.mosaic_cloud.connectors.v1.core.ConnectorsFactoryBuilder;
 import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactory;
-import eu.mosaic_cloud.connectors.v1.core.IConnectorsFactoryBuilder;
 
 import com.google.common.base.Preconditions;
 
@@ -41,7 +41,7 @@ public final class ComponentConnectorFactoryInitializer
 	}
 	
 	@Override
-	protected void initialize_1 (final IConnectorsFactoryBuilder builder, final ICloudletController<?> cloudlet, final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
+	protected void initialize_1 (final ConnectorsFactoryBuilder builder, final ICloudletController<?> cloudlet, final ConnectorEnvironment environment, final IConnectorsFactory delegate) {
 		builder.register (IComponentConnectorFactory.class, new ComponentConnectorFactory (cloudlet, this.backingConnector, environment, delegate));
 	}
 	

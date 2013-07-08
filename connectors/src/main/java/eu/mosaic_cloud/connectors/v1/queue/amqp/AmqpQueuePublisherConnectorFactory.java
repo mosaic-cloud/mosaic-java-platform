@@ -21,5 +21,13 @@
 package eu.mosaic_cloud.connectors.v1.queue.amqp;
 
 
-public interface IAmqpMessageToken
-{}
+import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
+import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
+
+
+public interface AmqpQueuePublisherConnectorFactory
+			extends
+				AmqpQueueConnectorFactory<IAmqpQueueConsumerConnector<?>>
+{
+	<TMessage> IAmqpQueuePublisherConnector<TMessage> create (Configuration configuration, Class<TMessage> messageClass, DataEncoder<TMessage> messageEncoder);
+}

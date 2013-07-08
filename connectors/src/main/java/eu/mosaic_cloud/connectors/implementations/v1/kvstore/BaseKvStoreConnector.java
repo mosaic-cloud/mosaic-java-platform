@@ -22,7 +22,7 @@ package eu.mosaic_cloud.connectors.implementations.v1.kvstore;
 
 
 import eu.mosaic_cloud.connectors.implementations.v1.core.BaseConnector;
-import eu.mosaic_cloud.connectors.v1.kvstore.IKvStoreConnector;
+import eu.mosaic_cloud.connectors.v1.kvstore.KvStoreConnector;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -38,7 +38,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public abstract class BaseKvStoreConnector<TValue extends Object, TProxy extends BaseKvStoreConnectorProxy<TValue>>
 			extends BaseConnector<TProxy>
 			implements
-				IKvStoreConnector<TValue>
+				KvStoreConnector<TValue>
 {
 	protected BaseKvStoreConnector (final TProxy proxy) {
 		super (proxy);

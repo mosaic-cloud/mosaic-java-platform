@@ -28,7 +28,7 @@ import java.util.Map;
 
 import eu.mosaic_cloud.connectors.implementations.v1.core.BaseConnectorProxy;
 import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorConfiguration;
-import eu.mosaic_cloud.connectors.v1.kvstore.IKvStoreConnector;
+import eu.mosaic_cloud.connectors.v1.kvstore.KvStoreConnector;
 import eu.mosaic_cloud.interoperability.core.Message;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.AbortRequest;
@@ -64,7 +64,7 @@ import com.google.protobuf.ByteString;
 public abstract class BaseKvStoreConnectorProxy<TValue extends Object>
 			extends BaseConnectorProxy
 			implements
-				IKvStoreConnector<TValue>
+				KvStoreConnector<TValue>
 {
 	protected BaseKvStoreConnectorProxy (final ConnectorConfiguration configuration, final DataEncoder<TValue> encoder) {
 		super (configuration);

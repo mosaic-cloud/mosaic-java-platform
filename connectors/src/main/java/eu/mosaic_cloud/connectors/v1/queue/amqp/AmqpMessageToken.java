@@ -18,13 +18,8 @@
  * #L%
  */
 
-package eu.mosaic_cloud.connectors.v1.core;
+package eu.mosaic_cloud.connectors.v1.queue.amqp;
 
 
-import eu.mosaic_cloud.connectors.implementations.v1.core.ConnectorEnvironment;
-
-
-public interface IConnectorsFactoryInitializer
-{
-	public abstract void initialize (final IConnectorsFactoryBuilder builder, final ConnectorEnvironment environment, final IConnectorsFactory delegate);
-}
+public interface AmqpMessageToken
+{}

@@ -21,11 +21,11 @@
 package eu.mosaic_cloud.connectors.v1.core;
 
 
-public interface IConnectorsFactoryBuilder
+public interface ConnectorsFactoryBuilder
 {
 	public abstract IConnectorsFactory build ();
 	
-	public abstract void initialize (final IConnectorsFactoryInitializer initializer);
+	public abstract void initialize (final ConnectorsFactoryInitializer initializer);
 	
 	public abstract <TFactory extends IConnectorFactory<?>> void register (final Class<TFactory> factoryClass, final TFactory factory);
 }
