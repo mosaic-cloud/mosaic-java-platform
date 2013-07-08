@@ -44,17 +44,17 @@ public final class AmqpQueueConnectorFactoryInitializer
 		Preconditions.checkNotNull (delegate);
 		builder.register (AmqpQueueConsumerConnectorFactory.class, new AmqpQueueConsumerConnectorFactory () {
 			@Override
-			public <TContext, Message, TExtra> AmqpQueueConsumerConnector<TContext, Message, TExtra> create (final Configuration configuration, final Class<Message> messageClass, final DataEncoder<Message> messageEncoder, final AmqpQueueConsumerConnectorCallback<TContext, Message, TExtra> callback, final TContext callbackContext) {
-				final AmqpQueueConsumerConnector.Callback<Message> backingCallback = new AmqpQueueConsumerConnector.Callback<Message> ();
-				final eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueConsumerConnector<Message> backingConnector = delegate.getConnectorFactory (eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueConsumerConnectorFactory.class).create (configuration, messageClass, messageEncoder, backingCallback);
-				return new AmqpQueueConsumerConnector<TContext, Message, TExtra> (cloudlet, backingConnector, configuration, callback, callbackContext, backingCallback);
+			public <TContext, TMessage, TExtra> AmqpQueueConsumerConnector<TContext, TMessage, TExtra> create (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final AmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, final TContext callbackContext) {
+				final AmqpQueueConsumerConnector.Callback<TMessage> backingCallback = new AmqpQueueConsumerConnector.Callback<TMessage> ();
+				final eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueConsumerConnector<TMessage> backingConnector = delegate.getConnectorFactory (eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueConsumerConnectorFactory.class).create (configuration, messageClass, messageEncoder, backingCallback);
+				return new AmqpQueueConsumerConnector<TContext, TMessage, TExtra> (cloudlet, backingConnector, configuration, callback, callbackContext, backingCallback);
 			}
 		});
 		builder.register (AmqpQueuePublisherConnectorFactory.class, new AmqpQueuePublisherConnectorFactory () {
 			@Override
-			public <TContext, Message, TExtra> AmqpQueuePublisherConnector<TContext, Message, TExtra> create (final Configuration configuration, final Class<Message> messageClass, final DataEncoder<Message> messageEncoder, final AmqpQueuePublisherConnectorCallback<TContext, Message, TExtra> callback, final TContext callbackContext) {
-				final eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueuePublisherConnector<Message> backingConnector = delegate.getConnectorFactory (eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueuePublisherConnectorFactory.class).create (configuration, messageClass, messageEncoder);
-				return new AmqpQueuePublisherConnector<TContext, Message, TExtra> (cloudlet, backingConnector, configuration, callback, callbackContext);
+			public <TContext, TMessage, TExtra> AmqpQueuePublisherConnector<TContext, TMessage, TExtra> create (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final AmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback, final TContext callbackContext) {
+				final eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueuePublisherConnector<TMessage> backingConnector = delegate.getConnectorFactory (eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueuePublisherConnectorFactory.class).create (configuration, messageClass, messageEncoder);
+				return new AmqpQueuePublisherConnector<TContext, TMessage, TExtra> (cloudlet, backingConnector, configuration, callback, callbackContext);
 			}
 		});
 	}

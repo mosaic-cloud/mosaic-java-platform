@@ -44,9 +44,9 @@ public final class ComponentConnectorFactory
 	}
 	
 	@Override
-	public final <TConnectorContext, TExtra> ComponentConnector<TConnectorContext, TExtra> create (final ComponentConnectorCallbacks<TConnectorContext, TExtra> callbacks, final TConnectorContext callbacksContext) {
+	public final <TContext, TExtra> ComponentConnector<TContext, TExtra> create (final ComponentConnectorCallbacks<TContext, TExtra> callbacks, final TContext callbacksContext) {
 		final Configuration configuration = PropertyTypeConfiguration.createEmpty ();
-		final ComponentConnector<TConnectorContext, TExtra> connector = new ComponentConnector<TConnectorContext, TExtra> (this.cloudlet, this.backingConnector, configuration, callbacks, callbacksContext);
+		final ComponentConnector<TContext, TExtra> connector = new ComponentConnector<TContext, TExtra> (this.cloudlet, this.backingConnector, configuration, callbacks, callbacksContext);
 		return connector;
 	}
 	
