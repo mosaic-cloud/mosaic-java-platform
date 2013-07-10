@@ -192,7 +192,7 @@ public final class HttpgQueueConnectorProxy<TRequestBody, TResponseBody>
 		final CallbackCompletion<Void> publishOutcome = this.raw.publish (outbound);
 		this.transcript.traceDebugging ("acknowledging the message `%032x` for consumer `%s`...", Long.valueOf (delivery.acknowledgeToken), this.requestConsumerIdentifier);
 		final CallbackCompletion<Void> acknowledgeOutcome = this.raw.ack (delivery.acknowledgeToken, false);
-		return (CallbackCompletion.createAndChained (publishOutcome, acknowledgeOutcome));
+		return (CallbackCompletion.createChained (publishOutcome, acknowledgeOutcome));
 	}
 	
 	protected HttpgRequestMessage<TRequestBody> decodeRequest (final AmqpInboundMessage message)

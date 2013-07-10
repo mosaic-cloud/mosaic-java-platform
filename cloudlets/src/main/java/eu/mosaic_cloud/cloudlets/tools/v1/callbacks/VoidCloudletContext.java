@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-examples-simple-cloudlets
+ * mosaic-cloudlets
  * %%
  * Copyright (C) 2010 - 2013 Institute e-Austria Timisoara (Romania)
  * %%
@@ -18,34 +18,16 @@
  * #L%
  */
 
-package eu.mosaic_cloud.examples.cloudlets.simple;
+package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
-public class PingPongData
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
+
+
+public final class VoidCloudletContext
+			extends DefaultCloudletContext<VoidCloudletContext>
 {
-	public PingPongData () {}
-	
-	public String getPing () {
-		return this.ping;
+	public VoidCloudletContext (final CloudletController<VoidCloudletContext> cloudlet) {
+		super (cloudlet);
 	}
-	
-	public String getPong () {
-		return this.pong;
-	}
-	
-	public void setPing (final String ping) {
-		this.ping = ping;
-	}
-	
-	public void setPong (final String pong) {
-		this.pong = pong;
-	}
-	
-	@Override
-	public String toString () {
-		return "(" + this.ping + ", " + this.pong + ")";
-	}
-	
-	private String ping;
-	private String pong;
 }

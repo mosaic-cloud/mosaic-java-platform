@@ -53,7 +53,7 @@ public class PingPongCloudletsTest
 		@Override
 		public void setUp () {
 			this.doRun = PingPongCloudletsTest.doRun;
-			this.setUp (PingCloudlet.LifeCycleHandler.class, PingCloudlet.PingCloudletContext.class, "ping-cloudlet.properties");
+			this.setUp (PingCloudlet.CloudletCallback.class, PingCloudlet.Context.class, "ping-cloudlet.properties");
 		}
 	}
 	
@@ -63,7 +63,7 @@ public class PingPongCloudletsTest
 		@Override
 		public void setUp () {
 			this.doRun = PingPongCloudletsTest.doRun;
-			this.setUp (PongCloudlet.LifeCycleHandler.class, PongCloudlet.PongCloudletContext.class, "pong-cloudlet.properties");
+			this.setUp (PongCloudlet.CloudletCallback.class, PongCloudlet.Context.class, "pong-cloudlet.properties");
 		}
 	}
 }

@@ -21,6 +21,7 @@
 package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutionFailedCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutionSucceededCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutorCallback;
@@ -32,13 +33,17 @@ public class DefaultExecutorCallback<TContext, TOutcome, TExtra>
 			implements
 				ExecutorCallback<TContext, TOutcome, TExtra>
 {
+	public DefaultExecutorCallback (final CloudletController<TContext> cloudlet) {
+		super (cloudlet);
+	}
+	
 	@Override
 	public CallbackCompletion<Void> executionFailed (final TContext context, final ExecutionFailedCallbackArguments<TExtra> arguments) {
-		return this.handleUnhandledCallback (arguments, "Execution Failed", false, false);
+		return (this.handleUnhandledCallback (ExecutorCallback.class, "executionFailed", context, arguments, false, false));
 	}
 	
 	@Override
 	public CallbackCompletion<Void> executionSucceeded (final TContext context, final ExecutionSucceededCallbackArguments<TOutcome, TExtra> arguments) {
-		return this.handleUnhandledCallback (arguments, "Execution Succeeded", true, false);
+		return (this.handleUnhandledCallback (ExecutorCallback.class, "executionSucceeded", context, arguments, true, false));
 	}
 }

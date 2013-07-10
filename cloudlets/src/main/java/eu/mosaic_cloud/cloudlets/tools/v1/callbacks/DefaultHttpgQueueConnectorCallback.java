@@ -21,6 +21,7 @@
 package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.HttpgQueueConnectorCallback;
 import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.HttpgQueueRequestedCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.core.GenericCallbackCompletionArguments;
@@ -32,18 +33,22 @@ public class DefaultHttpgQueueConnectorCallback<TContext, TRequestBody, TRespons
 			implements
 				HttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra>
 {
+	public DefaultHttpgQueueConnectorCallback (final CloudletController<TContext> cloudlet) {
+		super (cloudlet);
+	}
+	
 	@Override
 	public CallbackCompletion<Void> requested (final TContext context, final HttpgQueueRequestedCallbackArguments<TRequestBody> arguments) {
-		return this.handleUnhandledCallback (arguments, "Requested", false, false);
+		return (this.handleUnhandledCallback (HttpgQueueConnectorCallback.class, "requested", context, arguments, true, false));
 	}
 	
 	@Override
 	public CallbackCompletion<Void> respondFailed (final TContext context, final GenericCallbackCompletionArguments<TExtra> arguments) {
-		return this.handleUnhandledCallback (arguments, "Acknowledge Failed", false, false);
+		return (this.handleUnhandledCallback (HttpgQueueConnectorCallback.class, "respondFailed", context, arguments, false, false));
 	}
 	
 	@Override
 	public CallbackCompletion<Void> respondSucceeded (final TContext context, final GenericCallbackCompletionArguments<TExtra> arguments) {
-		return this.handleUnhandledCallback (arguments, "Acknowledge Succeeded", true, false);
+		return (this.handleUnhandledCallback (HttpgQueueConnectorCallback.class, "respondSucceeded", context, arguments, false, false));
 	}
 }

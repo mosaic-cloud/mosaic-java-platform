@@ -23,8 +23,9 @@ package eu.mosaic_cloud.cloudlets.implementations.v1.tests;
 
 import eu.mosaic_cloud.cloudlets.implementations.v1.cloudlets.Cloudlet;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
+import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.VoidCloudletContext;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
-import eu.mosaic_cloud.cloudlets.v1.core.Callback;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -34,7 +35,7 @@ public class CloudletLifecycleTest
 	@Override
 	public void setUp () {
 		this.scenario = new BaseScenario<VoidCloudletContext> ();
-		BaseCloudletTest.setUpScenario (this.getClass (), this.scenario, null, Callbacks.class, VoidCloudletContext.class);
+		BaseCloudletTest.setUpScenario (this.getClass (), this.scenario, null, Callback.class, VoidCloudletContext.class);
 		this.cloudlet = Cloudlet.create (this.scenario.environment);
 	}
 	
@@ -43,19 +44,23 @@ public class CloudletLifecycleTest
 		this.awaitSuccess (this.cloudlet.initialize ());
 	}
 	
-	public static class Callbacks
+	public static class Callback
 				extends DefaultCloudletCallback<VoidCloudletContext>
 	{
+		public Callback (final CloudletController<VoidCloudletContext> cloudlet) {
+			super (cloudlet);
+		}
+		
 		@Override
 		public CallbackCompletion<Void> destroy (final VoidCloudletContext context, final CloudletCallbackArguments<VoidCloudletContext> arguments) {
-			this.transcript.traceDebugging ("destroying...");
-			return (Callback.SUCCESS);
+			context.transcript.traceDebugging ("destroying...");
+			return (eu.mosaic_cloud.cloudlets.v1.core.Callback.SUCCESS);
 		}
 		
 		@Override
 		public CallbackCompletion<Void> initialize (final VoidCloudletContext context, final CloudletCallbackArguments<VoidCloudletContext> arguments) {
-			this.transcript.traceDebugging ("initializing...");
-			return (Callback.SUCCESS);
+			context.transcript.traceDebugging ("initializing...");
+			return (eu.mosaic_cloud.cloudlets.v1.core.Callback.SUCCESS);
 		}
 	}
 }

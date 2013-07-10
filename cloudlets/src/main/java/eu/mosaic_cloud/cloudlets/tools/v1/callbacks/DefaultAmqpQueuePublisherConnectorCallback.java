@@ -21,34 +21,28 @@
 package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueuePublisherConnectorCallback;
 import eu.mosaic_cloud.cloudlets.v1.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-/**
- * Default AMQP publisher callback.
- * 
- * @author Georgiana Macariu
- * @param <TContext>
- *            the context of the cloudlet callback
- * @param <TValue>
- *            the type of the values exchanged with the key-value store using this connector
- * @param <TExtra>
- *            the type of the extra data; as an example, this data can be used correlation
- */
-public class DefaultAmqpPublisherConnectorCallback<TContext, TValue, TExtra>
+public class DefaultAmqpQueuePublisherConnectorCallback<TContext, TValue, TExtra>
 			extends DefaultAmqpQueueConnectorCallback<TContext>
 			implements
 				AmqpQueuePublisherConnectorCallback<TContext, TValue, TExtra>
 {
+	public DefaultAmqpQueuePublisherConnectorCallback (final CloudletController<TContext> cloudlet) {
+		super (cloudlet);
+	}
+	
 	@Override
 	public CallbackCompletion<Void> publishFailed (final TContext context, final GenericCallbackCompletionArguments<TExtra> arguments) {
-		return this.handleUnhandledCallback (arguments, "Publish Failed", false, false);
+		return (this.handleUnhandledCallback (AmqpQueuePublisherConnectorCallback.class, "publishFailed", context, arguments, false, false));
 	}
 	
 	@Override
 	public CallbackCompletion<Void> publishSucceeded (final TContext context, final GenericCallbackCompletionArguments<TExtra> arguments) {
-		return this.handleUnhandledCallback (arguments, "Publish Succeeded", true, false);
+		return (this.handleUnhandledCallback (AmqpQueuePublisherConnectorCallback.class, "publishSucceeded", context, arguments, true, false));
 	}
 }

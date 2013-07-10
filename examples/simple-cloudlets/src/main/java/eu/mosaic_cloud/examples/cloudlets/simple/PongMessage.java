@@ -25,27 +25,9 @@ public class PongMessage
 {
 	public PongMessage () {}
 	
-	public PongMessage (final String key, final PingPongData value) {
-		this.key = key;
-		this.value = value;
+	public PongMessage (final String token) {
+		this.token = token;
 	}
 	
-	public String getKey () {
-		return this.key;
-	}
-	
-	public PingPongData getValue () {
-		return this.value;
-	}
-	
-	public void setKey (final String key) {
-		this.key = key;
-	}
-	
-	public void setValue (final PingPongData value) {
-		this.value = value;
-	}
-	
-	private String key;
-	private PingPongData value;
+	public String token;
 }

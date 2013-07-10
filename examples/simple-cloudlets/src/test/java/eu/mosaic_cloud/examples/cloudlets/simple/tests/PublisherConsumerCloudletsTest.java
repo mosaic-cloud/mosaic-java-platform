@@ -53,7 +53,7 @@ public class PublisherConsumerCloudletsTest
 		@Override
 		public void setUp () {
 			this.doRun = PublisherConsumerCloudletsTest.doRun;
-			this.setUp (ConsumerCloudlet.LifeCycleHandler.class, ConsumerCloudlet.ConsumerCloudletContext.class, "consumer-cloudlet.properties");
+			this.setUp (ConsumerCloudlet.CloudletCallback.class, ConsumerCloudlet.Context.class, "consumer-cloudlet.properties");
 		}
 	}
 	
@@ -63,7 +63,7 @@ public class PublisherConsumerCloudletsTest
 		@Override
 		public void setUp () {
 			this.doRun = PublisherConsumerCloudletsTest.doRun;
-			this.setUp (PublisherCloudlet.LifeCycleHandler.class, PublisherCloudlet.PublisherCloudletContext.class, "publisher-cloudlet.properties");
+			this.setUp (PublisherCloudlet.CloudletCallback.class, PublisherCloudlet.Context.class, "publisher-cloudlet.properties");
 		}
 	}
 }

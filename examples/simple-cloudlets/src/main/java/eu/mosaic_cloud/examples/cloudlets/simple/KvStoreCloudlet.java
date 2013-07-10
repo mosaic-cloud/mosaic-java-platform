@@ -23,23 +23,23 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 
 import java.util.UUID;
 
-import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultAmqpQueuePublisherConnectorCallback;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudlet;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletContext;
+import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultKvStoreConnectorCallback;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
-import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueuePublisherConnector;
+import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.KvStoreCallbackCompletionArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.KvStoreConnector;
 import eu.mosaic_cloud.cloudlets.v1.core.Callback;
 import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
-import eu.mosaic_cloud.cloudlets.v1.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.platform.implementations.v1.serialization.PlainTextDataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 
-public class PublisherCloudlet
+public class KvStoreCloudlet
 			extends DefaultCloudlet
 {
 	static CallbackCompletion<Void> maybeContinue (final Context context) {
@@ -47,9 +47,10 @@ public class PublisherCloudlet
 		Threading.sleep (context.delay);
 		//----
 		if (context.count < context.limit) {
-			final String data = String.format ("Test message %d! (%s)", Integer.valueOf (context.count), UUID.randomUUID ().toString ());
-			context.logger.info ("PublisherCloudlet sending message `{}`.", data);
-			context.connector.publish (data, null);
+			final String key = UUID.randomUUID ().toString ();
+			final String data = String.format ("Test value %d! (%s)", Integer.valueOf (context.count), key);
+			context.logger.info ("KvStoreCloudlet setting value `{}` -> `{}`.", key, data);
+			context.connector.set (key, data, key);
 			context.count += 1;
 		} else
 			context.cloudlet.destroy ();
@@ -78,14 +79,14 @@ public class PublisherCloudlet
 		@Override
 		public CallbackCompletion<Void> initialize (final Context context, final CloudletCallbackArguments<Context> arguments) {
 			context.logger.info ("PublisherCloudlet initializing...");
-			context.connector = context.createAmqpQueuePublisherConnector ("connector", String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, ConnectorCallback.class);
+			context.connector = context.createKvStoreConnector ("store", String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, ConnectorCallback.class);
 			return (context.connector.initialize ());
 		}
 		
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded (final Context context, final CloudletCallbackCompletionArguments<Context> arguments) {
 			context.logger.info ("PublisherCloudlet initialized successfully.");
-			return (PublisherCloudlet.maybeContinue (context));
+			return (KvStoreCloudlet.maybeContinue (context));
 		}
 	}
 	
@@ -96,14 +97,14 @@ public class PublisherCloudlet
 			super (cloudlet);
 		}
 		
-		AmqpQueuePublisherConnector<String, Void> connector;
+		KvStoreConnector<String, String> connector;
 		int count = 0;
 		final int delay = 100;
 		final int limit = 1000;
 	}
 	
 	static class ConnectorCallback
-				extends DefaultAmqpQueuePublisherConnectorCallback<Context, String, Void>
+				extends DefaultKvStoreConnectorCallback<Context, String, String>
 	{
 		public ConnectorCallback (final CloudletController<Context> cloudlet) {
 			super (cloudlet);
@@ -116,14 +117,25 @@ public class PublisherCloudlet
 		}
 		
 		@Override
+		public CallbackCompletion<Void> getSucceeded (final Context context, final KvStoreCallbackCompletionArguments<String, String> arguments) {
+			final String key = arguments.getExtra ();
+			final String value = arguments.getValue ();
+			context.logger.info ("KvStoreCloudlet got value `{}` -> `{}`.", key, value);
+			return (KvStoreCloudlet.maybeContinue (context));
+		}
+		
+		@Override
 		public CallbackCompletion<Void> initializeSucceeded (final Context context, final CallbackArguments arguments) {
 			context.logger.info ("PublisherCloudlet connector initialized successfully.");
 			return (Callback.SUCCESS);
 		}
 		
 		@Override
-		public CallbackCompletion<Void> publishSucceeded (final Context context, final GenericCallbackCompletionArguments<Void> arguments) {
-			return (PublisherCloudlet.maybeContinue (context));
+		public CallbackCompletion<Void> setSucceeded (final Context context, final KvStoreCallbackCompletionArguments<String, String> arguments) {
+			final String key = arguments.getExtra ();
+			context.logger.info ("KvStoreCloudlet getting value `{}`.", key);
+			context.connector.get (key, key);
+			return (Callback.SUCCESS);
 		}
 	}
 }

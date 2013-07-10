@@ -21,40 +21,38 @@
 package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorCallback;
 import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-/**
- * Default resource accessor callback.
- * 
- * @author Georgiana Macariu
- * @param <TContext>
- *            the type of the context of the cloudlet using this callback
- */
 public class DefaultConnectorCallback<TContext>
 			extends DefaultCallback<TContext>
 			implements
 				ConnectorCallback<TContext>
 {
+	public DefaultConnectorCallback (final CloudletController<TContext> cloudlet) {
+		super (cloudlet);
+	}
+	
 	@Override
 	public CallbackCompletion<Void> destroyFailed (final TContext context, final CallbackArguments arguments) {
-		return this.handleUnhandledCallback (arguments, "Resource Destroy Failed", false, false);
+		return (this.handleUnhandledCallback (ConnectorCallback.class, "destroyFailed", context, arguments, false, true));
 	}
 	
 	@Override
 	public CallbackCompletion<Void> destroySucceeded (final TContext context, final CallbackArguments arguments) {
-		return this.handleUnhandledCallback (arguments, "Resource Destroy Succeeded", true, false);
+		return (this.handleUnhandledCallback (ConnectorCallback.class, "destroySucceeded", context, arguments, true, false));
 	}
 	
 	@Override
 	public CallbackCompletion<Void> initializeFailed (final TContext context, final CallbackArguments arguments) {
-		return this.handleUnhandledCallback (arguments, "Resource Initialize Failed", false, true);
+		return (this.handleUnhandledCallback (ConnectorCallback.class, "initializeFailed", context, arguments, false, true));
 	}
 	
 	@Override
 	public CallbackCompletion<Void> initializeSucceeded (final TContext context, final CallbackArguments arguments) {
-		return this.handleUnhandledCallback (arguments, "Resource Initialize Succeeded", true, true);
+		return (this.handleUnhandledCallback (ConnectorCallback.class, "initializeSucceeded", context, arguments, true, false));
 	}
 }

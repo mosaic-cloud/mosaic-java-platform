@@ -29,6 +29,6 @@ public class HelloWorldCloudletTest
 {
 	@Override
 	public void setUp () {
-		this.setUp (HelloWorldCloudlet.LifeCycleHandler.class, HelloWorldCloudlet.HelloCloudletContext.class, "hello-cloudlet.properties");
+		this.setUp (HelloWorldCloudlet.Callback.class, HelloWorldCloudlet.Context.class, "hello-cloudlet.properties");
 	}
 }

@@ -23,55 +23,63 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 
 import java.util.UUID;
 
+import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudlet;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
+import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletContext;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultHttpgQueueConnectorCallback;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
-import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.HttpgQueueConnectorFactory;
 import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.HttpgQueueRequestedCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.core.Callback;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgQueueConnector;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgRequestMessage;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgResponseMessage;
 import eu.mosaic_cloud.platform.implementations.v1.serialization.PlainTextDataEncoder;
-import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
-import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 public class HttpgCloudlet
+			extends DefaultCloudlet
 {
-	public static final class Callbacks
+	public static class CloudletCallback
 				extends DefaultCloudletCallback<Context>
 	{
+		public CloudletCallback (final CloudletController<Context> cloudlet) {
+			super (cloudlet);
+		}
+		
 		@Override
 		public CallbackCompletion<Void> destroy (final Context context, final CloudletCallbackArguments<Context> arguments) {
-			this.logger.info ("destroying cloudlet...");
+			context.logger.info ("destroying cloudlet...");
 			return (context.gateway.destroy ());
 		}
 		
 		@Override
 		public CallbackCompletion<Void> initialize (final Context context, final CloudletCallbackArguments<Context> arguments) {
-			this.logger.info ("initializing cloudlet...");
-			context.identity = UUID.randomUUID ().toString ();
-			context.cloudlet = arguments.getCloudlet ();
-			final Configuration cloudletConfiguration = context.cloudlet.getConfiguration ();
-			final Configuration gatewayConfiguration = cloudletConfiguration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("gateway"));
-			context.gateway = context.cloudlet.getConnectorFactory (HttpgQueueConnectorFactory.class).create (gatewayConfiguration, String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, new GatewayCallbacks (), context);
+			context.logger.info ("initializing cloudlet...");
+			context.gateway = context.createHttpgQueueConnector ("gateway", String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, GatewayCallback.class);
 			return (context.gateway.initialize ());
 		}
 	}
 	
-	public static final class Context
+	public static class Context
+				extends DefaultCloudletContext<Context>
 	{
-		CloudletController<Context> cloudlet;
+		public Context (final CloudletController<Context> cloudlet) {
+			super (cloudlet);
+		}
+		
 		HttpgQueueConnector<String, String> gateway;
-		String identity;
+		final String identity = UUID.randomUUID ().toString ();
 	}
 	
-	public static final class GatewayCallbacks
+	static class GatewayCallback
 				extends DefaultHttpgQueueConnectorCallback<Context, String, String, Void>
 	{
+		public GatewayCallback (final CloudletController<Context> cloudlet) {
+			super (cloudlet);
+		}
+		
 		@Override
 		public CallbackCompletion<Void> requested (final Context context, final HttpgQueueRequestedCallbackArguments<String> arguments) {
 			final HttpgRequestMessage<String> request = arguments.getRequest ();

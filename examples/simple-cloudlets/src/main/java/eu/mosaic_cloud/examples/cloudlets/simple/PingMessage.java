@@ -25,17 +25,9 @@ public class PingMessage
 {
 	public PingMessage () {}
 	
-	public PingMessage (final String key) {
-		this.key = key;
+	public PingMessage (final String token) {
+		this.token = token;
 	}
 	
-	public String getKey () {
-		return this.key;
-	}
-	
-	public void setKey (final String key) {
-		this.key = key;
-	}
-	
-	private String key;
+	public String token;
 }

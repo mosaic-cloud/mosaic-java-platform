@@ -21,6 +21,7 @@
 package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.core.Callback;
 import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -28,66 +29,54 @@ import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
-import org.slf4j.Logger;
 
-
-/**
- * Default callback class.
- * 
- * @author Georgiana Macariu
- * @param <TContext>
- *            the type of the context of the cloudlet using this callback
- */
 public class DefaultCallback<TContext>
+			extends Object
 			implements
 				Callback<TContext>
 {
-	protected DefaultCallback () {
+	protected DefaultCallback (final CloudletController<TContext> cloudlet) {
 		super ();
+		this.cloudlet = cloudlet;
 		this.transcript = Transcript.create (this, true);
-		this.logger = this.transcript.adaptAs (Logger.class);
 		this.exceptions = TranscriptExceptionTracer.create (this.transcript, FallbackExceptionTracer.defaultInstance);
 	}
 	
-	/**
-	 * Handles any unhandled callback.
-	 * 
-	 * @param arguments
-	 *            the arguments of the callback
-	 * @param callbackType
-	 *            a string describing the type of callback (e.g. initialize)
-	 * @param positive
-	 *            <code>true</code> if callback corresponds to successful termination of the operation
-	 * @param couldDestroy
-	 *            <code>true</code> if cloudlet can be destroyed here
-	 */
-	protected CallbackCompletion<Void> handleUnhandledCallback (final CallbackArguments arguments, final String callbackType, final boolean positive, final boolean couldDestroy) {
-		this.traceUnhandledCallback (arguments, callbackType, positive);
-		if (!positive && couldDestroy) {
-			arguments.getCloudlet ().destroy ();
-		}
-		return CallbackCompletion.createOutcome ();
+	protected CallbackCompletion<Void> chain (final CallbackCompletion<?> ... dependents) {
+		return (CallbackCompletion.createChained (dependents));
 	}
 	
-	/**
-	 * Traces unhandled callbacks.
-	 * 
-	 * @param arguments
-	 *            the arguments of the callback
-	 * @param callbackType
-	 *            a string describing the type of callback (e.g. initialize)
-	 * @param positive
-	 *            <code>true</code> if callback corresponds to successful termination of the operation
-	 */
-	protected void traceUnhandledCallback (final CallbackArguments arguments, final String callbackType, final boolean positive) {
-		if (positive) {
-			this.transcript.traceDebugging ("unhandled successfull callback `%s` for cloudlet `%{object:identity}`; ignoring!", callbackType, arguments.getCloudlet ());
-		} else {
-			this.transcript.traceWarning ("unhandled failure callback `%s` for cloudlet `%{object:identity}`; ignoring!", callbackType, arguments.getCloudlet ());
-		}
+	protected void enforceCloudlet (final CloudletController<?> cloudlet) {
+		if ((this.cloudlet != null) && (this.cloudlet != cloudlet))
+			throw (new IllegalArgumentException ());
 	}
 	
+	protected CallbackCompletion<Void> handleUnhandledCallback (final Class<? extends Callback> category, final String callback, final TContext context, final CallbackArguments arguments, final boolean positive, final boolean couldDestroy) {
+		final CloudletController<?> cloudlet = arguments.getCloudlet ();
+		this.enforceCloudlet (cloudlet);
+		this.traceCallback (category, callback, context, arguments, positive);
+		if (positive)
+			this.transcript.traceDebugging ("unhandled successfull callback `%{class}:%s` for cloudlet `%{object:identity}` within context `%{object:identity}`; ignoring!", category, callback, cloudlet, context);
+		else
+			this.transcript.traceWarning ("unhandled failure callback `%{class}:%s` for cloudlet `%{object:identity}` within context `%{object:identity}`; ignoring!", category, callback, cloudlet, context);
+		if (!positive && couldDestroy)
+			cloudlet.destroy ();
+		return (Callback.SUCCESS);
+	}
+	
+	protected void traceCallback (final Class<? extends Callback> category, final String callback, final TContext context, final CallbackArguments arguments, final boolean positive) {
+		final CloudletController<?> cloudlet = arguments.getCloudlet ();
+		this.enforceCloudlet (cloudlet);
+		if (positive)
+			this.transcript.traceDebugging ("triggered (positive) callback `%{class}:%s` for cloudlet `%{object:identity}` within context `%{object:identity}`; ignoring!", category, callback, cloudlet, context);
+		else
+			this.transcript.traceWarning ("triggered (negative) callback `%{class}:%s` for cloudlet `%{object:identity}` within context `%{object:identity}`; ignoring!", category, callback, cloudlet, context);
+	}
+	
+	@Deprecated
+	protected final CloudletController<TContext> cloudlet;
+	@Deprecated
 	protected final TranscriptExceptionTracer exceptions;
-	protected final Logger logger;
+	@Deprecated
 	protected final Transcript transcript;
 }

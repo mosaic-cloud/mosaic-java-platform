@@ -21,48 +21,57 @@
 package eu.mosaic_cloud.examples.cloudlets.simple;
 
 
+import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudlet;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
+import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletContext;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
-import eu.mosaic_cloud.cloudlets.v1.core.Callback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
 public class HelloWorldCloudlet
+			extends DefaultCloudlet
 {
-	public static final class HelloCloudletContext
+	public static class Callback
+				extends DefaultCloudletCallback<Context>
 	{
-		CloudletController<HelloCloudletContext> cloudlet;
+		public Callback (final CloudletController<Context> cloudlet) {
+			super (cloudlet);
+		}
+		
+		@Override
+		public CallbackCompletion<Void> destroy (final Context context, final CloudletCallbackArguments<Context> arguments) {
+			context.logger.info ("HelloWorldCloudlet destroying...");
+			return (eu.mosaic_cloud.cloudlets.v1.core.Callback.SUCCESS);
+		}
+		
+		@Override
+		public CallbackCompletion<Void> destroySucceeded (final Context context, final CloudletCallbackCompletionArguments<Context> arguments) {
+			context.logger.info ("HelloWorldCloudlet destroyed successfully.");
+			return (eu.mosaic_cloud.cloudlets.v1.core.Callback.SUCCESS);
+		}
+		
+		@Override
+		public CallbackCompletion<Void> initialize (final Context context, final CloudletCallbackArguments<Context> arguments) {
+			context.logger.info ("HelloWorldCloudlet initializing...");
+			return (eu.mosaic_cloud.cloudlets.v1.core.Callback.SUCCESS);
+		}
+		
+		@Override
+		public CallbackCompletion<Void> initializeSucceeded (final Context context, final CloudletCallbackCompletionArguments<Context> arguments) {
+			context.logger.info ("HelloWorldCloudlet initialized successfully.");
+			context.logger.info ("HelloWorldCloudlet greats the cloud developer!");
+			context.cloudlet.destroy ();
+			return (eu.mosaic_cloud.cloudlets.v1.core.Callback.SUCCESS);
+		}
 	}
 	
-	public static final class LifeCycleHandler
-				extends DefaultCloudletCallback<HelloCloudletContext>
+	public static class Context
+				extends DefaultCloudletContext<Context>
 	{
-		@Override
-		public CallbackCompletion<Void> destroy (final HelloCloudletContext context, final CloudletCallbackArguments<HelloCloudletContext> arguments) {
-			this.logger.info ("HelloWorldCloudlet destroying...");
-			return Callback.SUCCESS;
-		}
-		
-		@Override
-		public CallbackCompletion<Void> destroySucceeded (final HelloCloudletContext context, final CloudletCallbackCompletionArguments<HelloCloudletContext> arguments) {
-			this.logger.info ("HelloWorldCloudlet destroyed successfully.");
-			return Callback.SUCCESS;
-		}
-		
-		@Override
-		public CallbackCompletion<Void> initialize (final HelloCloudletContext context, final CloudletCallbackArguments<HelloCloudletContext> arguments) {
-			this.logger.info ("HelloWorldCloudlet initializing...");
-			context.cloudlet = arguments.getCloudlet ();
-			return Callback.SUCCESS;
-		}
-		
-		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final HelloCloudletContext context, final CloudletCallbackCompletionArguments<HelloCloudletContext> arguments) {
-			this.logger.info ("HelloWorldCloudlet initialized successfully.");
-			context.cloudlet.destroy ();
-			return Callback.SUCCESS;
+		public Context (final CloudletController<Context> cloudlet) {
+			super (cloudlet);
 		}
 	}
 }

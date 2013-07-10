@@ -22,103 +22,111 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 
 
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultAmqpQueueConsumerConnectorCallback;
+import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudlet;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
+import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletContext;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueueConsumerConnector;
-import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueueConsumerConnectorFactory;
 import eu.mosaic_cloud.cloudlets.v1.core.Callback;
 import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.platform.implementations.v1.serialization.PlainTextDataEncoder;
-import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
-import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
-import org.slf4j.Logger;
-
 
 public class ConsumerCloudlet
+			extends DefaultCloudlet
 {
-	public static final class AmqpConsumerCallback
-				extends DefaultAmqpQueueConsumerConnectorCallback<ConsumerCloudletContext, String, Void>
+	static CallbackCompletion<Void> maybeContinue (final Context context) {
+		// FIXME: DON'T DO THIS IN YOUR CODE... This is for throttling...
+		Threading.sleep (context.delay);
+		//----		
+		context.count += 1;
+		if (context.count >= context.limit)
+			context.cloudlet.destroy ();
+		return (Callback.SUCCESS);
+	}
+	
+	public static class CloudletCallback
+				extends DefaultCloudletCallback<Context>
 	{
-		@Override
-		public CallbackCompletion<Void> acknowledgeSucceeded (final ConsumerCloudletContext context, final GenericCallbackCompletionArguments<Void> arguments) {
-			{
-				// FIXME: DON'T DO THIS IN YOUR CODE... This is for throttling...
-				Threading.sleep (context.delay);
-			}
-			context.count += 1;
-			if (context.count >= context.limit)
-				context.cloudlet.destroy ();
-			return Callback.SUCCESS;
+		public CloudletCallback (final CloudletController<Context> cloudlet) {
+			super (cloudlet);
 		}
 		
 		@Override
-		public CallbackCompletion<Void> consume (final ConsumerCloudletContext context, final AmqpQueueConsumeCallbackArguments<String> arguments) {
+		public CallbackCompletion<Void> destroy (final Context context, final CloudletCallbackArguments<Context> arguments) {
+			context.logger.info ("ConsumerCloudlet destroying...");
+			return (context.connector.destroy ());
+		}
+		
+		@Override
+		public CallbackCompletion<Void> destroySucceeded (final Context context, final CloudletCallbackCompletionArguments<Context> arguments) {
+			context.logger.info ("ConsumerCloudlet destroyed successfully.");
+			return (Callback.SUCCESS);
+		}
+		
+		@Override
+		public CallbackCompletion<Void> initialize (final Context context, final CloudletCallbackArguments<Context> arguments) {
+			context.logger.info ("ConsumerCloudlet initializing...");
+			context.connector = context.createAmqpQueueConsumerConnector ("connector", String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, ConnectorCallback.class);
+			return (context.connector.initialize ());
+		}
+		
+		@Override
+		public CallbackCompletion<Void> initializeSucceeded (final Context context, final CloudletCallbackCompletionArguments<Context> arguments) {
+			context.logger.info ("ConsumerCloudlet initialized successfully.");
+			return (Callback.SUCCESS);
+		}
+	}
+	
+	public static class Context
+				extends DefaultCloudletContext<Context>
+	{
+		public Context (final CloudletController<Context> cloudlet) {
+			super (cloudlet);
+		}
+		
+		AmqpQueueConsumerConnector<String, Void> connector;
+		int count = 0;
+		final int delay = 50;
+		final int limit = 10000;
+	}
+	
+	static class ConnectorCallback
+				extends DefaultAmqpQueueConsumerConnectorCallback<Context, String, Void>
+	{
+		public ConnectorCallback (final CloudletController<Context> cloudlet) {
+			super (cloudlet);
+		}
+		
+		@Override
+		public CallbackCompletion<Void> acknowledgeSucceeded (final Context context, final GenericCallbackCompletionArguments<Void> arguments) {
+			return (ConsumerCloudlet.maybeContinue (context));
+		}
+		
+		@Override
+		public CallbackCompletion<Void> consume (final Context context, final AmqpQueueConsumeCallbackArguments<String> arguments) {
 			final String data = arguments.getMessage ();
 			context.logger.info ("ConsumerCloudlet received message `{}`.", data);
-			context.consumer.acknowledge (arguments.getToken ());
-			return Callback.SUCCESS;
+			context.connector.acknowledge (arguments.getToken ());
+			return (Callback.SUCCESS);
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final ConsumerCloudletContext context, final CallbackArguments arguments) {
-			context.logger.info ("ConsumerCloudlet consumer destroyed successfully.");
-			return Callback.SUCCESS;
+		public CallbackCompletion<Void> destroySucceeded (final Context context, final CallbackArguments arguments) {
+			context.logger.info ("ConsumerCloudlet connector destroyed successfully.");
+			return (Callback.SUCCESS);
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final ConsumerCloudletContext context, final CallbackArguments arguments) {
-			context.logger.info ("ConsumerCloudlet consumer initialized successfully.");
-			return Callback.SUCCESS;
-		}
-	}
-	
-	public static final class ConsumerCloudletContext
-	{
-		CloudletController<ConsumerCloudletContext> cloudlet;
-		AmqpQueueConsumerConnector<String, Void> consumer;
-		int count = 0;
-		int delay = 50;
-		int limit = 10000;
-		Logger logger;
-	}
-	
-	public static final class LifeCycleHandler
-				extends DefaultCloudletCallback<ConsumerCloudletContext>
-	{
-		@Override
-		public CallbackCompletion<Void> destroy (final ConsumerCloudletContext context, final CloudletCallbackArguments<ConsumerCloudletContext> arguments) {
-			context.logger.info ("ConsumerCloudlet destroying...");
-			return context.consumer.destroy ();
-		}
-		
-		@Override
-		public CallbackCompletion<Void> destroySucceeded (final ConsumerCloudletContext context, final CloudletCallbackCompletionArguments<ConsumerCloudletContext> arguments) {
-			context.logger.info ("ConsumerCloudlet destroyed successfully.");
-			return Callback.SUCCESS;
-		}
-		
-		@Override
-		public CallbackCompletion<Void> initialize (final ConsumerCloudletContext context, final CloudletCallbackArguments<ConsumerCloudletContext> arguments) {
-			context.cloudlet = arguments.getCloudlet ();
-			context.logger = this.logger;
-			context.logger.info ("ConsumerCloudlet initializing...");
-			final Configuration configuration = context.cloudlet.getConfiguration ();
-			final Configuration queueConfiguration = configuration.spliceConfiguration (ConfigurationIdentifier.resolveAbsolute ("consumer"));
-			context.consumer = context.cloudlet.getConnectorFactory (AmqpQueueConsumerConnectorFactory.class).create (queueConfiguration, String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, new AmqpConsumerCallback (), context);
-			return context.consumer.initialize ();
-		}
-		
-		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final ConsumerCloudletContext context, final CloudletCallbackCompletionArguments<ConsumerCloudletContext> arguments) {
-			context.logger.info ("ConsumerCloudlet initialized successfully.");
-			return Callback.SUCCESS;
+		public CallbackCompletion<Void> initializeSucceeded (final Context context, final CallbackArguments arguments) {
+			context.logger.info ("ConsumerCloudlet connector initialized successfully.");
+			return (Callback.SUCCESS);
 		}
 	}
 }

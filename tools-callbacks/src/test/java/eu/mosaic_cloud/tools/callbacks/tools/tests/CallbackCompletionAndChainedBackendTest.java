@@ -43,7 +43,7 @@ public final class CallbackCompletionAndChainedBackendTest
 		final AtomicBoolean observed2 = new AtomicBoolean (false);
 		final CallbackCompletionDeferredFuture<Void> future1 = CallbackCompletionDeferredFuture.create (Void.class);
 		final CallbackCompletionDeferredFuture<Void> future2 = CallbackCompletionDeferredFuture.create (Void.class);
-		final CallbackCompletion<Void> completion = CallbackCompletion.createAndChained (future1.completion, future2.completion);
+		final CallbackCompletion<Void> completion = CallbackCompletion.createChained (future1.completion, future2.completion);
 		Assert.assertFalse (completion.await (0));
 		Assert.assertFalse (completion.await (10));
 		completion.observe (new Observer (completion, observed1));
@@ -75,7 +75,7 @@ public final class CallbackCompletionAndChainedBackendTest
 		final AtomicBoolean observed2 = new AtomicBoolean (false);
 		final CallbackCompletionDeferredFuture<Void> future1 = CallbackCompletionDeferredFuture.create (Void.class);
 		final CallbackCompletionDeferredFuture<Void> future2 = CallbackCompletionDeferredFuture.create (Void.class);
-		final CallbackCompletion<Void> completion = CallbackCompletion.createAndChained (future1.completion, future2.completion);
+		final CallbackCompletion<Void> completion = CallbackCompletion.createChained (future1.completion, future2.completion);
 		Assert.assertFalse (completion.await (0));
 		Assert.assertFalse (completion.await (10));
 		completion.observe (new Observer (completion, observed1));
@@ -106,7 +106,7 @@ public final class CallbackCompletionAndChainedBackendTest
 		final AtomicBoolean observed2 = new AtomicBoolean (false);
 		final CallbackCompletionDeferredFuture<Void> future1 = CallbackCompletionDeferredFuture.create (Void.class);
 		final CallbackCompletionDeferredFuture<Void> future2 = CallbackCompletionDeferredFuture.create (Void.class);
-		final CallbackCompletion<Void> completion = CallbackCompletion.createAndChained (future1.completion, future2.completion);
+		final CallbackCompletion<Void> completion = CallbackCompletion.createChained (future1.completion, future2.completion);
 		Assert.assertFalse (completion.await (0));
 		Assert.assertFalse (completion.await (10));
 		completion.observe (new Observer (completion, observed1));

@@ -21,18 +21,16 @@
 package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueueConnectorCallback;
 
 
-/**
- * Default AMQP resource accessor callback.
- * 
- * @author Georgiana Macariu
- * @param <TContext>
- *            the type of the context of the cloudlet using this callback
- */
 public class DefaultAmqpQueueConnectorCallback<TContext>
 			extends DefaultQueueConnectorCallback<TContext>
 			implements
 				AmqpQueueConnectorCallback<TContext>
-{}
+{
+	protected DefaultAmqpQueueConnectorCallback (final CloudletController<TContext> cloudlet) {
+		super (cloudlet);
+	}
+}

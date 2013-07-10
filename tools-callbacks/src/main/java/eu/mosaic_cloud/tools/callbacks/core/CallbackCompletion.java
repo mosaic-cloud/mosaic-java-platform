@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.tools.callbacks.core;
 
 
-import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionAndChainedBackend;
+import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionChainedBackend;
 import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionFutureBackend;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.Joinable;
@@ -161,12 +161,8 @@ public final class CallbackCompletion<_Outcome_ extends Object>
 	private volatile Throwable exception;
 	private volatile _Outcome_ outcome;
 	
-	public static final CallbackCompletion<Void> createAndChained (final CallbackCompletion<?> ... dependents) {
-		return (CallbackCompletionAndChainedBackend.createCompletion (dependents));
-	}
-	
 	public static final CallbackCompletion<Void> createChained (final CallbackCompletion<?> ... dependents) {
-		return (CallbackCompletionAndChainedBackend.createCompletion (dependents));
+		return (CallbackCompletionChainedBackend.createCompletion (dependents));
 	}
 	
 	public static final <_Outcome_ extends Object> CallbackCompletion<_Outcome_> createDeferred (final CallbackCompletionBackend backend) {

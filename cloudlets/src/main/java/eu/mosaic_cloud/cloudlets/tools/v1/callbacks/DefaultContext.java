@@ -29,8 +29,10 @@ import org.slf4j.Logger;
 
 
 public class DefaultContext
+			extends Object
 {
 	public DefaultContext () {
+		super ();
 		this.transcript = Transcript.create (this, true);
 		this.logger = this.transcript.adaptAs (Logger.class);
 		this.exceptions = TranscriptExceptionTracer.create (this.transcript, FallbackExceptionTracer.defaultInstance);

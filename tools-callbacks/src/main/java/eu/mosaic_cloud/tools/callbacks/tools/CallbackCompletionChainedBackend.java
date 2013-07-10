@@ -39,11 +39,11 @@ import com.google.common.base.Preconditions;
 import com.google.common.util.concurrent.Atomics;
 
 
-public final class CallbackCompletionAndChainedBackend
+public final class CallbackCompletionChainedBackend
 			implements
 				CallbackCompletionBackend
 {
-	private CallbackCompletionAndChainedBackend (final CallbackCompletion<?>[] dependents) {
+	private CallbackCompletionChainedBackend (final CallbackCompletion<?>[] dependents) {
 		super ();
 		Preconditions.checkNotNull (dependents);
 		this.pending = new CountDownLatch (dependents.length);
@@ -147,7 +147,7 @@ public final class CallbackCompletionAndChainedBackend
 	private final CountDownLatch pending;
 	
 	public static final CallbackCompletion<Void> createCompletion (final CallbackCompletion<?>[] dependents) {
-		return (new CallbackCompletionAndChainedBackend (dependents).completion);
+		return (new CallbackCompletionChainedBackend (dependents).completion);
 	}
 	
 	private final class Observer
@@ -165,7 +165,7 @@ public final class CallbackCompletionAndChainedBackend
 		public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion) {
 			Preconditions.checkState (completion == this.dependent);
 			Preconditions.checkState (this.triggered.compareAndSet (false, true));
-			return (CallbackCompletionAndChainedBackend.this.triggerCompleted (this.dependent));
+			return (CallbackCompletionChainedBackend.this.triggerCompleted (this.dependent));
 		}
 		
 		private final CallbackCompletion<?> dependent;
