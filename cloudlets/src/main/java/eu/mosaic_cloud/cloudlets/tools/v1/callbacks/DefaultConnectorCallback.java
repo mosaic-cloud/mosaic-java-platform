@@ -39,7 +39,7 @@ public class DefaultConnectorCallback<TContext>
 	public CallbackCompletion<Void> destroyFailed (final TContext context, final DestroyFailedArguments arguments) {
 		this.enforceCallbackArguments (context, arguments);
 		final CallbackCompletion<Void> maybeCompleted = this.destroyFailed (context, arguments.error);
-		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
 		return (this.handleUnhandledCallback (ConnectorCallback.class, "destroyFailed", context, arguments, false, true));
 	}
@@ -48,7 +48,7 @@ public class DefaultConnectorCallback<TContext>
 	public CallbackCompletion<Void> destroySucceeded (final TContext context, final DestroySucceededArguments arguments) {
 		this.enforceCallbackArguments (context, arguments);
 		final CallbackCompletion<Void> maybeCompleted = this.destroySucceeded (context);
-		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
 		return (this.handleUnhandledCallback (ConnectorCallback.class, "destroySucceeded", context, arguments, true, false));
 	}
@@ -57,7 +57,7 @@ public class DefaultConnectorCallback<TContext>
 	public CallbackCompletion<Void> initializeFailed (final TContext context, final InitializeFailedArguments arguments) {
 		this.enforceCallbackArguments (context, arguments);
 		final CallbackCompletion<Void> maybeCompleted = this.initializeFailed (context, arguments.error);
-		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
 		return (this.handleUnhandledCallback (ConnectorCallback.class, "initializeFailed", context, arguments, false, true));
 	}
@@ -66,24 +66,24 @@ public class DefaultConnectorCallback<TContext>
 	public CallbackCompletion<Void> initializeSucceeded (final TContext context, final InitializeSucceededArguments arguments) {
 		this.enforceCallbackArguments (context, arguments);
 		final CallbackCompletion<Void> maybeCompleted = this.initializeSucceeded (context);
-		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
 		return (this.handleUnhandledCallback (ConnectorCallback.class, "initializeSucceeded", context, arguments, true, false));
 	}
 	
 	protected CallbackCompletion<Void> destroyFailed (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final Throwable error) {
-		return (DefaultCallback.callbackNotImplemented);
+		return (DefaultCallback.NotImplemented);
 	}
 	
 	protected CallbackCompletion<Void> destroySucceeded (@SuppressWarnings ("unused") final TContext context) {
-		return (DefaultCallback.callbackNotImplemented);
+		return (DefaultCallback.NotImplemented);
 	}
 	
 	protected CallbackCompletion<Void> initializeFailed (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final Throwable error) {
-		return (DefaultCallback.callbackNotImplemented);
+		return (DefaultCallback.NotImplemented);
 	}
 	
 	protected CallbackCompletion<Void> initializeSucceeded (@SuppressWarnings ("unused") final TContext context) {
-		return (DefaultCallback.callbackNotImplemented);
+		return (DefaultCallback.NotImplemented);
 	}
 }

@@ -23,12 +23,12 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultAmqpQueueConsumerConnectorCallback;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultAmqpQueuePublisherConnectorCallback;
+import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCallback;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletContext;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueueConsumerConnector;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueuePublisherConnector;
-import eu.mosaic_cloud.cloudlets.v1.core.Callback;
 import eu.mosaic_cloud.platform.implementations.v1.serialization.JsonDataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -52,7 +52,7 @@ public class PongCloudlet
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final Context context, final DestroySucceededArguments arguments) {
 			context.logger.info ("cloudlet destroyed successfully.");
-			return (Callback.SUCCESS);
+			return (DefaultCallback.Succeeded);
 		}
 		
 		@Override
@@ -68,7 +68,7 @@ public class PongCloudlet
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded (final Context context, final InitializeSucceededArguments arguments) {
 			context.logger.info ("cloudlet initialized successfully.");
-			return (Callback.SUCCESS);
+			return (DefaultCallback.Succeeded);
 		}
 	}
 	
@@ -98,19 +98,19 @@ public class PongCloudlet
 			final PongMessage pong = new PongMessage (ping.token);
 			context.logger.info ("sending pong message with token `{}`...", pong);
 			context.publisher.publish (pong, null);
-			return (Callback.SUCCESS);
+			return (DefaultCallback.Succeeded);
 		}
 		
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final Context context, final DestroySucceededArguments arguments) {
 			context.logger.info ("queue connector connector destroyed successfully.");
-			return (Callback.SUCCESS);
+			return (DefaultCallback.Succeeded);
 		}
 		
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded (final Context context, final InitializeSucceededArguments arguments) {
 			context.logger.info ("queue connector connector initialized successfully.");
-			return (Callback.SUCCESS);
+			return (DefaultCallback.Succeeded);
 		}
 	}
 	
@@ -124,20 +124,20 @@ public class PongCloudlet
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final Context context, final DestroySucceededArguments arguments) {
 			context.logger.info ("queue connector connector destroyed successfully.");
-			return (Callback.SUCCESS);
+			return (DefaultCallback.Succeeded);
 		}
 		
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded (final Context context, final InitializeSucceededArguments arguments) {
 			context.logger.info ("queue connector connector initialized successfully.");
-			return (Callback.SUCCESS);
+			return (DefaultCallback.Succeeded);
 		}
 		
 		@Override
 		public CallbackCompletion<Void> publishSucceeded (final Context context, final PublishSucceededArguments<PongMessage, Void> arguments) {
 			context.logger.info ("publish succeeded; exiting...");
 			context.cloudlet.destroy ();
-			return (Callback.SUCCESS);
+			return (DefaultCallback.Succeeded);
 		}
 	}
 }

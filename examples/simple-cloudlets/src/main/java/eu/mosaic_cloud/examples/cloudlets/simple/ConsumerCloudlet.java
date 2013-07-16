@@ -22,12 +22,12 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 
 
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultAmqpQueueConsumerConnectorCallback;
+import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCallback;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudlet;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletContext;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueueConsumerConnector;
-import eu.mosaic_cloud.cloudlets.v1.core.Callback;
 import eu.mosaic_cloud.platform.implementations.v1.serialization.PlainTextDataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
@@ -43,7 +43,7 @@ public class ConsumerCloudlet
 		context.count += 1;
 		if (context.count >= context.limit)
 			context.cloudlet.destroy ();
-		return (Callback.SUCCESS);
+		return (DefaultCallback.Succeeded);
 	}
 	
 	public static class CloudletCallback
@@ -62,7 +62,7 @@ public class ConsumerCloudlet
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final Context context, final DestroySucceededArguments arguments) {
 			context.logger.info ("ConsumerCloudlet destroyed successfully.");
-			return (Callback.SUCCESS);
+			return (DefaultCallback.Succeeded);
 		}
 		
 		@Override
@@ -75,7 +75,7 @@ public class ConsumerCloudlet
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded (final Context context, final InitializeSucceededArguments arguments) {
 			context.logger.info ("ConsumerCloudlet initialized successfully.");
-			return (Callback.SUCCESS);
+			return (DefaultCallback.Succeeded);
 		}
 	}
 	
@@ -109,19 +109,19 @@ public class ConsumerCloudlet
 			final String data = arguments.message;
 			context.logger.info ("ConsumerCloudlet received message `{}`.", data);
 			context.connector.acknowledge (arguments.token);
-			return (Callback.SUCCESS);
+			return (DefaultCallback.Succeeded);
 		}
 		
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final Context context, final DestroySucceededArguments arguments) {
 			context.logger.info ("ConsumerCloudlet connector destroyed successfully.");
-			return (Callback.SUCCESS);
+			return (DefaultCallback.Succeeded);
 		}
 		
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded (final Context context, final InitializeSucceededArguments arguments) {
 			context.logger.info ("ConsumerCloudlet connector initialized successfully.");
-			return (Callback.SUCCESS);
+			return (DefaultCallback.Succeeded);
 		}
 	}
 }

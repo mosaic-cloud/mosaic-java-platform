@@ -39,7 +39,7 @@ public class DefaultExecutorCallback<TContext, TOutcome, TExtra>
 	public CallbackCompletion<Void> executionFailed (final TContext context, final ExecutionFailedArguments<TOutcome, TExtra> arguments) {
 		this.enforceCallbackArguments (context, arguments);
 		final CallbackCompletion<Void> maybeCompleted = this.executionFailed (context, arguments.extra);
-		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
 		return (this.handleUnhandledCallback (ExecutorCallback.class, "executionFailed", context, arguments, false, false));
 	}
@@ -48,16 +48,16 @@ public class DefaultExecutorCallback<TContext, TOutcome, TExtra>
 	public CallbackCompletion<Void> executionSucceeded (final TContext context, final ExecutionSucceededArguments<TOutcome, TExtra> arguments) {
 		this.enforceCallbackArguments (context, arguments);
 		final CallbackCompletion<Void> maybeCompleted = this.executionSucceeded (context, arguments.outcome, arguments.extra);
-		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
 		return (this.handleUnhandledCallback (ExecutorCallback.class, "executionSucceeded", context, arguments, true, false));
 	}
 	
 	protected CallbackCompletion<Void> executionFailed (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TExtra extra) {
-		return (DefaultCallback.callbackNotImplemented);
+		return (DefaultCallback.NotImplemented);
 	}
 	
 	protected CallbackCompletion<Void> executionSucceeded (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TOutcome outcome, @SuppressWarnings ("unused") final TExtra extra) {
-		return (DefaultCallback.callbackNotImplemented);
+		return (DefaultCallback.NotImplemented);
 	}
 }

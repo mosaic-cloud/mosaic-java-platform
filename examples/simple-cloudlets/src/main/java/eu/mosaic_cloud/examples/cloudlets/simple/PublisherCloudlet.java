@@ -24,12 +24,12 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 import java.util.UUID;
 
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultAmqpQueuePublisherConnectorCallback;
+import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCallback;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudlet;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletContext;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueuePublisherConnector;
-import eu.mosaic_cloud.cloudlets.v1.core.Callback;
 import eu.mosaic_cloud.platform.implementations.v1.serialization.PlainTextDataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
@@ -49,7 +49,7 @@ public class PublisherCloudlet
 			context.count += 1;
 		} else
 			context.cloudlet.destroy ();
-		return (Callback.SUCCESS);
+		return (DefaultCallback.Succeeded);
 	}
 	
 	public static class CloudletCallback
@@ -68,7 +68,7 @@ public class PublisherCloudlet
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final Context context, final DestroySucceededArguments arguments) {
 			context.logger.info ("PublisherCloudlet destroyed successfully.");
-			return (Callback.SUCCESS);
+			return (DefaultCallback.Succeeded);
 		}
 		
 		@Override
@@ -108,13 +108,13 @@ public class PublisherCloudlet
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final Context context, final DestroySucceededArguments arguments) {
 			context.logger.info ("PublisherCloudlet connector destroyed successfully.");
-			return (Callback.SUCCESS);
+			return (DefaultCallback.Succeeded);
 		}
 		
 		@Override
 		public CallbackCompletion<Void> initializeSucceeded (final Context context, final InitializeSucceededArguments arguments) {
 			context.logger.info ("PublisherCloudlet connector initialized successfully.");
-			return (Callback.SUCCESS);
+			return (DefaultCallback.Succeeded);
 		}
 		
 		@Override

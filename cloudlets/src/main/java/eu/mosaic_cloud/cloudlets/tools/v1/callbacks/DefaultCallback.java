@@ -65,7 +65,7 @@ public class DefaultCallback<TContext>
 			this.transcript.traceWarning ("unhandled failure callback `%{class}:%s` for cloudlet `%{object:identity}` within context `%{object:identity}`; ignoring!", category, callback, arguments.cloudlet, context);
 		if (!positive && couldDestroy)
 			this.cloudlet.destroy ();
-		return (Callback.SUCCESS);
+		return (DefaultCallback.Succeeded);
 	}
 	
 	protected void traceCallback (@SuppressWarnings ("rawtypes") final Class<? extends Callback> category, final String callback, final TContext context, final CallbackArguments arguments, final boolean positive) {
@@ -82,5 +82,6 @@ public class DefaultCallback<TContext>
 	protected final TranscriptExceptionTracer exceptions;
 	@Deprecated
 	protected final Transcript transcript;
-	protected static final CallbackCompletion<Void> callbackNotImplemented = CallbackCompletion.createFailure (new UnsupportedOperationException ());
+	public static final CallbackCompletion<Void> Succeeded = CallbackCompletion.createOutcome ();
+	protected static final CallbackCompletion<Void> NotImplemented = CallbackCompletion.createFailure (new UnsupportedOperationException ());
 }

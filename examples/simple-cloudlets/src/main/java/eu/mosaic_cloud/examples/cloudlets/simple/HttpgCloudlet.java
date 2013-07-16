@@ -23,12 +23,12 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 
 import java.util.UUID;
 
+import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCallback;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudlet;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletContext;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultHttpgQueueConnectorCallback;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
-import eu.mosaic_cloud.cloudlets.v1.core.Callback;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgQueueConnector;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgRequestMessage;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgResponseMessage;
@@ -93,7 +93,7 @@ public class HttpgCloudlet
 				responseBody.append ("HTTP body: empty\n");
 			final HttpgResponseMessage<String> response = HttpgResponseMessage.create200 (request, responseBody.toString ());
 			context.gateway.respond (response);
-			return (Callback.SUCCESS);
+			return (DefaultCallback.Succeeded);
 		}
 	}
 }

@@ -24,13 +24,13 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 import java.util.UUID;
 import java.util.concurrent.Callable;
 
+import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCallback;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudlet;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletContext;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultExecutorCallback;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.Executor;
-import eu.mosaic_cloud.cloudlets.v1.core.Callback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -54,7 +54,7 @@ public class TasksCloudlet
 		@Override
 		public CallbackCompletion<Void> destroySucceeded (final Context context, final DestroySucceededArguments arguments) {
 			context.logger.info ("cloudlet destroyed successfully.");
-			return (Callback.SUCCESS);
+			return (DefaultCallback.Succeeded);
 		}
 		
 		@Override
@@ -127,7 +127,7 @@ public class TasksCloudlet
 			context.counter++;
 			if (context.counter == context.limit) {
 				context.cloudlet.destroy ();
-				return (Callback.SUCCESS);
+				return (DefaultCallback.Succeeded);
 			}
 			return (context.workflow.submitExecution (context));
 		}
@@ -136,7 +136,7 @@ public class TasksCloudlet
 			final String input = UUID.randomUUID ().toString ();
 			context.logger.info ("scheduling task with input `{}`...", input);
 			context.executor.execute (new TimeConsumingOperation (context, input), input);
-			return (Callback.SUCCESS);
+			return (DefaultCallback.Succeeded);
 		}
 	}
 }

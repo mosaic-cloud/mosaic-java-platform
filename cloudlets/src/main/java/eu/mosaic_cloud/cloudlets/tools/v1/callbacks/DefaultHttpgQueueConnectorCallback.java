@@ -40,7 +40,7 @@ public class DefaultHttpgQueueConnectorCallback<TContext, TRequestBody, TRespons
 	public CallbackCompletion<Void> requested (final TContext context, final RequestedArguments<TRequestBody> arguments) {
 		this.enforceCallbackArguments (context, arguments);
 		final CallbackCompletion<Void> maybeCompleted = this.requested (context, arguments.request);
-		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
 		return (this.handleUnhandledCallback (HttpgQueueConnectorCallback.class, "requested", context, arguments, true, false));
 	}
@@ -49,7 +49,7 @@ public class DefaultHttpgQueueConnectorCallback<TContext, TRequestBody, TRespons
 	public CallbackCompletion<Void> respondFailed (final TContext context, final RespondFailedArguments<TResponseBody, TExtra> arguments) {
 		this.enforceCallbackArguments (context, arguments);
 		final CallbackCompletion<Void> maybeCompleted = this.respondFailed (context, arguments.error, arguments.extra);
-		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
 		return (this.handleUnhandledCallback (HttpgQueueConnectorCallback.class, "respondFailed", context, arguments, false, false));
 	}
@@ -58,20 +58,20 @@ public class DefaultHttpgQueueConnectorCallback<TContext, TRequestBody, TRespons
 	public CallbackCompletion<Void> respondSucceeded (final TContext context, final RespondSucceededArguments<TResponseBody, TExtra> arguments) {
 		this.enforceCallbackArguments (context, arguments);
 		final CallbackCompletion<Void> maybeCompleted = this.respondSucceeded (context, arguments.extra);
-		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
 		return (this.handleUnhandledCallback (HttpgQueueConnectorCallback.class, "respondSucceeded", context, arguments, false, false));
 	}
 	
 	protected CallbackCompletion<Void> requested (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final HttpgRequestMessage<TRequestBody> request) {
-		return (DefaultCallback.callbackNotImplemented);
+		return (DefaultCallback.NotImplemented);
 	}
 	
 	protected CallbackCompletion<Void> respondFailed (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final Throwable error, @SuppressWarnings ("unused") final TExtra extra) {
-		return (DefaultCallback.callbackNotImplemented);
+		return (DefaultCallback.NotImplemented);
 	}
 	
 	protected CallbackCompletion<Void> respondSucceeded (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TExtra extra) {
-		return (DefaultCallback.callbackNotImplemented);
+		return (DefaultCallback.NotImplemented);
 	}
 }

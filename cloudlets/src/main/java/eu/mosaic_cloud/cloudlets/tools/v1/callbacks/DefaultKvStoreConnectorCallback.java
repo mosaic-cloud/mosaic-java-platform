@@ -39,7 +39,7 @@ public class DefaultKvStoreConnectorCallback<TContext, TValue, TExtra>
 	public CallbackCompletion<Void> deleteFailed (final TContext context, final DeleteFailedArguments<TExtra> arguments) {
 		this.enforceCallbackArguments (context, arguments);
 		final CallbackCompletion<Void> maybeCompleted = this.deleteFailed (context, arguments.extra);
-		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
 		return (this.handleUnhandledCallback (KvStoreConnectorCallback.class, "deleteFailed", context, arguments, false, false));
 	}
@@ -48,7 +48,7 @@ public class DefaultKvStoreConnectorCallback<TContext, TValue, TExtra>
 	public CallbackCompletion<Void> deleteSucceeded (final TContext context, final DeleteSucceededArguments<TExtra> arguments) {
 		this.enforceCallbackArguments (context, arguments);
 		final CallbackCompletion<Void> maybeCompleted = this.deleteSucceeded (context, arguments.extra);
-		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
 		return (this.handleUnhandledCallback (KvStoreConnectorCallback.class, "deleteSucceeded", context, arguments, true, false));
 	}
@@ -57,7 +57,7 @@ public class DefaultKvStoreConnectorCallback<TContext, TValue, TExtra>
 	public CallbackCompletion<Void> getFailed (final TContext context, final GetFailedArguments<TExtra> arguments) {
 		this.enforceCallbackArguments (context, arguments);
 		final CallbackCompletion<Void> maybeCompleted = this.getFailed (context, arguments.extra);
-		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
 		return (this.handleUnhandledCallback (KvStoreConnectorCallback.class, "getFailed", context, arguments, false, false));
 	}
@@ -66,7 +66,7 @@ public class DefaultKvStoreConnectorCallback<TContext, TValue, TExtra>
 	public CallbackCompletion<Void> getSucceeded (final TContext context, final GetSucceededArguments<TValue, TExtra> arguments) {
 		this.enforceCallbackArguments (context, arguments);
 		final CallbackCompletion<Void> maybeCompleted = this.getSucceeded (context, arguments.value, arguments.extra);
-		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
 		return (this.handleUnhandledCallback (KvStoreConnectorCallback.class, "getSucceeded", context, arguments, true, false));
 	}
@@ -75,7 +75,7 @@ public class DefaultKvStoreConnectorCallback<TContext, TValue, TExtra>
 	public CallbackCompletion<Void> setFailed (final TContext context, final SetFailedArguments<TValue, TExtra> arguments) {
 		this.enforceCallbackArguments (context, arguments);
 		final CallbackCompletion<Void> maybeCompleted = this.setFailed (context, arguments.extra);
-		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
 		return (this.handleUnhandledCallback (KvStoreConnectorCallback.class, "setFailed", context, arguments, false, false));
 	}
@@ -84,32 +84,32 @@ public class DefaultKvStoreConnectorCallback<TContext, TValue, TExtra>
 	public CallbackCompletion<Void> setSucceeded (final TContext context, final SetSucceededArguments<TValue, TExtra> arguments) {
 		this.enforceCallbackArguments (context, arguments);
 		final CallbackCompletion<Void> maybeCompleted = this.setSucceeded (context, arguments.extra);
-		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
 		return (this.handleUnhandledCallback (KvStoreConnectorCallback.class, "setSucceeded", context, arguments, true, false));
 	}
 	
 	protected CallbackCompletion<Void> deleteFailed (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TExtra extra) {
-		return (DefaultCallback.callbackNotImplemented);
+		return (DefaultCallback.NotImplemented);
 	}
 	
 	protected CallbackCompletion<Void> deleteSucceeded (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TExtra extra) {
-		return (DefaultCallback.callbackNotImplemented);
+		return (DefaultCallback.NotImplemented);
 	}
 	
 	protected CallbackCompletion<Void> getFailed (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TExtra extra) {
-		return (DefaultCallback.callbackNotImplemented);
+		return (DefaultCallback.NotImplemented);
 	}
 	
 	protected CallbackCompletion<Void> getSucceeded (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TValue value, @SuppressWarnings ("unused") final TExtra extra) {
-		return (DefaultCallback.callbackNotImplemented);
+		return (DefaultCallback.NotImplemented);
 	}
 	
 	protected CallbackCompletion<Void> setFailed (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TExtra extra) {
-		return (DefaultCallback.callbackNotImplemented);
+		return (DefaultCallback.NotImplemented);
 	}
 	
 	protected CallbackCompletion<Void> setSucceeded (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TExtra extra) {
-		return (DefaultCallback.callbackNotImplemented);
+		return (DefaultCallback.NotImplemented);
 	}
 }

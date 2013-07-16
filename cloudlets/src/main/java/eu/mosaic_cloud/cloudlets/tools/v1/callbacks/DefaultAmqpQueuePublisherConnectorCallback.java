@@ -39,7 +39,7 @@ public class DefaultAmqpQueuePublisherConnectorCallback<TContext, TValue, TExtra
 	public CallbackCompletion<Void> publishFailed (final TContext context, final PublishFailedArguments<TValue, TExtra> arguments) {
 		this.enforceCallbackArguments (context, arguments);
 		final CallbackCompletion<Void> maybeCompleted = this.publishFailed (context, arguments.extra);
-		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
 		return (this.handleUnhandledCallback (AmqpQueuePublisherConnectorCallback.class, "publishFailed", context, arguments, false, false));
 	}
@@ -48,16 +48,16 @@ public class DefaultAmqpQueuePublisherConnectorCallback<TContext, TValue, TExtra
 	public CallbackCompletion<Void> publishSucceeded (final TContext context, final PublishSucceededArguments<TValue, TExtra> arguments) {
 		this.enforceCallbackArguments (context, arguments);
 		final CallbackCompletion<Void> maybeCompleted = this.publishSucceeded (context, arguments.extra);
-		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
 		return (this.handleUnhandledCallback (AmqpQueuePublisherConnectorCallback.class, "publishSucceeded", context, arguments, true, false));
 	}
 	
 	protected CallbackCompletion<Void> publishFailed (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TExtra extra) {
-		return (DefaultCallback.callbackNotImplemented);
+		return (DefaultCallback.NotImplemented);
 	}
 	
 	protected CallbackCompletion<Void> publishSucceeded (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TExtra extra) {
-		return (DefaultCallback.callbackNotImplemented);
+		return (DefaultCallback.NotImplemented);
 	}
 }

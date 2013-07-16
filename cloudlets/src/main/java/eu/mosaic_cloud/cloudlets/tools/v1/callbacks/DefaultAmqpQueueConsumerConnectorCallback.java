@@ -39,7 +39,7 @@ public class DefaultAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtr
 	public CallbackCompletion<Void> acknowledgeFailed (final TContext context, final AcknowledgeFailedArguments<TExtra> arguments) {
 		this.enforceCallbackArguments (context, arguments);
 		final CallbackCompletion<Void> maybeCompleted = this.acknowledgeFailed (context, arguments.extra);
-		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
 		return (this.handleUnhandledCallback (AmqpQueueConsumerConnectorCallback.class, "acknowledgeFailed", context, arguments, false, false));
 	}
@@ -48,7 +48,7 @@ public class DefaultAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtr
 	public CallbackCompletion<Void> acknowledgeSucceeded (final TContext context, final AcknowledgeSucceededArguments<TExtra> arguments) {
 		this.enforceCallbackArguments (context, arguments);
 		final CallbackCompletion<Void> maybeCompleted = this.acknowledgeSucceeded (context, arguments.extra);
-		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
 		return (this.handleUnhandledCallback (AmqpQueueConsumerConnectorCallback.class, "acknowledgeSucceeded", context, arguments, true, false));
 	}
@@ -57,20 +57,20 @@ public class DefaultAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtr
 	public CallbackCompletion<Void> consume (final TContext context, final ConsumeArguments<TMessage> arguments) {
 		this.enforceCallbackArguments (context, arguments);
 		final CallbackCompletion<Void> maybeCompleted = this.consume (context, arguments.message);
-		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
 		return (this.handleUnhandledCallback (AmqpQueueConsumerConnectorCallback.class, "consume", context, arguments, false, false));
 	}
 	
 	protected CallbackCompletion<Void> acknowledgeFailed (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TExtra extra) {
-		return (DefaultCallback.callbackNotImplemented);
+		return (DefaultCallback.NotImplemented);
 	}
 	
 	protected CallbackCompletion<Void> acknowledgeSucceeded (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TExtra extra) {
-		return (DefaultCallback.callbackNotImplemented);
+		return (DefaultCallback.NotImplemented);
 	}
 	
 	protected CallbackCompletion<Void> consume (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TMessage message) {
-		return (DefaultCallback.callbackNotImplemented);
+		return (DefaultCallback.NotImplemented);
 	}
 }

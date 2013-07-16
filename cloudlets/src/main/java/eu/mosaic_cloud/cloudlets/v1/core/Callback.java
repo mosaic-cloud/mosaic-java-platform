@@ -21,13 +21,10 @@
 package eu.mosaic_cloud.cloudlets.v1.core;
 
 
-import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
 
 public interface Callback<TContext extends Object>
 			extends
 				Callbacks
-{
-	public static final CallbackCompletion<Void> SUCCESS = CallbackCompletion.createOutcome ();
-}
+{}
