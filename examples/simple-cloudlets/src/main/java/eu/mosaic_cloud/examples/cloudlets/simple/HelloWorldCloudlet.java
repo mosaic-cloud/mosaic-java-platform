@@ -40,25 +40,25 @@ public class HelloWorldCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroy (final Context context, final DestroyArguments arguments) {
+		protected CallbackCompletion<Void> destroy (final Context context) {
 			context.logger.info ("HelloWorldCloudlet destroying...");
 			return (DefaultCallback.Succeeded);
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final Context context, final DestroySucceededArguments arguments) {
+		protected CallbackCompletion<Void> destroySucceeded (final Context context) {
 			context.logger.info ("HelloWorldCloudlet destroyed successfully.");
 			return (DefaultCallback.Succeeded);
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initialize (final Context context, final InitializeArguments arguments) {
+		protected CallbackCompletion<Void> initialize (final Context context) {
 			context.logger.info ("HelloWorldCloudlet initializing...");
 			return (DefaultCallback.Succeeded);
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final Context context, final InitializeSucceededArguments arguments) {
+		protected CallbackCompletion<Void> initializeSucceeded (final Context context) {
 			context.logger.info ("HelloWorldCloudlet initialized successfully.");
 			context.logger.info ("HelloWorldCloudlet greats the cloud developer!");
 			context.cloudlet.destroy ();

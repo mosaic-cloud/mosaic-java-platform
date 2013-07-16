@@ -47,13 +47,13 @@ public class HttpgCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroy (final Context context, final DestroyArguments arguments) {
+		protected CallbackCompletion<Void> destroy (final Context context) {
 			context.logger.info ("destroying cloudlet...");
 			return (context.gateway.destroy ());
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initialize (final Context context, final InitializeArguments arguments) {
+		protected CallbackCompletion<Void> initialize (final Context context) {
 			context.logger.info ("initializing cloudlet...");
 			context.gateway = context.createHttpgQueueConnector ("gateway", String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, GatewayCallback.class);
 			return (context.gateway.initialize ());
@@ -79,8 +79,7 @@ public class HttpgCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> requested (final Context context, final RequestedArguments<String> arguments) {
-			final HttpgRequestMessage<String> request = arguments.request;
+		protected CallbackCompletion<Void> requested (final Context context, final HttpgRequestMessage<String> request) {
 			final StringBuilder responseBody = new StringBuilder ();
 			responseBody.append (String.format ("Cloudlet: %s\n", context.identity));
 			responseBody.append (String.format ("HTTP version: %s\n", request.version));

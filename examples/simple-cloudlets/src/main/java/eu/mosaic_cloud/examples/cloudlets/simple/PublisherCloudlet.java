@@ -60,26 +60,26 @@ public class PublisherCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroy (final Context context, final DestroyArguments arguments) {
+		protected CallbackCompletion<Void> destroy (final Context context) {
 			context.logger.info ("PublisherCloudlet destroying...");
 			return (context.connector.destroy ());
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final Context context, final DestroySucceededArguments arguments) {
+		protected CallbackCompletion<Void> destroySucceeded (final Context context) {
 			context.logger.info ("PublisherCloudlet destroyed successfully.");
 			return (DefaultCallback.Succeeded);
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initialize (final Context context, final InitializeArguments arguments) {
+		protected CallbackCompletion<Void> initialize (final Context context) {
 			context.logger.info ("PublisherCloudlet initializing...");
 			context.connector = context.createAmqpQueuePublisherConnector ("connector", String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, ConnectorCallback.class);
 			return (context.connector.initialize ());
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final Context context, final InitializeSucceededArguments arguments) {
+		protected CallbackCompletion<Void> initializeSucceeded (final Context context) {
 			context.logger.info ("PublisherCloudlet initialized successfully.");
 			return (PublisherCloudlet.maybeContinue (context));
 		}
@@ -106,19 +106,19 @@ public class PublisherCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final Context context, final DestroySucceededArguments arguments) {
+		protected CallbackCompletion<Void> destroySucceeded (final Context context) {
 			context.logger.info ("PublisherCloudlet connector destroyed successfully.");
 			return (DefaultCallback.Succeeded);
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final Context context, final InitializeSucceededArguments arguments) {
+		protected CallbackCompletion<Void> initializeSucceeded (final Context context) {
 			context.logger.info ("PublisherCloudlet connector initialized successfully.");
 			return (DefaultCallback.Succeeded);
 		}
 		
 		@Override
-		public CallbackCompletion<Void> publishSucceeded (final Context context, final PublishSucceededArguments<String, Void> arguments) {
+		protected CallbackCompletion<Void> publishSucceeded (final Context context, final Void extra) {
 			return (PublisherCloudlet.maybeContinue (context));
 		}
 	}

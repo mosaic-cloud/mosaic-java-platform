@@ -28,6 +28,7 @@ import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletContext;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueueConsumerConnector;
+import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpMessageToken;
 import eu.mosaic_cloud.platform.implementations.v1.serialization.PlainTextDataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
@@ -54,26 +55,26 @@ public class ConsumerCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroy (final Context context, final DestroyArguments arguments) {
+		protected CallbackCompletion<Void> destroy (final Context context) {
 			context.logger.info ("ConsumerCloudlet destroying...");
 			return (context.connector.destroy ());
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final Context context, final DestroySucceededArguments arguments) {
+		protected CallbackCompletion<Void> destroySucceeded (final Context context) {
 			context.logger.info ("ConsumerCloudlet destroyed successfully.");
 			return (DefaultCallback.Succeeded);
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initialize (final Context context, final InitializeArguments arguments) {
+		protected CallbackCompletion<Void> initialize (final Context context) {
 			context.logger.info ("ConsumerCloudlet initializing...");
 			context.connector = context.createAmqpQueueConsumerConnector ("connector", String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, ConnectorCallback.class);
 			return (context.connector.initialize ());
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final Context context, final InitializeSucceededArguments arguments) {
+		protected CallbackCompletion<Void> initializeSucceeded (final Context context) {
 			context.logger.info ("ConsumerCloudlet initialized successfully.");
 			return (DefaultCallback.Succeeded);
 		}
@@ -100,26 +101,25 @@ public class ConsumerCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> acknowledgeSucceeded (final Context context, final AcknowledgeSucceededArguments<Void> arguments) {
+		protected CallbackCompletion<Void> acknowledgeSucceeded (final Context context, final Void extra) {
 			return (ConsumerCloudlet.maybeContinue (context));
 		}
 		
 		@Override
-		public CallbackCompletion<Void> consume (final Context context, final ConsumeArguments<String> arguments) {
-			final String data = arguments.message;
-			context.logger.info ("ConsumerCloudlet received message `{}`.", data);
-			context.connector.acknowledge (arguments.token);
+		protected CallbackCompletion<Void> consume (final Context context, final String message, final AmqpMessageToken token) {
+			context.logger.info ("ConsumerCloudlet received message `{}`.", message);
+			context.connector.acknowledge (token, null);
 			return (DefaultCallback.Succeeded);
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final Context context, final DestroySucceededArguments arguments) {
+		protected CallbackCompletion<Void> destroySucceeded (final Context context) {
 			context.logger.info ("ConsumerCloudlet connector destroyed successfully.");
 			return (DefaultCallback.Succeeded);
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final Context context, final InitializeSucceededArguments arguments) {
+		protected CallbackCompletion<Void> initializeSucceeded (final Context context) {
 			context.logger.info ("ConsumerCloudlet connector initialized successfully.");
 			return (DefaultCallback.Succeeded);
 		}

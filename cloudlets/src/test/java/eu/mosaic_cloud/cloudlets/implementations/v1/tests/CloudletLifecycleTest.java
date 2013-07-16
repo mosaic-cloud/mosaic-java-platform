@@ -52,13 +52,13 @@ public class CloudletLifecycleTest
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroy (final VoidCloudletContext context, final DestroyArguments arguments) {
+		protected CallbackCompletion<Void> destroy (final VoidCloudletContext context) {
 			context.transcript.traceDebugging ("destroying...");
 			return (DefaultCallback.Succeeded);
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initialize (final VoidCloudletContext context, final InitializeArguments arguments) {
+		protected CallbackCompletion<Void> initialize (final VoidCloudletContext context) {
 			context.transcript.traceDebugging ("initializing...");
 			return (DefaultCallback.Succeeded);
 		}
