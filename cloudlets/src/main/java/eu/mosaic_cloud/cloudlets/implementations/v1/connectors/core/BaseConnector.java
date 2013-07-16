@@ -24,7 +24,10 @@ package eu.mosaic_cloud.cloudlets.implementations.v1.connectors.core;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.core.Connector;
 import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorCallback;
-import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorCallback.DestroyFailedArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorCallback.DestroySucceededArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorCallback.InitializeFailedArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorCallback.InitializeSucceededArguments;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
@@ -93,10 +96,10 @@ public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connector
 					assert (completion_ == completion);
 					if (completion.getException () != null) {
 						BaseConnector.this.transcript.traceDebugging ("triggering the callback for destroy failure...");
-						return BaseConnector.this.callback.destroyFailed (BaseConnector.this.context, new CallbackArguments (BaseConnector.this.cloudlet));
+						return BaseConnector.this.callback.destroyFailed (BaseConnector.this.context, new DestroyFailedArguments (BaseConnector.this.cloudlet, BaseConnector.this, completion.getException ()));
 					}
 					BaseConnector.this.transcript.traceDebugging ("triggering the callback for destroy success...");
-					return BaseConnector.this.callback.destroySucceeded (BaseConnector.this.context, new CallbackArguments (BaseConnector.this.cloudlet));
+					return BaseConnector.this.callback.destroySucceeded (BaseConnector.this.context, new DestroySucceededArguments (BaseConnector.this.cloudlet, BaseConnector.this));
 				}
 			});
 		}
@@ -118,10 +121,10 @@ public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.connector
 					assert (completion_ == completion);
 					if (completion.getException () != null) {
 						BaseConnector.this.transcript.traceDebugging ("triggering the callback for initialize failure...");
-						return BaseConnector.this.callback.initializeFailed (BaseConnector.this.context, new CallbackArguments (BaseConnector.this.cloudlet));
+						return BaseConnector.this.callback.initializeFailed (BaseConnector.this.context, new InitializeFailedArguments (BaseConnector.this.cloudlet, BaseConnector.this, completion.getException ()));
 					}
 					BaseConnector.this.transcript.traceDebugging ("triggering the callback for initialize success...");
-					return BaseConnector.this.callback.initializeSucceeded (BaseConnector.this.context, new CallbackArguments (BaseConnector.this.cloudlet));
+					return BaseConnector.this.callback.initializeSucceeded (BaseConnector.this.context, new InitializeSucceededArguments (BaseConnector.this.cloudlet, BaseConnector.this));
 				}
 			});
 		}

@@ -25,9 +25,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
-import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutionFailedCallbackArguments;
-import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutionSucceededCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutorCallback;
+import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutorCallback.ExecutionFailedArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutorCallback.ExecutionSucceededArguments;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
@@ -87,9 +87,9 @@ public class Executor<TContext, TOutcome, TExtra>
 					assert (completion_ == completion);
 					CallbackCompletion<Void> result;
 					if (completion.getException () == null) {
-						result = Executor.this.callback.executionSucceeded (Executor.this.context, new ExecutionSucceededCallbackArguments<TOutcome, TExtra> (Executor.this.cloudlet, completion.getOutcome (), extra));
+						result = Executor.this.callback.executionSucceeded (Executor.this.context, new ExecutionSucceededArguments<TOutcome, TExtra> (Executor.this.cloudlet, Executor.this, callable, completion.getOutcome (), extra));
 					} else {
-						result = Executor.this.callback.executionFailed (Executor.this.context, new ExecutionFailedCallbackArguments<TExtra> (Executor.this.cloudlet, completion.getException (), extra));
+						result = Executor.this.callback.executionFailed (Executor.this.context, new ExecutionFailedArguments<TOutcome, TExtra> (Executor.this.cloudlet, Executor.this, callable, completion.getException (), extra));
 					}
 					return result;
 				}

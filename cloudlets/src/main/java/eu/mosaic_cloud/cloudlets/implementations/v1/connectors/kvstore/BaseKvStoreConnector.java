@@ -23,9 +23,14 @@ package eu.mosaic_cloud.cloudlets.implementations.v1.connectors.kvstore;
 
 import eu.mosaic_cloud.cloudlets.implementations.v1.connectors.core.BaseConnector;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
-import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.KvStoreCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.KvStoreConnector;
 import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.KvStoreConnectorCallback;
+import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.KvStoreConnectorCallback.DeleteFailedArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.KvStoreConnectorCallback.DeleteSucceededArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.KvStoreConnectorCallback.GetFailedArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.KvStoreConnectorCallback.GetSucceededArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.KvStoreConnectorCallback.SetFailedArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.KvStoreConnectorCallback.SetSucceededArguments;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
@@ -57,10 +62,10 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
 					assert (completion_ == completion);
 					if (completion.getException () != null) {
 						BaseKvStoreConnector.this.transcript.traceDebugging ("triggering the callback for delete failure for key `%s` and extra `%{object}`...", key, extra);
-						return BaseKvStoreConnector.this.callback.deleteFailed (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<TValue, TExtra> (BaseKvStoreConnector.this.cloudlet, key, completion.getException (), extra));
+						return BaseKvStoreConnector.this.callback.deleteFailed (BaseKvStoreConnector.this.context, new DeleteFailedArguments<TExtra> (BaseKvStoreConnector.this.cloudlet, BaseKvStoreConnector.this, key, completion.getException (), extra));
 					}
 					BaseKvStoreConnector.this.transcript.traceDebugging ("triggering the callback for delete success for key `%s` and extra `%{object}`...", key, extra);
-					return BaseKvStoreConnector.this.callback.deleteSucceeded (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<TValue, TExtra> (BaseKvStoreConnector.this.cloudlet, key, (TValue) null, extra));
+					return BaseKvStoreConnector.this.callback.deleteSucceeded (BaseKvStoreConnector.this.context, new DeleteSucceededArguments<TExtra> (BaseKvStoreConnector.this.cloudlet, BaseKvStoreConnector.this, key, extra));
 				}
 			});
 		}
@@ -84,10 +89,10 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
 					assert (completion_ == completion);
 					if (completion.getException () != null) {
 						BaseKvStoreConnector.this.transcript.traceDebugging ("triggering the callback for get failure for key `%s` and extra `%{object}`...", key, extra);
-						return BaseKvStoreConnector.this.callback.getFailed (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<TValue, TExtra> (BaseKvStoreConnector.this.cloudlet, key, completion.getException (), extra));
+						return BaseKvStoreConnector.this.callback.getFailed (BaseKvStoreConnector.this.context, new GetFailedArguments<TExtra> (BaseKvStoreConnector.this.cloudlet, BaseKvStoreConnector.this, key, completion.getException (), extra));
 					}
 					BaseKvStoreConnector.this.transcript.traceDebugging ("triggering the callback for get success for key `%s` and extra `%{object}`...", key, extra);
-					return BaseKvStoreConnector.this.callback.getSucceeded (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<TValue, TExtra> (BaseKvStoreConnector.this.cloudlet, key, completion.getOutcome (), extra));
+					return BaseKvStoreConnector.this.callback.getSucceeded (BaseKvStoreConnector.this.context, new GetSucceededArguments<TValue, TExtra> (BaseKvStoreConnector.this.cloudlet, BaseKvStoreConnector.this, key, completion.getOutcome (), extra));
 				}
 			});
 		}
@@ -111,10 +116,10 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.co
 					assert (completion_ == completion);
 					if (completion.getException () != null) {
 						BaseKvStoreConnector.this.transcript.traceDebugging ("triggering the callback for set failure for key `%s` and extra `%{object}`...", key, extra);
-						return BaseKvStoreConnector.this.callback.setFailed (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<TValue, TExtra> (BaseKvStoreConnector.this.cloudlet, key, completion.getException (), extra));
+						return BaseKvStoreConnector.this.callback.setFailed (BaseKvStoreConnector.this.context, new SetFailedArguments<TValue, TExtra> (BaseKvStoreConnector.this.cloudlet, BaseKvStoreConnector.this, key, value, completion.getException (), extra));
 					}
 					BaseKvStoreConnector.this.transcript.traceDebugging ("triggering the callback for set success for key `%s` and extra `%{object}`...", key, extra);
-					return BaseKvStoreConnector.this.callback.setSucceeded (BaseKvStoreConnector.this.context, new KvStoreCallbackCompletionArguments<TValue, TExtra> (BaseKvStoreConnector.this.cloudlet, key, value, extra));
+					return BaseKvStoreConnector.this.callback.setSucceeded (BaseKvStoreConnector.this.context, new SetSucceededArguments<TValue, TExtra> (BaseKvStoreConnector.this.cloudlet, BaseKvStoreConnector.this, key, value, extra));
 				}
 			});
 		}

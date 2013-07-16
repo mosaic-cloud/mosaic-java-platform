@@ -22,9 +22,10 @@ package eu.mosaic_cloud.cloudlets.implementations.v1.connectors.queue.amqp;
 
 
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
-import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueueConsumerConnectorCallback;
-import eu.mosaic_cloud.cloudlets.v1.core.GenericCallbackCompletionArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueueConsumerConnectorCallback.AcknowledgeFailedArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueueConsumerConnectorCallback.AcknowledgeSucceededArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueueConsumerConnectorCallback.ConsumeArguments;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpMessageToken;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueConsumerCallback;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
@@ -59,9 +60,9 @@ public class AmqpQueueConsumerConnector<TContext, TMessage, TExtra>
 					assert (completion_ == completion);
 					CallbackCompletion<Void> result;
 					if (completion.getException () == null) {
-						result = AmqpQueueConsumerConnector.this.callback.acknowledgeSucceeded (AmqpQueueConsumerConnector.this.context, new GenericCallbackCompletionArguments<TExtra> (AmqpQueueConsumerConnector.this.cloudlet, extra));
+						result = AmqpQueueConsumerConnector.this.callback.acknowledgeSucceeded (AmqpQueueConsumerConnector.this.context, new AcknowledgeSucceededArguments<TExtra> (AmqpQueueConsumerConnector.this.cloudlet, AmqpQueueConsumerConnector.this, token, extra));
 					} else {
-						result = AmqpQueueConsumerConnector.this.callback.acknowledgeFailed (AmqpQueueConsumerConnector.this.context, new GenericCallbackCompletionArguments<TExtra> (AmqpQueueConsumerConnector.this.cloudlet, completion.getException ()));
+						result = AmqpQueueConsumerConnector.this.callback.acknowledgeFailed (AmqpQueueConsumerConnector.this.context, new AcknowledgeFailedArguments<TExtra> (AmqpQueueConsumerConnector.this.cloudlet, AmqpQueueConsumerConnector.this, token, completion.getException (), extra));
 					}
 					return result;
 				}
@@ -75,7 +76,7 @@ public class AmqpQueueConsumerConnector<TContext, TMessage, TExtra>
 		if (this.callback == null) {
 			result = CallbackCompletion.createFailure (new IllegalStateException ());
 		} else {
-			result = this.callback.consume (this.context, new AmqpQueueConsumeCallbackArguments<TMessage> (this.cloudlet, token, message));
+			result = this.callback.consume (this.context, new ConsumeArguments<TMessage> (this.cloudlet, this, message, token));
 		}
 		return result;
 	}

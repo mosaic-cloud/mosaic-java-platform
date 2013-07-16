@@ -23,10 +23,11 @@ package eu.mosaic_cloud.cloudlets.implementations.v1.connectors.components;
 
 import eu.mosaic_cloud.cloudlets.implementations.v1.connectors.core.BaseConnector;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
-import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentAcquireSucceededCallbackArguments;
-import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentCallSucceededCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentConnectorCallbacks;
-import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentRequestFailedCallbackArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentConnectorCallbacks.AcquireFailedArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentConnectorCallbacks.AcquireSucceededArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentConnectorCallbacks.CallFailedArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentConnectorCallbacks.CallSucceededArguments;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
 import eu.mosaic_cloud.components.core.ComponentResourceSpecification;
@@ -61,10 +62,10 @@ public class ComponentConnector<TContext, TExtra>
 					assert (completion_ == completion);
 					if (completion.getException () != null) {
 						ComponentConnector.this.transcript.traceDebugging ("triggering the callback for acquire failure for resource `%s` and extra `%{object}`...", resource.identifier, extra);
-						return ComponentConnector.this.callback.acquireFailed (ComponentConnector.this.context, new ComponentRequestFailedCallbackArguments<TExtra> (ComponentConnector.this.cloudlet, completion.getException (), extra));
+						return ComponentConnector.this.callback.acquireFailed (ComponentConnector.this.context, new AcquireFailedArguments<TExtra> (ComponentConnector.this.cloudlet, ComponentConnector.this, resource, completion.getException (), extra));
 					}
 					ComponentConnector.this.transcript.traceDebugging ("triggering the callback for acquire success for resource `%s` and extra `%{object}`...", resource.identifier, extra);
-					return ComponentConnector.this.callback.acquireSucceeded (ComponentConnector.this.context, new ComponentAcquireSucceededCallbackArguments<TExtra> (ComponentConnector.this.cloudlet, completion.getOutcome (), extra));
+					return ComponentConnector.this.callback.acquireSucceeded (ComponentConnector.this.context, new AcquireSucceededArguments<TExtra> (ComponentConnector.this.cloudlet, ComponentConnector.this, resource, completion.getOutcome (), extra));
 				}
 			});
 		}
@@ -88,10 +89,10 @@ public class ComponentConnector<TContext, TExtra>
 					assert (completion_ == completion);
 					if (completion.getException () != null) {
 						ComponentConnector.this.transcript.traceDebugging ("triggering the callback for call failure to the component `%s` with the operation `%s` and extra `%{object}`...", component.string, operation, extra);
-						return ComponentConnector.this.callback.callFailed (ComponentConnector.this.context, new ComponentRequestFailedCallbackArguments<TExtra> (ComponentConnector.this.cloudlet, completion.getException (), extra));
+						return ComponentConnector.this.callback.callFailed (ComponentConnector.this.context, new CallFailedArguments<TInputs, TOutputs, TExtra> (ComponentConnector.this.cloudlet, ComponentConnector.this, component, operation, inputs, outputs, completion.getException (), extra));
 					}
 					ComponentConnector.this.transcript.traceDebugging ("triggering the callback for call success to the component `%s` with the operation `%s` and extra `%{object}`...", component.string, operation, extra);
-					return ComponentConnector.this.callback.callSucceeded (ComponentConnector.this.context, new ComponentCallSucceededCallbackArguments<TOutputs, TExtra> (ComponentConnector.this.cloudlet, completion.getOutcome (), extra));
+					return ComponentConnector.this.callback.callSucceeded (ComponentConnector.this.context, new CallSucceededArguments<TInputs, TOutputs, TExtra> (ComponentConnector.this.cloudlet, ComponentConnector.this, component, operation, inputs, outputs, completion.getOutcome (), extra));
 				}
 			});
 		}

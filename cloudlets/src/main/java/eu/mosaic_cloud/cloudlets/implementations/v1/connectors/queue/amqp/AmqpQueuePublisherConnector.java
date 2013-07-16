@@ -23,7 +23,8 @@ package eu.mosaic_cloud.cloudlets.implementations.v1.connectors.queue.amqp;
 
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueuePublisherConnectorCallback;
-import eu.mosaic_cloud.cloudlets.v1.core.GenericCallbackCompletionArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueuePublisherConnectorCallback.PublishFailedArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueuePublisherConnectorCallback.PublishSucceededArguments;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
@@ -53,9 +54,9 @@ public class AmqpQueuePublisherConnector<TContext, TMessage, TExtra>
 				public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_) {
 					assert (completion_ == completion);
 					if (completion.getException () != null) {
-						return AmqpQueuePublisherConnector.this.callback.publishFailed (AmqpQueuePublisherConnector.this.context, new GenericCallbackCompletionArguments<TExtra> (AmqpQueuePublisherConnector.this.cloudlet, completion.getException ()));
+						return AmqpQueuePublisherConnector.this.callback.publishFailed (AmqpQueuePublisherConnector.this.context, new PublishFailedArguments<TMessage, TExtra> (AmqpQueuePublisherConnector.this.cloudlet, AmqpQueuePublisherConnector.this, message, completion.getException (), extra));
 					}
-					return AmqpQueuePublisherConnector.this.callback.publishSucceeded (AmqpQueuePublisherConnector.this.context, new GenericCallbackCompletionArguments<TExtra> (AmqpQueuePublisherConnector.this.cloudlet, extra));
+					return AmqpQueuePublisherConnector.this.callback.publishSucceeded (AmqpQueuePublisherConnector.this.context, new PublishSucceededArguments<TMessage, TExtra> (AmqpQueuePublisherConnector.this.cloudlet, AmqpQueuePublisherConnector.this, message, extra));
 				}
 			});
 		}

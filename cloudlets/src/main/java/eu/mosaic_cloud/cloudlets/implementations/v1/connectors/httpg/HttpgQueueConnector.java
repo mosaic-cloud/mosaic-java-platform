@@ -24,8 +24,9 @@ package eu.mosaic_cloud.cloudlets.implementations.v1.connectors.httpg;
 import eu.mosaic_cloud.cloudlets.implementations.v1.connectors.core.BaseConnector;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.HttpgQueueConnectorCallback;
-import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.HttpgQueueRequestedCallbackArguments;
-import eu.mosaic_cloud.cloudlets.v1.core.GenericCallbackCompletionArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.HttpgQueueConnectorCallback.RequestedArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.HttpgQueueConnectorCallback.RespondFailedArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.HttpgQueueConnectorCallback.RespondSucceededArguments;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgRequestMessage;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgResponseMessage;
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
@@ -60,9 +61,9 @@ public class HttpgQueueConnector<TContext, TRequestBody, TResponseBody, TExtra>
 					assert (completion_ == completion);
 					CallbackCompletion<Void> result;
 					if (completion.getException () == null) {
-						result = HttpgQueueConnector.this.callback.respondSucceeded (HttpgQueueConnector.this.context, new GenericCallbackCompletionArguments<TExtra> (HttpgQueueConnector.this.cloudlet, extra));
+						result = HttpgQueueConnector.this.callback.respondSucceeded (HttpgQueueConnector.this.context, new RespondSucceededArguments<TResponseBody, TExtra> (HttpgQueueConnector.this.cloudlet, HttpgQueueConnector.this, response, extra));
 					} else {
-						result = HttpgQueueConnector.this.callback.respondFailed (HttpgQueueConnector.this.context, new GenericCallbackCompletionArguments<TExtra> (HttpgQueueConnector.this.cloudlet, completion.getException ()));
+						result = HttpgQueueConnector.this.callback.respondFailed (HttpgQueueConnector.this.context, new RespondFailedArguments<TResponseBody, TExtra> (HttpgQueueConnector.this.cloudlet, HttpgQueueConnector.this, response, completion.getException (), extra));
 					}
 					return result;
 				}
@@ -76,7 +77,7 @@ public class HttpgQueueConnector<TContext, TRequestBody, TResponseBody, TExtra>
 		if (this.callback == null) {
 			result = CallbackCompletion.createFailure (new IllegalStateException ());
 		} else {
-			result = this.callback.requested (this.context, new HttpgQueueRequestedCallbackArguments<TRequestBody> (this.cloudlet, request));
+			result = this.callback.requested (this.context, new RequestedArguments<TRequestBody> (this.cloudlet, this, request));
 		}
 		return result;
 	}
