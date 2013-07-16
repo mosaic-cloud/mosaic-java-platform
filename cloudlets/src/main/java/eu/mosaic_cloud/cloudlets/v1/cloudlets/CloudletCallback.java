@@ -25,74 +25,67 @@ import eu.mosaic_cloud.cloudlets.v1.core.Callback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-/**
- * Main interface for user cloudlets. All user cloudlets must implement this interface.
- * 
- * @author Georgiana Macariu
- * @param <TContext>
- *            The type of the object encoding the context of the cloudlet.
- */
-public interface CloudletCallback<TContext>
+public interface CloudletCallback<TContext extends Object>
 			extends
 				Callback<TContext>
 {
-	/**
-	 * Destroys the user cloudlet.
-	 * 
-	 * @param context
-	 *            the context of the cloudlet
-	 * @param arguments
-	 *            here, this argument just gives access to the cloudlet controller
-	 */
-	CallbackCompletion<Void> destroy (TContext context, CloudletCallbackArguments<TContext> arguments);
+	public abstract CallbackCompletion<Void> destroy (TContext context, DestroyArguments arguments);
 	
-	/**
-	 * Operation called after the cloudlet is unsuccessfully destroyed.
-	 * 
-	 * @param context
-	 *            the context of the cloudlet
-	 * @param arguments
-	 *            here, this argument just gives access to the cloudlet controller
-	 */
-	CallbackCompletion<Void> destroyFailed (TContext context, CloudletCallbackCompletionArguments<TContext> arguments);
+	public abstract CallbackCompletion<Void> destroyFailed (TContext context, DestroyFailedArguments arguments);
 	
-	/**
-	 * Operation called after the cloudlet is successfully destroyed.
-	 * 
-	 * @param context
-	 *            the context of the cloudlet
-	 * @param arguments
-	 *            here, this argument just gives access to the cloudlet controller
-	 */
-	CallbackCompletion<Void> destroySucceeded (TContext context, CloudletCallbackCompletionArguments<TContext> arguments);
+	public abstract CallbackCompletion<Void> destroySucceeded (TContext context, DestroySucceededArguments arguments);
 	
-	/**
-	 * Initializes the user cloudlet.
-	 * 
-	 * @param context
-	 *            the context of the cloudlet
-	 * @param arguments
-	 *            here, this argument just gives access to the cloudlet controller
-	 */
-	CallbackCompletion<Void> initialize (TContext context, CloudletCallbackArguments<TContext> arguments);
+	public abstract CallbackCompletion<Void> initialize (TContext context, InitializeArguments arguments);
 	
-	/**
-	 * Operation called after the cloudlet is unsuccessfully initialized.
-	 * 
-	 * @param context
-	 *            the context of the cloudlet
-	 * @param arguments
-	 *            here, this argument just gives access to the cloudlet controller
-	 */
-	CallbackCompletion<Void> initializeFailed (TContext context, CloudletCallbackCompletionArguments<TContext> arguments);
+	public abstract CallbackCompletion<Void> initializeFailed (TContext context, InitializeFailedArguments arguments);
 	
-	/**
-	 * Operation called after the cloudlet is successfully initialized.
-	 * 
-	 * @param context
-	 *            the context of the cloudlet
-	 * @param arguments
-	 *            here, this argument just gives access to the cloudlet controller
-	 */
-	CallbackCompletion<Void> initializeSucceeded (TContext context, CloudletCallbackCompletionArguments<TContext> arguments);
+	public abstract CallbackCompletion<Void> initializeSucceeded (TContext context, InitializeSucceededArguments arguments);
+	
+	public static final class DestroyArguments
+				extends CloudletCallbackArguments
+	{
+		public DestroyArguments (final CloudletController<?> cloudlet) {
+			super (cloudlet);
+		}
+	}
+	
+	public static final class DestroyFailedArguments
+				extends CloudletFailedArguments
+	{
+		public DestroyFailedArguments (final CloudletController<?> cloudlet, final Throwable error) {
+			super (cloudlet, error);
+		}
+	}
+	
+	public static final class DestroySucceededArguments
+				extends CloudletSucceededArguments
+	{
+		public DestroySucceededArguments (final CloudletController<?> cloudlet) {
+			super (cloudlet);
+		}
+	}
+	
+	public static final class InitializeArguments
+				extends CloudletCallbackArguments
+	{
+		public InitializeArguments (final CloudletController<?> cloudlet) {
+			super (cloudlet);
+		}
+	}
+	
+	public static final class InitializeFailedArguments
+				extends CloudletFailedArguments
+	{
+		public InitializeFailedArguments (final CloudletController<?> cloudlet, final Throwable error) {
+			super (cloudlet, error);
+		}
+	}
+	
+	public static final class InitializeSucceededArguments
+				extends CloudletSucceededArguments
+	{
+		public InitializeSucceededArguments (final CloudletController<?> cloudlet) {
+			super (cloudlet);
+		}
+	}
 }

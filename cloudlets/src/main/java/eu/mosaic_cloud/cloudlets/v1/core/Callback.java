@@ -25,12 +25,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
 
-/**
- * Marker interface for cloudlet callbacks.
- * 
- * @author Georgiana Macariu
- */
-public interface Callback<TContext>
+public interface Callback<TContext extends Object>
 			extends
 				Callbacks
 {

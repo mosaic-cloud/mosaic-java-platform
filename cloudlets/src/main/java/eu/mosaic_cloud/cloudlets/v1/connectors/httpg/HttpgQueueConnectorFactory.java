@@ -30,5 +30,5 @@ public interface HttpgQueueConnectorFactory
 			extends
 				QueueConnectorFactory<HttpgQueueConnector<?, ?, ?>>
 {
-	<TContext, TRequestBody, TResponseBody, TExtra> HttpgQueueConnector<TRequestBody, TResponseBody, TExtra> create (final Configuration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, HttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra> callback, TContext callbackContext);
+	public abstract <TContext extends Object, TRequestBody extends Object, TResponseBody extends Object, TExtra extends Object> HttpgQueueConnector<TRequestBody, TResponseBody, TExtra> create (final Configuration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, HttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra> callback, TContext callbackContext);
 }

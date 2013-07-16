@@ -21,44 +21,40 @@
 package eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp;
 
 
-import eu.mosaic_cloud.cloudlets.v1.core.GenericCallbackCompletionArguments;
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.Connector;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorOperationFailedArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorOperationSucceededArguments;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-/**
- * Interface for AMQP queue publishers. This will be implemented by cloudlets which need to send messages to an exchange.
- * 
- * @author Georgiana Macariu
- * @param <TContext>
- *            the type of the cloudlet context
- * @param <TMessage>
- *            the type of published data
- * @param <TExtra>
- *            the type of the extra data; as an example, this data can be used correlation
- */
-public interface AmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra>
+public interface AmqpQueuePublisherConnectorCallback<TContext extends Object, TMessage extends Object, TExtra extends Object>
 			extends
 				AmqpQueueConnectorCallback<TContext>
 {
-	/**
-	 * Called when the publisher receives notification that the message publishing could not be finished with success.
-	 * 
-	 * @param context
-	 *            the context of the cloudlet
-	 * @param arguments
-	 *            the arguments of the callback
-	 */
-	CallbackCompletion<Void> publishFailed (TContext context, GenericCallbackCompletionArguments<TExtra> arguments);
+	public abstract CallbackCompletion<Void> publishFailed (TContext context, PublishFailedArguments<TMessage, TExtra> arguments);
 	
-	/**
-	 * Called when the publisher receives confirmation that the message publishing finished successfully.
-	 * 
-	 * @param <D>
-	 *            the type of the published message
-	 * @param context
-	 *            the context of the cloudlet
-	 * @param arguments
-	 *            the arguments of the callback
-	 */
-	CallbackCompletion<Void> publishSucceeded (TContext context, GenericCallbackCompletionArguments<TExtra> arguments);
+	public abstract CallbackCompletion<Void> publishSucceeded (TContext context, PublishSucceededArguments<TMessage, TExtra> arguments);
+	
+	public static final class PublishFailedArguments<TMessage extends Object, TExtra extends Object>
+				extends ConnectorOperationFailedArguments<TExtra>
+	{
+		public PublishFailedArguments (final CloudletController<?> cloudlet, final Connector connector, final TMessage message, final Throwable error, final TExtra extra) {
+			super (cloudlet, connector, error, extra);
+			this.message = message;
+		}
+		
+		public final TMessage message;
+	}
+	
+	public static final class PublishSucceededArguments<TMessage extends Object, TExtra extends Object>
+				extends ConnectorOperationSucceededArguments<TExtra>
+	{
+		public PublishSucceededArguments (final CloudletController<?> cloudlet, final Connector connector, final TMessage message, final TExtra extra) {
+			super (cloudlet, connector, extra);
+			this.message = message;
+		}
+		
+		public final TMessage message;
+	}
 }

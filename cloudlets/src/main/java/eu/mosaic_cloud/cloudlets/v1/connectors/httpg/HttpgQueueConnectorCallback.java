@@ -21,18 +21,57 @@
 package eu.mosaic_cloud.cloudlets.v1.connectors.httpg;
 
 
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.Connector;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorCallbackArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorOperationFailedArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorOperationSucceededArguments;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.QueueConnectorCallback;
-import eu.mosaic_cloud.cloudlets.v1.core.GenericCallbackCompletionArguments;
+import eu.mosaic_cloud.connectors.v1.httpg.HttpgRequestMessage;
+import eu.mosaic_cloud.connectors.v1.httpg.HttpgResponseMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-public interface HttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra>
+public interface HttpgQueueConnectorCallback<TContext extends Object, TRequestBody extends Object, TResponseBody extends Object, TExtra extends Object>
 			extends
 				QueueConnectorCallback<TContext>
 {
-	CallbackCompletion<Void> requested (TContext context, HttpgQueueRequestedCallbackArguments<TRequestBody> arguments);
+	public abstract CallbackCompletion<Void> requested (TContext context, RequestedArguments<TRequestBody> arguments);
 	
-	CallbackCompletion<Void> respondFailed (TContext context, GenericCallbackCompletionArguments<TExtra> arguments);
+	public abstract CallbackCompletion<Void> respondFailed (TContext context, RespondFailedArguments<TResponseBody, TExtra> arguments);
 	
-	CallbackCompletion<Void> respondSucceeded (TContext context, GenericCallbackCompletionArguments<TExtra> arguments);
+	public abstract CallbackCompletion<Void> respondSucceeded (TContext context, RespondSucceededArguments<TResponseBody, TExtra> arguments);
+	
+	public static final class RequestedArguments<TRequestBody extends Object>
+				extends ConnectorCallbackArguments
+	{
+		public RequestedArguments (final CloudletController<?> cloudlet, final Connector connector, final HttpgRequestMessage<TRequestBody> request) {
+			super (cloudlet, connector);
+			this.request = request;
+		}
+		
+		public final HttpgRequestMessage<TRequestBody> request;
+	}
+	
+	public static final class RespondFailedArguments<TResponseBody extends Object, TExtra extends Object>
+				extends ConnectorOperationFailedArguments<TExtra>
+	{
+		public RespondFailedArguments (final CloudletController<?> cloudlet, final Connector connector, final HttpgResponseMessage<TResponseBody> response, final Throwable error, final TExtra extra) {
+			super (cloudlet, connector, error, extra);
+			this.response = response;
+		}
+		
+		public final HttpgResponseMessage<TResponseBody> response;
+	}
+	
+	public static final class RespondSucceededArguments<TResponseBody extends Object, TExtra extends Object>
+				extends ConnectorOperationSucceededArguments<TExtra>
+	{
+		public RespondSucceededArguments (final CloudletController<?> cloudlet, final Connector connector, final HttpgResponseMessage<TResponseBody> response, final TExtra extra) {
+			super (cloudlet, connector, extra);
+			this.response = response;
+		}
+		
+		public final HttpgResponseMessage<TResponseBody> response;
+	}
 }

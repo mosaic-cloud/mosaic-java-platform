@@ -28,5 +28,5 @@ public interface ComponentConnectorFactory
 			extends
 				ConnectorFactory<ComponentConnector<?>>
 {
-	<TContext, TExtra> ComponentConnector<TExtra> create (ComponentConnectorCallbacks<TContext, TExtra> callbacks, TContext callbacksContext);
+	public abstract <TContext extends Object, TExtra extends Object> ComponentConnector<TExtra> create (ComponentConnectorCallbacks<TContext, TExtra> callbacks, TContext callbacksContext);
 }

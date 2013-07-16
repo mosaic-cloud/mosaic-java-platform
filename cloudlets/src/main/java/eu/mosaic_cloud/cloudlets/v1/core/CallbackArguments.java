@@ -23,34 +23,16 @@ package eu.mosaic_cloud.cloudlets.v1.core;
 
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 
+import com.google.common.base.Preconditions;
 
-/**
- * Base class for cloudlet callback arguments. This will hold a reference to the cloudlet controller and operation specific
- * information.
- * 
- * @author Georgiana Macariu
- */
-public class CallbackArguments
+
+public abstract class CallbackArguments
 {
-	/**
-	 * Creates a new argument
-	 * 
-	 * @param cloudlet
-	 *            the cloudlet controller
-	 */
-	public CallbackArguments (final CloudletController<?> cloudlet) {
+	protected CallbackArguments (final CloudletController<?> cloudlet) {
 		super ();
+		Preconditions.checkNotNull (cloudlet);
 		this.cloudlet = cloudlet;
 	}
 	
-	/**
-	 * Returns the cloudlet controller.
-	 * 
-	 * @return the cloudlet controller
-	 */
-	public CloudletController<?> getCloudlet () {
-		return this.cloudlet;
-	}
-	
-	protected final CloudletController<?> cloudlet;
+	public final CloudletController<?> cloudlet;
 }

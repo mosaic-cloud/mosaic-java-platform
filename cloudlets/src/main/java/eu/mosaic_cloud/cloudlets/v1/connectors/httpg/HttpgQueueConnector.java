@@ -26,10 +26,10 @@ import eu.mosaic_cloud.connectors.v1.httpg.HttpgResponseMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-public interface HttpgQueueConnector<TRequestBody, TResponseBody, TExtra>
+public interface HttpgQueueConnector<TRequestBody extends Object, TResponseBody extends Object, TExtra extends Object>
 			extends
 				QueueConnector,
 				eu.mosaic_cloud.connectors.v1.httpg.HttpgQueueConnector<TRequestBody, TResponseBody>
 {
-	CallbackCompletion<Void> respond (HttpgResponseMessage<TResponseBody> response, TExtra extra);
+	public abstract CallbackCompletion<Void> respond (HttpgResponseMessage<TResponseBody> response, TExtra extra);
 }

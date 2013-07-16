@@ -27,9 +27,9 @@ import eu.mosaic_cloud.cloudlets.v1.connectors.core.Connector;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-public interface Executor<TOutcome, TExtra>
+public interface Executor<TOutcome extends Object, TExtra extends Object>
 			extends
 				Connector
 {
-	CallbackCompletion<TOutcome> execute (Callable<TOutcome> callable, TExtra extra);
+	public abstract CallbackCompletion<TOutcome> execute (Callable<TOutcome> callable, TExtra extra);
 }

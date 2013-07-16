@@ -18,31 +18,23 @@
  * #L%
  */
 
-package eu.mosaic_cloud.cloudlets.v1.connectors.components;
+package eu.mosaic_cloud.cloudlets.v1.connectors.core;
 
 
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
-import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
+
+import com.google.common.base.Preconditions;
 
 
-public class ComponentAcquireSucceededCallbackArguments<TExtra>
+public abstract class ConnectorCallbackArguments
 			extends CallbackArguments
 {
-	public ComponentAcquireSucceededCallbackArguments (final CloudletController<?> cloudlet, final ComponentResourceDescriptor descriptor, final TExtra extra) {
+	protected ConnectorCallbackArguments (final CloudletController<?> cloudlet, final Connector connector) {
 		super (cloudlet);
-		this.descriptor = descriptor;
-		this.extra = extra;
+		Preconditions.checkNotNull (connector);
+		this.connector = connector;
 	}
 	
-	public ComponentResourceDescriptor getDescriptor () {
-		return (this.descriptor);
-	}
-	
-	public TExtra getExtra () {
-		return (this.extra);
-	}
-	
-	private final ComponentResourceDescriptor descriptor;
-	private final TExtra extra;
+	public final Connector connector;
 }

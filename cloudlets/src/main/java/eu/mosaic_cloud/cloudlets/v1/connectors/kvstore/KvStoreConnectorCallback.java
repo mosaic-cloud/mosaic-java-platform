@@ -21,85 +21,99 @@
 package eu.mosaic_cloud.cloudlets.v1.connectors.kvstore;
 
 
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.Connector;
 import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorCallback;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorOperationFailedArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorOperationSucceededArguments;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-/**
- * Base interface for key-value storage accessor callbacks. This interface should be implemented directly or indirectly by
- * cloudlets wishing to use a key value storage.
- * 
- * @author Georgiana Macariu
- * @param <TContext>
- *            the type of the cloudlet context
- * @param <TValue>
- *            the type of the values exchanged with the key-value store using this connector
- * @param <TExtra>
- *            the type of the extra data; as an example, this data can be used correlation
- */
-public interface KvStoreConnectorCallback<TContext, TValue, TExtra>
+public interface KvStoreConnectorCallback<TContext extends Object, TValue extends Object, TExtra extends Object>
 			extends
 				ConnectorCallback<TContext>
 {
-	/**
-	 * Called when the delete operation completed unsuccessfully. The error can be retrieved from the <i>arguments</i>
-	 * parameter.
-	 * 
-	 * @param context
-	 *            cloudlet context
-	 * @param arguments
-	 *            callback arguments
-	 */
-	CallbackCompletion<Void> deleteFailed (TContext context, KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
+	public abstract CallbackCompletion<Void> deleteFailed (TContext context, DeleteFailedArguments<TExtra> arguments);
 	
-	/**
-	 * Called when the delete operation completed successfully.
-	 * 
-	 * @param context
-	 *            cloudlet context
-	 * @param arguments
-	 *            callback arguments
-	 */
-	CallbackCompletion<Void> deleteSucceeded (TContext context, KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
+	public abstract CallbackCompletion<Void> deleteSucceeded (TContext context, DeleteSucceededArguments<TExtra> arguments);
 	
-	/**
-	 * Called when the get operation completed unsuccessfully. The error can be retrieved from the <i>arguments</i> parameter.
-	 * 
-	 * @param context
-	 *            cloudlet context
-	 * @param arguments
-	 *            callback arguments
-	 */
-	CallbackCompletion<Void> getFailed (TContext context, KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
+	public abstract CallbackCompletion<Void> getFailed (TContext context, GetFailedArguments<TExtra> arguments);
 	
-	/**
-	 * Called when the get operation completed successfully. The result of the get operation can be retrieved from the
-	 * <i>arguments</i> parameter.
-	 * 
-	 * @param context
-	 *            cloudlet context
-	 * @param arguments
-	 *            callback arguments
-	 */
-	CallbackCompletion<Void> getSucceeded (TContext context, KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
+	public abstract CallbackCompletion<Void> getSucceeded (TContext context, GetSucceededArguments<TValue, TExtra> arguments);
 	
-	/**
-	 * Called when the set operation completed unsuccessfully. The error can be retrieved from the <i>arguments</i> parameter.
-	 * 
-	 * @param context
-	 *            cloudlet context
-	 * @param arguments
-	 *            callback arguments
-	 */
-	CallbackCompletion<Void> setFailed (TContext context, KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
+	public abstract CallbackCompletion<Void> setFailed (TContext context, SetFailedArguments<TValue, TExtra> arguments);
 	
-	/**
-	 * Called when the set operation completed successfully.
-	 * 
-	 * @param context
-	 *            cloudlet context
-	 * @param arguments
-	 *            callback arguments
-	 */
-	CallbackCompletion<Void> setSucceeded (TContext context, KvStoreCallbackCompletionArguments<TValue, TExtra> arguments);
+	public abstract CallbackCompletion<Void> setSucceeded (TContext context, SetSucceededArguments<TValue, TExtra> arguments);
+	
+	public static final class DeleteFailedArguments<TExtra extends Object>
+				extends ConnectorOperationFailedArguments<TExtra>
+	{
+		public DeleteFailedArguments (final CloudletController<?> cloudlet, final Connector connector, final String key, final Throwable error, final TExtra extra) {
+			super (cloudlet, connector, error, extra);
+			this.key = key;
+		}
+		
+		public final String key;
+	}
+	
+	public static final class DeleteSucceededArguments<TExtra extends Object>
+				extends ConnectorOperationSucceededArguments<TExtra>
+	{
+		public DeleteSucceededArguments (final CloudletController<?> cloudlet, final Connector connector, final String key, final TExtra extra) {
+			super (cloudlet, connector, extra);
+			this.key = key;
+		}
+		
+		public final String key;
+	}
+	
+	public static final class GetFailedArguments<TExtra extends Object>
+				extends ConnectorOperationFailedArguments<TExtra>
+	{
+		public GetFailedArguments (final CloudletController<?> cloudlet, final Connector connector, final String key, final Throwable error, final TExtra extra) {
+			super (cloudlet, connector, error, extra);
+			this.key = key;
+		}
+		
+		public final String key;
+	}
+	
+	public static final class GetSucceededArguments<TValue extends Object, TExtra extends Object>
+				extends ConnectorOperationSucceededArguments<TExtra>
+	{
+		public GetSucceededArguments (final CloudletController<?> cloudlet, final Connector connector, final String key, final TValue value, final TExtra extra) {
+			super (cloudlet, connector, extra);
+			this.key = key;
+			this.value = value;
+		}
+		
+		public final String key;
+		public final TValue value;
+	}
+	
+	public static final class SetFailedArguments<TValue, TExtra extends Object>
+				extends ConnectorOperationFailedArguments<TExtra>
+	{
+		public SetFailedArguments (final CloudletController<?> cloudlet, final Connector connector, final String key, final TValue value, final Throwable error, final TExtra extra) {
+			super (cloudlet, connector, error, extra);
+			this.key = key;
+			this.value = value;
+		}
+		
+		public final String key;
+		public final TValue value;
+	}
+	
+	public static final class SetSucceededArguments<TValue extends Object, TExtra extends Object>
+				extends ConnectorOperationSucceededArguments<TExtra>
+	{
+		public SetSucceededArguments (final CloudletController<?> cloudlet, final Connector connector, final String key, final TValue value, final TExtra extra) {
+			super (cloudlet, connector, extra);
+			this.key = key;
+			this.value = value;
+		}
+		
+		public final String key;
+		public final TValue value;
+	}
 }

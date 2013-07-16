@@ -21,63 +21,52 @@
 package eu.mosaic_cloud.cloudlets.v1.connectors.core;
 
 
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.core.Callback;
-import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-/**
- * Basic interface for resource connector callback classes.
- * 
- * @author Georgiana Macariu
- * @param <TContext>
- *            the type of the cloudlet context
- */
-public interface ConnectorCallback<TContext>
+public interface ConnectorCallback<TContext extends Object>
 			extends
 				Callback<TContext>
 {
-	/**
-	 * Called when resource connector destruction failed.
-	 * 
-	 * @param context
-	 *            cloudlet context
-	 * @param arguments
-	 *            callback arguments
-	 * @return nothing
-	 */
-	CallbackCompletion<Void> destroyFailed (TContext context, CallbackArguments arguments);
+	public abstract CallbackCompletion<Void> destroyFailed (TContext context, DestroyFailedArguments arguments);
 	
-	/**
-	 * Called when resource connector destruction succeeded.
-	 * 
-	 * @param context
-	 *            cloudlet context
-	 * @param arguments
-	 *            callback arguments
-	 * @return nothing
-	 */
-	CallbackCompletion<Void> destroySucceeded (TContext context, CallbackArguments arguments);
+	public abstract CallbackCompletion<Void> destroySucceeded (TContext context, DestroySucceededArguments arguments);
 	
-	/**
-	 * Called when resource connector initialization failed.
-	 * 
-	 * @param context
-	 *            cloudlet context
-	 * @param arguments
-	 *            callback arguments
-	 * @return nothing
-	 */
-	CallbackCompletion<Void> initializeFailed (TContext context, CallbackArguments arguments);
+	public abstract CallbackCompletion<Void> initializeFailed (TContext context, InitializeFailedArguments arguments);
 	
-	/**
-	 * Called when resource connector initialization succeeded.
-	 * 
-	 * @param context
-	 *            cloudlet context
-	 * @param arguments
-	 *            callback arguments
-	 * @return nothing
-	 */
-	CallbackCompletion<Void> initializeSucceeded (TContext context, CallbackArguments arguments);
+	public abstract CallbackCompletion<Void> initializeSucceeded (TContext context, InitializeSucceededArguments arguments);
+	
+	public static final class DestroyFailedArguments
+				extends ConnectorFailedArguments
+	{
+		public DestroyFailedArguments (final CloudletController<?> cloudlet, final Connector connector, final Throwable error) {
+			super (cloudlet, connector, error);
+		}
+	}
+	
+	public static final class DestroySucceededArguments
+				extends ConnectorSucceededArguments
+	{
+		public DestroySucceededArguments (final CloudletController<?> cloudlet, final Connector connector) {
+			super (cloudlet, connector);
+		}
+	}
+	
+	public static final class InitializeFailedArguments
+				extends ConnectorFailedArguments
+	{
+		public InitializeFailedArguments (final CloudletController<?> cloudlet, final Connector connector, final Throwable error) {
+			super (cloudlet, connector, error);
+		}
+	}
+	
+	public static final class InitializeSucceededArguments
+				extends ConnectorSucceededArguments
+	{
+		public InitializeSucceededArguments (final CloudletController<?> cloudlet, final Connector connector) {
+			super (cloudlet, connector);
+		}
+	}
 }

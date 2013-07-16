@@ -24,7 +24,7 @@ package eu.mosaic_cloud.cloudlets.v1.connectors.queue;
 import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorCallback;
 
 
-public interface QueueConnectorCallback<TContext>
+public interface QueueConnectorCallback<TContext extends Object>
 			extends
 				ConnectorCallback<TContext>
 {}

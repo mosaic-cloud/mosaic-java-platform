@@ -26,24 +26,9 @@ import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 
 
-/**
- * Factory for creating key-value store connectors.
- * 
- * @author Ciprian Craciun
- */
 public interface KvStoreConnectorFactory
 			extends
 				ConnectorFactory<KvStoreConnector<?, ?>>
 {
-	/**
-	 * Creates a key-value store connector.
-	 * 
-	 * @param configuration
-	 * @param valueClass
-	 * @param valueEncoder
-	 * @param callback
-	 * @param callbackContext
-	 * @return
-	 */
-	<TContext, TValue, TExtra> KvStoreConnector<TValue, TExtra> create (Configuration configuration, Class<TValue> valueClass, DataEncoder<TValue> valueEncoder, KvStoreConnectorCallback<TContext, TValue, TExtra> callback, TContext callbackContext);
+	public abstract <TContext extends Object, TValue extends Object, TExtra extends Object> KvStoreConnector<TValue, TExtra> create (Configuration configuration, Class<TValue> valueClass, DataEncoder<TValue> valueEncoder, KvStoreConnectorCallback<TContext, TValue, TExtra> callback, TContext callbackContext);
 }

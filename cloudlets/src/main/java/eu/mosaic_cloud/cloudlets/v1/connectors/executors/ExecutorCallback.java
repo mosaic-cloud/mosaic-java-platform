@@ -21,15 +21,45 @@
 package eu.mosaic_cloud.cloudlets.v1.connectors.executors;
 
 
+import java.util.concurrent.Callable;
+
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.Connector;
 import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorCallback;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorOperationFailedArguments;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorOperationSucceededArguments;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-public interface ExecutorCallback<TContext, TOutcome, TExtra>
+public interface ExecutorCallback<TContext extends Object, TOutcome extends Object, TExtra extends Object>
 			extends
 				ConnectorCallback<TContext>
 {
-	CallbackCompletion<Void> executionFailed (TContext context, ExecutionFailedCallbackArguments<TExtra> arguments);
+	public abstract CallbackCompletion<Void> executionFailed (TContext context, ExecutionFailedArguments<TOutcome, TExtra> arguments);
 	
-	CallbackCompletion<Void> executionSucceeded (TContext context, ExecutionSucceededCallbackArguments<TOutcome, TExtra> arguments);
+	public abstract CallbackCompletion<Void> executionSucceeded (TContext context, ExecutionSucceededArguments<TOutcome, TExtra> arguments);
+	
+	public static final class ExecutionFailedArguments<TOutcome extends Object, TExtra extends Object>
+				extends ConnectorOperationFailedArguments<TExtra>
+	{
+		public ExecutionFailedArguments (final CloudletController<?> cloudlet, final Connector connector, final Callable<TOutcome> callable, final Throwable error, final TExtra extra) {
+			super (cloudlet, connector, error, extra);
+			this.callable = callable;
+		}
+		
+		public final Callable<TOutcome> callable;
+	}
+	
+	public static final class ExecutionSucceededArguments<TOutcome extends Object, TExtra extends Object>
+				extends ConnectorOperationSucceededArguments<TExtra>
+	{
+		public ExecutionSucceededArguments (final CloudletController<?> cloudlet, final Connector connector, final Callable<TOutcome> callable, final TOutcome outcome, final TExtra extra) {
+			super (cloudlet, connector, extra);
+			this.callable = callable;
+			this.outcome = outcome;
+		}
+		
+		public final Callable<TOutcome> callable;
+		public final TOutcome outcome;
+	}
 }

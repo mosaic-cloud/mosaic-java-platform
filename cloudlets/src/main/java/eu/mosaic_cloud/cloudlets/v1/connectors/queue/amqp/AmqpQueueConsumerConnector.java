@@ -25,26 +25,10 @@ import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpMessageToken;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-/**
- * Interface for registering and using for an AMQP resource as a consumer.
- * 
- * @author Georgiana Macariu
- * @param <TMessage>
- *            the type of the consumed data
- * @param <TExtra>
- *            the type of the extra data; as an example, this data can be used correlation
- */
-public interface AmqpQueueConsumerConnector<TMessage, TExtra>
+public interface AmqpQueueConsumerConnector<TMessage extends Object, TExtra extends Object>
 			extends
 				AmqpQueueConnector,
 				eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueConsumerConnector<TMessage>
 {
-	/**
-	 * Acknowledges a message.
-	 * 
-	 * @param token
-	 *            the delivery token in the received message
-	 * @param extra
-	 */
-	CallbackCompletion<Void> acknowledge (AmqpMessageToken token, TExtra extra);
+	public abstract CallbackCompletion<Void> acknowledge (AmqpMessageToken token, TExtra extra);
 }

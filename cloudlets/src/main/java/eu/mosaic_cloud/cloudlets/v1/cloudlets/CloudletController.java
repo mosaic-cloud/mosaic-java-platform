@@ -30,29 +30,23 @@ import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 
-/**
- * Interface for cloudlet control operations. Each cloudlet has access to an object implementing this interface and uses it to
- * ask for resources or destroying them when they are not required anymore.
- * 
- * @author Georgiana Macariu
- */
-public interface CloudletController<Context>
+public interface CloudletController<TContext extends Object>
 			extends
 				Callbacks,
 				ConnectorsFactory
 {
-	CallbackCompletion<Void> destroy ();
+	public abstract CallbackCompletion<Void> destroy ();
 	
 	@CallbackPassthrough
-	Configuration getConfiguration ();
+	public abstract Configuration getConfiguration ();
 	
 	@Override
 	@CallbackPassthrough
-	<Factory extends ConnectorFactory<?>> Factory getConnectorFactory (Class<Factory> factory);
+	public abstract <Factory extends ConnectorFactory<?>> Factory getConnectorFactory (Class<Factory> factory);
 	
 	@CallbackPassthrough
-	CloudletState getState ();
+	public abstract CloudletState getState ();
 	
 	@CallbackPassthrough
-	ThreadingContext getThreadingContext ();
+	public abstract ThreadingContext getThreadingContext ();
 }

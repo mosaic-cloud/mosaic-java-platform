@@ -21,13 +21,6 @@
 package eu.mosaic_cloud.cloudlets.v1.connectors.core;
 
 
-/**
- * Interface for custom connector factory. For each connector type an implementation of this interface should be implemented.
- * 
- * @author Ciprian Craciun
- * @param <TConnector>
- *            the type of the connector created by this factory
- */
 public interface ConnectorFactory<TConnector extends Connector>
 			extends
 				eu.mosaic_cloud.connectors.v1.core.ConnectorFactory<TConnector>

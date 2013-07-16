@@ -29,5 +29,5 @@ public interface ExecutorFactory
 			extends
 				ConnectorFactory<Executor<?, ?>>
 {
-	<TContext, TOutcome, TExtra> Executor<TOutcome, TExtra> create (final Configuration configuration, ExecutorCallback<TContext, TOutcome, TExtra> callback, TContext callbackContext);
+	public abstract <TContext extends Object, TOutcome extends Object, TExtra extends Object> Executor<TOutcome, TExtra> create (final Configuration configuration, ExecutorCallback<TContext, TOutcome, TExtra> callback, TContext callbackContext);
 }
