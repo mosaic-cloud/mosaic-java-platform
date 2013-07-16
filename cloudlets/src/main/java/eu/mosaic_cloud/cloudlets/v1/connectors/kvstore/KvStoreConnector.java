@@ -30,9 +30,21 @@ public interface KvStoreConnector<TValue extends Object, TExtra extends Object>
 				Connector,
 				eu.mosaic_cloud.connectors.v1.kvstore.KvStoreConnector<TValue>
 {
+	@Override
+	@Deprecated
+	public abstract CallbackCompletion<Void> delete (String key);
+	
 	public abstract CallbackCompletion<Void> delete (String key, TExtra extra);
 	
+	@Override
+	@Deprecated
+	public abstract CallbackCompletion<TValue> get (String key);
+	
 	public abstract CallbackCompletion<TValue> get (String key, TExtra extra);
+	
+	@Override
+	@Deprecated
+	public abstract CallbackCompletion<Void> set (String key, TValue data);
 	
 	public abstract CallbackCompletion<Void> set (String key, TValue value, TExtra extra);
 }

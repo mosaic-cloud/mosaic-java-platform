@@ -21,6 +21,7 @@
 package eu.mosaic_cloud.cloudlets.v1.connectors.components;
 
 
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.Connector;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
 import eu.mosaic_cloud.components.core.ComponentResourceSpecification;
@@ -29,9 +30,18 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 public interface ComponentConnector<TExtra extends Object>
 			extends
+				Connector,
 				eu.mosaic_cloud.connectors.v1.components.ComponentConnector
 {
+	@Override
+	@Deprecated
+	public abstract CallbackCompletion<ComponentResourceDescriptor> acquire (final ComponentResourceSpecification resource);
+	
 	public abstract CallbackCompletion<ComponentResourceDescriptor> acquire (final ComponentResourceSpecification resource, final TExtra extra);
+	
+	@Override
+	@Deprecated
+	public abstract <TInputs extends Object, TOutputs extends Object> CallbackCompletion<TOutputs> call (final ComponentIdentifier component, final String operation, final TInputs inputs, final Class<TOutputs> outputsExpected);
 	
 	public abstract <TInputs extends Object, TOutputs extends Object> CallbackCompletion<TOutputs> call (final ComponentIdentifier component, final String operation, final TInputs inputs, final Class<TOutputs> outputsExpected, final TExtra extra);
 	

@@ -31,5 +31,9 @@ public interface HttpgQueueConnector<TRequestBody extends Object, TResponseBody 
 				QueueConnector,
 				eu.mosaic_cloud.connectors.v1.httpg.HttpgQueueConnector<TRequestBody, TResponseBody>
 {
+	@Override
+	@Deprecated
+	public abstract CallbackCompletion<Void> respond (HttpgResponseMessage<TResponseBody> response);
+	
 	public abstract CallbackCompletion<Void> respond (HttpgResponseMessage<TResponseBody> response, TExtra extra);
 }

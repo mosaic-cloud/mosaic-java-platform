@@ -30,5 +30,9 @@ public interface AmqpQueueConsumerConnector<TMessage extends Object, TExtra exte
 				AmqpQueueConnector,
 				eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueueConsumerConnector<TMessage>
 {
+	@Override
+	@Deprecated
+	public abstract CallbackCompletion<Void> acknowledge (AmqpMessageToken token);
+	
 	public abstract CallbackCompletion<Void> acknowledge (AmqpMessageToken token, TExtra extra);
 }

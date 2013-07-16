@@ -29,5 +29,9 @@ public interface AmqpQueuePublisherConnector<TMessage extends Object, TExtra ext
 				AmqpQueueConnector,
 				eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpQueuePublisherConnector<TMessage>
 {
+	@Override
+	@Deprecated
+	public abstract CallbackCompletion<Void> publish (TMessage data);
+	
 	public abstract CallbackCompletion<Void> publish (TMessage data, TExtra extra);
 }
