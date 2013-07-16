@@ -36,6 +36,15 @@ public abstract class DefaultCloudletCallback<TContext>
 	}
 	
 	@Override
+	public CallbackCompletion<Void> destroy (final TContext context, final DestroyArguments arguments) {
+		this.enforceCallbackArguments (context, arguments);
+		final CallbackCompletion<Void> maybeCompleted = this.destroy (context);
+		if (maybeCompleted != DefaultCallback.NotImplemented)
+			return (maybeCompleted);
+		return (this.handleUnhandledCallback (CloudletCallback.class, "destroy", context, arguments, true, false));
+	}
+	
+	@Override
 	public CallbackCompletion<Void> destroyFailed (final TContext context, final DestroyFailedArguments arguments) {
 		this.enforceCallbackArguments (context, arguments);
 		final CallbackCompletion<Void> maybeCompleted = this.destroyFailed (context, arguments.error);
@@ -51,6 +60,15 @@ public abstract class DefaultCloudletCallback<TContext>
 		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
 		return (this.handleUnhandledCallback (CloudletCallback.class, "destroySucceeded", context, arguments, true, false));
+	}
+	
+	@Override
+	public CallbackCompletion<Void> initialize (final TContext context, final InitializeArguments arguments) {
+		this.enforceCallbackArguments (context, arguments);
+		final CallbackCompletion<Void> maybeCompleted = this.initialize (context);
+		if (maybeCompleted != DefaultCallback.NotImplemented)
+			return (maybeCompleted);
+		return (this.handleUnhandledCallback (CloudletCallback.class, "initialize", context, arguments, true, false));
 	}
 	
 	@Override

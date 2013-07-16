@@ -23,6 +23,7 @@ package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueueConsumerConnectorCallback;
+import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpMessageToken;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -56,7 +57,7 @@ public class DefaultAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtr
 	@Override
 	public CallbackCompletion<Void> consume (final TContext context, final ConsumeArguments<TMessage> arguments) {
 		this.enforceCallbackArguments (context, arguments);
-		final CallbackCompletion<Void> maybeCompleted = this.consume (context, arguments.message);
+		final CallbackCompletion<Void> maybeCompleted = this.consume (context, arguments.message, arguments.token);
 		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
 		return (this.handleUnhandledCallback (AmqpQueueConsumerConnectorCallback.class, "consume", context, arguments, false, false));
@@ -70,7 +71,7 @@ public class DefaultAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtr
 		return (DefaultCallback.NotImplemented);
 	}
 	
-	protected CallbackCompletion<Void> consume (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TMessage message) {
+	protected CallbackCompletion<Void> consume (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TMessage message, @SuppressWarnings ("unused") final AmqpMessageToken token) {
 		return (DefaultCallback.NotImplemented);
 	}
 }
