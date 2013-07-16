@@ -22,33 +22,55 @@ package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
-import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueueConsumeCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueueConsumerConnectorCallback;
-import eu.mosaic_cloud.cloudlets.v1.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-public class DefaultAmqpQueueConsumerConnectorCallback<TContext, TValue, TExtra>
+public class DefaultAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra>
 			extends DefaultAmqpQueueConnectorCallback<TContext>
 			implements
-				AmqpQueueConsumerConnectorCallback<TContext, TValue, TExtra>
+				AmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra>
 {
 	public DefaultAmqpQueueConsumerConnectorCallback (final CloudletController<TContext> cloudlet) {
 		super (cloudlet);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> acknowledgeFailed (final TContext context, final GenericCallbackCompletionArguments<TExtra> arguments) {
+	public CallbackCompletion<Void> acknowledgeFailed (final TContext context, final AcknowledgeFailedArguments<TExtra> arguments) {
+		this.enforceCallbackArguments (context, arguments);
+		final CallbackCompletion<Void> maybeCompleted = this.acknowledgeFailed (context, arguments.extra);
+		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+			return (maybeCompleted);
 		return (this.handleUnhandledCallback (AmqpQueueConsumerConnectorCallback.class, "acknowledgeFailed", context, arguments, false, false));
 	}
 	
 	@Override
-	public CallbackCompletion<Void> acknowledgeSucceeded (final TContext context, final GenericCallbackCompletionArguments<TExtra> arguments) {
+	public CallbackCompletion<Void> acknowledgeSucceeded (final TContext context, final AcknowledgeSucceededArguments<TExtra> arguments) {
+		this.enforceCallbackArguments (context, arguments);
+		final CallbackCompletion<Void> maybeCompleted = this.acknowledgeSucceeded (context, arguments.extra);
+		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+			return (maybeCompleted);
 		return (this.handleUnhandledCallback (AmqpQueueConsumerConnectorCallback.class, "acknowledgeSucceeded", context, arguments, true, false));
 	}
 	
 	@Override
-	public CallbackCompletion<Void> consume (final TContext context, final AmqpQueueConsumeCallbackArguments<TValue> arguments) {
+	public CallbackCompletion<Void> consume (final TContext context, final ConsumeArguments<TMessage> arguments) {
+		this.enforceCallbackArguments (context, arguments);
+		final CallbackCompletion<Void> maybeCompleted = this.consume (context, arguments.message);
+		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+			return (maybeCompleted);
 		return (this.handleUnhandledCallback (AmqpQueueConsumerConnectorCallback.class, "consume", context, arguments, false, false));
+	}
+	
+	protected CallbackCompletion<Void> acknowledgeFailed (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TExtra extra) {
+		return (DefaultCallback.callbackNotImplemented);
+	}
+	
+	protected CallbackCompletion<Void> acknowledgeSucceeded (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TExtra extra) {
+		return (DefaultCallback.callbackNotImplemented);
+	}
+	
+	protected CallbackCompletion<Void> consume (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TMessage message) {
+		return (DefaultCallback.callbackNotImplemented);
 	}
 }

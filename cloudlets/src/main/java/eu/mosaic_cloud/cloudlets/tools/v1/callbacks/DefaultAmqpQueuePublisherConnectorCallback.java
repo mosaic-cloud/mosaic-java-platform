@@ -23,7 +23,6 @@ package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueuePublisherConnectorCallback;
-import eu.mosaic_cloud.cloudlets.v1.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -37,12 +36,28 @@ public class DefaultAmqpQueuePublisherConnectorCallback<TContext, TValue, TExtra
 	}
 	
 	@Override
-	public CallbackCompletion<Void> publishFailed (final TContext context, final GenericCallbackCompletionArguments<TExtra> arguments) {
+	public CallbackCompletion<Void> publishFailed (final TContext context, final PublishFailedArguments<TValue, TExtra> arguments) {
+		this.enforceCallbackArguments (context, arguments);
+		final CallbackCompletion<Void> maybeCompleted = this.publishFailed (context, arguments.extra);
+		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+			return (maybeCompleted);
 		return (this.handleUnhandledCallback (AmqpQueuePublisherConnectorCallback.class, "publishFailed", context, arguments, false, false));
 	}
 	
 	@Override
-	public CallbackCompletion<Void> publishSucceeded (final TContext context, final GenericCallbackCompletionArguments<TExtra> arguments) {
+	public CallbackCompletion<Void> publishSucceeded (final TContext context, final PublishSucceededArguments<TValue, TExtra> arguments) {
+		this.enforceCallbackArguments (context, arguments);
+		final CallbackCompletion<Void> maybeCompleted = this.publishSucceeded (context, arguments.extra);
+		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+			return (maybeCompleted);
 		return (this.handleUnhandledCallback (AmqpQueuePublisherConnectorCallback.class, "publishSucceeded", context, arguments, true, false));
+	}
+	
+	protected CallbackCompletion<Void> publishFailed (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TExtra extra) {
+		return (DefaultCallback.callbackNotImplemented);
+	}
+	
+	protected CallbackCompletion<Void> publishSucceeded (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TExtra extra) {
+		return (DefaultCallback.callbackNotImplemented);
 	}
 }

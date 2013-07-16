@@ -27,9 +27,7 @@ import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudlet;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletContext;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultHttpgQueueConnectorCallback;
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
-import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.HttpgQueueRequestedCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.core.Callback;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgQueueConnector;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgRequestMessage;
@@ -49,13 +47,13 @@ public class HttpgCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroy (final Context context, final CloudletCallbackArguments<Context> arguments) {
+		public CallbackCompletion<Void> destroy (final Context context, final DestroyArguments arguments) {
 			context.logger.info ("destroying cloudlet...");
 			return (context.gateway.destroy ());
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initialize (final Context context, final CloudletCallbackArguments<Context> arguments) {
+		public CallbackCompletion<Void> initialize (final Context context, final InitializeArguments arguments) {
 			context.logger.info ("initializing cloudlet...");
 			context.gateway = context.createHttpgQueueConnector ("gateway", String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, GatewayCallback.class);
 			return (context.gateway.initialize ());
@@ -81,8 +79,8 @@ public class HttpgCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> requested (final Context context, final HttpgQueueRequestedCallbackArguments<String> arguments) {
-			final HttpgRequestMessage<String> request = arguments.getRequest ();
+		public CallbackCompletion<Void> requested (final Context context, final RequestedArguments<String> arguments) {
+			final HttpgRequestMessage<String> request = arguments.request;
 			final StringBuilder responseBody = new StringBuilder ();
 			responseBody.append (String.format ("Cloudlet: %s\n", context.identity));
 			responseBody.append (String.format ("HTTP version: %s\n", request.version));

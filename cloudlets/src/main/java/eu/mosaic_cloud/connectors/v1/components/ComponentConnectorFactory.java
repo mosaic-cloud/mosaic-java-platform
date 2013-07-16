@@ -28,5 +28,5 @@ public interface ComponentConnectorFactory
 			extends
 				ConnectorFactory<ComponentConnector>
 {
-	ComponentConnector create ();
+	public abstract ComponentConnector create ();
 }

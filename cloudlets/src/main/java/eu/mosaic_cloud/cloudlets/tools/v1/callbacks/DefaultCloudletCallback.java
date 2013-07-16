@@ -22,9 +22,7 @@ package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallback;
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
-import eu.mosaic_cloud.connectors.v1.core.Connector;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -38,36 +36,62 @@ public abstract class DefaultCloudletCallback<TContext>
 	}
 	
 	@Override
-	public CallbackCompletion<Void> destroyFailed (final TContext context, final CloudletCallbackCompletionArguments<TContext> arguments) {
+	public CallbackCompletion<Void> destroyFailed (final TContext context, final DestroyFailedArguments arguments) {
+		this.enforceCallbackArguments (context, arguments);
+		final CallbackCompletion<Void> maybeCompleted = this.destroyFailed (context, arguments.error);
+		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+			return (maybeCompleted);
 		return (this.handleUnhandledCallback (CloudletCallback.class, "destroyFailed", context, arguments, false, true));
 	}
 	
 	@Override
-	public CallbackCompletion<Void> destroySucceeded (final TContext context, final CloudletCallbackCompletionArguments<TContext> arguments) {
+	public CallbackCompletion<Void> destroySucceeded (final TContext context, final DestroySucceededArguments arguments) {
+		this.enforceCallbackArguments (context, arguments);
+		final CallbackCompletion<Void> maybeCompleted = this.destroySucceeded (context);
+		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+			return (maybeCompleted);
 		return (this.handleUnhandledCallback (CloudletCallback.class, "destroySucceeded", context, arguments, true, false));
 	}
 	
 	@Override
-	public CallbackCompletion<Void> initializeFailed (final TContext context, final CloudletCallbackCompletionArguments<TContext> arguments) {
+	public CallbackCompletion<Void> initializeFailed (final TContext context, final InitializeFailedArguments arguments) {
+		this.enforceCallbackArguments (context, arguments);
+		final CallbackCompletion<Void> maybeCompleted = this.initializeFailed (context, arguments.error);
+		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+			return (maybeCompleted);
 		return (this.handleUnhandledCallback (CloudletCallback.class, "initializeFailed", context, arguments, false, true));
 	}
 	
 	@Override
-	public CallbackCompletion<Void> initializeSucceeded (final TContext context, final CloudletCallbackCompletionArguments<TContext> arguments) {
+	public CallbackCompletion<Void> initializeSucceeded (final TContext context, final InitializeSucceededArguments arguments) {
+		this.enforceCallbackArguments (context, arguments);
+		final CallbackCompletion<Void> maybeCompleted = this.initializeSucceeded (context);
+		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+			return (maybeCompleted);
 		return (this.handleUnhandledCallback (CloudletCallback.class, "initializeSucceeded", context, arguments, true, false));
 	}
 	
-	protected CallbackCompletion<Void> destroy (final Connector ... connectors) {
-		@SuppressWarnings ("unchecked") final CallbackCompletion<Void>[] completions = new CallbackCompletion[connectors.length];
-		for (int index = 0; index < connectors.length; index++)
-			completions[index] = connectors[index].destroy ();
-		return (this.chain (completions));
+	protected CallbackCompletion<Void> destroy (@SuppressWarnings ("unused") final TContext context) {
+		return (DefaultCallback.callbackNotImplemented);
 	}
 	
-	protected CallbackCompletion<Void> initialize (final Connector ... connectors) {
-		@SuppressWarnings ("unchecked") final CallbackCompletion<Void>[] completions = new CallbackCompletion[connectors.length];
-		for (int index = 0; index < connectors.length; index++)
-			completions[index] = connectors[index].initialize ();
-		return (this.chain (completions));
+	protected CallbackCompletion<Void> destroyFailed (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final Throwable error) {
+		return (DefaultCallback.callbackNotImplemented);
+	}
+	
+	protected CallbackCompletion<Void> destroySucceeded (@SuppressWarnings ("unused") final TContext context) {
+		return (DefaultCallback.callbackNotImplemented);
+	}
+	
+	protected CallbackCompletion<Void> initialize (@SuppressWarnings ("unused") final TContext context) {
+		return (DefaultCallback.callbackNotImplemented);
+	}
+	
+	protected CallbackCompletion<Void> initializeFailed (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final Throwable error) {
+		return (DefaultCallback.callbackNotImplemented);
+	}
+	
+	protected CallbackCompletion<Void> initializeSucceeded (@SuppressWarnings ("unused") final TContext context) {
+		return (DefaultCallback.callbackNotImplemented);
 	}
 }

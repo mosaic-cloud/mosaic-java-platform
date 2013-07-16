@@ -24,8 +24,6 @@ package eu.mosaic_cloud.examples.cloudlets.simple;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudlet;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletContext;
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -41,25 +39,25 @@ public class HelloWorldCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroy (final Context context, final CloudletCallbackArguments<Context> arguments) {
+		public CallbackCompletion<Void> destroy (final Context context, final DestroyArguments arguments) {
 			context.logger.info ("HelloWorldCloudlet destroying...");
 			return (eu.mosaic_cloud.cloudlets.v1.core.Callback.SUCCESS);
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final Context context, final CloudletCallbackCompletionArguments<Context> arguments) {
+		public CallbackCompletion<Void> destroySucceeded (final Context context, final DestroySucceededArguments arguments) {
 			context.logger.info ("HelloWorldCloudlet destroyed successfully.");
 			return (eu.mosaic_cloud.cloudlets.v1.core.Callback.SUCCESS);
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initialize (final Context context, final CloudletCallbackArguments<Context> arguments) {
+		public CallbackCompletion<Void> initialize (final Context context, final InitializeArguments arguments) {
 			context.logger.info ("HelloWorldCloudlet initializing...");
 			return (eu.mosaic_cloud.cloudlets.v1.core.Callback.SUCCESS);
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final Context context, final CloudletCallbackCompletionArguments<Context> arguments) {
+		public CallbackCompletion<Void> initializeSucceeded (final Context context, final InitializeSucceededArguments arguments) {
 			context.logger.info ("HelloWorldCloudlet initialized successfully.");
 			context.logger.info ("HelloWorldCloudlet greats the cloud developer!");
 			context.cloudlet.destroy ();

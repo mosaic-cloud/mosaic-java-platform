@@ -22,8 +22,6 @@ package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
-import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutionFailedCallbackArguments;
-import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutionSucceededCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutorCallback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -38,12 +36,28 @@ public class DefaultExecutorCallback<TContext, TOutcome, TExtra>
 	}
 	
 	@Override
-	public CallbackCompletion<Void> executionFailed (final TContext context, final ExecutionFailedCallbackArguments<TExtra> arguments) {
+	public CallbackCompletion<Void> executionFailed (final TContext context, final ExecutionFailedArguments<TOutcome, TExtra> arguments) {
+		this.enforceCallbackArguments (context, arguments);
+		final CallbackCompletion<Void> maybeCompleted = this.executionFailed (context, arguments.extra);
+		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+			return (maybeCompleted);
 		return (this.handleUnhandledCallback (ExecutorCallback.class, "executionFailed", context, arguments, false, false));
 	}
 	
 	@Override
-	public CallbackCompletion<Void> executionSucceeded (final TContext context, final ExecutionSucceededCallbackArguments<TOutcome, TExtra> arguments) {
+	public CallbackCompletion<Void> executionSucceeded (final TContext context, final ExecutionSucceededArguments<TOutcome, TExtra> arguments) {
+		this.enforceCallbackArguments (context, arguments);
+		final CallbackCompletion<Void> maybeCompleted = this.executionSucceeded (context, arguments.outcome, arguments.extra);
+		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+			return (maybeCompleted);
 		return (this.handleUnhandledCallback (ExecutorCallback.class, "executionSucceeded", context, arguments, true, false));
+	}
+	
+	protected CallbackCompletion<Void> executionFailed (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TExtra extra) {
+		return (DefaultCallback.callbackNotImplemented);
+	}
+	
+	protected CallbackCompletion<Void> executionSucceeded (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TOutcome outcome, @SuppressWarnings ("unused") final TExtra extra) {
+		return (DefaultCallback.callbackNotImplemented);
 	}
 }

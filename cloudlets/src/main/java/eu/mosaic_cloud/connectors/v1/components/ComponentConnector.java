@@ -32,9 +32,9 @@ public interface ComponentConnector
 			extends
 				Connector
 {
-	CallbackCompletion<ComponentResourceDescriptor> acquire (final ComponentResourceSpecification resource);
+	public abstract CallbackCompletion<ComponentResourceDescriptor> acquire (final ComponentResourceSpecification resource);
 	
-	<TInputs, TOutputs> CallbackCompletion<TOutputs> call (final ComponentIdentifier component, final String operation, final TInputs inputs, final Class<TOutputs> outputs);
+	public abstract <TInputs extends Object, TOutputs extends Object> CallbackCompletion<TOutputs> call (final ComponentIdentifier component, final String operation, final TInputs inputs, final Class<TOutputs> outputsExpected);
 	
-	<TInputs> CallbackCompletion<Void> cast (final ComponentIdentifier component, final String operation, final TInputs inputs);
+	public abstract <TInputs extends Object> CallbackCompletion<Void> cast (final ComponentIdentifier component, final String operation, final TInputs inputs);
 }

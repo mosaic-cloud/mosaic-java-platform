@@ -25,6 +25,7 @@ import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentConnector;
 import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentConnectorCallbacks;
 import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentConnectorFactory;
+import eu.mosaic_cloud.cloudlets.v1.connectors.core.Connector;
 import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorFactory;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.Executor;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutorCallback;
@@ -46,6 +47,9 @@ import eu.mosaic_cloud.platform.implementations.v1.configuration.PropertyTypeCon
 import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+
+import com.google.common.base.Preconditions;
 
 
 public class DefaultCloudletContext<TContext extends DefaultCloudletContext<TContext>>
@@ -54,6 +58,10 @@ public class DefaultCloudletContext<TContext extends DefaultCloudletContext<TCon
 	public DefaultCloudletContext (final CloudletController<TContext> cloudlet) {
 		this.cloudlet = cloudlet;
 		this.configuration = this.cloudlet.getConfiguration ();
+	}
+	
+	public CallbackCompletion<Void> chain (final CallbackCompletion<?> ... dependents) {
+		return (CallbackCompletion.createChained (dependents));
 	}
 	
 	@SuppressWarnings ("unchecked")
@@ -267,8 +275,30 @@ public class DefaultCloudletContext<TContext extends DefaultCloudletContext<TCon
 		return (this.createKvStoreConnector ((configuration != null) ? this.spliceConfiguration (configuration) : null, valueClass, valueEncoder, callback, callbackContext));
 	}
 	
+	public CallbackCompletion<Void> destroyConnectors (final Connector ... connectors) {
+		Preconditions.checkNotNull (connectors);
+		@SuppressWarnings ("unchecked") final CallbackCompletion<Void>[] completions = new CallbackCompletion[connectors.length];
+		for (int index = 0; index < connectors.length; index++) {
+			final Connector connector = connectors[index];
+			Preconditions.checkNotNull (connector);
+			completions[index] = connector.destroy ();
+		}
+		return (this.chain (completions));
+	}
+	
 	public <Factory extends ConnectorFactory<?>> Factory getConnectorFactory (final Class<Factory> factory) {
 		return (this.cloudlet.getConnectorFactory (factory));
+	}
+	
+	public CallbackCompletion<Void> initializeConnectors (final Connector ... connectors) {
+		Preconditions.checkNotNull (connectors);
+		@SuppressWarnings ("unchecked") final CallbackCompletion<Void>[] completions = new CallbackCompletion[connectors.length];
+		for (int index = 0; index < connectors.length; index++) {
+			final Connector connector = connectors[index];
+			Preconditions.checkNotNull (connector);
+			completions[index] = connector.initialize ();
+		}
+		return (this.chain (completions));
 	}
 	
 	public Configuration spliceConfiguration (final String relative) {

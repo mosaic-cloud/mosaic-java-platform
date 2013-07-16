@@ -22,10 +22,8 @@ package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
-import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentAcquireSucceededCallbackArguments;
-import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentCallSucceededCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentConnectorCallbacks;
-import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentRequestFailedCallbackArguments;
+import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -39,22 +37,54 @@ public class DefaultComponentConnectorCallback<TContext, TExtra>
 	}
 	
 	@Override
-	public CallbackCompletion<Void> acquireFailed (final TContext context, final ComponentRequestFailedCallbackArguments<TExtra> arguments) {
+	public CallbackCompletion<Void> acquireFailed (final TContext context, final AcquireFailedArguments<TExtra> arguments) {
+		this.enforceCallbackArguments (context, arguments);
+		final CallbackCompletion<Void> maybeCompleted = this.acquireFailed (context, arguments.error, arguments.extra);
+		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+			return (maybeCompleted);
 		return (this.handleUnhandledCallback (DefaultComponentConnectorCallback.class, "acquireFailed", context, arguments, false, true));
 	}
 	
 	@Override
-	public CallbackCompletion<Void> acquireSucceeded (final TContext context, final ComponentAcquireSucceededCallbackArguments<TExtra> arguments) {
+	public CallbackCompletion<Void> acquireSucceeded (final TContext context, final AcquireSucceededArguments<TExtra> arguments) {
+		this.enforceCallbackArguments (context, arguments);
+		final CallbackCompletion<Void> maybeCompleted = this.acquireSucceeded (context, arguments.descriptor, arguments.extra);
+		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+			return (maybeCompleted);
 		return (this.handleUnhandledCallback (DefaultComponentConnectorCallback.class, "acquireSucceeded", context, arguments, true, false));
 	}
 	
 	@Override
-	public CallbackCompletion<Void> callFailed (final TContext context, final ComponentRequestFailedCallbackArguments<TExtra> arguments) {
+	public CallbackCompletion<Void> callFailed (final TContext context, final CallFailedArguments<?, ?, TExtra> arguments) {
+		this.enforceCallbackArguments (context, arguments);
+		final CallbackCompletion<Void> maybeCompleted = this.callFailed (context, arguments.error, arguments.extra);
+		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+			return (maybeCompleted);
 		return (this.handleUnhandledCallback (DefaultComponentConnectorCallback.class, "callFailed", context, arguments, false, true));
 	}
 	
 	@Override
-	public CallbackCompletion<Void> callSucceeded (final TContext context, final ComponentCallSucceededCallbackArguments<?, TExtra> arguments) {
+	public CallbackCompletion<Void> callSucceeded (final TContext context, final CallSucceededArguments<?, ?, TExtra> arguments) {
+		this.enforceCallbackArguments (context, arguments);
+		final CallbackCompletion<Void> maybeCompleted = this.callSucceded (context, arguments.outputs, arguments.extra);
+		if (maybeCompleted != DefaultCallback.callbackNotImplemented)
+			return (maybeCompleted);
 		return (this.handleUnhandledCallback (DefaultComponentConnectorCallback.class, "callSucceeded", context, arguments, true, false));
+	}
+	
+	protected CallbackCompletion<Void> acquireFailed (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final Throwable error, @SuppressWarnings ("unused") final TExtra extra) {
+		return (DefaultCallback.callbackNotImplemented);
+	}
+	
+	protected CallbackCompletion<Void> acquireSucceeded (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final ComponentResourceDescriptor descriptor, @SuppressWarnings ("unused") final TExtra extra) {
+		return (DefaultCallback.callbackNotImplemented);
+	}
+	
+	protected CallbackCompletion<Void> callFailed (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final Throwable error, @SuppressWarnings ("unused") final TExtra extra) {
+		return (DefaultCallback.callbackNotImplemented);
+	}
+	
+	protected CallbackCompletion<Void> callSucceded (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final Object outputs, @SuppressWarnings ("unused") final TExtra extra) {
+		return (DefaultCallback.callbackNotImplemented);
 	}
 }

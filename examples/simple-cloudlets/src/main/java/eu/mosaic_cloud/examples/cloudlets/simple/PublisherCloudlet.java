@@ -27,13 +27,9 @@ import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultAmqpQueuePublisherCon
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudlet;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletContext;
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueuePublisherConnector;
 import eu.mosaic_cloud.cloudlets.v1.core.Callback;
-import eu.mosaic_cloud.cloudlets.v1.core.CallbackArguments;
-import eu.mosaic_cloud.cloudlets.v1.core.GenericCallbackCompletionArguments;
 import eu.mosaic_cloud.platform.implementations.v1.serialization.PlainTextDataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
@@ -64,26 +60,26 @@ public class PublisherCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroy (final Context context, final CloudletCallbackArguments<Context> arguments) {
+		public CallbackCompletion<Void> destroy (final Context context, final DestroyArguments arguments) {
 			context.logger.info ("PublisherCloudlet destroying...");
 			return (context.connector.destroy ());
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final Context context, final CloudletCallbackCompletionArguments<Context> arguments) {
+		public CallbackCompletion<Void> destroySucceeded (final Context context, final DestroySucceededArguments arguments) {
 			context.logger.info ("PublisherCloudlet destroyed successfully.");
 			return (Callback.SUCCESS);
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initialize (final Context context, final CloudletCallbackArguments<Context> arguments) {
+		public CallbackCompletion<Void> initialize (final Context context, final InitializeArguments arguments) {
 			context.logger.info ("PublisherCloudlet initializing...");
 			context.connector = context.createAmqpQueuePublisherConnector ("connector", String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, ConnectorCallback.class);
 			return (context.connector.initialize ());
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final Context context, final CloudletCallbackCompletionArguments<Context> arguments) {
+		public CallbackCompletion<Void> initializeSucceeded (final Context context, final InitializeSucceededArguments arguments) {
 			context.logger.info ("PublisherCloudlet initialized successfully.");
 			return (PublisherCloudlet.maybeContinue (context));
 		}
@@ -110,19 +106,19 @@ public class PublisherCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final Context context, final CallbackArguments arguments) {
+		public CallbackCompletion<Void> destroySucceeded (final Context context, final DestroySucceededArguments arguments) {
 			context.logger.info ("PublisherCloudlet connector destroyed successfully.");
 			return (Callback.SUCCESS);
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final Context context, final CallbackArguments arguments) {
+		public CallbackCompletion<Void> initializeSucceeded (final Context context, final InitializeSucceededArguments arguments) {
 			context.logger.info ("PublisherCloudlet connector initialized successfully.");
 			return (Callback.SUCCESS);
 		}
 		
 		@Override
-		public CallbackCompletion<Void> publishSucceeded (final Context context, final GenericCallbackCompletionArguments<Void> arguments) {
+		public CallbackCompletion<Void> publishSucceeded (final Context context, final PublishSucceededArguments<String, Void> arguments) {
 			return (PublisherCloudlet.maybeContinue (context));
 		}
 	}

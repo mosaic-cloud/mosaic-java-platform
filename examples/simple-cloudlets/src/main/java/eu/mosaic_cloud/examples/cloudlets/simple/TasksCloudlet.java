@@ -28,10 +28,7 @@ import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudlet;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletContext;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultExecutorCallback;
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackCompletionArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
-import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutionSucceededCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.Executor;
 import eu.mosaic_cloud.cloudlets.v1.core.Callback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -48,20 +45,20 @@ public class TasksCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroy (final Context context, final CloudletCallbackArguments<Context> arguments) {
+		public CallbackCompletion<Void> destroy (final Context context, final DestroyArguments arguments) {
 			context.logger.info ("destroying cloudlet...");
 			context.logger.info ("destroying executor...");
 			return (context.executor.destroy ());
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroySucceeded (final Context context, final CloudletCallbackCompletionArguments<Context> arguments) {
+		public CallbackCompletion<Void> destroySucceeded (final Context context, final DestroySucceededArguments arguments) {
 			context.logger.info ("cloudlet destroyed successfully.");
 			return (Callback.SUCCESS);
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initialize (final Context context, final CloudletCallbackArguments<Context> arguments) {
+		public CallbackCompletion<Void> initialize (final Context context, final InitializeArguments arguments) {
 			context.logger.info ("initializing cloudlet...");
 			context.workflow = new Workflow ();
 			context.logger.info ("creating executor...");
@@ -71,7 +68,7 @@ public class TasksCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initializeSucceeded (final Context context, final CloudletCallbackCompletionArguments<Context> arguments) {
+		public CallbackCompletion<Void> initializeSucceeded (final Context context, final InitializeSucceededArguments arguments) {
 			context.logger.info ("cloudlet initialized successfully.");
 			return (context.workflow.submitExecution (context));
 		}
@@ -98,8 +95,8 @@ public class TasksCloudlet
 		}
 		
 		@Override
-		public CallbackCompletion<Void> executionSucceeded (final Context context, final ExecutionSucceededCallbackArguments<String, String> arguments) {
-			return (context.workflow.handleOutcome (context, arguments.getOutcome (), arguments.getExtra ()));
+		public CallbackCompletion<Void> executionSucceeded (final Context context, final ExecutionSucceededArguments<String, String> arguments) {
+			return (context.workflow.handleOutcome (context, arguments.outcome, arguments.extra));
 		}
 	}
 	

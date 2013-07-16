@@ -24,7 +24,6 @@ package eu.mosaic_cloud.cloudlets.implementations.v1.tests;
 import eu.mosaic_cloud.cloudlets.implementations.v1.cloudlets.Cloudlet;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.DefaultCloudletCallback;
 import eu.mosaic_cloud.cloudlets.tools.v1.callbacks.VoidCloudletContext;
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallbackArguments;
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -52,13 +51,13 @@ public class CloudletLifecycleTest
 		}
 		
 		@Override
-		public CallbackCompletion<Void> destroy (final VoidCloudletContext context, final CloudletCallbackArguments<VoidCloudletContext> arguments) {
+		public CallbackCompletion<Void> destroy (final VoidCloudletContext context, final DestroyArguments arguments) {
 			context.transcript.traceDebugging ("destroying...");
 			return (eu.mosaic_cloud.cloudlets.v1.core.Callback.SUCCESS);
 		}
 		
 		@Override
-		public CallbackCompletion<Void> initialize (final VoidCloudletContext context, final CloudletCallbackArguments<VoidCloudletContext> arguments) {
+		public CallbackCompletion<Void> initialize (final VoidCloudletContext context, final InitializeArguments arguments) {
 			context.transcript.traceDebugging ("initializing...");
 			return (eu.mosaic_cloud.cloudlets.v1.core.Callback.SUCCESS);
 		}
