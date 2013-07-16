@@ -21,7 +21,7 @@
 package eu.mosaic_cloud.connectors.v1.components;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorFactory;
+import eu.mosaic_cloud.connectors.v1.core.ConnectorFactory;
 
 
 public interface ComponentConnectorFactory

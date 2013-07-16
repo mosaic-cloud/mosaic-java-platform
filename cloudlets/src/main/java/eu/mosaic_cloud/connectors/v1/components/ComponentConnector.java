@@ -21,10 +21,10 @@
 package eu.mosaic_cloud.connectors.v1.components;
 
 
-import eu.mosaic_cloud.cloudlets.v1.connectors.core.Connector;
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
 import eu.mosaic_cloud.components.core.ComponentResourceSpecification;
+import eu.mosaic_cloud.connectors.v1.core.Connector;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
