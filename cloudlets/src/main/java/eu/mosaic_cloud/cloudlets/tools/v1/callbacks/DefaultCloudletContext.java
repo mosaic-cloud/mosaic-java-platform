@@ -57,7 +57,6 @@ public class DefaultCloudletContext<TContext extends DefaultCloudletContext<TCon
 {
 	public DefaultCloudletContext (final CloudletController<TContext> cloudlet) {
 		this.cloudlet = cloudlet;
-		this.configuration = this.cloudlet.getConfiguration ();
 	}
 	
 	public CallbackCompletion<Void> chain (final CallbackCompletion<?> ... dependents) {
@@ -286,6 +285,10 @@ public class DefaultCloudletContext<TContext extends DefaultCloudletContext<TCon
 		return (this.chain (completions));
 	}
 	
+	public Configuration getConfiguration () {
+		return (this.cloudlet.getConfiguration ());
+	}
+	
 	public <Factory extends ConnectorFactory<?>> Factory getConnectorFactory (final Class<Factory> factory) {
 		return (this.cloudlet.getConnectorFactory (factory));
 	}
@@ -302,9 +305,8 @@ public class DefaultCloudletContext<TContext extends DefaultCloudletContext<TCon
 	}
 	
 	public Configuration spliceConfiguration (final String relative) {
-		return (this.configuration.spliceConfiguration (ConfigurationIdentifier.resolveRelative (relative)));
+		return (this.getConfiguration ().spliceConfiguration (ConfigurationIdentifier.resolveRelative (relative)));
 	}
 	
 	public final CloudletController<TContext> cloudlet;
-	public final Configuration configuration;
 }

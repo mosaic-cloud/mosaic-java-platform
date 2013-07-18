@@ -83,24 +83,8 @@ public final class Cloudlet<TContext extends Object>
 		this.failures = QueueingExceptionTracer.create (this.exceptions);
 		this.reactor = this.environment.getReactor ();
 		try {
-			CloudletCallback<TContext> controllerCallbacksDelegate;
-			try {
-				controllerCallbacksDelegate = (CloudletCallback<TContext>) this.environment.getCloudletCallbackClass ().newInstance ();
-			} catch (final Throwable exception) {
-				controllerCallbacksDelegate = null;
-				this.handleInternalFailure (null, exception);
-			}
-			TContext controllerContext;
-			try {
-				controllerContext = (TContext) this.environment.getCloudletContextClass ().newInstance ();
-			} catch (final Throwable exception) {
-				controllerContext = null;
-				this.handleInternalFailure (null, exception);
-			}
 			this.controllerHandler = new ControllerHandler ();
 			this.callbacksHandler = new CallbacksHandler ();
-			this.callbacksDelegate = controllerCallbacksDelegate;
-			this.controllerContext = controllerContext;
 			this.genericCallbacksHandler = new GenericCallbacksHandler ();
 			this.genericCallbacksDelegates = new ConcurrentHashMap<Callbacks, CallbackProxy> ();
 			this.isolate = this.reactor.createIsolate ();
@@ -109,6 +93,22 @@ public final class Cloudlet<TContext extends Object>
 			this.genericCallbacksProxies = new ConcurrentHashMap<CallbackProxy, Callbacks> ();
 			this.connectorsFactory = new ConnectorsFactory ();
 			this.connectorsFactoryDelegate = this.provideConnectorsFactory ();
+			CloudletCallback<TContext> controllerCallbacksDelegate;
+			try {
+				controllerCallbacksDelegate = (CloudletCallback<TContext>) this.environment.getCloudletCallbackClass ().getConstructor (CloudletController.class).newInstance (this.controllerProxy);
+			} catch (final Throwable exception) {
+				controllerCallbacksDelegate = null;
+				this.handleInternalFailure (null, exception);
+			}
+			TContext controllerContext;
+			try {
+				controllerContext = (TContext) this.environment.getCloudletContextClass ().getConstructor (CloudletController.class).newInstance (this.controllerProxy);
+			} catch (final Throwable exception) {
+				controllerContext = null;
+				this.handleInternalFailure (null, exception);
+			}
+			this.callbacksDelegate = controllerCallbacksDelegate;
+			this.controllerContext = controllerContext;
 			this.fsm.execute (FsmTransition.CreateCompleted, FsmState.Created);
 		} catch (final CaughtException.Wrapper wrapper) {
 			wrapper.trace (this.exceptions);
