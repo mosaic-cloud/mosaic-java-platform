@@ -23,6 +23,13 @@
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud.drivers</groupId>
+			<artifactId>drivers-core</artifactId>
+			<version>${project.version}</version>
+			<classifier>tests</classifier>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.drivers</groupId>
 			<artifactId>drivers-container</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -30,13 +37,6 @@
 			<groupId>eu.mosaic_cloud.platform</groupId>
 			<artifactId>platform-core</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>eu.mosaic_cloud.platform</groupId>
-			<artifactId>platform-core</artifactId>
-			<version>${project.version}</version>
-			<classifier>tests</classifier>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud.platform</groupId>
