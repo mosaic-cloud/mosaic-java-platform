@@ -115,7 +115,7 @@
 							</descriptorRefs>
 							<archive>
 								<manifest>
-									<mainClass>eu.mosaic_cloud.cloudlets.implementations.v1.components.CloudletComponentPreMain</mainClass>
+									<mainClass>eu.mosaic_cloud.platform.implementation.v2.cloudlets.component.CloudletComponentPreMain</mainClass>
 								</manifest>
 							</archive>
 						</configuration>

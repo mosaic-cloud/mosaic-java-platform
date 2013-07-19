@@ -67,7 +67,7 @@ final class AmqpOperationFactory
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * eu.mosaic_cloud.platform.v1.core.IOperationFactory#getOperation(eu.mosaic_cloud
+	 * eu.mosaic_cloud.platform.v2.IOperationFactory#getOperation(eu.mosaic_cloud
 	 * .platform.core.IOperationType , java.lang.Object[])
 	 */
 	@Override

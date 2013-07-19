@@ -32,7 +32,7 @@ import eu.mosaic_cloud.drivers.ops.IOperation;
 import eu.mosaic_cloud.drivers.ops.IOperationFactory;
 import eu.mosaic_cloud.drivers.ops.IOperationType;
 import eu.mosaic_cloud.platform.interop.common.kv.KeyValueMessage;
-import eu.mosaic_cloud.platform.v1.core.serialization.EncodingMetadata;
+import eu.mosaic_cloud.platform.v2.serialization.EncodingMetadata;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;

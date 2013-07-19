@@ -40,11 +40,11 @@ import eu.mosaic_cloud.drivers.component.AbstractDriverComponentCallbacks;
 import eu.mosaic_cloud.drivers.kvstore.riak.KeyValueDriverFactory;
 import eu.mosaic_cloud.drivers.kvstore.riak.interop.KeyValueStub;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
-import eu.mosaic_cloud.platform.implementations.v1.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.implementations.v1.configuration.PropertyTypeConfiguration;
+import eu.mosaic_cloud.platform.implementation.v2.configuration.ConfigUtils;
+import eu.mosaic_cloud.platform.implementation.v2.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
-import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
-import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
+import eu.mosaic_cloud.platform.v2.configuration.Configuration;
+import eu.mosaic_cloud.platform.v2.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 import com.google.common.base.Preconditions;

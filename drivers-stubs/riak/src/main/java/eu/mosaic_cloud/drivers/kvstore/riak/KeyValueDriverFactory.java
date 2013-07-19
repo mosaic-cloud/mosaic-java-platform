@@ -25,7 +25,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import eu.mosaic_cloud.drivers.DriverNotFoundException;
-import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
+import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
