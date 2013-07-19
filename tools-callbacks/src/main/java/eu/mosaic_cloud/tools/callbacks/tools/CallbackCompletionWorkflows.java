@@ -62,8 +62,10 @@ public class CallbackCompletionWorkflows
 					if (exception != null) {
 						future.trigger.triggerFailed (exception);
 						return;
-					} else
+					} else {
+						chainer.run ();
 						return;
+					}
 				}
 				completion.observe (new CallbackCompletionObserver () {
 					@Override
