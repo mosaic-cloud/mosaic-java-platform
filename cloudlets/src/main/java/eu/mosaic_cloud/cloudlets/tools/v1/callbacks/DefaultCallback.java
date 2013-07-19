@@ -37,12 +37,15 @@ public class DefaultCallback<TContext>
 			implements
 				Callback<TContext>
 {
-	protected DefaultCallback (final CloudletController<TContext> cloudlet) {
+	protected DefaultCallback () {
 		super ();
-		Preconditions.checkNotNull (cloudlet);
-		this.cloudlet = cloudlet;
 		this.transcript = Transcript.create (this, true);
 		this.exceptions = TranscriptExceptionTracer.create (this.transcript, FallbackExceptionTracer.defaultInstance);
+	}
+	
+	public void initialize (@SuppressWarnings ("unused") final TContext context, final CloudletController<?> cloudlet) {
+		Preconditions.checkNotNull (cloudlet);
+		this.cloudlet = cloudlet;
 	}
 	
 	protected void enforceCallbackArguments (final TContext context, final CallbackArguments arguments) {
@@ -77,7 +80,7 @@ public class DefaultCallback<TContext>
 	}
 	
 	@Deprecated
-	protected final CloudletController<TContext> cloudlet;
+	protected CloudletController<?> cloudlet;
 	@Deprecated
 	protected final TranscriptExceptionTracer exceptions;
 	@Deprecated

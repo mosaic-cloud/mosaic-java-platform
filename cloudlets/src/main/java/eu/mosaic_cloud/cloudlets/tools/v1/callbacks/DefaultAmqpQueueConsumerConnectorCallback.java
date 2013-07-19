@@ -21,7 +21,6 @@
 package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.amqp.AmqpQueueConsumerConnectorCallback;
 import eu.mosaic_cloud.connectors.v1.queue.amqp.AmqpMessageToken;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -32,8 +31,8 @@ public class DefaultAmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtr
 			implements
 				AmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra>
 {
-	public DefaultAmqpQueueConsumerConnectorCallback (final CloudletController<TContext> cloudlet) {
-		super (cloudlet);
+	public DefaultAmqpQueueConsumerConnectorCallback () {
+		super ();
 	}
 	
 	@Override

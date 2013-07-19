@@ -21,7 +21,6 @@
 package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.httpg.HttpgQueueConnectorCallback;
 import eu.mosaic_cloud.connectors.v1.httpg.HttpgRequestMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -32,8 +31,8 @@ public class DefaultHttpgQueueConnectorCallback<TContext, TRequestBody, TRespons
 			implements
 				HttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra>
 {
-	public DefaultHttpgQueueConnectorCallback (final CloudletController<TContext> cloudlet) {
-		super (cloudlet);
+	public DefaultHttpgQueueConnectorCallback () {
+		super ();
 	}
 	
 	@Override

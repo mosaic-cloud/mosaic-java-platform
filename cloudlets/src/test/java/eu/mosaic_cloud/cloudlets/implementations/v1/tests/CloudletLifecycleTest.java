@@ -47,10 +47,6 @@ public class CloudletLifecycleTest
 	public static class Callback
 				extends DefaultCloudletCallback<VoidCloudletContext>
 	{
-		public Callback (final CloudletController<VoidCloudletContext> cloudlet) {
-			super (cloudlet);
-		}
-		
 		@Override
 		protected CallbackCompletion<Void> destroy (final VoidCloudletContext context) {
 			context.transcript.traceDebugging ("destroying...");

@@ -22,7 +22,6 @@ package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
 import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletCallback;
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -31,8 +30,8 @@ public abstract class DefaultCloudletCallback<TContext>
 			implements
 				CloudletCallback<TContext>
 {
-	public DefaultCloudletCallback (final CloudletController<TContext> cloudlet) {
-		super (cloudlet);
+	public DefaultCloudletCallback () {
+		super ();
 	}
 	
 	@Override

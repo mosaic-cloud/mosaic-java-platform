@@ -95,7 +95,7 @@ public final class Cloudlet<TContext extends Object>
 			this.connectorsFactoryDelegate = this.provideConnectorsFactory ();
 			CloudletCallback<TContext> controllerCallbacksDelegate;
 			try {
-				controllerCallbacksDelegate = (CloudletCallback<TContext>) this.environment.getCloudletCallbackClass ().getConstructor (CloudletController.class).newInstance (this.controllerProxy);
+				controllerCallbacksDelegate = (CloudletCallback<TContext>) this.environment.getCloudletCallbackClass ().getConstructor ().newInstance ();
 			} catch (final Throwable exception) {
 				controllerCallbacksDelegate = null;
 				this.handleInternalFailure (null, exception);

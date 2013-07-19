@@ -21,7 +21,6 @@
 package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.KvStoreConnectorCallback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -31,8 +30,8 @@ public class DefaultKvStoreConnectorCallback<TContext, TValue, TExtra>
 			implements
 				KvStoreConnectorCallback<TContext, TValue, TExtra>
 {
-	public DefaultKvStoreConnectorCallback (final CloudletController<TContext> cloudlet) {
-		super (cloudlet);
+	public DefaultKvStoreConnectorCallback () {
+		super ();
 	}
 	
 	@Override

@@ -21,7 +21,6 @@
 package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.components.ComponentConnectorCallbacks;
 import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -32,8 +31,8 @@ public class DefaultComponentConnectorCallback<TContext, TExtra>
 			implements
 				ComponentConnectorCallbacks<TContext, TExtra>
 {
-	public DefaultComponentConnectorCallback (final CloudletController<TContext> cloudlet) {
-		super (cloudlet);
+	public DefaultComponentConnectorCallback () {
+		super ();
 	}
 	
 	@Override

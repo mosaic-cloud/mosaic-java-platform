@@ -48,6 +48,8 @@ import eu.mosaic_cloud.platform.v1.core.configuration.Configuration;
 import eu.mosaic_cloud.platform.v1.core.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.v1.core.serialization.DataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.tools.exceptions.core.CaughtException;
+import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 
 import com.google.common.base.Preconditions;
 
@@ -56,7 +58,11 @@ public class DefaultCloudletContext<TContext extends DefaultCloudletContext<TCon
 			extends DefaultContext
 {
 	public DefaultCloudletContext (final CloudletController<TContext> cloudlet) {
-		this.cloudlet = cloudlet;
+		super (cloudlet);
+	}
+	
+	public DefaultCloudletContext (final DefaultContext parent) {
+		super (parent);
 	}
 	
 	public CallbackCompletion<Void> chain (final CallbackCompletion<?> ... dependents) {
@@ -136,8 +142,16 @@ public class DefaultCloudletContext<TContext extends DefaultCloudletContext<TCon
 	}
 	
 	public <TCallback extends Callback<TContext>, TContext> TCallback createCallback (final Class<TCallback> callbackClass) {
-		// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		throw (new UnsupportedOperationException ());
+		Preconditions.checkNotNull (callbackClass);
+		final TCallback callback;
+		try {
+			callback = callbackClass.getConstructor ().newInstance ();
+		} catch (final CaughtException.Wrapper wrapper) {
+			throw (wrapper);
+		} catch (final Throwable exception) {
+			throw (CaughtException.create (ExceptionResolution.Deferred, exception, "failed creating callback instance; aborting!").wrap ());
+		}
+		return (callback);
 	}
 	
 	@SuppressWarnings ("unchecked")
@@ -307,6 +321,4 @@ public class DefaultCloudletContext<TContext extends DefaultCloudletContext<TCon
 	public Configuration spliceConfiguration (final String relative) {
 		return (this.getConfiguration ().spliceConfiguration (ConfigurationIdentifier.resolveRelative (relative)));
 	}
-	
-	public final CloudletController<TContext> cloudlet;
 }

@@ -30,4 +30,8 @@ public final class VoidCloudletContext
 	public VoidCloudletContext (final CloudletController<VoidCloudletContext> cloudlet) {
 		super (cloudlet);
 	}
+	
+	public VoidCloudletContext (final DefaultContext parent) {
+		super (parent);
+	}
 }

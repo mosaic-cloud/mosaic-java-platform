@@ -21,23 +21,33 @@
 package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
+import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
 
 import org.slf4j.Logger;
 
+import com.google.common.base.Preconditions;
+
 
 public class DefaultContext
 			extends Object
 {
-	public DefaultContext () {
+	public DefaultContext (final CloudletController<?> cloudlet) {
 		super ();
+		Preconditions.checkNotNull (cloudlet);
+		this.cloudlet = cloudlet;
 		this.transcript = Transcript.create (this, true);
 		this.logger = this.transcript.adaptAs (Logger.class);
 		this.exceptions = TranscriptExceptionTracer.create (this.transcript, FallbackExceptionTracer.defaultInstance);
 	}
 	
+	public DefaultContext (final DefaultContext parent) {
+		this (parent.cloudlet);
+	}
+	
+	public final CloudletController<?> cloudlet;
 	public final TranscriptExceptionTracer exceptions;
 	public final Logger logger;
 	public final Transcript transcript;

@@ -21,7 +21,6 @@
 package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.core.ConnectorCallback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -31,8 +30,8 @@ public class DefaultConnectorCallback<TContext>
 			implements
 				ConnectorCallback<TContext>
 {
-	public DefaultConnectorCallback (final CloudletController<TContext> cloudlet) {
-		super (cloudlet);
+	public DefaultConnectorCallback () {
+		super ();
 	}
 	
 	@Override

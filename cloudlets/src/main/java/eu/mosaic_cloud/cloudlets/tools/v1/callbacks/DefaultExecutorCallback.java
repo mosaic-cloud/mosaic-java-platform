@@ -21,7 +21,6 @@
 package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.executors.ExecutorCallback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -31,8 +30,8 @@ public class DefaultExecutorCallback<TContext, TOutcome, TExtra>
 			implements
 				ExecutorCallback<TContext, TOutcome, TExtra>
 {
-	public DefaultExecutorCallback (final CloudletController<TContext> cloudlet) {
-		super (cloudlet);
+	public DefaultExecutorCallback () {
+		super ();
 	}
 	
 	@Override

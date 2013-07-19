@@ -21,7 +21,6 @@
 package eu.mosaic_cloud.cloudlets.tools.v1.callbacks;
 
 
-import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.queue.QueueConnectorCallback;
 
 
@@ -30,7 +29,7 @@ public class DefaultQueueConnectorCallback<TContext>
 			implements
 				QueueConnectorCallback<TContext>
 {
-	protected DefaultQueueConnectorCallback (final CloudletController<TContext> cloudlet) {
-		super (cloudlet);
+	protected DefaultQueueConnectorCallback () {
+		super ();
 	}
 }
