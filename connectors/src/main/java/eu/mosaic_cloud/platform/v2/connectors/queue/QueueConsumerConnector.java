@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-cloudlets
+ * mosaic-connectors
  * %%
  * Copyright (C) 2010 - 2013 Institute e-Austria Timisoara (Romania)
  * %%
@@ -18,20 +18,28 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.amqp;
+package eu.mosaic_cloud.platform.v2.connectors.queue;
 
 
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-public interface AmqpQueuePublisherConnector<TMessage extends Object, TExtra extends Object>
+/**
+ * Interface for using for an AMQP resource as a consumer.
+ * 
+ * @author Georgiana Macariu
+ * @param <TMessage>
+ *            the type of the consumed data
+ */
+public interface QueueConsumerConnector<TMessage>
 			extends
-				AmqpQueueConnector,
-				eu.mosaic_cloud.platform.v2.connectors.queue.amqp.AmqpQueuePublisherConnector<TMessage>
+				QueueConnector
 {
-	@Override
-	@Deprecated
-	public abstract CallbackCompletion<Void> publish (TMessage data);
-	
-	public abstract CallbackCompletion<Void> publish (TMessage data, TExtra extra);
+	/**
+	 * Acknowledges a message.
+	 * 
+	 * @param message
+	 *            the message to acknowledge
+	 */
+	CallbackCompletion<Void> acknowledge (QueueDeliveryToken token);
 }

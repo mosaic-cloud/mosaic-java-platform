@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.amqp;
+package eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue;
 
 
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.core.Connector;
@@ -26,13 +26,13 @@ import eu.mosaic_cloud.platform.v2.cloudlets.connectors.core.ConnectorCallbackAr
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.core.ConnectorOperationFailedArguments;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.core.ConnectorOperationSucceededArguments;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
-import eu.mosaic_cloud.platform.v2.connectors.queue.amqp.AmqpMessageToken;
+import eu.mosaic_cloud.platform.v2.connectors.queue.QueueDeliveryToken;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-public interface AmqpQueueConsumerConnectorCallback<TContext extends Object, TMessage extends Object, TExtra extends Object>
+public interface QueueConsumerConnectorCallback<TContext extends Object, TMessage extends Object, TExtra extends Object>
 			extends
-				AmqpQueueConnectorCallback<TContext>
+				QueueConnectorCallback<TContext>
 {
 	public abstract CallbackCompletion<Void> acknowledgeFailed (TContext context, AcknowledgeFailedArguments<TExtra> arguments);
 	
@@ -43,35 +43,35 @@ public interface AmqpQueueConsumerConnectorCallback<TContext extends Object, TMe
 	public static final class AcknowledgeFailedArguments<TExtra extends Object>
 				extends ConnectorOperationFailedArguments<TExtra>
 	{
-		public AcknowledgeFailedArguments (final CloudletController<?> cloudlet, final Connector connector, final AmqpMessageToken token, final Throwable error, final TExtra extra) {
+		public AcknowledgeFailedArguments (final CloudletController<?> cloudlet, final Connector connector, final QueueDeliveryToken token, final Throwable error, final TExtra extra) {
 			super (cloudlet, connector, error, extra);
 			this.token = token;
 		}
 		
-		public final AmqpMessageToken token;
+		public final QueueDeliveryToken token;
 	}
 	
 	public static final class AcknowledgeSucceededArguments<TExtra extends Object>
 				extends ConnectorOperationSucceededArguments<TExtra>
 	{
-		public AcknowledgeSucceededArguments (final CloudletController<?> cloudlet, final Connector connector, final AmqpMessageToken token, final TExtra extra) {
+		public AcknowledgeSucceededArguments (final CloudletController<?> cloudlet, final Connector connector, final QueueDeliveryToken token, final TExtra extra) {
 			super (cloudlet, connector, extra);
 			this.token = token;
 		}
 		
-		public final AmqpMessageToken token;
+		public final QueueDeliveryToken token;
 	}
 	
 	public static final class ConsumeArguments<TMessage extends Object>
 				extends ConnectorCallbackArguments
 	{
-		public ConsumeArguments (final CloudletController<?> cloudlet, final Connector connector, final TMessage message, final AmqpMessageToken token) {
+		public ConsumeArguments (final CloudletController<?> cloudlet, final Connector connector, final TMessage message, final QueueDeliveryToken token) {
 			super (cloudlet, connector);
 			this.message = message;
 			this.token = token;
 		}
 		
 		public final TMessage message;
-		public final AmqpMessageToken token;
+		public final QueueDeliveryToken token;
 	}
 }

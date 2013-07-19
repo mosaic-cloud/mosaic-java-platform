@@ -18,13 +18,13 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.core;
+package eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.tools;
 
 
 import eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.executor.ExecutorFactoryInitializer;
 import eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.httpg.HttpgQueueConnectorFactoryInitializer;
 import eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.kvstore.generic.GenericKvStoreConnectorFactoryInitializer;
-import eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.queue.amqp.AmqpQueueConnectorFactoryInitializer;
+import eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.queue.generic.GenericQueueConnectorFactoryInitializer;
 import eu.mosaic_cloud.platform.implementation.v2.connectors.core.BaseConnectorsFactory;
 import eu.mosaic_cloud.platform.implementation.v2.connectors.core.BaseConnectorsFactoryBuilder;
 import eu.mosaic_cloud.platform.implementation.v2.connectors.core.ConnectorEnvironment;
@@ -51,7 +51,7 @@ public class DefaultConnectorsFactory
 	protected final CloudletController<?> cloudlet;
 	
 	public static final DefaultConnectorsFactory create (final CloudletController<?> cloudlet, final ConnectorEnvironment environment) {
-		final eu.mosaic_cloud.platform.implementation.v2.connectors.core.DefaultConnectorsFactory delegate = eu.mosaic_cloud.platform.implementation.v2.connectors.core.DefaultConnectorsFactory.create (environment);
+		final eu.mosaic_cloud.platform.implementation.v2.connectors.tools.DefaultConnectorsFactory delegate = eu.mosaic_cloud.platform.implementation.v2.connectors.tools.DefaultConnectorsFactory.create (environment);
 		return DefaultConnectorsFactory.create (cloudlet, environment, delegate);
 	}
 	
@@ -87,7 +87,7 @@ public class DefaultConnectorsFactory
 		@Override
 		protected final void initialize_1 () {
 			this.initialize (GenericKvStoreConnectorFactoryInitializer.defaultInstance);
-			this.initialize (AmqpQueueConnectorFactoryInitializer.defaultInstance);
+			this.initialize (GenericQueueConnectorFactoryInitializer.defaultInstance);
 			this.initialize (HttpgQueueConnectorFactoryInitializer.defaultInstance);
 			this.initialize (ExecutorFactoryInitializer.defaultInstance);
 		}

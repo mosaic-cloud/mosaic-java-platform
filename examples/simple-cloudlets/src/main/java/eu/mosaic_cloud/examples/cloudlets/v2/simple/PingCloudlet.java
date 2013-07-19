@@ -24,16 +24,16 @@ package eu.mosaic_cloud.examples.cloudlets.v2.simple;
 import java.util.UUID;
 
 import eu.mosaic_cloud.platform.implementation.v2.serialization.JsonDataEncoder;
-import eu.mosaic_cloud.platform.tools.v2.cloudlets.callbacks.DefaultAmqpQueueConsumerConnectorCallback;
-import eu.mosaic_cloud.platform.tools.v2.cloudlets.callbacks.DefaultAmqpQueuePublisherConnectorCallback;
 import eu.mosaic_cloud.platform.tools.v2.cloudlets.callbacks.DefaultCallback;
 import eu.mosaic_cloud.platform.tools.v2.cloudlets.callbacks.DefaultCloudlet;
 import eu.mosaic_cloud.platform.tools.v2.cloudlets.callbacks.DefaultCloudletCallback;
 import eu.mosaic_cloud.platform.tools.v2.cloudlets.callbacks.DefaultCloudletContext;
-import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.amqp.AmqpQueueConsumerConnector;
-import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.amqp.AmqpQueuePublisherConnector;
+import eu.mosaic_cloud.platform.tools.v2.cloudlets.callbacks.DefaultQueueConsumerConnectorCallback;
+import eu.mosaic_cloud.platform.tools.v2.cloudlets.callbacks.DefaultQueuePublisherConnectorCallback;
+import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueueConsumerConnector;
+import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueuePublisherConnector;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
-import eu.mosaic_cloud.platform.v2.connectors.queue.amqp.AmqpMessageToken;
+import eu.mosaic_cloud.platform.v2.connectors.queue.QueueDeliveryToken;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
@@ -60,8 +60,8 @@ public class PingCloudlet
 		protected CallbackCompletion<Void> initialize (final Context context) {
 			context.logger.info ("initializing cloudlet...");
 			context.logger.info ("creating queue connectors...");
-			context.consumer = context.createAmqpQueueConsumerConnector ("consumer", PongMessage.class, JsonDataEncoder.create (PongMessage.class), ConsumerCallback.class);
-			context.publisher = context.createAmqpQueuePublisherConnector ("publisher", PingMessage.class, JsonDataEncoder.create (PingMessage.class), PublisherCallback.class);
+			context.consumer = context.createQueueConsumerConnector ("consumer", PongMessage.class, JsonDataEncoder.create (PongMessage.class), ConsumerCallback.class);
+			context.publisher = context.createQueuePublisherConnector ("publisher", PingMessage.class, JsonDataEncoder.create (PingMessage.class), PublisherCallback.class);
 			context.logger.info ("initializing queue connectors...");
 			return (context.initializeConnectors (context.consumer, context.publisher));
 		}
@@ -77,7 +77,7 @@ public class PingCloudlet
 	}
 	
 	public static class ConsumerCallback
-				extends DefaultAmqpQueueConsumerConnectorCallback<Context, PongMessage, Void>
+				extends DefaultQueueConsumerConnectorCallback<Context, PongMessage, Void>
 	{
 		@Override
 		protected CallbackCompletion<Void> acknowledgeSucceeded (final Context context, final Void extra) {
@@ -87,7 +87,7 @@ public class PingCloudlet
 		}
 		
 		@Override
-		protected CallbackCompletion<Void> consume (final Context context, final PongMessage ping, final AmqpMessageToken token) {
+		protected CallbackCompletion<Void> consume (final Context context, final PongMessage ping, final QueueDeliveryToken token) {
 			context.logger.info ("received pong message with token `{}`; acknowledging...", ping.token);
 			context.consumer.acknowledge (token, null);
 			return (DefaultCallback.Succeeded);
@@ -113,13 +113,13 @@ public class PingCloudlet
 			super (cloudlet);
 		}
 		
-		AmqpQueueConsumerConnector<PongMessage, Void> consumer;
-		AmqpQueuePublisherConnector<PingMessage, Void> publisher;
+		QueueConsumerConnector<PongMessage, Void> consumer;
+		QueuePublisherConnector<PingMessage, Void> publisher;
 		final String token = UUID.randomUUID ().toString ();
 	}
 	
 	public static class PublisherCallback
-				extends DefaultAmqpQueuePublisherConnectorCallback<Context, PingMessage, Void>
+				extends DefaultQueuePublisherConnectorCallback<Context, PingMessage, Void>
 	{
 		@Override
 		protected CallbackCompletion<Void> destroySucceeded (final Context context) {

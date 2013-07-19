@@ -24,12 +24,12 @@ package eu.mosaic_cloud.examples.cloudlets.v2.simple;
 import java.util.UUID;
 
 import eu.mosaic_cloud.platform.implementation.v2.serialization.PlainTextDataEncoder;
-import eu.mosaic_cloud.platform.tools.v2.cloudlets.callbacks.DefaultAmqpQueuePublisherConnectorCallback;
 import eu.mosaic_cloud.platform.tools.v2.cloudlets.callbacks.DefaultCallback;
 import eu.mosaic_cloud.platform.tools.v2.cloudlets.callbacks.DefaultCloudlet;
 import eu.mosaic_cloud.platform.tools.v2.cloudlets.callbacks.DefaultCloudletCallback;
 import eu.mosaic_cloud.platform.tools.v2.cloudlets.callbacks.DefaultCloudletContext;
-import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.amqp.AmqpQueuePublisherConnector;
+import eu.mosaic_cloud.platform.tools.v2.cloudlets.callbacks.DefaultQueuePublisherConnectorCallback;
+import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueuePublisherConnector;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
@@ -70,7 +70,7 @@ public class PublisherCloudlet
 		@Override
 		protected CallbackCompletion<Void> initialize (final Context context) {
 			context.logger.info ("PublisherCloudlet initializing...");
-			context.connector = context.createAmqpQueuePublisherConnector ("publisher", String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, ConnectorCallback.class);
+			context.connector = context.createQueuePublisherConnector ("publisher", String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, ConnectorCallback.class);
 			return (context.connector.initialize ());
 		}
 		
@@ -82,7 +82,7 @@ public class PublisherCloudlet
 	}
 	
 	public static class ConnectorCallback
-				extends DefaultAmqpQueuePublisherConnectorCallback<Context, String, Void>
+				extends DefaultQueuePublisherConnectorCallback<Context, String, Void>
 	{
 		@Override
 		protected CallbackCompletion<Void> destroySucceeded (final Context context) {
@@ -109,7 +109,7 @@ public class PublisherCloudlet
 			super (cloudlet);
 		}
 		
-		AmqpQueuePublisherConnector<String, Void> connector;
+		QueuePublisherConnector<String, Void> connector;
 		int count = 0;
 		final int delay = 100;
 		final int limit = 10;

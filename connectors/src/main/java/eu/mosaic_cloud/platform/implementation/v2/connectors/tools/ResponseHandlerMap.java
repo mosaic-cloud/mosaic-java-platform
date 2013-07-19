@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.implementation.v2.connectors.core;
+package eu.mosaic_cloud.platform.implementation.v2.connectors.tools;
 
 
 import java.util.Map;

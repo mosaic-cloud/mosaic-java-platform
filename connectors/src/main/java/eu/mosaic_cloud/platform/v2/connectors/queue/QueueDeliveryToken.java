@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-cloudlets
+ * mosaic-connectors
  * %%
  * Copyright (C) 2010 - 2013 Institute e-Austria Timisoara (Romania)
  * %%
@@ -18,13 +18,8 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.amqp;
+package eu.mosaic_cloud.platform.v2.connectors.queue;
 
 
-import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueueConnectorFactory;
-
-
-public interface AmqpQueueConnectorFactory<TConnector extends AmqpQueueConnector>
-			extends
-				QueueConnectorFactory<TConnector>
+public interface QueueDeliveryToken
 {}

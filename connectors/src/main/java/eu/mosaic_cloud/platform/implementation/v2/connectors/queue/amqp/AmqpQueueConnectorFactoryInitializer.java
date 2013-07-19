@@ -27,9 +27,9 @@ import eu.mosaic_cloud.platform.implementation.v2.connectors.core.ConnectorEnvir
 import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryBuilder;
-import eu.mosaic_cloud.platform.v2.connectors.queue.amqp.AmqpQueueConsumerCallback;
-import eu.mosaic_cloud.platform.v2.connectors.queue.amqp.AmqpQueueConsumerConnectorFactory;
-import eu.mosaic_cloud.platform.v2.connectors.queue.amqp.AmqpQueuePublisherConnectorFactory;
+import eu.mosaic_cloud.platform.v2.connectors.queue.QueueConsumerCallback;
+import eu.mosaic_cloud.platform.v2.connectors.queue.QueueConsumerConnectorFactory;
+import eu.mosaic_cloud.platform.v2.connectors.queue.QueuePublisherConnectorFactory;
 import eu.mosaic_cloud.platform.v2.connectors.queue.amqp.AmqpQueueRawConnectorFactory;
 import eu.mosaic_cloud.platform.v2.serialization.DataEncoder;
 
@@ -45,13 +45,13 @@ public final class AmqpQueueConnectorFactoryInitializer
 				return AmqpQueueRawConnector.create (ConnectorConfiguration.create (configuration, environment));
 			}
 		});
-		builder.register (AmqpQueueConsumerConnectorFactory.class, new AmqpQueueConsumerConnectorFactory () {
+		builder.register (QueueConsumerConnectorFactory.class, new QueueConsumerConnectorFactory () {
 			@Override
-			public <TMessage> AmqpQueueConsumerConnector<TMessage> create (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final AmqpQueueConsumerCallback<TMessage> callback) {
+			public <TMessage> AmqpQueueConsumerConnector<TMessage> create (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueueConsumerCallback<TMessage> callback) {
 				return AmqpQueueConsumerConnector.create (ConnectorConfiguration.create (configuration, environment), messageClass, messageEncoder, callback);
 			}
 		});
-		builder.register (AmqpQueuePublisherConnectorFactory.class, new AmqpQueuePublisherConnectorFactory () {
+		builder.register (QueuePublisherConnectorFactory.class, new QueuePublisherConnectorFactory () {
 			@Override
 			public <TMessage> AmqpQueuePublisherConnector<TMessage> create (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder) {
 				return AmqpQueuePublisherConnector.create (ConnectorConfiguration.create (configuration, environment), messageClass, messageEncoder);

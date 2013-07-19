@@ -18,16 +18,30 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.v2.connectors.queue.amqp;
+package eu.mosaic_cloud.platform.v2.connectors.queue;
 
 
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
-import eu.mosaic_cloud.platform.v2.serialization.DataEncoder;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-public interface AmqpQueueConsumerConnectorFactory
+/**
+ * Interface for registering and using for an AMQP resource as a publisher.
+ * 
+ * @author Georgiana Macariu
+ * @param <Context>
+ *            the type of the context of the cloudlet using this accessor
+ * @param <Message>
+ *            the type of the published data
+ */
+public interface QueuePublisherConnector<Message>
 			extends
-				AmqpQueueConnectorFactory<AmqpQueueConsumerConnector<?>>
+				QueueConnector
 {
-	<TMessage> AmqpQueueConsumerConnector<TMessage> create (Configuration configuration, Class<TMessage> messageClass, DataEncoder<TMessage> messageEncoder, AmqpQueueConsumerCallback<TMessage> callback);
+	/**
+	 * Publishes a message to a queue.
+	 * 
+	 * @param data
+	 *            the data to publish
+	 */
+	CallbackCompletion<Void> publish (Message data);
 }

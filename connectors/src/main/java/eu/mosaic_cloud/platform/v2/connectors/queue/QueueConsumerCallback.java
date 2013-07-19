@@ -1,6 +1,6 @@
 /*
  * #%L
- * mosaic-cloudlets
+ * mosaic-connectors
  * %%
  * Copyright (C) 2010 - 2013 Institute e-Austria Timisoara (Romania)
  * %%
@@ -18,16 +18,22 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.amqp;
+package eu.mosaic_cloud.platform.v2.connectors.queue;
 
 
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
-import eu.mosaic_cloud.platform.v2.serialization.DataEncoder;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 
 
-public interface AmqpQueueConsumerConnectorFactory
+public interface QueueConsumerCallback<TMessage>
 			extends
-				AmqpQueueConnectorFactory<AmqpQueueConsumerConnector<?, ?>>
+				Callbacks
 {
-	public abstract <TContext extends Object, TMessage extends Object, TExtra extends Object> AmqpQueueConsumerConnector<TMessage, TExtra> create (Configuration configuration, Class<TMessage> messageClass, DataEncoder<TMessage> messageEncoder, AmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, TContext callbackContext);
+	/**
+	 * Handles a delivered message.
+	 * 
+	 * @param message
+	 *            the message and all its properties
+	 */
+	CallbackCompletion<Void> consume (QueueDeliveryToken token, TMessage message);
 }

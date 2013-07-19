@@ -27,9 +27,9 @@ import eu.mosaic_cloud.platform.implementation.v2.connectors.core.ConnectorConfi
 import eu.mosaic_cloud.platform.implementation.v2.connectors.tools.ConfigProperties;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
-import eu.mosaic_cloud.platform.v2.connectors.queue.amqp.AmqpMessageToken;
-import eu.mosaic_cloud.platform.v2.connectors.queue.amqp.AmqpQueueConsumerCallback;
-import eu.mosaic_cloud.platform.v2.connectors.queue.amqp.AmqpQueueConsumerConnector;
+import eu.mosaic_cloud.platform.v2.connectors.queue.QueueConsumerCallback;
+import eu.mosaic_cloud.platform.v2.connectors.queue.QueueConsumerConnector;
+import eu.mosaic_cloud.platform.v2.connectors.queue.QueueDeliveryToken;
 import eu.mosaic_cloud.platform.v2.connectors.queue.amqp.AmqpQueueRawConsumerCallback;
 import eu.mosaic_cloud.platform.v2.serialization.DataEncoder;
 import eu.mosaic_cloud.platform.v2.serialization.EncodingException;
@@ -43,9 +43,9 @@ import com.google.common.base.Preconditions;
 public final class AmqpQueueConsumerConnectorProxy<TMessage>
 			extends AmqpQueueConnectorProxy<TMessage>
 			implements
-				AmqpQueueConsumerConnector<TMessage>
+				QueueConsumerConnector<TMessage>
 {
-	private AmqpQueueConsumerConnectorProxy (final AmqpQueueRawConnectorProxy rawProxy, final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final AmqpQueueConsumerCallback<TMessage> callback) {
+	private AmqpQueueConsumerConnectorProxy (final AmqpQueueRawConnectorProxy rawProxy, final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueueConsumerCallback<TMessage> callback) {
 		super (rawProxy, configuration, messageClass, messageEncoder);
 		final String identifier = this.raw.getIdentifier ();
 		this.exchange = configuration.getConfigParameter (ConfigProperties.AmqpQueueConnector_0, String.class, identifier);
@@ -69,7 +69,7 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 	}
 	
 	@Override
-	public CallbackCompletion<Void> acknowledge (final AmqpMessageToken token_) {
+	public CallbackCompletion<Void> acknowledge (final QueueDeliveryToken token_) {
 		final DeliveryToken token = (DeliveryToken) token_;
 		Preconditions.checkNotNull (token);
 		Preconditions.checkArgument (token.proxy == this);
@@ -153,7 +153,7 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 	private final boolean queueDurable;
 	private final boolean queueExclusive;
 	
-	public static <TMessage> AmqpQueueConsumerConnectorProxy<TMessage> create (final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final AmqpQueueConsumerCallback<TMessage> callback) {
+	public static <TMessage> AmqpQueueConsumerConnectorProxy<TMessage> create (final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueueConsumerCallback<TMessage> callback) {
 		final AmqpQueueRawConnectorProxy rawProxy = AmqpQueueRawConnectorProxy.create (configuration);
 		// FIXME: the splice below will be done when creating the environment
 		//# final Configuration subConfiguration = configuration.spliceConfiguration(ConfigurationIdentifier.resolveRelative("publisher"));
@@ -165,7 +165,7 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 				implements
 					AmqpQueueRawConsumerCallback
 	{
-		AmqpConsumerCallback (final AmqpQueueConsumerCallback<TMessage> delegate) {
+		AmqpConsumerCallback (final QueueConsumerCallback<TMessage> delegate) {
 			super ();
 			this.delegate = delegate;
 		}
@@ -209,12 +209,12 @@ public final class AmqpQueueConsumerConnectorProxy<TMessage>
 			return (CallbackCompletion.createOutcome ());
 		}
 		
-		final AmqpQueueConsumerCallback<TMessage> delegate;
+		final QueueConsumerCallback<TMessage> delegate;
 	}
 	
 	private static final class DeliveryToken
 				implements
-					AmqpMessageToken
+					QueueDeliveryToken
 	{
 		DeliveryToken (final AmqpQueueConsumerConnectorProxy<?> proxy, final long token) {
 			super ();

@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.amqp;
+package eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue;
 
 
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.core.Connector;
@@ -28,9 +28,9 @@ import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-public interface AmqpQueuePublisherConnectorCallback<TContext extends Object, TMessage extends Object, TExtra extends Object>
+public interface QueuePublisherConnectorCallback<TContext extends Object, TMessage extends Object, TExtra extends Object>
 			extends
-				AmqpQueueConnectorCallback<TContext>
+				QueueConnectorCallback<TContext>
 {
 	public abstract CallbackCompletion<Void> publishFailed (TContext context, PublishFailedArguments<TMessage, TExtra> arguments);
 	

@@ -22,14 +22,14 @@ package eu.mosaic_cloud.examples.cloudlets.v2.simple;
 
 
 import eu.mosaic_cloud.platform.implementation.v2.serialization.PlainTextDataEncoder;
-import eu.mosaic_cloud.platform.tools.v2.cloudlets.callbacks.DefaultAmqpQueueConsumerConnectorCallback;
 import eu.mosaic_cloud.platform.tools.v2.cloudlets.callbacks.DefaultCallback;
 import eu.mosaic_cloud.platform.tools.v2.cloudlets.callbacks.DefaultCloudlet;
 import eu.mosaic_cloud.platform.tools.v2.cloudlets.callbacks.DefaultCloudletCallback;
 import eu.mosaic_cloud.platform.tools.v2.cloudlets.callbacks.DefaultCloudletContext;
-import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.amqp.AmqpQueueConsumerConnector;
+import eu.mosaic_cloud.platform.tools.v2.cloudlets.callbacks.DefaultQueueConsumerConnectorCallback;
+import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueueConsumerConnector;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
-import eu.mosaic_cloud.platform.v2.connectors.queue.amqp.AmqpMessageToken;
+import eu.mosaic_cloud.platform.v2.connectors.queue.QueueDeliveryToken;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
@@ -65,7 +65,7 @@ public class ConsumerCloudlet
 		@Override
 		protected CallbackCompletion<Void> initialize (final Context context) {
 			context.logger.info ("ConsumerCloudlet initializing...");
-			context.connector = context.createAmqpQueueConsumerConnector ("consumer", String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, ConnectorCallback.class);
+			context.connector = context.createQueueConsumerConnector ("consumer", String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, ConnectorCallback.class);
 			return (context.connector.initialize ());
 		}
 		
@@ -77,7 +77,7 @@ public class ConsumerCloudlet
 	}
 	
 	public static class ConnectorCallback
-				extends DefaultAmqpQueueConsumerConnectorCallback<Context, String, Void>
+				extends DefaultQueueConsumerConnectorCallback<Context, String, Void>
 	{
 		@Override
 		protected CallbackCompletion<Void> acknowledgeSucceeded (final Context context, final Void extra) {
@@ -85,7 +85,7 @@ public class ConsumerCloudlet
 		}
 		
 		@Override
-		protected CallbackCompletion<Void> consume (final Context context, final String message, final AmqpMessageToken token) {
+		protected CallbackCompletion<Void> consume (final Context context, final String message, final QueueDeliveryToken token) {
 			context.logger.info ("ConsumerCloudlet received message `{}`.", message);
 			context.connector.acknowledge (token, null);
 			return (DefaultCallback.Succeeded);
@@ -111,7 +111,7 @@ public class ConsumerCloudlet
 			super (cloudlet);
 		}
 		
-		AmqpQueueConsumerConnector<String, Void> connector;
+		QueueConsumerConnector<String, Void> connector;
 		int count = 0;
 		final int delay = 50;
 		final int limit = 10;

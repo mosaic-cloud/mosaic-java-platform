@@ -25,7 +25,6 @@ import java.util.UUID;
 
 import eu.mosaic_cloud.platform.implementation.v2.connectors.kvstore.BaseKvStoreConnector;
 import eu.mosaic_cloud.platform.v2.configuration.Configuration;
-import eu.mosaic_cloud.platform.v2.serialization.EncodingMetadata;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -56,7 +55,6 @@ public abstract class BaseKvStoreConnectorTest<TConnector extends BaseKvStoreCon
 	
 	protected void testGet () {
 		final String k1 = this.scenario.keyPrefix + "_key_fantastic";
-		final EncodingMetadata encoding1 = new EncodingMetadata ("text/plain", "identity");
 		Assert.assertEquals ("fantastic", this.awaitOutcome (this.connector.get (k1)));
 	}
 	

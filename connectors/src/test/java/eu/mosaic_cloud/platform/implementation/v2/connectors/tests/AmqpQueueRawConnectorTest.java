@@ -49,6 +49,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 
 
+@SuppressWarnings ("boxing")
 public class AmqpQueueRawConnectorTest
 			extends BaseConnectorTest<AmqpQueueRawConnector, BaseScenario>
 {
@@ -74,8 +75,7 @@ public class AmqpQueueRawConnectorTest
 		this.testConsumeCancel ();
 	}
 	
-	public void testConsume ()
-				throws InterruptedException, ExecutionException {
+	public void testConsume () {
 		final Configuration configuration = this.scenario.getConfiguration ();
 		final String queue = ConfigUtils.resolveParameter (configuration, "consumer.amqp.queue", String.class, "");
 		final boolean autoAck = ConfigUtils.resolveParameter (configuration, "consumer.amqp.auto_ack", Boolean.class, true);
@@ -92,7 +92,7 @@ public class AmqpQueueRawConnectorTest
 	}
 	
 	public void testPublish ()
-				throws EncodingException, InterruptedException, ExecutionException {
+				throws EncodingException {
 		final Configuration configuration = this.scenario.getConfiguration ();
 		final String exchange = ConfigUtils.resolveParameter (configuration, "publisher.amqp.exchange", String.class, "");
 		final String routingKey = ConfigUtils.resolveParameter (configuration, "publisher.amqp.routing_key", String.class, "");

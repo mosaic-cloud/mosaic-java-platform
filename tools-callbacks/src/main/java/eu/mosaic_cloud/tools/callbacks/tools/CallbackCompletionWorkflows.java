@@ -32,6 +32,7 @@ import com.google.common.base.Preconditions;
 
 public class CallbackCompletionWorkflows
 {
+	@SafeVarargs
 	public static final CallbackCompletion<Void> executeSequence (final Callable<CallbackCompletion<Void>> ... operations_) {
 		Preconditions.checkNotNull (operations_);
 		final ArrayDeque<Callable<CallbackCompletion<Void>>> operations = new ArrayDeque<Callable<CallbackCompletion<Void>>> (operations_.length);

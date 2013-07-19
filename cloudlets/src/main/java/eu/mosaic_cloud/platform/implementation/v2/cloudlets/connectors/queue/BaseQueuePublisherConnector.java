@@ -18,24 +18,24 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.queue.amqp;
+package eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.queue;
 
 
-import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.amqp.AmqpQueuePublisherConnectorCallback;
-import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.amqp.AmqpQueuePublisherConnectorCallback.PublishFailedArguments;
-import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.amqp.AmqpQueuePublisherConnectorCallback.PublishSucceededArguments;
+import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueuePublisherConnectorCallback;
+import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueuePublisherConnectorCallback.PublishFailedArguments;
+import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueuePublisherConnectorCallback.PublishSucceededArguments;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
 import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 
 
-public class AmqpQueuePublisherConnector<TContext, TMessage, TExtra>
-			extends BaseAmqpQueueConnector<eu.mosaic_cloud.platform.v2.connectors.queue.amqp.AmqpQueuePublisherConnector<TMessage>, AmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra>, TContext>
+public class BaseQueuePublisherConnector<TContext, TMessage, TExtra>
+			extends BaseQueueConnector<eu.mosaic_cloud.platform.v2.connectors.queue.QueuePublisherConnector<TMessage>, QueuePublisherConnectorCallback<TContext, TMessage, TExtra>, TContext>
 			implements
-				eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.amqp.AmqpQueuePublisherConnector<TMessage, TExtra>
+				eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueuePublisherConnector<TMessage, TExtra>
 {
-	public AmqpQueuePublisherConnector (final CloudletController<?> cloudlet, final eu.mosaic_cloud.platform.v2.connectors.queue.amqp.AmqpQueuePublisherConnector<TMessage> connector, final Configuration configuration, final AmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback, final TContext context) {
+	protected BaseQueuePublisherConnector (final CloudletController<?> cloudlet, final eu.mosaic_cloud.platform.v2.connectors.queue.QueuePublisherConnector<TMessage> connector, final Configuration configuration, final QueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback, final TContext context) {
 		super (cloudlet, connector, configuration, callback, context);
 	}
 	
@@ -54,9 +54,9 @@ public class AmqpQueuePublisherConnector<TContext, TMessage, TExtra>
 				public CallbackCompletion<Void> completed (final CallbackCompletion<?> completion_) {
 					assert (completion_ == completion);
 					if (completion.getException () != null) {
-						return AmqpQueuePublisherConnector.this.callback.publishFailed (AmqpQueuePublisherConnector.this.context, new PublishFailedArguments<TMessage, TExtra> (AmqpQueuePublisherConnector.this.cloudlet, AmqpQueuePublisherConnector.this, message, completion.getException (), extra));
+						return BaseQueuePublisherConnector.this.callback.publishFailed (BaseQueuePublisherConnector.this.context, new PublishFailedArguments<TMessage, TExtra> (BaseQueuePublisherConnector.this.cloudlet, BaseQueuePublisherConnector.this, message, completion.getException (), extra));
 					}
-					return AmqpQueuePublisherConnector.this.callback.publishSucceeded (AmqpQueuePublisherConnector.this.context, new PublishSucceededArguments<TMessage, TExtra> (AmqpQueuePublisherConnector.this.cloudlet, AmqpQueuePublisherConnector.this, message, extra));
+					return BaseQueuePublisherConnector.this.callback.publishSucceeded (BaseQueuePublisherConnector.this.context, new PublishSucceededArguments<TMessage, TExtra> (BaseQueuePublisherConnector.this.cloudlet, BaseQueuePublisherConnector.this, message, extra));
 				}
 			});
 		}

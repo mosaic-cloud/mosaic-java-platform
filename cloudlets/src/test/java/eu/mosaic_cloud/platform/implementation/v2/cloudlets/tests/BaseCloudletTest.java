@@ -32,7 +32,7 @@ import eu.mosaic_cloud.platform.implementation.v2.cloudlets.core.Cloudlet;
 import eu.mosaic_cloud.platform.implementation.v2.cloudlets.core.CloudletEnvironment;
 import eu.mosaic_cloud.platform.implementation.v2.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.implementation.v2.connectors.core.ConnectorEnvironment;
-import eu.mosaic_cloud.platform.implementation.v2.connectors.core.DefaultConnectorsFactory;
+import eu.mosaic_cloud.platform.implementation.v2.connectors.tools.DefaultConnectorsFactory;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletCallback;
 import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.connectors.component.ComponentConnector;

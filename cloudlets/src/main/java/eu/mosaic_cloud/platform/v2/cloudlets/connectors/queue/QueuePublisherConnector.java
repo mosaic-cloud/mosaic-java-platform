@@ -18,21 +18,20 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.amqp;
+package eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue;
 
 
-import eu.mosaic_cloud.platform.v2.connectors.queue.amqp.AmqpMessageToken;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-public interface AmqpQueueConsumerConnector<TMessage extends Object, TExtra extends Object>
+public interface QueuePublisherConnector<TMessage extends Object, TExtra extends Object>
 			extends
-				AmqpQueueConnector,
-				eu.mosaic_cloud.platform.v2.connectors.queue.amqp.AmqpQueueConsumerConnector<TMessage>
+				QueueConnector,
+				eu.mosaic_cloud.platform.v2.connectors.queue.QueuePublisherConnector<TMessage>
 {
 	@Override
 	@Deprecated
-	public abstract CallbackCompletion<Void> acknowledge (AmqpMessageToken token);
+	public abstract CallbackCompletion<Void> publish (TMessage data);
 	
-	public abstract CallbackCompletion<Void> acknowledge (AmqpMessageToken token, TExtra extra);
+	public abstract CallbackCompletion<Void> publish (TMessage data, TExtra extra);
 }

@@ -22,8 +22,8 @@ package eu.mosaic_cloud.platform.implementation.v2.connectors.queue.amqp;
 
 
 import eu.mosaic_cloud.platform.implementation.v2.connectors.core.ConnectorConfiguration;
-import eu.mosaic_cloud.platform.v2.connectors.queue.amqp.AmqpMessageToken;
-import eu.mosaic_cloud.platform.v2.connectors.queue.amqp.AmqpQueueConsumerCallback;
+import eu.mosaic_cloud.platform.v2.connectors.queue.QueueConsumerCallback;
+import eu.mosaic_cloud.platform.v2.connectors.queue.QueueDeliveryToken;
 import eu.mosaic_cloud.platform.v2.serialization.DataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
@@ -31,18 +31,18 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 public class AmqpQueueConsumerConnector<TMessage>
 			extends AmqpQueueConnector<AmqpQueueConsumerConnectorProxy<TMessage>>
 			implements
-				eu.mosaic_cloud.platform.v2.connectors.queue.amqp.AmqpQueueConsumerConnector<TMessage>
+				eu.mosaic_cloud.platform.v2.connectors.queue.QueueConsumerConnector<TMessage>
 {
 	protected AmqpQueueConsumerConnector (final AmqpQueueConsumerConnectorProxy<TMessage> proxy) {
 		super (proxy);
 	}
 	
 	@Override
-	public CallbackCompletion<Void> acknowledge (final AmqpMessageToken token) {
+	public CallbackCompletion<Void> acknowledge (final QueueDeliveryToken token) {
 		return this.proxy.acknowledge (token);
 	}
 	
-	public static <TMessage> AmqpQueueConsumerConnector<TMessage> create (final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final AmqpQueueConsumerCallback<TMessage> callback) {
+	public static <TMessage> AmqpQueueConsumerConnector<TMessage> create (final ConnectorConfiguration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueueConsumerCallback<TMessage> callback) {
 		final AmqpQueueConsumerConnectorProxy<TMessage> proxy = AmqpQueueConsumerConnectorProxy.create (configuration, messageClass, messageEncoder, callback);
 		return new AmqpQueueConsumerConnector<TMessage> (proxy);
 	}

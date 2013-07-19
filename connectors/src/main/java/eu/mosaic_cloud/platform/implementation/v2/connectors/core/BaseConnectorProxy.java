@@ -32,6 +32,7 @@ import eu.mosaic_cloud.interoperability.core.SessionCallbacks;
 import eu.mosaic_cloud.interoperability.core.SessionSpecification;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.implementation.v2.connectors.tools.ConfigProperties;
+import eu.mosaic_cloud.platform.implementation.v2.connectors.tools.ResponseHandlerMap;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.CompletionToken;
 import eu.mosaic_cloud.platform.interop.idl.IdlCommon.Envelope;
 import eu.mosaic_cloud.platform.v2.connectors.core.Connector;

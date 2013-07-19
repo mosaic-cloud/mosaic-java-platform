@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.component.ComponentConnectorFactory;
-import eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.core.DefaultConnectorsFactory;
+import eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.tools.DefaultConnectorsFactory;
 import eu.mosaic_cloud.platform.implementation.v2.cloudlets.core.CloudletFsm.FsmCallbackCompletionTransaction;
 import eu.mosaic_cloud.platform.implementation.v2.cloudlets.core.CloudletFsm.FsmState;
 import eu.mosaic_cloud.platform.implementation.v2.cloudlets.core.CloudletFsm.FsmTransition;

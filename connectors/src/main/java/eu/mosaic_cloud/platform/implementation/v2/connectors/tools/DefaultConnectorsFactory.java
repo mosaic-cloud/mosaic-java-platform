@@ -18,9 +18,12 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.implementation.v2.connectors.core;
+package eu.mosaic_cloud.platform.implementation.v2.connectors.tools;
 
 
+import eu.mosaic_cloud.platform.implementation.v2.connectors.core.BaseConnectorsFactory;
+import eu.mosaic_cloud.platform.implementation.v2.connectors.core.BaseConnectorsFactoryBuilder;
+import eu.mosaic_cloud.platform.implementation.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.implementation.v2.connectors.httpg.HttpgQueueConnectorFactoryInitializer;
 import eu.mosaic_cloud.platform.implementation.v2.connectors.kvstore.generic.GenericKvStoreConnectorFactoryInitializer;
 import eu.mosaic_cloud.platform.implementation.v2.connectors.queue.amqp.AmqpQueueConnectorFactoryInitializer;

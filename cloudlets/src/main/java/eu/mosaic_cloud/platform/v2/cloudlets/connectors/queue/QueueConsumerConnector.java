@@ -18,16 +18,21 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.amqp;
+package eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue;
 
 
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
-import eu.mosaic_cloud.platform.v2.serialization.DataEncoder;
+import eu.mosaic_cloud.platform.v2.connectors.queue.QueueDeliveryToken;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-public interface AmqpQueuePublisherConnectorFactory
+public interface QueueConsumerConnector<TMessage extends Object, TExtra extends Object>
 			extends
-				AmqpQueueConnectorFactory<AmqpQueueConsumerConnector<?, ?>>
+				QueueConnector,
+				eu.mosaic_cloud.platform.v2.connectors.queue.QueueConsumerConnector<TMessage>
 {
-	public abstract <TContext extends Object, TMessage extends Object, TExtra extends Object> AmqpQueuePublisherConnector<TMessage, TExtra> create (Configuration configuration, Class<TMessage> messageClass, DataEncoder<TMessage> messageEncoder, AmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback, TContext callbackContext);
+	@Override
+	@Deprecated
+	public abstract CallbackCompletion<Void> acknowledge (QueueDeliveryToken token);
+	
+	public abstract CallbackCompletion<Void> acknowledge (QueueDeliveryToken token, TExtra extra);
 }

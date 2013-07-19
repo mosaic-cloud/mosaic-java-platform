@@ -36,12 +36,12 @@ import eu.mosaic_cloud.platform.v2.cloudlets.connectors.httpg.HttpgQueueConnecto
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.kvstore.KvStoreConnector;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.kvstore.KvStoreConnectorCallback;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.kvstore.KvStoreConnectorFactory;
-import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.amqp.AmqpQueueConsumerConnector;
-import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.amqp.AmqpQueueConsumerConnectorCallback;
-import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.amqp.AmqpQueueConsumerConnectorFactory;
-import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.amqp.AmqpQueuePublisherConnector;
-import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.amqp.AmqpQueuePublisherConnectorCallback;
-import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.amqp.AmqpQueuePublisherConnectorFactory;
+import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueueConsumerConnector;
+import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueueConsumerConnectorCallback;
+import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueueConsumerConnectorFactory;
+import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueuePublisherConnector;
+import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueuePublisherConnectorCallback;
+import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueuePublisherConnectorFactory;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.Callback;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
 import eu.mosaic_cloud.platform.v2.configuration.Configuration;
@@ -67,78 +67,6 @@ public class DefaultCloudletContext<TContext extends DefaultCloudletContext<TCon
 	
 	public CallbackCompletion<Void> chain (final CallbackCompletion<?> ... dependents) {
 		return (CallbackCompletion.createChained (dependents));
-	}
-	
-	@SuppressWarnings ("unchecked")
-	public <TMessage, TExtra> AmqpQueueConsumerConnector<TMessage, TExtra> createAmqpQueueConsumerConnector (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final AmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback) {
-		return (this.createAmqpQueueConsumerConnector (configuration, messageClass, messageEncoder, callback, (TContext) this));
-	}
-	
-	public <TContext, TMessage, TExtra> AmqpQueueConsumerConnector<TMessage, TExtra> createAmqpQueueConsumerConnector (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final AmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, final TContext callbackContext) {
-		return (this.getConnectorFactory (AmqpQueueConsumerConnectorFactory.class).create ((configuration != null) ? configuration : PropertyTypeConfiguration.createEmpty (), messageClass, messageEncoder, callback, callbackContext));
-	}
-	
-	@SuppressWarnings ("unchecked")
-	public <TMessage, TExtra> AmqpQueueConsumerConnector<TMessage, TExtra> createAmqpQueueConsumerConnector (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final Class<? extends AmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra>> callbackClass) {
-		return (this.createAmqpQueueConsumerConnector (configuration, messageClass, messageEncoder, callbackClass, (TContext) this));
-	}
-	
-	public <TContext, TMessage, TExtra> AmqpQueueConsumerConnector<TMessage, TExtra> createAmqpQueueConsumerConnector (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final Class<? extends AmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra>> callbackClass, final TContext callbackContext) {
-		return (this.createAmqpQueueConsumerConnector (configuration, messageClass, messageEncoder, this.createCallback (callbackClass), callbackContext));
-	}
-	
-	@SuppressWarnings ("unchecked")
-	public <TMessage, TExtra> AmqpQueueConsumerConnector<TMessage, TExtra> createAmqpQueueConsumerConnector (final String configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final AmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback) {
-		return (this.createAmqpQueueConsumerConnector (configuration, messageClass, messageEncoder, callback, (TContext) this));
-	}
-	
-	public <TContext, TMessage, TExtra> AmqpQueueConsumerConnector<TMessage, TExtra> createAmqpQueueConsumerConnector (final String configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final AmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, final TContext callbackContext) {
-		return (this.createAmqpQueueConsumerConnector ((configuration != null) ? this.spliceConfiguration (configuration) : null, messageClass, messageEncoder, callback, callbackContext));
-	}
-	
-	@SuppressWarnings ("unchecked")
-	public <TMessage, TExtra> AmqpQueueConsumerConnector<TMessage, TExtra> createAmqpQueueConsumerConnector (final String configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final Class<? extends AmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra>> callbackClass) {
-		return (this.createAmqpQueueConsumerConnector (configuration, messageClass, messageEncoder, callbackClass, (TContext) this));
-	}
-	
-	public <TContext, TMessage, TExtra> AmqpQueueConsumerConnector<TMessage, TExtra> createAmqpQueueConsumerConnector (final String configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final Class<? extends AmqpQueueConsumerConnectorCallback<TContext, TMessage, TExtra>> callbackClass, final TContext callbackContext) {
-		return (this.createAmqpQueueConsumerConnector ((configuration != null) ? this.spliceConfiguration (configuration) : null, messageClass, messageEncoder, callbackClass, callbackContext));
-	}
-	
-	@SuppressWarnings ("unchecked")
-	public <TContext, TMessage, TExtra> AmqpQueuePublisherConnector<TMessage, TExtra> createAmqpQueuePublisherConnector (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final AmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback) {
-		return (this.createAmqpQueuePublisherConnector (configuration, messageClass, messageEncoder, callback, (TContext) this));
-	}
-	
-	public <TContext, TMessage, TExtra> AmqpQueuePublisherConnector<TMessage, TExtra> createAmqpQueuePublisherConnector (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final AmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback, final TContext callbackContext) {
-		return (this.getConnectorFactory (AmqpQueuePublisherConnectorFactory.class).create ((configuration != null) ? configuration : PropertyTypeConfiguration.createEmpty (), messageClass, messageEncoder, callback, callbackContext));
-	}
-	
-	@SuppressWarnings ("unchecked")
-	public <TContext, TMessage, TExtra> AmqpQueuePublisherConnector<TMessage, TExtra> createAmqpQueuePublisherConnector (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final Class<? extends AmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra>> callbackClass) {
-		return (this.createAmqpQueuePublisherConnector (configuration, messageClass, messageEncoder, callbackClass, (TContext) this));
-	}
-	
-	public <TContext, TMessage, TExtra> AmqpQueuePublisherConnector<TMessage, TExtra> createAmqpQueuePublisherConnector (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final Class<? extends AmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra>> callbackClass, final TContext callbackContext) {
-		return (this.createAmqpQueuePublisherConnector (configuration, messageClass, messageEncoder, this.createCallback (callbackClass), callbackContext));
-	}
-	
-	@SuppressWarnings ("unchecked")
-	public <TContext, TMessage, TExtra> AmqpQueuePublisherConnector<TMessage, TExtra> createAmqpQueuePublisherConnector (final String configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final AmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback) {
-		return (this.createAmqpQueuePublisherConnector (configuration, messageClass, messageEncoder, callback, (TContext) this));
-	}
-	
-	public <TContext, TMessage, TExtra> AmqpQueuePublisherConnector<TMessage, TExtra> createAmqpQueuePublisherConnector (final String configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final AmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback, final TContext callbackContext) {
-		return (this.createAmqpQueuePublisherConnector ((configuration != null) ? this.spliceConfiguration (configuration) : null, messageClass, messageEncoder, callback, callbackContext));
-	}
-	
-	@SuppressWarnings ("unchecked")
-	public <TContext, TMessage, TExtra> AmqpQueuePublisherConnector<TMessage, TExtra> createAmqpQueuePublisherConnector (final String configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final Class<? extends AmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra>> callbackClass) {
-		return (this.createAmqpQueuePublisherConnector (configuration, messageClass, messageEncoder, callbackClass, (TContext) this));
-	}
-	
-	public <TContext, TMessage, TExtra> AmqpQueuePublisherConnector<TMessage, TExtra> createAmqpQueuePublisherConnector (final String configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final Class<? extends AmqpQueuePublisherConnectorCallback<TContext, TMessage, TExtra>> callbackClass, final TContext callbackContext) {
-		return (this.createAmqpQueuePublisherConnector ((configuration != null) ? this.spliceConfiguration (configuration) : null, messageClass, messageEncoder, callbackClass, callbackContext));
 	}
 	
 	public <TCallback extends Callback<TContext>, TContext> TCallback createCallback (final Class<TCallback> callbackClass) {
@@ -286,6 +214,78 @@ public class DefaultCloudletContext<TContext extends DefaultCloudletContext<TCon
 	
 	public <TContext, TValue, TExtra> KvStoreConnector<TValue, TExtra> createKvStoreConnector (final String configuration, final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder, final KvStoreConnectorCallback<TContext, TValue, TExtra> callback, final TContext callbackContext) {
 		return (this.createKvStoreConnector ((configuration != null) ? this.spliceConfiguration (configuration) : null, valueClass, valueEncoder, callback, callbackContext));
+	}
+	
+	@SuppressWarnings ("unchecked")
+	public <TMessage, TExtra> QueueConsumerConnector<TMessage, TExtra> createQueueConsumerConnector (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final Class<? extends QueueConsumerConnectorCallback<TContext, TMessage, TExtra>> callbackClass) {
+		return (this.createQueueConsumerConnector (configuration, messageClass, messageEncoder, callbackClass, (TContext) this));
+	}
+	
+	public <TContext, TMessage, TExtra> QueueConsumerConnector<TMessage, TExtra> createQueueConsumerConnector (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final Class<? extends QueueConsumerConnectorCallback<TContext, TMessage, TExtra>> callbackClass, final TContext callbackContext) {
+		return (this.createQueueConsumerConnector (configuration, messageClass, messageEncoder, this.createCallback (callbackClass), callbackContext));
+	}
+	
+	@SuppressWarnings ("unchecked")
+	public <TMessage, TExtra> QueueConsumerConnector<TMessage, TExtra> createQueueConsumerConnector (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback) {
+		return (this.createQueueConsumerConnector (configuration, messageClass, messageEncoder, callback, (TContext) this));
+	}
+	
+	public <TContext, TMessage, TExtra> QueueConsumerConnector<TMessage, TExtra> createQueueConsumerConnector (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, final TContext callbackContext) {
+		return (this.getConnectorFactory (QueueConsumerConnectorFactory.class).create ((configuration != null) ? configuration : PropertyTypeConfiguration.createEmpty (), messageClass, messageEncoder, callback, callbackContext));
+	}
+	
+	@SuppressWarnings ("unchecked")
+	public <TMessage, TExtra> QueueConsumerConnector<TMessage, TExtra> createQueueConsumerConnector (final String configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final Class<? extends QueueConsumerConnectorCallback<TContext, TMessage, TExtra>> callbackClass) {
+		return (this.createQueueConsumerConnector (configuration, messageClass, messageEncoder, callbackClass, (TContext) this));
+	}
+	
+	public <TContext, TMessage, TExtra> QueueConsumerConnector<TMessage, TExtra> createQueueConsumerConnector (final String configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final Class<? extends QueueConsumerConnectorCallback<TContext, TMessage, TExtra>> callbackClass, final TContext callbackContext) {
+		return (this.createQueueConsumerConnector ((configuration != null) ? this.spliceConfiguration (configuration) : null, messageClass, messageEncoder, callbackClass, callbackContext));
+	}
+	
+	@SuppressWarnings ("unchecked")
+	public <TMessage, TExtra> QueueConsumerConnector<TMessage, TExtra> createQueueConsumerConnector (final String configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback) {
+		return (this.createQueueConsumerConnector (configuration, messageClass, messageEncoder, callback, (TContext) this));
+	}
+	
+	public <TContext, TMessage, TExtra> QueueConsumerConnector<TMessage, TExtra> createQueueConsumerConnector (final String configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, final TContext callbackContext) {
+		return (this.createQueueConsumerConnector ((configuration != null) ? this.spliceConfiguration (configuration) : null, messageClass, messageEncoder, callback, callbackContext));
+	}
+	
+	@SuppressWarnings ("unchecked")
+	public <TContext, TMessage, TExtra> QueuePublisherConnector<TMessage, TExtra> createQueuePublisherConnector (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final Class<? extends QueuePublisherConnectorCallback<TContext, TMessage, TExtra>> callbackClass) {
+		return (this.createQueuePublisherConnector (configuration, messageClass, messageEncoder, callbackClass, (TContext) this));
+	}
+	
+	public <TContext, TMessage, TExtra> QueuePublisherConnector<TMessage, TExtra> createQueuePublisherConnector (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final Class<? extends QueuePublisherConnectorCallback<TContext, TMessage, TExtra>> callbackClass, final TContext callbackContext) {
+		return (this.createQueuePublisherConnector (configuration, messageClass, messageEncoder, this.createCallback (callbackClass), callbackContext));
+	}
+	
+	@SuppressWarnings ("unchecked")
+	public <TContext, TMessage, TExtra> QueuePublisherConnector<TMessage, TExtra> createQueuePublisherConnector (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback) {
+		return (this.createQueuePublisherConnector (configuration, messageClass, messageEncoder, callback, (TContext) this));
+	}
+	
+	public <TContext, TMessage, TExtra> QueuePublisherConnector<TMessage, TExtra> createQueuePublisherConnector (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback, final TContext callbackContext) {
+		return (this.getConnectorFactory (QueuePublisherConnectorFactory.class).create ((configuration != null) ? configuration : PropertyTypeConfiguration.createEmpty (), messageClass, messageEncoder, callback, callbackContext));
+	}
+	
+	@SuppressWarnings ("unchecked")
+	public <TContext, TMessage, TExtra> QueuePublisherConnector<TMessage, TExtra> createQueuePublisherConnector (final String configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final Class<? extends QueuePublisherConnectorCallback<TContext, TMessage, TExtra>> callbackClass) {
+		return (this.createQueuePublisherConnector (configuration, messageClass, messageEncoder, callbackClass, (TContext) this));
+	}
+	
+	public <TContext, TMessage, TExtra> QueuePublisherConnector<TMessage, TExtra> createQueuePublisherConnector (final String configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final Class<? extends QueuePublisherConnectorCallback<TContext, TMessage, TExtra>> callbackClass, final TContext callbackContext) {
+		return (this.createQueuePublisherConnector ((configuration != null) ? this.spliceConfiguration (configuration) : null, messageClass, messageEncoder, callbackClass, callbackContext));
+	}
+	
+	@SuppressWarnings ("unchecked")
+	public <TContext, TMessage, TExtra> QueuePublisherConnector<TMessage, TExtra> createQueuePublisherConnector (final String configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback) {
+		return (this.createQueuePublisherConnector (configuration, messageClass, messageEncoder, callback, (TContext) this));
+	}
+	
+	public <TContext, TMessage, TExtra> QueuePublisherConnector<TMessage, TExtra> createQueuePublisherConnector (final String configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback, final TContext callbackContext) {
+		return (this.createQueuePublisherConnector ((configuration != null) ? this.spliceConfiguration (configuration) : null, messageClass, messageEncoder, callback, callbackContext));
 	}
 	
 	public CallbackCompletion<Void> destroyConnectors (final Connector ... connectors) {

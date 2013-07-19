@@ -33,6 +33,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 
 
+@SuppressWarnings ("boxing")
 public class RiakKvStoreConnectorTest
 			extends BaseKvStoreConnectorTest<GenericKvStoreConnector<String>>
 {

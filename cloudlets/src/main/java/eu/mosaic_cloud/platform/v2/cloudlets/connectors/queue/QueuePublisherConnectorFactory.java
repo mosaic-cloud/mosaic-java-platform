@@ -18,13 +18,16 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.amqp;
+package eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue;
 
 
-import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueueConnectorCallback;
+import eu.mosaic_cloud.platform.v2.configuration.Configuration;
+import eu.mosaic_cloud.platform.v2.serialization.DataEncoder;
 
 
-public interface AmqpQueueConnectorCallback<TContext extends Object>
+public interface QueuePublisherConnectorFactory
 			extends
-				QueueConnectorCallback<TContext>
-{}
+				QueueConnectorFactory<QueuePublisherConnector<?, ?>>
+{
+	public abstract <TContext extends Object, TMessage extends Object, TExtra extends Object> QueuePublisherConnector<TMessage, TExtra> create (Configuration configuration, Class<TMessage> messageClass, DataEncoder<TMessage> messageEncoder, QueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback, TContext callbackContext);
+}

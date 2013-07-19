@@ -21,16 +21,16 @@
 package eu.mosaic_cloud.platform.tools.v2.cloudlets.callbacks;
 
 
-import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.amqp.AmqpQueuePublisherConnectorCallback;
+import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueuePublisherConnectorCallback;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 
 
-public class DefaultAmqpQueuePublisherConnectorCallback<TContext, TValue, TExtra>
-			extends DefaultAmqpQueueConnectorCallback<TContext>
+public class DefaultQueuePublisherConnectorCallback<TContext, TValue, TExtra>
+			extends DefaultQueueConnectorCallback<TContext>
 			implements
-				AmqpQueuePublisherConnectorCallback<TContext, TValue, TExtra>
+				QueuePublisherConnectorCallback<TContext, TValue, TExtra>
 {
-	public DefaultAmqpQueuePublisherConnectorCallback () {
+	public DefaultQueuePublisherConnectorCallback () {
 		super ();
 	}
 	
@@ -40,7 +40,7 @@ public class DefaultAmqpQueuePublisherConnectorCallback<TContext, TValue, TExtra
 		final CallbackCompletion<Void> maybeCompleted = this.publishFailed (context, arguments.extra);
 		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
-		return (this.handleUnhandledCallback (AmqpQueuePublisherConnectorCallback.class, "publishFailed", context, arguments, false, false));
+		return (this.handleUnhandledCallback (QueuePublisherConnectorCallback.class, "publishFailed", context, arguments, false, false));
 	}
 	
 	@Override
@@ -49,7 +49,7 @@ public class DefaultAmqpQueuePublisherConnectorCallback<TContext, TValue, TExtra
 		final CallbackCompletion<Void> maybeCompleted = this.publishSucceeded (context, arguments.extra);
 		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
-		return (this.handleUnhandledCallback (AmqpQueuePublisherConnectorCallback.class, "publishSucceeded", context, arguments, true, false));
+		return (this.handleUnhandledCallback (QueuePublisherConnectorCallback.class, "publishSucceeded", context, arguments, true, false));
 	}
 	
 	protected CallbackCompletion<Void> publishFailed (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TExtra extra) {
