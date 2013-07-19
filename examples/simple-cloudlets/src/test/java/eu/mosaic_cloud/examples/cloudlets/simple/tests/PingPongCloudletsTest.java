@@ -53,6 +53,7 @@ public class PingPongCloudletsTest
 		@Override
 		public void setUp () {
 			this.doRun = PingPongCloudletsTest.doRun;
+			this.runDelay = 250;
 			this.setUp (PingCloudlet.CloudletCallback.class, PingCloudlet.Context.class, "ping-cloudlet.properties");
 		}
 	}

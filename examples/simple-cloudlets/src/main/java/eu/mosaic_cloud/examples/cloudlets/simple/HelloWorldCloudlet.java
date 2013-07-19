@@ -35,10 +35,6 @@ public class HelloWorldCloudlet
 	public static class Callback
 				extends DefaultCloudletCallback<Context>
 	{
-		public Callback (final CloudletController<Context> cloudlet) {
-			super (cloudlet);
-		}
-		
 		@Override
 		protected CallbackCompletion<Void> destroy (final Context context) {
 			context.logger.info ("HelloWorldCloudlet destroying...");

@@ -62,6 +62,7 @@ public class PublisherConsumerCloudletsTest
 	{
 		@Override
 		public void setUp () {
+			this.runDelay = 250;
 			this.doRun = PublisherConsumerCloudletsTest.doRun;
 			this.setUp (PublisherCloudlet.CloudletCallback.class, PublisherCloudlet.Context.class, "publisher-cloudlet.properties");
 		}

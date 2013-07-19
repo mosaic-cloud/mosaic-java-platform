@@ -32,21 +32,17 @@ import eu.mosaic_cloud.cloudlets.v1.cloudlets.CloudletController;
 import eu.mosaic_cloud.cloudlets.v1.connectors.kvstore.KvStoreConnector;
 import eu.mosaic_cloud.platform.implementations.v1.serialization.PlainTextDataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
-import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 
 public class KvStoreCloudlet
 			extends DefaultCloudlet
 {
-	static CallbackCompletion<Void> maybeContinue (final Context context) {
-		// FIXME: DON'T DO THIS IN YOUR CODE... This is for throttling...
-		Threading.sleep (context.delay);
-		//----
+	public static CallbackCompletion<Void> maybeContinue (final Context context) {
 		if (context.count < context.limit) {
 			final String key = UUID.randomUUID ().toString ();
 			final String data = String.format ("Test value %d! (%s)", Integer.valueOf (context.count), key);
 			context.logger.info ("KvStoreCloudlet setting value `{}` -> `{}`.", key, data);
-			context.connector.set (key, data, null);
+			context.connector.set (key, data, key);
 			context.count += 1;
 		} else
 			context.cloudlet.destroy ();
@@ -56,10 +52,6 @@ public class KvStoreCloudlet
 	public static class CloudletCallback
 				extends DefaultCloudletCallback<Context>
 	{
-		public CloudletCallback (final CloudletController<Context> cloudlet) {
-			super (cloudlet);
-		}
-		
 		@Override
 		protected CallbackCompletion<Void> destroy (final Context context) {
 			context.logger.info ("PublisherCloudlet destroying...");
@@ -86,26 +78,9 @@ public class KvStoreCloudlet
 		}
 	}
 	
-	public static class Context
-				extends DefaultCloudletContext<Context>
-	{
-		public Context (final CloudletController<Context> cloudlet) {
-			super (cloudlet);
-		}
-		
-		KvStoreConnector<String, String> connector;
-		int count = 0;
-		final int delay = 100;
-		final int limit = 1000;
-	}
-	
-	static class ConnectorCallback
+	public static class ConnectorCallback
 				extends DefaultKvStoreConnectorCallback<Context, String, String>
 	{
-		public ConnectorCallback (final CloudletController<Context> cloudlet) {
-			super (cloudlet);
-		}
-		
 		@Override
 		protected CallbackCompletion<Void> destroySucceeded (final Context context) {
 			context.logger.info ("PublisherCloudlet connector destroyed successfully.");
@@ -129,8 +104,21 @@ public class KvStoreCloudlet
 		protected CallbackCompletion<Void> setSucceeded (final Context context, final String extra) {
 			final String key = extra;
 			context.logger.info ("KvStoreCloudlet getting value `{}`.", key);
-			context.connector.get (key, null);
+			context.connector.get (key, extra);
 			return (DefaultCallback.Succeeded);
 		}
+	}
+	
+	public static class Context
+				extends DefaultCloudletContext<Context>
+	{
+		public Context (final CloudletController<Context> cloudlet) {
+			super (cloudlet);
+		}
+		
+		KvStoreConnector<String, String> connector;
+		int count = 0;
+		final int delay = 100;
+		final int limit = 10;
 	}
 }

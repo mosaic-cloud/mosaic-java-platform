@@ -42,10 +42,6 @@ public class HttpgCloudlet
 	public static class CloudletCallback
 				extends DefaultCloudletCallback<Context>
 	{
-		public CloudletCallback (final CloudletController<Context> cloudlet) {
-			super (cloudlet);
-		}
-		
 		@Override
 		protected CallbackCompletion<Void> destroy (final Context context) {
 			context.logger.info ("destroying cloudlet...");
@@ -71,13 +67,9 @@ public class HttpgCloudlet
 		final String identity = UUID.randomUUID ().toString ();
 	}
 	
-	static class GatewayCallback
+	public static class GatewayCallback
 				extends DefaultHttpgQueueConnectorCallback<Context, String, String, Void>
 	{
-		public GatewayCallback (final CloudletController<Context> cloudlet) {
-			super (cloudlet);
-		}
-		
 		@Override
 		protected CallbackCompletion<Void> requested (final Context context, final HttpgRequestMessage<String> request) {
 			final StringBuilder responseBody = new StringBuilder ();

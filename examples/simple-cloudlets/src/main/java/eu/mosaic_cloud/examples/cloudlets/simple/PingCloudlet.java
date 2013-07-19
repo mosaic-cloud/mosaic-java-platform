@@ -43,10 +43,6 @@ public class PingCloudlet
 	public static class CloudletCallback
 				extends DefaultCloudletCallback<Context>
 	{
-		public CloudletCallback (final CloudletController<Context> cloudlet) {
-			super (cloudlet);
-		}
-		
 		@Override
 		protected CallbackCompletion<Void> destroy (final Context context) {
 			context.logger.info ("destroying cloudlet...");
@@ -80,25 +76,9 @@ public class PingCloudlet
 		}
 	}
 	
-	public static class Context
-				extends DefaultCloudletContext<Context>
-	{
-		public Context (final CloudletController<Context> cloudlet) {
-			super (cloudlet);
-		}
-		
-		AmqpQueueConsumerConnector<PongMessage, Void> consumer;
-		AmqpQueuePublisherConnector<PingMessage, Void> publisher;
-		final String token = UUID.randomUUID ().toString ();
-	}
-	
-	static class ConsumerCallback
+	public static class ConsumerCallback
 				extends DefaultAmqpQueueConsumerConnectorCallback<Context, PongMessage, Void>
 	{
-		public ConsumerCallback (final CloudletController<Context> cloudlet) {
-			super (cloudlet);
-		}
-		
 		@Override
 		protected CallbackCompletion<Void> acknowledgeSucceeded (final Context context, final Void extra) {
 			context.logger.info ("ackowledge succeeded; exiting...");
@@ -126,13 +106,21 @@ public class PingCloudlet
 		}
 	}
 	
-	static class PublisherCallback
-				extends DefaultAmqpQueuePublisherConnectorCallback<Context, PingMessage, Void>
+	public static class Context
+				extends DefaultCloudletContext<Context>
 	{
-		public PublisherCallback (final CloudletController<Context> cloudlet) {
+		public Context (final CloudletController<Context> cloudlet) {
 			super (cloudlet);
 		}
 		
+		AmqpQueueConsumerConnector<PongMessage, Void> consumer;
+		AmqpQueuePublisherConnector<PingMessage, Void> publisher;
+		final String token = UUID.randomUUID ().toString ();
+	}
+	
+	public static class PublisherCallback
+				extends DefaultAmqpQueuePublisherConnectorCallback<Context, PingMessage, Void>
+	{
 		@Override
 		protected CallbackCompletion<Void> destroySucceeded (final Context context) {
 			context.logger.info ("queue connector connector destroyed successfully.");

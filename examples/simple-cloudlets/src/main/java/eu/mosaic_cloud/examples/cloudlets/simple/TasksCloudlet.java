@@ -40,10 +40,6 @@ public class TasksCloudlet
 	public static class CloudletCallback
 				extends DefaultCloudletCallback<Context>
 	{
-		public CloudletCallback (final CloudletController<Context> cloudlet) {
-			super (cloudlet);
-		}
-		
 		@Override
 		protected CallbackCompletion<Void> destroy (final Context context) {
 			context.logger.info ("destroying cloudlet...");
@@ -87,20 +83,16 @@ public class TasksCloudlet
 		Workflow workflow;
 	}
 	
-	static class ExecutorCallback
+	public static class ExecutorCallback
 				extends DefaultExecutorCallback<Context, String, String>
 	{
-		public ExecutorCallback (final CloudletController<Context> cloudlet) {
-			super (cloudlet);
-		}
-		
 		@Override
 		protected CallbackCompletion<Void> executionSucceeded (final Context context, final String outcome, final String extra) {
 			return (context.workflow.handleOutcome (context, outcome, extra));
 		}
 	}
 	
-	static class TimeConsumingOperation
+	public static class TimeConsumingOperation
 				implements
 					Callable<String>
 	{
@@ -120,7 +112,7 @@ public class TasksCloudlet
 		String input;
 	}
 	
-	static class Workflow
+	public static class Workflow
 	{
 		CallbackCompletion<Void> handleOutcome (final Context context, final String output, final String input) {
 			context.logger.info ("succeeded task with input `{}` and output `{}`...", input, output);

@@ -37,7 +37,7 @@ import eu.mosaic_cloud.tools.threading.tools.Threading;
 public class ConsumerCloudlet
 			extends DefaultCloudlet
 {
-	static CallbackCompletion<Void> maybeContinue (final Context context) {
+	public static CallbackCompletion<Void> maybeContinue (final Context context) {
 		// FIXME: DON'T DO THIS IN YOUR CODE... This is for throttling...
 		Threading.sleep (context.delay);
 		//----		
@@ -50,10 +50,6 @@ public class ConsumerCloudlet
 	public static class CloudletCallback
 				extends DefaultCloudletCallback<Context>
 	{
-		public CloudletCallback (final CloudletController<Context> cloudlet) {
-			super (cloudlet);
-		}
-		
 		@Override
 		protected CallbackCompletion<Void> destroy (final Context context) {
 			context.logger.info ("ConsumerCloudlet destroying...");
@@ -69,7 +65,7 @@ public class ConsumerCloudlet
 		@Override
 		protected CallbackCompletion<Void> initialize (final Context context) {
 			context.logger.info ("ConsumerCloudlet initializing...");
-			context.connector = context.createAmqpQueueConsumerConnector ("connector", String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, ConnectorCallback.class);
+			context.connector = context.createAmqpQueueConsumerConnector ("consumer", String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, ConnectorCallback.class);
 			return (context.connector.initialize ());
 		}
 		
@@ -80,26 +76,9 @@ public class ConsumerCloudlet
 		}
 	}
 	
-	public static class Context
-				extends DefaultCloudletContext<Context>
-	{
-		public Context (final CloudletController<Context> cloudlet) {
-			super (cloudlet);
-		}
-		
-		AmqpQueueConsumerConnector<String, Void> connector;
-		int count = 0;
-		final int delay = 50;
-		final int limit = 10000;
-	}
-	
-	static class ConnectorCallback
+	public static class ConnectorCallback
 				extends DefaultAmqpQueueConsumerConnectorCallback<Context, String, Void>
 	{
-		public ConnectorCallback (final CloudletController<Context> cloudlet) {
-			super (cloudlet);
-		}
-		
 		@Override
 		protected CallbackCompletion<Void> acknowledgeSucceeded (final Context context, final Void extra) {
 			return (ConsumerCloudlet.maybeContinue (context));
@@ -123,5 +102,18 @@ public class ConsumerCloudlet
 			context.logger.info ("ConsumerCloudlet connector initialized successfully.");
 			return (DefaultCallback.Succeeded);
 		}
+	}
+	
+	public static class Context
+				extends DefaultCloudletContext<Context>
+	{
+		public Context (final CloudletController<Context> cloudlet) {
+			super (cloudlet);
+		}
+		
+		AmqpQueueConsumerConnector<String, Void> connector;
+		int count = 0;
+		final int delay = 50;
+		final int limit = 10;
 	}
 }

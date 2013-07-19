@@ -38,7 +38,7 @@ import eu.mosaic_cloud.tools.threading.tools.Threading;
 public class PublisherCloudlet
 			extends DefaultCloudlet
 {
-	static CallbackCompletion<Void> maybeContinue (final Context context) {
+	public static CallbackCompletion<Void> maybeContinue (final Context context) {
 		// FIXME: DON'T DO THIS IN YOUR CODE... This is for throttling...
 		Threading.sleep (context.delay);
 		//----
@@ -55,10 +55,6 @@ public class PublisherCloudlet
 	public static class CloudletCallback
 				extends DefaultCloudletCallback<Context>
 	{
-		public CloudletCallback (final CloudletController<Context> cloudlet) {
-			super (cloudlet);
-		}
-		
 		@Override
 		protected CallbackCompletion<Void> destroy (final Context context) {
 			context.logger.info ("PublisherCloudlet destroying...");
@@ -74,7 +70,7 @@ public class PublisherCloudlet
 		@Override
 		protected CallbackCompletion<Void> initialize (final Context context) {
 			context.logger.info ("PublisherCloudlet initializing...");
-			context.connector = context.createAmqpQueuePublisherConnector ("connector", String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, ConnectorCallback.class);
+			context.connector = context.createAmqpQueuePublisherConnector ("publisher", String.class, PlainTextDataEncoder.DEFAULT_INSTANCE, ConnectorCallback.class);
 			return (context.connector.initialize ());
 		}
 		
@@ -85,26 +81,9 @@ public class PublisherCloudlet
 		}
 	}
 	
-	public static class Context
-				extends DefaultCloudletContext<Context>
-	{
-		public Context (final CloudletController<Context> cloudlet) {
-			super (cloudlet);
-		}
-		
-		AmqpQueuePublisherConnector<String, Void> connector;
-		int count = 0;
-		final int delay = 100;
-		final int limit = 1000;
-	}
-	
-	static class ConnectorCallback
+	public static class ConnectorCallback
 				extends DefaultAmqpQueuePublisherConnectorCallback<Context, String, Void>
 	{
-		public ConnectorCallback (final CloudletController<Context> cloudlet) {
-			super (cloudlet);
-		}
-		
 		@Override
 		protected CallbackCompletion<Void> destroySucceeded (final Context context) {
 			context.logger.info ("PublisherCloudlet connector destroyed successfully.");
@@ -121,5 +100,18 @@ public class PublisherCloudlet
 		protected CallbackCompletion<Void> publishSucceeded (final Context context, final Void extra) {
 			return (PublisherCloudlet.maybeContinue (context));
 		}
+	}
+	
+	public static class Context
+				extends DefaultCloudletContext<Context>
+	{
+		public Context (final CloudletController<Context> cloudlet) {
+			super (cloudlet);
+		}
+		
+		AmqpQueuePublisherConnector<String, Void> connector;
+		int count = 0;
+		final int delay = 100;
+		final int limit = 10;
 	}
 }

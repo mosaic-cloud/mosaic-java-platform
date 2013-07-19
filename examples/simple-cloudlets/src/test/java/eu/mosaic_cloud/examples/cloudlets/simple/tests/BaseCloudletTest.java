@@ -41,6 +41,7 @@ import eu.mosaic_cloud.platform.implementations.v1.configuration.PropertyTypeCon
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -83,6 +84,9 @@ public abstract class BaseCloudletTest
 	public void test () {
 		if (!this.doRun) {
 			return;
+		}
+		if (this.runDelay != 0) {
+			Threading.sleep (this.runDelay);
 		}
 		this.awaitSuccess (this.cloudlet.initialize ());
 		Assert.assertTrue (this.cloudlet.await (this.scenario.poolTimeout));
@@ -195,6 +199,7 @@ public abstract class BaseCloudletTest
 	}
 	
 	protected boolean doRun = true;
+	protected long runDelay = 0;
 	private static final String MOSAIC_AMQP_HOST = "mosaic.tests.resources.amqp.host";
 	private static final String MOSAIC_AMQP_HOST_DEFAULT = "127.0.0.1";
 	private static final String MOSAIC_AMQP_PORT = "mosaic.tests.resources.amqp.port";
