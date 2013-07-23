@@ -46,74 +46,88 @@ public interface KvStoreConnectorCallback<TContext extends Object, TValue extend
 	public abstract CallbackCompletion<Void> setSucceeded (TContext context, SetSucceededArguments<TValue, TExtra> arguments);
 	
 	public static final class DeleteFailedArguments<TExtra extends Object>
-				extends ConnectorOperationFailedArguments<TExtra>
+				extends OperationFailedArguments<TExtra>
 	{
 		public DeleteFailedArguments (final CloudletController<?> cloudlet, final Connector connector, final String key, final Throwable error, final TExtra extra) {
-			super (cloudlet, connector, error, extra);
-			this.key = key;
+			super (cloudlet, connector, key, error, extra);
 		}
 		
-		public final String key;
 	}
 	
 	public static final class DeleteSucceededArguments<TExtra extends Object>
-				extends ConnectorOperationSucceededArguments<TExtra>
+				extends OperationSucceededArguments<TExtra>
 	{
 		public DeleteSucceededArguments (final CloudletController<?> cloudlet, final Connector connector, final String key, final TExtra extra) {
-			super (cloudlet, connector, extra);
-			this.key = key;
+			super (cloudlet, connector, key, extra);
 		}
 		
-		public final String key;
 	}
 	
 	public static final class GetFailedArguments<TExtra extends Object>
-				extends ConnectorOperationFailedArguments<TExtra>
+				extends OperationFailedArguments<TExtra>
 	{
 		public GetFailedArguments (final CloudletController<?> cloudlet, final Connector connector, final String key, final Throwable error, final TExtra extra) {
-			super (cloudlet, connector, error, extra);
-			this.key = key;
+			super (cloudlet, connector, key, error, extra);
 		}
 		
-		public final String key;
 	}
 	
 	public static final class GetSucceededArguments<TValue extends Object, TExtra extends Object>
-				extends ConnectorOperationSucceededArguments<TExtra>
+				extends OperationSucceededArguments<TExtra>
 	{
 		public GetSucceededArguments (final CloudletController<?> cloudlet, final Connector connector, final String key, final TValue value, final TExtra extra) {
-			super (cloudlet, connector, extra);
-			this.key = key;
+			super (cloudlet, connector, key, extra);
 			this.value = value;
 		}
 		
-		public final String key;
+		
 		public final TValue value;
 	}
 	
 	public static final class SetFailedArguments<TValue, TExtra extends Object>
-				extends ConnectorOperationFailedArguments<TExtra>
+				extends OperationFailedArguments<TExtra>
 	{
 		public SetFailedArguments (final CloudletController<?> cloudlet, final Connector connector, final String key, final TValue value, final Throwable error, final TExtra extra) {
-			super (cloudlet, connector, error, extra);
-			this.key = key;
+			super (cloudlet, connector, key, error, extra);
 			this.value = value;
 		}
 		
-		public final String key;
+		
 		public final TValue value;
 	}
 	
 	public static final class SetSucceededArguments<TValue extends Object, TExtra extends Object>
-				extends ConnectorOperationSucceededArguments<TExtra>
+				extends OperationSucceededArguments<TExtra>
 	{
 		public SetSucceededArguments (final CloudletController<?> cloudlet, final Connector connector, final String key, final TValue value, final TExtra extra) {
-			super (cloudlet, connector, extra);
-			this.key = key;
+			super (cloudlet, connector, key, extra);
 			this.value = value;
 		}
 		
-		public final String key;
+		
 		public final TValue value;
+	}
+	
+	
+	public static abstract class OperationFailedArguments<TExtra extends Object>
+				extends ConnectorOperationFailedArguments<TExtra>
+	{
+		OperationFailedArguments (final CloudletController<?> cloudlet, final Connector connector, final String key, final Throwable error, final TExtra extra) {
+			super (cloudlet, connector, error, extra);
+			this.key = key;
+		}
+		
+		public final String key;
+	}
+	
+	public static abstract class OperationSucceededArguments<TExtra extends Object>
+				extends ConnectorOperationSucceededArguments<TExtra>
+	{
+		OperationSucceededArguments (final CloudletController<?> cloudlet, final Connector connector, final String key, final TExtra extra) {
+			super (cloudlet, connector, extra);
+			this.key = key;
+		}
+		
+		public final String key;
 	}
 }
