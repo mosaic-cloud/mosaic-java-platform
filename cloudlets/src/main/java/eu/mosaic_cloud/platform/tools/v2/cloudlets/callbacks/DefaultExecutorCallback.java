@@ -37,7 +37,7 @@ public class DefaultExecutorCallback<TContext, TOutcome, TExtra>
 	@Override
 	public CallbackCompletion<Void> executionFailed (final TContext context, final ExecutionFailedArguments<TOutcome, TExtra> arguments) {
 		this.enforceCallbackArguments (context, arguments);
-		final CallbackCompletion<Void> maybeCompleted = this.executionFailed (context, arguments.extra);
+		final CallbackCompletion<Void> maybeCompleted = this.executionFailed (context, arguments.error, arguments.extra);
 		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
 		return (this.handleUnhandledCallback (ExecutorCallback.class, "executionFailed", context, arguments, false, false));
@@ -52,7 +52,7 @@ public class DefaultExecutorCallback<TContext, TOutcome, TExtra>
 		return (this.handleUnhandledCallback (ExecutorCallback.class, "executionSucceeded", context, arguments, true, false));
 	}
 	
-	protected CallbackCompletion<Void> executionFailed (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TExtra extra) {
+	protected CallbackCompletion<Void> executionFailed (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final Throwable error, @SuppressWarnings ("unused") final TExtra extra) {
 		return (DefaultCallback.NotImplemented);
 	}
 	

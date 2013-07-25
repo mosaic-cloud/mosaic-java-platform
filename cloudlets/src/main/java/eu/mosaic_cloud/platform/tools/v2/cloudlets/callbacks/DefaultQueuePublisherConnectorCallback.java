@@ -37,7 +37,7 @@ public class DefaultQueuePublisherConnectorCallback<TContext, TValue, TExtra>
 	@Override
 	public CallbackCompletion<Void> publishFailed (final TContext context, final PublishFailedArguments<TValue, TExtra> arguments) {
 		this.enforceCallbackArguments (context, arguments);
-		final CallbackCompletion<Void> maybeCompleted = this.publishFailed (context, arguments.extra);
+		final CallbackCompletion<Void> maybeCompleted = this.publishFailed (context, arguments.error, arguments.extra);
 		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
 		return (this.handleUnhandledCallback (QueuePublisherConnectorCallback.class, "publishFailed", context, arguments, false, false));
@@ -52,7 +52,7 @@ public class DefaultQueuePublisherConnectorCallback<TContext, TValue, TExtra>
 		return (this.handleUnhandledCallback (QueuePublisherConnectorCallback.class, "publishSucceeded", context, arguments, true, false));
 	}
 	
-	protected CallbackCompletion<Void> publishFailed (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TExtra extra) {
+	protected CallbackCompletion<Void> publishFailed (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final Throwable error, @SuppressWarnings ("unused") final TExtra extra) {
 		return (DefaultCallback.NotImplemented);
 	}
 	

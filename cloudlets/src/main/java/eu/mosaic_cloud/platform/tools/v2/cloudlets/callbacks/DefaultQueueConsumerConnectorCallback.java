@@ -38,7 +38,7 @@ public class DefaultQueueConsumerConnectorCallback<TContext, TMessage, TExtra>
 	@Override
 	public CallbackCompletion<Void> acknowledgeFailed (final TContext context, final AcknowledgeFailedArguments<TExtra> arguments) {
 		this.enforceCallbackArguments (context, arguments);
-		final CallbackCompletion<Void> maybeCompleted = this.acknowledgeFailed (context, arguments.extra);
+		final CallbackCompletion<Void> maybeCompleted = this.acknowledgeFailed (context, arguments.error, arguments.extra);
 		if (maybeCompleted != DefaultCallback.NotImplemented)
 			return (maybeCompleted);
 		return (this.handleUnhandledCallback (QueueConsumerConnectorCallback.class, "acknowledgeFailed", context, arguments, false, false));
@@ -62,7 +62,7 @@ public class DefaultQueueConsumerConnectorCallback<TContext, TMessage, TExtra>
 		return (this.handleUnhandledCallback (QueueConsumerConnectorCallback.class, "consume", context, arguments, false, false));
 	}
 	
-	protected CallbackCompletion<Void> acknowledgeFailed (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final TExtra extra) {
+	protected CallbackCompletion<Void> acknowledgeFailed (@SuppressWarnings ("unused") final TContext context, @SuppressWarnings ("unused") final Throwable error, @SuppressWarnings ("unused") final TExtra extra) {
 		return (DefaultCallback.NotImplemented);
 	}
 	

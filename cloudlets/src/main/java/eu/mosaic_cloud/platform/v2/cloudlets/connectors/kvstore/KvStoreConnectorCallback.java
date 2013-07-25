@@ -51,7 +51,6 @@ public interface KvStoreConnectorCallback<TContext extends Object, TValue extend
 		public DeleteFailedArguments (final CloudletController<?> cloudlet, final Connector connector, final String key, final Throwable error, final TExtra extra) {
 			super (cloudlet, connector, key, error, extra);
 		}
-		
 	}
 	
 	public static final class DeleteSucceededArguments<TExtra extends Object>
@@ -60,7 +59,6 @@ public interface KvStoreConnectorCallback<TContext extends Object, TValue extend
 		public DeleteSucceededArguments (final CloudletController<?> cloudlet, final Connector connector, final String key, final TExtra extra) {
 			super (cloudlet, connector, key, extra);
 		}
-		
 	}
 	
 	public static final class GetFailedArguments<TExtra extends Object>
@@ -69,7 +67,6 @@ public interface KvStoreConnectorCallback<TContext extends Object, TValue extend
 		public GetFailedArguments (final CloudletController<?> cloudlet, final Connector connector, final String key, final Throwable error, final TExtra extra) {
 			super (cloudlet, connector, key, error, extra);
 		}
-		
 	}
 	
 	public static final class GetSucceededArguments<TValue extends Object, TExtra extends Object>
@@ -80,34 +77,8 @@ public interface KvStoreConnectorCallback<TContext extends Object, TValue extend
 			this.value = value;
 		}
 		
-		
 		public final TValue value;
 	}
-	
-	public static final class SetFailedArguments<TValue, TExtra extends Object>
-				extends OperationFailedArguments<TExtra>
-	{
-		public SetFailedArguments (final CloudletController<?> cloudlet, final Connector connector, final String key, final TValue value, final Throwable error, final TExtra extra) {
-			super (cloudlet, connector, key, error, extra);
-			this.value = value;
-		}
-		
-		
-		public final TValue value;
-	}
-	
-	public static final class SetSucceededArguments<TValue extends Object, TExtra extends Object>
-				extends OperationSucceededArguments<TExtra>
-	{
-		public SetSucceededArguments (final CloudletController<?> cloudlet, final Connector connector, final String key, final TValue value, final TExtra extra) {
-			super (cloudlet, connector, key, extra);
-			this.value = value;
-		}
-		
-		
-		public final TValue value;
-	}
-	
 	
 	public static abstract class OperationFailedArguments<TExtra extends Object>
 				extends ConnectorOperationFailedArguments<TExtra>
@@ -129,5 +100,27 @@ public interface KvStoreConnectorCallback<TContext extends Object, TValue extend
 		}
 		
 		public final String key;
+	}
+	
+	public static final class SetFailedArguments<TValue, TExtra extends Object>
+				extends OperationFailedArguments<TExtra>
+	{
+		public SetFailedArguments (final CloudletController<?> cloudlet, final Connector connector, final String key, final TValue value, final Throwable error, final TExtra extra) {
+			super (cloudlet, connector, key, error, extra);
+			this.value = value;
+		}
+		
+		public final TValue value;
+	}
+	
+	public static final class SetSucceededArguments<TValue extends Object, TExtra extends Object>
+				extends OperationSucceededArguments<TExtra>
+	{
+		public SetSucceededArguments (final CloudletController<?> cloudlet, final Connector connector, final String key, final TValue value, final TExtra extra) {
+			super (cloudlet, connector, key, extra);
+			this.value = value;
+		}
+		
+		public final TValue value;
 	}
 }
