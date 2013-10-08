@@ -22,8 +22,8 @@ package eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.componen
 
 
 import eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.core.BaseConnectorsFactoryInitializer;
-import eu.mosaic_cloud.platform.implementation.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
+import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryBuilder;
 

@@ -37,7 +37,6 @@ import eu.mosaic_cloud.platform.implementation.v2.cloudlets.core.CloudletFsm.Fsm
 import eu.mosaic_cloud.platform.implementation.v2.cloudlets.core.CloudletFsm.FsmTransition;
 import eu.mosaic_cloud.platform.implementation.v2.cloudlets.tools.ConfigProperties;
 import eu.mosaic_cloud.platform.implementation.v2.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.implementation.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.core.ConnectorsFactoryBuilder;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.Callback;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletCallback;
@@ -48,6 +47,7 @@ import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletState;
 import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.connectors.core.Connector;
+import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackFunnelHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;

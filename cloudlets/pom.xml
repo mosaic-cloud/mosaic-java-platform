@@ -23,7 +23,12 @@
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud.platform</groupId>
-			<artifactId>connectors</artifactId>
+			<artifactId>connectors-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>eu.mosaic_cloud.platform</groupId>
+			<artifactId>connectors-interop</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -58,12 +63,12 @@
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud.tools</groupId>
-			<artifactId>tools-transcript</artifactId>
+			<artifactId>tools-exceptions</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>eu.mosaic_cloud.tools</groupId>
-			<artifactId>tools-exceptions</artifactId>
+			<artifactId>tools-transcript</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

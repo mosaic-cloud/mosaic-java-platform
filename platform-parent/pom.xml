@@ -19,7 +19,7 @@
 	
 	<modules>
 		<module>../cloudlets</module>
-		<module>../connectors</module>
+		<module>../connectors-parent</module>
 		<module>../platform-core</module>
 		<module>../platform-interop</module>
 		<module>../drivers-parent</module>

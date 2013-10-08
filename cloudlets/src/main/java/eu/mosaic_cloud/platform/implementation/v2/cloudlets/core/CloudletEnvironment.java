@@ -25,9 +25,9 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.HashMap;
 import java.util.Map;
 
-import eu.mosaic_cloud.platform.implementation.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.connectors.component.ComponentConnector;
+import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;

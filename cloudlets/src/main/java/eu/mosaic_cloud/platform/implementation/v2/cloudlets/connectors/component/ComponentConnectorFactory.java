@@ -23,10 +23,10 @@ package eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.componen
 
 import eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.core.BaseConnectorFactory;
 import eu.mosaic_cloud.platform.implementation.v2.configuration.PropertyTypeConfiguration;
-import eu.mosaic_cloud.platform.implementation.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.component.ComponentConnectorCallbacks;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
 import eu.mosaic_cloud.platform.v2.configuration.Configuration;
+import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
 
 import com.google.common.base.Preconditions;

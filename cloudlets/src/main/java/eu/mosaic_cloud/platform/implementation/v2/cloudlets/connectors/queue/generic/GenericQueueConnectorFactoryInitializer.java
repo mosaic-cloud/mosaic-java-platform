@@ -22,13 +22,13 @@ package eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.queue.ge
 
 
 import eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.core.BaseConnectorsFactoryInitializer;
-import eu.mosaic_cloud.platform.implementation.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueueConsumerConnectorCallback;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueueConsumerConnectorFactory;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueuePublisherConnectorCallback;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueuePublisherConnectorFactory;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
 import eu.mosaic_cloud.platform.v2.configuration.Configuration;
+import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryBuilder;
 import eu.mosaic_cloud.platform.v2.serialization.DataEncoder;

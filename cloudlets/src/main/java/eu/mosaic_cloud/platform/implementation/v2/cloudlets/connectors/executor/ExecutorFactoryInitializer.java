@@ -22,11 +22,11 @@ package eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.executor
 
 
 import eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.core.BaseConnectorsFactoryInitializer;
-import eu.mosaic_cloud.platform.implementation.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.executor.ExecutorCallback;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.executor.ExecutorFactory;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
 import eu.mosaic_cloud.platform.v2.configuration.Configuration;
+import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryBuilder;
 
