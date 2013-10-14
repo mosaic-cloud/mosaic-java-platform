@@ -195,7 +195,8 @@
 						</goals>
 						<configuration>
 							<target>
-								<echo message="_maven_pom_group=${project.groupId}${line.separator}"
+								<echo
+									message="_maven_pom_group=${project.groupId}${line.separator}"
 									file="/dev/stdout" />
 								<echo
 									message="_maven_pom_artifact=${project.artifactId}${line.separator}"
@@ -219,7 +220,7 @@
 				<version>${versions.plugins.exec}</version>
 				<executions>
 					<execution>
-						<phase>validate</phase>
+						<phase>initialize</phase>
 						<goals>
 							<goal>exec</goal>
 						</goals>
@@ -229,11 +230,16 @@
 								<argument>-c</argument>
 								<argument>
 									if test \
+											\( ! -e '${project.build.directory}' -a -L '${project.build.directory}' \) -o \
 											\( -n '${_maven_pom_outputs}' -a ! -e '${project.build.directory}' \) -o \
-											\( ! -e '${project.build.directory}' -a -L '${project.build.directory}' \)
+											\( -n '${_maven_pom_outputs}' -a -d '${project.build.directory}' \)
 									then
 										if test -L '${project.build.directory}' ; then
 											mkdir -p -- "$( readlink -m -- '${project.build.directory}' )" || exit 1 ;
+										elif test -d '${project.build.directory}' ; then
+											mkdir -p -- '${_maven_pom_outputs}/${project.groupId}:${project.artifactId}:${project.version}' || exit 1 ;
+											mv -T -- '${project.build.directory}' '${_maven_pom_outputs}/${project.groupId}:${project.artifactId}:${project.version}/target' || exit 1 ;
+											ln -s -T -- '${_maven_pom_outputs}/${project.groupId}:${project.artifactId}:${project.version}/target' '${project.build.directory}' || exit 1 ;
 										else
 											mkdir -p -- '${_maven_pom_outputs}/${project.groupId}:${project.artifactId}:${project.version}/target' || exit 1 ;
 											ln -s -T -- '${_maven_pom_outputs}/${project.groupId}:${project.artifactId}:${project.version}/target' '${project.build.directory}' || exit 1 ;
