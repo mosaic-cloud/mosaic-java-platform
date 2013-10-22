@@ -43,7 +43,7 @@ public final class GenericKvStoreConnectorFactoryInitializer
 		builder.register (KvStoreConnectorFactory.class, new KvStoreConnectorFactory () {
 			@Override
 			public <TContext, TValue, TExtra> GenericKvStoreConnector<TContext, TValue, TExtra> create (final ConfigurationSource configuration, final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder, final KvStoreConnectorCallback<TContext, TValue, TExtra> callback, final TContext callbackContext) {
-				final eu.mosaic_cloud.platform.implementation.v2.connectors.kvstore.generic.GenericKvStoreConnector<TValue> backingConnector = (eu.mosaic_cloud.platform.implementation.v2.connectors.kvstore.generic.GenericKvStoreConnector<TValue>) delegate.getConnectorFactory (eu.mosaic_cloud.platform.v2.connectors.kvstore.KvStoreConnectorFactory.class).create (configuration, valueClass, valueEncoder);
+				final eu.mosaic_cloud.platform.implementation.v2.connectors.interop.kvstore.generic.GenericKvStoreConnector<TValue> backingConnector = (eu.mosaic_cloud.platform.implementation.v2.connectors.interop.kvstore.generic.GenericKvStoreConnector<TValue>) delegate.getConnectorFactory (eu.mosaic_cloud.platform.v2.connectors.kvstore.KvStoreConnectorFactory.class).create (configuration, valueClass, valueEncoder);
 				return new GenericKvStoreConnector<TContext, TValue, TExtra> (cloudlet, backingConnector, configuration, callback, callbackContext);
 			}
 		});

@@ -26,7 +26,7 @@ import java.util.concurrent.ExecutionException;
 
 import eu.mosaic_cloud.drivers.queue.amqp.interop.AmqpStub;
 import eu.mosaic_cloud.platform.implementation.v2.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.implementation.v2.connectors.queue.amqp.AmqpQueueRawConnector;
+import eu.mosaic_cloud.platform.implementation.v2.connectors.interop.queue.amqp.AmqpQueueRawConnector;
 import eu.mosaic_cloud.platform.implementation.v2.serialization.PlainTextDataEncoder;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;

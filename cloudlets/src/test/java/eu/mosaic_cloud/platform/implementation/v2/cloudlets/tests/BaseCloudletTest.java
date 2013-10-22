@@ -32,7 +32,7 @@ import eu.mosaic_cloud.interoperability.core.ChannelResolver;
 import eu.mosaic_cloud.interoperability.core.ResolverCallbacks;
 import eu.mosaic_cloud.platform.implementation.v2.cloudlets.core.Cloudlet;
 import eu.mosaic_cloud.platform.implementation.v2.cloudlets.core.CloudletEnvironment;
-import eu.mosaic_cloud.platform.implementation.v2.connectors.tools.DefaultConnectorsFactory;
+import eu.mosaic_cloud.platform.implementation.v2.connectors.interop.tools.DefaultConnectorsFactory;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletCallback;
 import eu.mosaic_cloud.platform.v2.connectors.component.ComponentConnector;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;

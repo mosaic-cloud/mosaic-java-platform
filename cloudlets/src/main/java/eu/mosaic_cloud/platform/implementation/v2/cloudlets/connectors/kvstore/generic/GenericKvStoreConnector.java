@@ -40,9 +40,9 @@ import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
  *            the type of the extra data; as an example, this data can be used correlation
  */
 public class GenericKvStoreConnector<TContext, TValue, TExtra>
-			extends BaseKvStoreConnector<eu.mosaic_cloud.platform.implementation.v2.connectors.kvstore.generic.GenericKvStoreConnector<TValue>, KvStoreConnectorCallback<TContext, TValue, TExtra>, TContext, TValue, TExtra>
+			extends BaseKvStoreConnector<eu.mosaic_cloud.platform.implementation.v2.connectors.interop.kvstore.generic.GenericKvStoreConnector<TValue>, KvStoreConnectorCallback<TContext, TValue, TExtra>, TContext, TValue, TExtra>
 {
-	public GenericKvStoreConnector (final CloudletController<?> cloudlet, final eu.mosaic_cloud.platform.implementation.v2.connectors.kvstore.generic.GenericKvStoreConnector<TValue> connector, final ConfigurationSource config, final KvStoreConnectorCallback<TContext, TValue, TExtra> callback, final TContext context) {
+	public GenericKvStoreConnector (final CloudletController<?> cloudlet, final eu.mosaic_cloud.platform.implementation.v2.connectors.interop.kvstore.generic.GenericKvStoreConnector<TValue> connector, final ConfigurationSource config, final KvStoreConnectorCallback<TContext, TValue, TExtra> callback, final TContext context) {
 		super (cloudlet, connector, config, callback, context);
 	}
 }

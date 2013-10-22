@@ -51,7 +51,7 @@ public class DefaultConnectorsFactory
 	protected final CloudletController<?> cloudlet;
 	
 	public static final DefaultConnectorsFactory create (final CloudletController<?> cloudlet, final ConnectorEnvironment environment) {
-		final eu.mosaic_cloud.platform.implementation.v2.connectors.tools.DefaultConnectorsFactory delegate = eu.mosaic_cloud.platform.implementation.v2.connectors.tools.DefaultConnectorsFactory.create (environment);
+		final eu.mosaic_cloud.platform.implementation.v2.connectors.interop.tools.DefaultConnectorsFactory delegate = eu.mosaic_cloud.platform.implementation.v2.connectors.interop.tools.DefaultConnectorsFactory.create (environment);
 		return DefaultConnectorsFactory.create (cloudlet, environment, delegate);
 	}
 	
