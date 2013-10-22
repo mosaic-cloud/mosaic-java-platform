@@ -32,10 +32,10 @@
 		</encoder>
 	</appender>
 	
-	<logger name="eu.mosaic_cloud.cloudlets.implementations.v1.cloudlets" level="${logback.levels.mosaic.cloudlets:-}" />
-	<logger name="eu.mosaic_cloud.cloudlets.implementations.v1.connectors" level="${logback.levels.mosaic.connectors:-}" />
-	<logger name="eu.mosaic_cloud.connectors.implementations.v1" level="${logback.levels.mosaic.connectors:-}" />
-	<logger name="eu.mosaic_cloud.platform.implementations.v1" level="${logback.levels.mosaic.platform:-}" />
+	<logger name="eu.mosaic_cloud.platform.implementation.v2.cloudlets" level="${logback.levels.mosaic.cloudlets:-}" />
+	<logger name="eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors" level="${logback.levels.mosaic.connectors:-}" />
+	<logger name="eu.mosaic_cloud.platform.implementation.v2.connectors" level="${logback.levels.mosaic.connectors:-}" />
+	<logger name="eu.mosaic_cloud.platform.implementation.v2" level="${logback.levels.mosaic.platform:-}" />
 	<logger name="eu.mosaic_cloud.drivers" level="${logback.levels.mosaic.drivers:-}" />
 	<logger name="eu.mosaic_cloud.components" level="${logback.levels.mosaic.components:-}" />
 	<logger name="eu.mosaic_cloud.interoperability" level="${logback.levels.mosaic.interoperability:-}" />
