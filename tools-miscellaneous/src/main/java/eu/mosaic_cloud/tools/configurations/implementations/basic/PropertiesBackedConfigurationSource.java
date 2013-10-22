@@ -43,8 +43,8 @@ public class PropertiesBackedConfigurationSource
 	
 	protected String resolvePropertyName (final ConfigurationIdentifier identifier) {
 		if (this.prefix == null)
-			return (identifier.path);
-		return (this.prefix + identifier.path);
+			return (identifier.path.replace ('/', '.'));
+		return ((this.prefix + identifier.path).replace ('/', '.'));
 	}
 	
 	protected final String prefix;
