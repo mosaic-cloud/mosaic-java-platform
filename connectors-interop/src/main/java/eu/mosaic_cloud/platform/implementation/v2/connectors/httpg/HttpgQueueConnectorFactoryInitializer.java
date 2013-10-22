@@ -22,7 +22,6 @@ package eu.mosaic_cloud.platform.implementation.v2.connectors.httpg;
 
 
 import eu.mosaic_cloud.platform.implementation.v2.connectors.core.BaseConnectorsFactoryInitializer;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorConfiguration;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
@@ -30,6 +29,7 @@ import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryBuilder;
 import eu.mosaic_cloud.platform.v2.connectors.httpg.HttpgQueueCallback;
 import eu.mosaic_cloud.platform.v2.connectors.httpg.HttpgQueueConnectorFactory;
 import eu.mosaic_cloud.platform.v2.serialization.DataEncoder;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 
 
 public final class HttpgQueueConnectorFactoryInitializer
@@ -39,7 +39,7 @@ public final class HttpgQueueConnectorFactoryInitializer
 	protected void initialize_1 (final ConnectorsFactoryBuilder builder, final ConnectorEnvironment environment, final ConnectorsFactory delegate) {
 		builder.register (HttpgQueueConnectorFactory.class, new HttpgQueueConnectorFactory () {
 			@Override
-			public <TRequestBody, TResponseBody> eu.mosaic_cloud.platform.v2.connectors.httpg.HttpgQueueConnector<TRequestBody, TResponseBody> create (final Configuration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final HttpgQueueCallback<TRequestBody, TResponseBody> callback) {
+			public <TRequestBody, TResponseBody> eu.mosaic_cloud.platform.v2.connectors.httpg.HttpgQueueConnector<TRequestBody, TResponseBody> create (final ConfigurationSource configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final HttpgQueueCallback<TRequestBody, TResponseBody> callback) {
 				return HttpgQueueConnector.create (ConnectorConfiguration.create (configuration, environment), requestBodyClass, requestBodyEncoder, responseBodyClass, responseBodyEncoder, callback);
 			}
 		});

@@ -28,10 +28,10 @@ import eu.mosaic_cloud.platform.v2.cloudlets.connectors.core.ConnectorCallback.D
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.core.ConnectorCallback.InitializeFailedArguments;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.core.ConnectorCallback.InitializeSucceededArguments;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 
 import com.google.common.base.Preconditions;
@@ -54,7 +54,7 @@ public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.platform.
 				Connector,
 				CallbackProxy
 {
-	protected BaseConnector (final CloudletController<?> cloudlet, final TConnector connector, final Configuration configuration, final TCallback callback, final TContext context) {
+	protected BaseConnector (final CloudletController<?> cloudlet, final TConnector connector, final ConfigurationSource configuration, final TCallback callback, final TContext context) {
 		super ();
 		Preconditions.checkNotNull (cloudlet);
 		Preconditions.checkNotNull (connector);
@@ -133,7 +133,7 @@ public abstract class BaseConnector<TConnector extends eu.mosaic_cloud.platform.
 	
 	protected final TCallback callback;
 	protected final CloudletController<?> cloudlet;
-	protected final Configuration configuration;
+	protected final ConfigurationSource configuration;
 	protected final TConnector connector;
 	protected final TContext context;
 	protected final Transcript transcript;

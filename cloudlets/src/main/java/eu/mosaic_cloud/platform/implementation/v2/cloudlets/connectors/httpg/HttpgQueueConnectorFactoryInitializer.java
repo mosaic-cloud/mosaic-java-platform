@@ -25,11 +25,11 @@ import eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.core.Base
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.httpg.HttpgQueueConnectorCallback;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.httpg.HttpgQueueConnectorFactory;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryBuilder;
 import eu.mosaic_cloud.platform.v2.serialization.DataEncoder;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 
 import com.google.common.base.Preconditions;
 
@@ -42,7 +42,7 @@ public final class HttpgQueueConnectorFactoryInitializer
 		Preconditions.checkNotNull (delegate);
 		builder.register (HttpgQueueConnectorFactory.class, new HttpgQueueConnectorFactory () {
 			@Override
-			public <TContext, TRequestBody, TResponseBody, TExtra> HttpgQueueConnector<TContext, TRequestBody, TResponseBody, TExtra> create (final Configuration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final HttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra> callback, final TContext callbackContext) {
+			public <TContext, TRequestBody, TResponseBody, TExtra> HttpgQueueConnector<TContext, TRequestBody, TResponseBody, TExtra> create (final ConfigurationSource configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final HttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra> callback, final TContext callbackContext) {
 				final HttpgQueueConnector.Callback<TRequestBody, TResponseBody> backingCallback = new HttpgQueueConnector.Callback<TRequestBody, TResponseBody> ();
 				final eu.mosaic_cloud.platform.v2.connectors.httpg.HttpgQueueConnector<TRequestBody, TResponseBody> backingConnector = delegate.getConnectorFactory (eu.mosaic_cloud.platform.v2.connectors.httpg.HttpgQueueConnectorFactory.class).create (configuration, requestBodyClass, requestBodyEncoder, responseBodyClass, responseBodyEncoder, backingCallback);
 				return new HttpgQueueConnector<TContext, TRequestBody, TResponseBody, TExtra> (cloudlet, backingConnector, configuration, callback, callbackContext, backingCallback);

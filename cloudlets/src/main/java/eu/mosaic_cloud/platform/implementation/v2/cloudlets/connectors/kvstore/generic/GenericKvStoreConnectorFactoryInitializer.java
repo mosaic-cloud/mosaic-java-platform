@@ -25,11 +25,11 @@ import eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.core.Base
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.kvstore.KvStoreConnectorCallback;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.kvstore.KvStoreConnectorFactory;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryBuilder;
 import eu.mosaic_cloud.platform.v2.serialization.DataEncoder;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 
 import com.google.common.base.Preconditions;
 
@@ -42,7 +42,7 @@ public final class GenericKvStoreConnectorFactoryInitializer
 		Preconditions.checkNotNull (delegate);
 		builder.register (KvStoreConnectorFactory.class, new KvStoreConnectorFactory () {
 			@Override
-			public <TContext, TValue, TExtra> GenericKvStoreConnector<TContext, TValue, TExtra> create (final Configuration configuration, final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder, final KvStoreConnectorCallback<TContext, TValue, TExtra> callback, final TContext callbackContext) {
+			public <TContext, TValue, TExtra> GenericKvStoreConnector<TContext, TValue, TExtra> create (final ConfigurationSource configuration, final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder, final KvStoreConnectorCallback<TContext, TValue, TExtra> callback, final TContext callbackContext) {
 				final eu.mosaic_cloud.platform.implementation.v2.connectors.kvstore.generic.GenericKvStoreConnector<TValue> backingConnector = (eu.mosaic_cloud.platform.implementation.v2.connectors.kvstore.generic.GenericKvStoreConnector<TValue>) delegate.getConnectorFactory (eu.mosaic_cloud.platform.v2.connectors.kvstore.KvStoreConnectorFactory.class).create (configuration, valueClass, valueEncoder);
 				return new GenericKvStoreConnector<TContext, TValue, TExtra> (cloudlet, backingConnector, configuration, callback, callbackContext);
 			}

@@ -22,12 +22,12 @@ package eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.componen
 
 
 import eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.core.BaseConnectorFactory;
-import eu.mosaic_cloud.platform.implementation.v2.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.component.ComponentConnectorCallbacks;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
+import eu.mosaic_cloud.tools.configurations.implementations.basic.EmptyConfigurationSource;
 
 import com.google.common.base.Preconditions;
 
@@ -45,7 +45,7 @@ public final class ComponentConnectorFactory
 	
 	@Override
 	public final <TContext, TExtra> ComponentConnector<TContext, TExtra> create (final ComponentConnectorCallbacks<TContext, TExtra> callbacks, final TContext callbacksContext) {
-		final Configuration configuration = PropertyTypeConfiguration.createEmpty ();
+		final ConfigurationSource configuration = EmptyConfigurationSource.defaultInstance;
 		final ComponentConnector<TContext, TExtra> connector = new ComponentConnector<TContext, TExtra> (this.cloudlet, this.backingConnector, configuration, callbacks, callbacksContext);
 		return connector;
 	}

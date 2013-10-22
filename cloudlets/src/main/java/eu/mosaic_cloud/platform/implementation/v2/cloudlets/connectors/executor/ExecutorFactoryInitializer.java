@@ -25,10 +25,10 @@ import eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.core.Base
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.executor.ExecutorCallback;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.executor.ExecutorFactory;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryBuilder;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 
 
 public final class ExecutorFactoryInitializer
@@ -38,7 +38,7 @@ public final class ExecutorFactoryInitializer
 	protected void initialize_1 (final ConnectorsFactoryBuilder builder, final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final ConnectorsFactory delegate) {
 		builder.register (ExecutorFactory.class, new ExecutorFactory () {
 			@Override
-			public <TContext, TOutcome, TExtra> Executor<TContext, TOutcome, TExtra> create (final Configuration configuration, final ExecutorCallback<TContext, TOutcome, TExtra> callback, final TContext callbackContext) {
+			public <TContext, TOutcome, TExtra> Executor<TContext, TOutcome, TExtra> create (final ConfigurationSource configuration, final ExecutorCallback<TContext, TOutcome, TExtra> callback, final TContext callbackContext) {
 				return new Executor<TContext, TOutcome, TExtra> (cloudlet, environment.getThreading (), environment.getExceptions (), configuration, callback, callbackContext);
 			}
 		});

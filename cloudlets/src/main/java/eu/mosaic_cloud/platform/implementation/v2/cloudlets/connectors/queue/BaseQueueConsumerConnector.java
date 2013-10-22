@@ -26,11 +26,11 @@ import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueueConsumerConne
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueueConsumerConnectorCallback.AcknowledgeSucceededArguments;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueueConsumerConnectorCallback.ConsumeArguments;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.connectors.queue.QueueConsumerCallback;
 import eu.mosaic_cloud.platform.v2.connectors.queue.QueueDeliveryToken;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 
 
 public abstract class BaseQueueConsumerConnector<TContext, TMessage, TExtra>
@@ -39,7 +39,7 @@ public abstract class BaseQueueConsumerConnector<TContext, TMessage, TExtra>
 				eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueueConsumerConnector<TMessage, TExtra>
 {
 	@SuppressWarnings ("synthetic-access")
-	protected BaseQueueConsumerConnector (final CloudletController<?> cloudlet, final eu.mosaic_cloud.platform.v2.connectors.queue.QueueConsumerConnector<TMessage> connector, final Configuration configuration, final QueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, final TContext context, final Callback<TMessage> backingCallback) {
+	protected BaseQueueConsumerConnector (final CloudletController<?> cloudlet, final eu.mosaic_cloud.platform.v2.connectors.queue.QueueConsumerConnector<TMessage> connector, final ConfigurationSource configuration, final QueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, final TContext context, final Callback<TMessage> backingCallback) {
 		super (cloudlet, connector, configuration, callback, context);
 		backingCallback.connector = this;
 	}

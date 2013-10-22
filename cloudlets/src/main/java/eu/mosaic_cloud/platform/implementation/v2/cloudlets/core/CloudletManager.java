@@ -28,14 +28,14 @@ import eu.mosaic_cloud.interoperability.core.ChannelFactory;
 import eu.mosaic_cloud.interoperability.core.ChannelResolver;
 import eu.mosaic_cloud.platform.implementation.v2.cloudlets.tools.ConfigProperties;
 import eu.mosaic_cloud.platform.implementation.v2.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.implementation.v2.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.implementation.v2.connectors.tools.DefaultConnectorsFactory;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletCallback;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.connectors.component.ComponentConnector;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
+import eu.mosaic_cloud.tools.configurations.implementations.basic.PropertiesBackedConfigurationSource;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.DelegatingExceptionTracer;
@@ -54,7 +54,7 @@ import com.google.common.base.Preconditions;
  */
 public final class CloudletManager
 {
-	private CloudletManager (final Configuration configuration, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ComponentConnector componentConnector, final ChannelFactory channelFactory, final ChannelResolver channelResolver) {
+	private CloudletManager (final ConfigurationSource configuration, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ComponentConnector componentConnector, final ChannelFactory channelFactory, final ChannelResolver channelResolver) {
 		super ();
 		Preconditions.checkNotNull (configuration);
 		Preconditions.checkNotNull (classLoader);
@@ -143,7 +143,7 @@ public final class CloudletManager
 	private final Cloudlet<?> createCloudletInstance () {
 		final Class<?> cloudletCallbacksClass = this.resolveCloudletCallbacksClass ();
 		final Class<?> cloudletContextClass = this.resolveCloudletStateClass ();
-		final Configuration cloudletConfiguration = this.resolveCloudletConfiguration ();
+		final ConfigurationSource cloudletConfiguration = this.resolveCloudletConfiguration ();
 		// FIXME: Currently exceptions from cloudlets are not deferred anywhere.
 		//-- Thus any deferred exception should be treated as an ignored one.
 		final ExceptionTracer exceptions = new CloudletExceptionTracer ();
@@ -170,14 +170,14 @@ public final class CloudletManager
 		return (clasz);
 	}
 	
-	private final Configuration resolveCloudletConfiguration () {
+	private final ConfigurationSource resolveCloudletConfiguration () {
 		this.transcript.traceDebugging ("resolving the cloudlet configuration...");
 		final String configurationDescriptor = ConfigUtils.resolveParameter (this.configuration, ConfigProperties.CloudletComponent_10, String.class, null);
 		Preconditions.checkNotNull (configurationDescriptor, "unknown cloudlet configuration descriptor");
 		this.transcript.traceDebugging ("resolving the cloudlet configuration `%s`...", configurationDescriptor);
-		final Configuration configuration;
+		final ConfigurationSource configuration;
 		try {
-			configuration = PropertyTypeConfiguration.create (this.classLoader, configurationDescriptor);
+			configuration = PropertiesBackedConfigurationSource.load (this.classLoader.getResourceAsStream (configurationDescriptor));
 		} catch (final Throwable exception) {
 			this.exceptions.traceHandledException (exception);
 			throw (new IllegalArgumentException ("error encountered while loading cloudlet configuration", exception));
@@ -205,14 +205,14 @@ public final class CloudletManager
 	private final ClassLoader classLoader;
 	private final ConcurrentHashMap<Cloudlet<?>, Cloudlet<?>> cloudlets;
 	private final ComponentConnector componentConnector;
-	private final Configuration configuration;
+	private final ConfigurationSource configuration;
 	private final TranscriptExceptionTracer exceptions;
 	private final Monitor monitor = Monitor.create (this);
 	private final CallbackReactor reactor;
 	private final ThreadingContext threading;
 	private final Transcript transcript;
 	
-	public static final CloudletManager create (final Configuration configuration, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ComponentConnector componentConnector, final ChannelFactory channelFactory, final ChannelResolver channelResolver) {
+	public static final CloudletManager create (final ConfigurationSource configuration, final ClassLoader classLoader, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ComponentConnector componentConnector, final ChannelFactory channelFactory, final ChannelResolver channelResolver) {
 		return (new CloudletManager (configuration, classLoader, reactor, threading, exceptions, componentConnector, channelFactory, channelResolver));
 	}
 	

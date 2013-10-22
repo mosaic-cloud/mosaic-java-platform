@@ -22,12 +22,11 @@ package eu.mosaic_cloud.platform.implementation.v2.connectors.tests;
 
 
 import eu.mosaic_cloud.drivers.kvstore.riak.interop.KeyValueStub;
-import eu.mosaic_cloud.platform.implementation.v2.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.implementation.v2.connectors.kvstore.generic.GenericKvStoreConnector;
 import eu.mosaic_cloud.platform.implementation.v2.serialization.PlainTextDataEncoder;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorConfiguration;
+import eu.mosaic_cloud.tools.configurations.implementations.basic.PropertiesBackedConfigurationSource;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -48,14 +47,14 @@ public class RiakKvStoreConnectorTest
 	public static void setUpBeforeClass () {
 		final String host = System.getProperty (RiakKvStoreConnectorTest.MOSAIC_RIAK_HOST, RiakKvStoreConnectorTest.MOSAIC_RIAK_HOST_DEFAULT);
 		final Integer port = Integer.valueOf (System.getProperty (RiakKvStoreConnectorTest.MOSAIC_RIAK_PORT, RiakKvStoreConnectorTest.MOSAIC_RIAK_PORT_DEFAULT));
-		final Configuration configuration = PropertyTypeConfiguration.create ();
-		configuration.addParameter ("interop.driver.endpoint", "inproc://fb012d6b-c238-4b31-b889-4121a318b2cb");
-		configuration.addParameter ("interop.driver.identity", "fb012d6b-c238-4b31-b889-4121a318b2cb");
-		configuration.addParameter ("kvstore.host", host);
-		configuration.addParameter ("kvstore.port", port);
-		configuration.addParameter ("kvstore.driver_name", "RIAKREST");
-		configuration.addParameter ("kvstore.driver_threads", 1);
-		configuration.addParameter ("kvstore.bucket", "tests");
+		final PropertiesBackedConfigurationSource configuration = PropertiesBackedConfigurationSource.create ();
+		configuration.overridePropertyValue ("interop.driver.endpoint", "inproc://fb012d6b-c238-4b31-b889-4121a318b2cb");
+		configuration.overridePropertyValue ("interop.driver.identity", "fb012d6b-c238-4b31-b889-4121a318b2cb");
+		configuration.overridePropertyValue ("kvstore.host", host);
+		configuration.overridePropertyValue ("kvstore.port", port.toString ());
+		configuration.overridePropertyValue ("kvstore.driver_name", "RIAKREST");
+		configuration.overridePropertyValue ("kvstore.driver_threads", Integer.toString (1));
+		configuration.overridePropertyValue ("kvstore.bucket", "tests");
 		final Scenario scenario = new Scenario (RiakKvStoreConnectorTest.class, configuration);
 		scenario.registerDriverRole (KeyValueSession.DRIVER);
 		BaseConnectorTest.driverStub = KeyValueStub.createDetached (configuration, scenario.getThreading (), scenario.getDriverChannel ());

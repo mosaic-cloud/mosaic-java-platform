@@ -31,11 +31,11 @@ import eu.mosaic_cloud.drivers.interop.AbstractDriverStub;
 import eu.mosaic_cloud.interoperability.core.SessionSpecification;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.implementation.v2.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.tools.BaseExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
@@ -123,16 +123,16 @@ public abstract class AbstractDriverComponentCallbacks
 		return driverChannel;
 	}
 	
-	protected Configuration getDriverConfiguration () {
+	protected ConfigurationSource getDriverConfiguration () {
 		return this.driverConfiguration;
 	}
 	
-	protected void setDriverConfiguration (final Configuration driverConfiguration) {
+	protected void setDriverConfiguration (final ConfigurationSource driverConfiguration) {
 		this.driverConfiguration = driverConfiguration;
 	}
 	
 	protected ComponentController component;
-	protected Configuration driverConfiguration;
+	protected ConfigurationSource driverConfiguration;
 	protected BaseExceptionTracer exceptions;
 	protected Logger logger;
 	protected ComponentCallReference pendingReference;

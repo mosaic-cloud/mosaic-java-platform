@@ -27,11 +27,11 @@ import eu.mosaic_cloud.platform.v2.cloudlets.connectors.httpg.HttpgQueueConnecto
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.httpg.HttpgQueueConnectorCallback.RespondFailedArguments;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.httpg.HttpgQueueConnectorCallback.RespondSucceededArguments;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.connectors.httpg.HttpgRequestMessage;
 import eu.mosaic_cloud.platform.v2.connectors.httpg.HttpgResponseMessage;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 
 
 public class HttpgQueueConnector<TContext, TRequestBody, TResponseBody, TExtra>
@@ -40,7 +40,7 @@ public class HttpgQueueConnector<TContext, TRequestBody, TResponseBody, TExtra>
 				eu.mosaic_cloud.platform.v2.cloudlets.connectors.httpg.HttpgQueueConnector<TRequestBody, TResponseBody, TExtra>
 {
 	@SuppressWarnings ("synthetic-access")
-	public HttpgQueueConnector (final CloudletController<?> cloudlet, final eu.mosaic_cloud.platform.v2.connectors.httpg.HttpgQueueConnector<TRequestBody, TResponseBody> connector, final Configuration configuration, final HttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra> callback, final TContext context, final Callback<TRequestBody, TResponseBody> backingCallback) {
+	public HttpgQueueConnector (final CloudletController<?> cloudlet, final eu.mosaic_cloud.platform.v2.connectors.httpg.HttpgQueueConnector<TRequestBody, TResponseBody> connector, final ConfigurationSource configuration, final HttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra> callback, final TContext context, final Callback<TRequestBody, TResponseBody> backingCallback) {
 		super (cloudlet, connector, configuration, callback, context);
 		backingCallback.connector = this;
 	}

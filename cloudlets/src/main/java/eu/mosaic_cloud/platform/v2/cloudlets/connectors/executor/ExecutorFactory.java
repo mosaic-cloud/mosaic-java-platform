@@ -22,12 +22,12 @@ package eu.mosaic_cloud.platform.v2.cloudlets.connectors.executor;
 
 
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.core.ConnectorFactory;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 
 
 public interface ExecutorFactory
 			extends
 				ConnectorFactory<Executor<?, ?>>
 {
-	public abstract <TContext extends Object, TOutcome extends Object, TExtra extends Object> Executor<TOutcome, TExtra> create (final Configuration configuration, ExecutorCallback<TContext, TOutcome, TExtra> callback, TContext callbackContext);
+	public abstract <TContext extends Object, TOutcome extends Object, TExtra extends Object> Executor<TOutcome, TExtra> create (final ConfigurationSource configuration, ExecutorCallback<TContext, TOutcome, TExtra> callback, TContext callbackContext);
 }

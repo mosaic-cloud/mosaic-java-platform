@@ -21,13 +21,13 @@
 package eu.mosaic_cloud.platform.v2.connectors.queue.amqp;
 
 
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.connectors.queue.QueueConnectorFactory;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 
 
 public interface AmqpQueueRawConnectorFactory
 			extends
 				QueueConnectorFactory<AmqpQueueRawConnector>
 {
-	AmqpQueueRawConnector create (Configuration configuration);
+	AmqpQueueRawConnector create (ConfigurationSource configuration);
 }

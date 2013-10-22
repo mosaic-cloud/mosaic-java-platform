@@ -28,10 +28,10 @@ import eu.mosaic_cloud.platform.v2.cloudlets.connectors.executor.ExecutorCallbac
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.executor.ExecutorCallback.ExecutionFailedArguments;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.executor.ExecutorCallback.ExecutionSucceededArguments;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackProxy;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.UncaughtExceptionHandler;
 import eu.mosaic_cloud.tools.threading.core.ThreadConfiguration;
@@ -47,7 +47,7 @@ public class Executor<TContext, TOutcome, TExtra>
 				eu.mosaic_cloud.platform.v2.cloudlets.connectors.executor.Executor<TOutcome, TExtra>,
 				CallbackProxy
 {
-	public Executor (final CloudletController<?> cloudlet, final ThreadingContext threading, final ExceptionTracer exceptions, final Configuration configuration, final ExecutorCallback<TContext, TOutcome, TExtra> callback, final TContext context) {
+	public Executor (final CloudletController<?> cloudlet, final ThreadingContext threading, final ExceptionTracer exceptions, final ConfigurationSource configuration, final ExecutorCallback<TContext, TOutcome, TExtra> callback, final TContext context) {
 		super ();
 		Preconditions.checkNotNull (cloudlet);
 		Preconditions.checkNotNull (threading);
@@ -105,7 +105,7 @@ public class Executor<TContext, TOutcome, TExtra>
 	
 	protected final ExecutorCallback<TContext, TOutcome, TExtra> callback;
 	protected final CloudletController<?> cloudlet;
-	protected final Configuration configuration;
+	protected final ConfigurationSource configuration;
 	protected final TContext context;
 	protected final ExecutorService executor;
 	protected final Transcript transcript;

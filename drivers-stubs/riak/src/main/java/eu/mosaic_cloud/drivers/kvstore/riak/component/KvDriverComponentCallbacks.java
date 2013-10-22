@@ -41,11 +41,11 @@ import eu.mosaic_cloud.drivers.kvstore.riak.KeyValueDriverFactory;
 import eu.mosaic_cloud.drivers.kvstore.riak.interop.KeyValueStub;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.implementation.v2.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.implementation.v2.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
-import eu.mosaic_cloud.platform.v2.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationIdentifier;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
+import eu.mosaic_cloud.tools.configurations.implementations.basic.PropertiesBackedConfigurationSource;
 
 import com.google.common.base.Preconditions;
 
@@ -65,7 +65,7 @@ public final class KvDriverComponentCallbacks
 	public KvDriverComponentCallbacks (final ComponentEnvironment context) {
 		super (context);
 		try {
-			final Configuration configuration = PropertyTypeConfiguration.create (KvDriverComponentCallbacks.class.getResourceAsStream ("driver-component.properties"));
+			final ConfigurationSource configuration = PropertiesBackedConfigurationSource.load (KvDriverComponentCallbacks.class.getResourceAsStream ("driver-component.properties"));
 			this.setDriverConfiguration (configuration);
 			this.resourceGroup = ComponentIdentifier.resolve (ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.KVDriverComponentCallbacks_0, String.class, ""));
 			this.selfGroup = ComponentIdentifier.resolve (ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.KVDriverComponentCallbacks_1, String.class, ""));
@@ -193,8 +193,9 @@ public final class KvDriverComponentCallbacks
 	}
 	
 	private void configureDriver (final String brokerIp, final String port) {
-		this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.KVStoreDriver_0), brokerIp);
-		this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.KVStoreDriver_1), port);
+		final PropertiesBackedConfigurationSource config = (PropertiesBackedConfigurationSource) this.getDriverConfiguration ();
+		config.overridePropertyValue (ConfigurationIdentifier.resolveRelative (ConfigProperties.KVStoreDriver_0), brokerIp);
+		config.overridePropertyValue (ConfigurationIdentifier.resolveRelative (ConfigProperties.KVStoreDriver_1), port);
 	}
 	
 	private String driverName;

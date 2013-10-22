@@ -31,9 +31,9 @@ import eu.mosaic_cloud.platform.v2.cloudlets.connectors.kvstore.KvStoreConnector
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.kvstore.KvStoreConnectorCallback.SetFailedArguments;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.kvstore.KvStoreConnectorCallback.SetSucceededArguments;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 
 
 public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.platform.v2.connectors.kvstore.KvStoreConnector<TValue>, TCallback extends KvStoreConnectorCallback<TContext, TValue, TExtra>, TContext, TValue, TExtra>
@@ -41,7 +41,7 @@ public abstract class BaseKvStoreConnector<TConnector extends eu.mosaic_cloud.pl
 			implements
 				KvStoreConnector<TValue, TExtra>
 {
-	protected BaseKvStoreConnector (final CloudletController<?> cloudlet, final TConnector connector, final Configuration config, final TCallback callback, final TContext context) {
+	protected BaseKvStoreConnector (final CloudletController<?> cloudlet, final TConnector connector, final ConfigurationSource config, final TCallback callback, final TContext context) {
 		super (cloudlet, connector, config, callback, context);
 	}
 	

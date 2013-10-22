@@ -25,9 +25,9 @@ import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueuePublisherConn
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueuePublisherConnectorCallback.PublishFailedArguments;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueuePublisherConnectorCallback.PublishSucceededArguments;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 
 
 public class BaseQueuePublisherConnector<TContext, TMessage, TExtra>
@@ -35,7 +35,7 @@ public class BaseQueuePublisherConnector<TContext, TMessage, TExtra>
 			implements
 				eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueuePublisherConnector<TMessage, TExtra>
 {
-	protected BaseQueuePublisherConnector (final CloudletController<?> cloudlet, final eu.mosaic_cloud.platform.v2.connectors.queue.QueuePublisherConnector<TMessage> connector, final Configuration configuration, final QueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback, final TContext context) {
+	protected BaseQueuePublisherConnector (final CloudletController<?> cloudlet, final eu.mosaic_cloud.platform.v2.connectors.queue.QueuePublisherConnector<TMessage> connector, final ConfigurationSource configuration, final QueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback, final TContext context) {
 		super (cloudlet, connector, configuration, callback, context);
 	}
 	

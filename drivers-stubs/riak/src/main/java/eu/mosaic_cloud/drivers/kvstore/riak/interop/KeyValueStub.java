@@ -53,8 +53,8 @@ import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.ListRequest
 import eu.mosaic_cloud.platform.interop.idl.kvstore.KeyValuePayloads.SetRequest;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueMessage;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.serialization.EncodingMetadata;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 import eu.mosaic_cloud.tools.exceptions.core.FallbackExceptionTracer;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
@@ -84,7 +84,7 @@ public class KeyValueStub
 	 * @param commChannel
 	 *            the channel for communicating with connectors
 	 */
-	public KeyValueStub (final Configuration config, final KeyValueResponseTransmitter transmitter, final AbstractKeyValueDriver driver, final ZeroMqChannel commChannel) {
+	public KeyValueStub (final ConfigurationSource config, final KeyValueResponseTransmitter transmitter, final AbstractKeyValueDriver driver, final ZeroMqChannel commChannel) {
 		super (config, transmitter, driver, commChannel);
 	}
 	
@@ -234,7 +234,7 @@ public class KeyValueStub
 	 *            the channel used by the driver for receiving requests
 	 * @return the driver stub
 	 */
-	public static KeyValueStub create (final Configuration config, final ThreadingContext threadingContext, final ZeroMqChannel channel) {
+	public static KeyValueStub create (final ConfigurationSource config, final ThreadingContext threadingContext, final ZeroMqChannel channel) {
 		final DriverConnectionData cData = KeyValueStub.readConnectionData (config);
 		KeyValueStub stub;
 		synchronized (AbstractDriverStub.MONITOR) {
@@ -263,7 +263,7 @@ public class KeyValueStub
 		return stub;
 	}
 	
-	public static KeyValueStub createDetached (final Configuration config, final ThreadingContext threadingContext, final ZeroMqChannel channel) {
+	public static KeyValueStub createDetached (final ConfigurationSource config, final ThreadingContext threadingContext, final ZeroMqChannel channel) {
 		KeyValueStub stub;
 		try {
 			KeyValueStub.logger.trace ("KeyValueStub: create new stub.");
@@ -290,7 +290,7 @@ public class KeyValueStub
 	 *            the configuration data
 	 * @return resource connection data
 	 */
-	protected static DriverConnectionData readConnectionData (final Configuration config) {
+	protected static DriverConnectionData readConnectionData (final ConfigurationSource config) {
 		final String resourceHost = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_0, String.class, "localhost");
 		final int resourcePort = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_1, Integer.class, 0);
 		final String driver = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_6, String.class, "");

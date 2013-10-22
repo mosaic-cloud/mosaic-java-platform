@@ -21,13 +21,13 @@
 package eu.mosaic_cloud.platform.v2.connectors.queue;
 
 
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.serialization.DataEncoder;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 
 
 public interface QueuePublisherConnectorFactory
 			extends
 				QueueConnectorFactory<QueuePublisherConnector<?>>
 {
-	<TMessage> QueuePublisherConnector<TMessage> create (Configuration configuration, Class<TMessage> messageClass, DataEncoder<TMessage> messageEncoder);
+	<TMessage> QueuePublisherConnector<TMessage> create (ConfigurationSource configuration, Class<TMessage> messageClass, DataEncoder<TMessage> messageEncoder);
 }

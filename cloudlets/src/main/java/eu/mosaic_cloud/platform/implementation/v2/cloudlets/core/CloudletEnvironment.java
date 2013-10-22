@@ -25,11 +25,11 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.HashMap;
 import java.util.Map;
 
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.connectors.component.ComponentConnector;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
 import eu.mosaic_cloud.tools.miscellaneous.SupplementaryEnvironment;
@@ -40,7 +40,7 @@ import com.google.common.base.Preconditions;
 
 public final class CloudletEnvironment
 {
-	private CloudletEnvironment (final Configuration configuration, final Class<?> cloudletCallbackClass, final Class<?> cloudletContextClass, final ClassLoader classLoader, final ConnectorsFactory connectors, final ConnectorEnvironment connectorEnvironment, final ComponentConnector componentConnector, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final Map<String, Object> supplementary) {
+	private CloudletEnvironment (final ConfigurationSource configuration, final Class<?> cloudletCallbackClass, final Class<?> cloudletContextClass, final ClassLoader classLoader, final ConnectorsFactory connectors, final ConnectorEnvironment connectorEnvironment, final ComponentConnector componentConnector, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final Map<String, Object> supplementary) {
 		super ();
 		Preconditions.checkNotNull (configuration);
 		Preconditions.checkNotNull (cloudletCallbackClass);
@@ -88,7 +88,7 @@ public final class CloudletEnvironment
 		return this.componentConnector;
 	}
 	
-	public Configuration getConfiguration () {
+	public ConfigurationSource getConfiguration () {
 		return this.configuration;
 	}
 	
@@ -120,7 +120,7 @@ public final class CloudletEnvironment
 	private final Class<?> cloudletCallbackClass;
 	private final Class<?> cloudletContextClass;
 	private final ComponentConnector componentConnector;
-	private final Configuration configuration;
+	private final ConfigurationSource configuration;
 	private final ConnectorEnvironment connectorEnvironment;
 	private final ConnectorsFactory connectors;
 	private final ExceptionTracer exceptions;
@@ -128,11 +128,11 @@ public final class CloudletEnvironment
 	private final SupplementaryEnvironment supplementary;
 	private final ThreadingContext threading;
 	
-	public static final CloudletEnvironment create (final Configuration configuration, final Class<?> cloudletCallbackClass, final Class<?> cloudletContextClass, final ClassLoader classLoader, final ConnectorsFactory connectors, final ConnectorEnvironment connectorEnvironment, final ComponentConnector componentConnector, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions) {
+	public static final CloudletEnvironment create (final ConfigurationSource configuration, final Class<?> cloudletCallbackClass, final Class<?> cloudletContextClass, final ClassLoader classLoader, final ConnectorsFactory connectors, final ConnectorEnvironment connectorEnvironment, final ComponentConnector componentConnector, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions) {
 		return new CloudletEnvironment (configuration, cloudletCallbackClass, cloudletContextClass, classLoader, connectors, connectorEnvironment, componentConnector, reactor, threading, exceptions, new HashMap<String, Object> ());
 	}
 	
-	public static final CloudletEnvironment create (final Configuration configuration, final Class<?> cloudletCallbackClass, final Class<?> cloudletContextClass, final ClassLoader classLoader, final ConnectorsFactory connectors, final ConnectorEnvironment connectorEnvironment, final ComponentConnector componentConnector, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final Map<String, Object> supplementary) {
+	public static final CloudletEnvironment create (final ConfigurationSource configuration, final Class<?> cloudletCallbackClass, final Class<?> cloudletContextClass, final ClassLoader classLoader, final ConnectorsFactory connectors, final ConnectorEnvironment connectorEnvironment, final ComponentConnector componentConnector, final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final Map<String, Object> supplementary) {
 		return new CloudletEnvironment (configuration, cloudletCallbackClass, cloudletContextClass, classLoader, connectors, connectorEnvironment, componentConnector, reactor, threading, exceptions, supplementary);
 	}
 }

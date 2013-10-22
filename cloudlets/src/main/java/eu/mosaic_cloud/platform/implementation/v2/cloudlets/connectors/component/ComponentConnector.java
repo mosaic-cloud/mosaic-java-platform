@@ -31,9 +31,9 @@ import eu.mosaic_cloud.platform.v2.cloudlets.connectors.component.ComponentConne
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.component.ComponentConnectorCallbacks.CallFailedArguments;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.component.ComponentConnectorCallbacks.CallSucceededArguments;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletionObserver;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 
 
 public class ComponentConnector<TContext, TExtra>
@@ -41,7 +41,7 @@ public class ComponentConnector<TContext, TExtra>
 			implements
 				eu.mosaic_cloud.platform.v2.cloudlets.connectors.component.ComponentConnector<TExtra>
 {
-	public ComponentConnector (final CloudletController<?> cloudlet, final eu.mosaic_cloud.platform.v2.connectors.component.ComponentConnector connector, final Configuration configuration, final ComponentConnectorCallbacks<TContext, TExtra> callback, final TContext context) {
+	public ComponentConnector (final CloudletController<?> cloudlet, final eu.mosaic_cloud.platform.v2.connectors.component.ComponentConnector connector, final ConfigurationSource configuration, final ComponentConnectorCallbacks<TContext, TExtra> callback, final TContext context) {
 		super (cloudlet, connector, configuration, callback, context);
 	}
 	

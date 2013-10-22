@@ -47,8 +47,6 @@ import eu.mosaic_cloud.platform.implementation.v2.cloudlets.component.CloudletCo
 import eu.mosaic_cloud.platform.implementation.v2.cloudlets.core.CloudletManager;
 import eu.mosaic_cloud.platform.implementation.v2.cloudlets.tools.ConfigProperties;
 import eu.mosaic_cloud.platform.implementation.v2.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.implementation.v2.configuration.PropertyTypeConfiguration;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.connectors.component.ComponentConnector;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
@@ -56,6 +54,8 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackIsolate;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.callbacks.tools.StateMachine.StateAndOutput;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
+import eu.mosaic_cloud.tools.configurations.implementations.basic.PropertiesBackedConfigurationSource;
 import eu.mosaic_cloud.tools.exceptions.core.CaughtException;
 import eu.mosaic_cloud.tools.exceptions.core.DeferredException;
 import eu.mosaic_cloud.tools.miscellaneous.DeferredFuture;
@@ -228,14 +228,14 @@ public final class CloudletComponent
 		}.trigger ();
 	}
 	
-	private final Configuration resolveConfiguration () {
+	private final ConfigurationSource resolveConfiguration () {
 		this.transcript.traceDebugging ("resolving the cloudlet component configuration...");
 		final String configurationDescriptor = this.componentEnvironment.supplementary.get ("descriptor", String.class, null);
 		Preconditions.checkNotNull (configurationDescriptor, "unknown cloudlet component configuration descriptor");
 		this.transcript.traceDebugging ("resolving the cloudlet component configuration `%s`...", configurationDescriptor);
-		final Configuration configuration;
+		final ConfigurationSource configuration;
 		try {
-			configuration = PropertyTypeConfiguration.create (this.classLoader, configurationDescriptor);
+			configuration = PropertiesBackedConfigurationSource.load (this.classLoader.getResourceAsStream (configurationDescriptor));
 		} catch (final Throwable exception) {
 			this.exceptions.traceHandledException (exception);
 			throw (new IllegalArgumentException ("error encountered while loading cloudlet component configuration", exception));
@@ -264,7 +264,7 @@ public final class CloudletComponent
 	final ComponentEnvironment componentEnvironment;
 	final IdentityHashMap<ComponentCallReference, Trigger<ComponentAcquireReply>> componentPendingAcquires;
 	final IdentityHashMap<ComponentCallReference, Trigger<ComponentCallReply>> componentPendingOutboundCalls;
-	final Configuration configuration;
+	final ConfigurationSource configuration;
 	final TranscriptExceptionTracer exceptions;
 	final CloudletComponentFsm fsm;
 	final CallbackIsolate isolate;

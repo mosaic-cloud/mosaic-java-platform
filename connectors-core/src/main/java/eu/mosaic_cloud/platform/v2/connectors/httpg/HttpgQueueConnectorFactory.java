@@ -21,14 +21,14 @@
 package eu.mosaic_cloud.platform.v2.connectors.httpg;
 
 
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.connectors.queue.QueueConnectorFactory;
 import eu.mosaic_cloud.platform.v2.serialization.DataEncoder;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 
 
 public interface HttpgQueueConnectorFactory
 			extends
 				QueueConnectorFactory<HttpgQueueConnector<?, ?>>
 {
-	<TRequestBody, TResponseBody> HttpgQueueConnector<TRequestBody, TResponseBody> create (Configuration configuration, Class<TRequestBody> requestBodyClass, DataEncoder<TRequestBody> requestBodyEncoder, Class<TResponseBody> responseBodyClass, DataEncoder<TResponseBody> responseBodyEncoder, HttpgQueueCallback<TRequestBody, TResponseBody> callback);
+	<TRequestBody, TResponseBody> HttpgQueueConnector<TRequestBody, TResponseBody> create (ConfigurationSource configuration, Class<TRequestBody> requestBodyClass, DataEncoder<TRequestBody> requestBodyEncoder, Class<TResponseBody> responseBodyClass, DataEncoder<TResponseBody> responseBodyEncoder, HttpgQueueCallback<TRequestBody, TResponseBody> callback);
 }

@@ -27,11 +27,11 @@ import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueueConsumerConne
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueuePublisherConnectorCallback;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueuePublisherConnectorFactory;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryBuilder;
 import eu.mosaic_cloud.platform.v2.serialization.DataEncoder;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 
 import com.google.common.base.Preconditions;
 
@@ -44,7 +44,7 @@ public final class GenericQueueConnectorFactoryInitializer
 		Preconditions.checkNotNull (delegate);
 		builder.register (QueueConsumerConnectorFactory.class, new QueueConsumerConnectorFactory () {
 			@Override
-			public <TContext, TMessage, TExtra> GenericQueueConsumerConnector<TContext, TMessage, TExtra> create (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, final TContext callbackContext) {
+			public <TContext, TMessage, TExtra> GenericQueueConsumerConnector<TContext, TMessage, TExtra> create (final ConfigurationSource configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, final TContext callbackContext) {
 				final GenericQueueConsumerConnector.Callback<TMessage> backingCallback = new GenericQueueConsumerConnector.Callback<TMessage> ();
 				final eu.mosaic_cloud.platform.v2.connectors.queue.QueueConsumerConnector<TMessage> backingConnector = delegate.getConnectorFactory (eu.mosaic_cloud.platform.v2.connectors.queue.QueueConsumerConnectorFactory.class).create (configuration, messageClass, messageEncoder, backingCallback);
 				return new GenericQueueConsumerConnector<TContext, TMessage, TExtra> (cloudlet, backingConnector, configuration, callback, callbackContext, backingCallback);
@@ -52,7 +52,7 @@ public final class GenericQueueConnectorFactoryInitializer
 		});
 		builder.register (QueuePublisherConnectorFactory.class, new QueuePublisherConnectorFactory () {
 			@Override
-			public <TContext, TMessage, TExtra> GenericQueuePublisherConnector<TContext, TMessage, TExtra> create (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback, final TContext callbackContext) {
+			public <TContext, TMessage, TExtra> GenericQueuePublisherConnector<TContext, TMessage, TExtra> create (final ConfigurationSource configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback, final TContext callbackContext) {
 				final eu.mosaic_cloud.platform.v2.connectors.queue.QueuePublisherConnector<TMessage> backingConnector = delegate.getConnectorFactory (eu.mosaic_cloud.platform.v2.connectors.queue.QueuePublisherConnectorFactory.class).create (configuration, messageClass, messageEncoder);
 				return new GenericQueuePublisherConnector<TContext, TMessage, TExtra> (cloudlet, backingConnector, configuration, callback, callbackContext);
 			}

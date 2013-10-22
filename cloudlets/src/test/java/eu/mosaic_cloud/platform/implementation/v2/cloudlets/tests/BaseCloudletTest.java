@@ -21,6 +21,8 @@
 package eu.mosaic_cloud.platform.implementation.v2.cloudlets.tests;
 
 
+import java.io.IOException;
+
 import eu.mosaic_cloud.components.core.ComponentIdentifier;
 import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
 import eu.mosaic_cloud.components.core.ComponentResourceSpecification;
@@ -30,15 +32,15 @@ import eu.mosaic_cloud.interoperability.core.ChannelResolver;
 import eu.mosaic_cloud.interoperability.core.ResolverCallbacks;
 import eu.mosaic_cloud.platform.implementation.v2.cloudlets.core.Cloudlet;
 import eu.mosaic_cloud.platform.implementation.v2.cloudlets.core.CloudletEnvironment;
-import eu.mosaic_cloud.platform.implementation.v2.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.implementation.v2.connectors.tools.DefaultConnectorsFactory;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletCallback;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.connectors.component.ComponentConnector;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.implementations.basic.BasicCallbackReactor;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
+import eu.mosaic_cloud.tools.configurations.implementations.basic.PropertiesBackedConfigurationSource;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.threading.implementations.basic.BasicThreadingContext;
@@ -154,9 +156,13 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
 		scenario.exceptionsQueue = QueueingExceptionTracer.create (NullExceptionTracer.defaultInstance);
 		scenario.exceptions = TranscriptExceptionTracer.create (scenario.transcript, scenario.exceptionsQueue);
 		if (configuration != null) {
-			scenario.configuration = PropertyTypeConfiguration.create (owner.getClassLoader (), configuration);
+			try {
+				scenario.configuration = PropertiesBackedConfigurationSource.load (owner.getClassLoader ().getResourceAsStream (configuration));
+			} catch (final IOException exception) {
+				throw (new Error (exception));
+			}
 		} else {
-			scenario.configuration = PropertyTypeConfiguration.create ();
+			scenario.configuration = PropertiesBackedConfigurationSource.create ();
 		}
 		scenario.threading = BasicThreadingContext.create (owner, scenario.exceptions, scenario.exceptions.catcher);
 		scenario.threading.initialize ();
@@ -177,7 +183,7 @@ public abstract class BaseCloudletTest<Scenario extends BaseCloudletTest.BaseSce
 	public static class BaseScenario<Context extends Object>
 	{
 		public Class<? extends CloudletCallback<Context>> callbacksClass;
-		public Configuration configuration;
+		public ConfigurationSource configuration;
 		public ConnectorsFactory connectors;
 		public Class<Context> contextClass;
 		public CloudletEnvironment environment;

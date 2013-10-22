@@ -24,13 +24,13 @@ package eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.queue.ge
 import eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.queue.BaseQueueConsumerConnector;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueueConsumerConnectorCallback;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 
 
 public class GenericQueueConsumerConnector<TContext, TMessage, TExtra>
 			extends BaseQueueConsumerConnector<TContext, TMessage, TExtra>
 {
-	public GenericQueueConsumerConnector (final CloudletController<?> cloudlet, final eu.mosaic_cloud.platform.v2.connectors.queue.QueueConsumerConnector<TMessage> connector, final Configuration configuration, final QueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, final TContext context, final Callback<TMessage> backingCallback) {
+	public GenericQueueConsumerConnector (final CloudletController<?> cloudlet, final eu.mosaic_cloud.platform.v2.connectors.queue.QueueConsumerConnector<TMessage> connector, final ConfigurationSource configuration, final QueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, final TContext context, final Callback<TMessage> backingCallback) {
 		super (cloudlet, connector, configuration, callback, context, backingCallback);
 	}
 	

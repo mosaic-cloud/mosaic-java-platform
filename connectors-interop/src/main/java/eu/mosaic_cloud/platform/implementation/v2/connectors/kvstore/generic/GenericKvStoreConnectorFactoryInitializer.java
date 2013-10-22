@@ -22,13 +22,13 @@ package eu.mosaic_cloud.platform.implementation.v2.connectors.kvstore.generic;
 
 
 import eu.mosaic_cloud.platform.implementation.v2.connectors.core.BaseConnectorsFactoryInitializer;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorConfiguration;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryBuilder;
 import eu.mosaic_cloud.platform.v2.connectors.kvstore.KvStoreConnectorFactory;
 import eu.mosaic_cloud.platform.v2.serialization.DataEncoder;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 
 
 public final class GenericKvStoreConnectorFactoryInitializer
@@ -38,7 +38,7 @@ public final class GenericKvStoreConnectorFactoryInitializer
 	protected void initialize_1 (final ConnectorsFactoryBuilder builder, final ConnectorEnvironment environment, final ConnectorsFactory delegate) {
 		builder.register (KvStoreConnectorFactory.class, new KvStoreConnectorFactory () {
 			@Override
-			public <TValue> GenericKvStoreConnector<TValue> create (final Configuration configuration, final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder) {
+			public <TValue> GenericKvStoreConnector<TValue> create (final ConfigurationSource configuration, final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder) {
 				return GenericKvStoreConnector.create (ConnectorConfiguration.create (configuration, environment), valueEncoder);
 			}
 		});

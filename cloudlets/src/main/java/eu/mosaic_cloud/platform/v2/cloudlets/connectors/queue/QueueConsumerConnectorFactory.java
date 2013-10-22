@@ -21,13 +21,13 @@
 package eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue;
 
 
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.serialization.DataEncoder;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 
 
 public interface QueueConsumerConnectorFactory
 			extends
 				QueueConnectorFactory<QueueConsumerConnector<?, ?>>
 {
-	public abstract <TContext extends Object, TMessage extends Object, TExtra extends Object> QueueConsumerConnector<TMessage, TExtra> create (Configuration configuration, Class<TMessage> messageClass, DataEncoder<TMessage> messageEncoder, QueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, TContext callbackContext);
+	public abstract <TContext extends Object, TMessage extends Object, TExtra extends Object> QueueConsumerConnector<TMessage, TExtra> create (ConfigurationSource configuration, Class<TMessage> messageClass, DataEncoder<TMessage> messageEncoder, QueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, TContext callbackContext);
 }

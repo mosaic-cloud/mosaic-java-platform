@@ -22,13 +22,13 @@ package eu.mosaic_cloud.platform.v2.cloudlets.connectors.kvstore;
 
 
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.core.ConnectorFactory;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.serialization.DataEncoder;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 
 
 public interface KvStoreConnectorFactory
 			extends
 				ConnectorFactory<KvStoreConnector<?, ?>>
 {
-	public abstract <TContext extends Object, TValue extends Object, TExtra extends Object> KvStoreConnector<TValue, TExtra> create (Configuration configuration, Class<TValue> valueClass, DataEncoder<TValue> valueEncoder, KvStoreConnectorCallback<TContext, TValue, TExtra> callback, TContext callbackContext);
+	public abstract <TContext extends Object, TValue extends Object, TExtra extends Object> KvStoreConnector<TValue, TExtra> create (ConfigurationSource configuration, Class<TValue> valueClass, DataEncoder<TValue> valueEncoder, KvStoreConnectorCallback<TContext, TValue, TExtra> callback, TContext callbackContext);
 }

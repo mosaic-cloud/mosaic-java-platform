@@ -24,13 +24,13 @@ package eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.queue.ge
 import eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.queue.BaseQueuePublisherConnector;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueuePublisherConnectorCallback;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 
 
 public class GenericQueuePublisherConnector<TContext, TMessage, TExtra>
 			extends BaseQueuePublisherConnector<TContext, TMessage, TExtra>
 {
-	public GenericQueuePublisherConnector (final CloudletController<?> cloudlet, final eu.mosaic_cloud.platform.v2.connectors.queue.QueuePublisherConnector<TMessage> connector, final Configuration configuration, final QueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback, final TContext context) {
+	public GenericQueuePublisherConnector (final CloudletController<?> cloudlet, final eu.mosaic_cloud.platform.v2.connectors.queue.QueuePublisherConnector<TMessage> connector, final ConfigurationSource configuration, final QueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback, final TContext context) {
 		super (cloudlet, connector, configuration, callback, context);
 	}
 }

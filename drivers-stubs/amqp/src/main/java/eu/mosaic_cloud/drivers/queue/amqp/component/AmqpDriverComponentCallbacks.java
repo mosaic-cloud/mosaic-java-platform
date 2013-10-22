@@ -40,11 +40,11 @@ import eu.mosaic_cloud.drivers.component.AbstractDriverComponentCallbacks;
 import eu.mosaic_cloud.drivers.queue.amqp.interop.AmqpStub;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.implementation.v2.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.implementation.v2.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
-import eu.mosaic_cloud.platform.v2.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationIdentifier;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
+import eu.mosaic_cloud.tools.configurations.implementations.basic.PropertiesBackedConfigurationSource;
 
 import com.google.common.base.Preconditions;
 
@@ -64,7 +64,7 @@ public final class AmqpDriverComponentCallbacks
 	public AmqpDriverComponentCallbacks (final ComponentEnvironment context) {
 		super (context);
 		try {
-			final Configuration configuration = PropertyTypeConfiguration.create (AmqpDriverComponentCallbacks.class.getResourceAsStream ("driver-component.properties"));
+			final ConfigurationSource configuration = PropertiesBackedConfigurationSource.load (AmqpDriverComponentCallbacks.class.getResourceAsStream ("driver-component.properties"));
 			this.setDriverConfiguration (configuration);
 			this.resourceGroup = ComponentIdentifier.resolve (ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.AmqpDriverComponentCallbacks_0, String.class, ""));
 			this.selfGroup = ComponentIdentifier.resolve (ConfigUtils.resolveParameter (this.getDriverConfiguration (), ConfigProperties.AmqpDriverComponentCallbacks_1, String.class, ""));
@@ -191,14 +191,11 @@ public final class AmqpDriverComponentCallbacks
 	}
 	
 	private void configureDriver (final String brokerIp, final String port, final String user, final String pass, final String vHost) {
-		try {
-			this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.AmqpDriver_1), brokerIp);
-			this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.AmqpDriver_2), port);
-			this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.AmqpDriver_3), user);
-			this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.AmqpDriver_4), pass);
-			this.getDriverConfiguration ().addParameter (ConfigurationIdentifier.resolveRelative (ConfigProperties.AmqpDriver_5), vHost);
-		} catch (final NullPointerException e) {
-			this.exceptions.traceIgnoredException (e);
-		}
+		final PropertiesBackedConfigurationSource config = (PropertiesBackedConfigurationSource) this.getDriverConfiguration ();
+		config.overridePropertyValue (ConfigurationIdentifier.resolveRelative (ConfigProperties.AmqpDriver_1), brokerIp);
+		config.overridePropertyValue (ConfigurationIdentifier.resolveRelative (ConfigProperties.AmqpDriver_2), port);
+		config.overridePropertyValue (ConfigurationIdentifier.resolveRelative (ConfigProperties.AmqpDriver_3), user);
+		config.overridePropertyValue (ConfigurationIdentifier.resolveRelative (ConfigProperties.AmqpDriver_4), pass);
+		config.overridePropertyValue (ConfigurationIdentifier.resolveRelative (ConfigProperties.AmqpDriver_5), vHost);
 	}
 }

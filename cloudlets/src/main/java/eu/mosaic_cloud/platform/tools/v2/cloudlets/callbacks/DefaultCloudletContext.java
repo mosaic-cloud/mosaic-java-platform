@@ -21,7 +21,6 @@
 package eu.mosaic_cloud.platform.tools.v2.cloudlets.callbacks;
 
 
-import eu.mosaic_cloud.platform.implementation.v2.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.component.ComponentConnector;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.component.ComponentConnectorCallbacks;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.component.ComponentConnectorFactory;
@@ -44,10 +43,11 @@ import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueuePublisherConn
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueuePublisherConnectorFactory;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.Callback;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
-import eu.mosaic_cloud.platform.v2.configuration.ConfigurationIdentifier;
 import eu.mosaic_cloud.platform.v2.serialization.DataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationIdentifier;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
+import eu.mosaic_cloud.tools.configurations.implementations.basic.EmptyConfigurationSource;
 import eu.mosaic_cloud.tools.exceptions.core.CaughtException;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 
@@ -102,28 +102,28 @@ public class DefaultCloudletContext<TContext extends DefaultCloudletContext<TCon
 	
 	@SuppressWarnings ("unchecked")
 	public <TOutcome, TExtra> Executor<TOutcome, TExtra> createExecutor (final Class<? extends ExecutorCallback<TContext, TOutcome, TExtra>> callbackClass) {
-		return (this.createExecutor ((Configuration) null, callbackClass, (TContext) this));
+		return (this.createExecutor ((ConfigurationSource) null, callbackClass, (TContext) this));
 	}
 	
 	public <TContext, TOutcome, TExtra> Executor<TOutcome, TExtra> createExecutor (final Class<? extends ExecutorCallback<TContext, TOutcome, TExtra>> callbackClass, final TContext callbackContext) {
-		return (this.createExecutor ((Configuration) null, callbackClass, callbackContext));
+		return (this.createExecutor ((ConfigurationSource) null, callbackClass, callbackContext));
 	}
 	
-	public <TContext, TOutcome, TExtra> Executor<TOutcome, TExtra> createExecutor (final Configuration configuration, final Class<? extends ExecutorCallback<TContext, TOutcome, TExtra>> callbackClass, final TContext callbackContext) {
+	public <TContext, TOutcome, TExtra> Executor<TOutcome, TExtra> createExecutor (final ConfigurationSource configuration, final Class<? extends ExecutorCallback<TContext, TOutcome, TExtra>> callbackClass, final TContext callbackContext) {
 		return (this.createExecutor (configuration, this.createCallback (callbackClass), callbackContext));
 	}
 	
-	public <TContext, TOutcome, TExtra> Executor<TOutcome, TExtra> createExecutor (final Configuration configuration, final ExecutorCallback<TContext, TOutcome, TExtra> callback, final TContext callbackContext) {
-		return (this.getConnectorFactory (ExecutorFactory.class).create ((configuration != null) ? configuration : PropertyTypeConfiguration.createEmpty (), callback, callbackContext));
+	public <TContext, TOutcome, TExtra> Executor<TOutcome, TExtra> createExecutor (final ConfigurationSource configuration, final ExecutorCallback<TContext, TOutcome, TExtra> callback, final TContext callbackContext) {
+		return (this.getConnectorFactory (ExecutorFactory.class).create ((configuration != null) ? configuration : EmptyConfigurationSource.defaultInstance, callback, callbackContext));
 	}
 	
 	@SuppressWarnings ("unchecked")
 	public <TOutcome, TExtra> Executor<TOutcome, TExtra> createExecutor (final ExecutorCallback<TContext, TOutcome, TExtra> callback) {
-		return (this.createExecutor ((Configuration) null, callback, (TContext) this));
+		return (this.createExecutor ((ConfigurationSource) null, callback, (TContext) this));
 	}
 	
 	public <TContext, TOutcome, TExtra> Executor<TOutcome, TExtra> createExecutor (final ExecutorCallback<TContext, TOutcome, TExtra> callback, final TContext callbackContext) {
-		return (this.createExecutor ((Configuration) null, callback, callbackContext));
+		return (this.createExecutor ((ConfigurationSource) null, callback, callbackContext));
 	}
 	
 	@SuppressWarnings ("unchecked")
@@ -145,21 +145,21 @@ public class DefaultCloudletContext<TContext extends DefaultCloudletContext<TCon
 	}
 	
 	@SuppressWarnings ("unchecked")
-	public <TRequestBody, TResponseBody, TExtra> HttpgQueueConnector<TRequestBody, TResponseBody, TExtra> createHttpgQueueConnector (final Configuration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final Class<? extends HttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra>> callbackClass) {
+	public <TRequestBody, TResponseBody, TExtra> HttpgQueueConnector<TRequestBody, TResponseBody, TExtra> createHttpgQueueConnector (final ConfigurationSource configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final Class<? extends HttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra>> callbackClass) {
 		return (this.createHttpgQueueConnector (configuration, requestBodyClass, requestBodyEncoder, responseBodyClass, responseBodyEncoder, callbackClass, (TContext) this));
 	}
 	
-	public <TContext, TRequestBody, TResponseBody, TExtra> HttpgQueueConnector<TRequestBody, TResponseBody, TExtra> createHttpgQueueConnector (final Configuration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final Class<? extends HttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra>> callbackClass, final TContext callbackContext) {
+	public <TContext, TRequestBody, TResponseBody, TExtra> HttpgQueueConnector<TRequestBody, TResponseBody, TExtra> createHttpgQueueConnector (final ConfigurationSource configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final Class<? extends HttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra>> callbackClass, final TContext callbackContext) {
 		return (this.createHttpgQueueConnector (configuration, requestBodyClass, requestBodyEncoder, responseBodyClass, responseBodyEncoder, this.createCallback (callbackClass), callbackContext));
 	}
 	
 	@SuppressWarnings ("unchecked")
-	public <TRequestBody, TResponseBody, TExtra> HttpgQueueConnector<TRequestBody, TResponseBody, TExtra> createHttpgQueueConnector (final Configuration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final HttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra> callback) {
+	public <TRequestBody, TResponseBody, TExtra> HttpgQueueConnector<TRequestBody, TResponseBody, TExtra> createHttpgQueueConnector (final ConfigurationSource configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final HttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra> callback) {
 		return (this.createHttpgQueueConnector (configuration, requestBodyClass, requestBodyEncoder, responseBodyClass, responseBodyEncoder, callback, (TContext) this));
 	}
 	
-	public <TContext, TRequestBody, TResponseBody, TExtra> HttpgQueueConnector<TRequestBody, TResponseBody, TExtra> createHttpgQueueConnector (final Configuration configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final HttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra> callback, final TContext callbackContext) {
-		return (this.getConnectorFactory (HttpgQueueConnectorFactory.class).create ((configuration != null) ? configuration : PropertyTypeConfiguration.createEmpty (), requestBodyClass, requestBodyEncoder, responseBodyClass, responseBodyEncoder, callback, callbackContext));
+	public <TContext, TRequestBody, TResponseBody, TExtra> HttpgQueueConnector<TRequestBody, TResponseBody, TExtra> createHttpgQueueConnector (final ConfigurationSource configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final HttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra> callback, final TContext callbackContext) {
+		return (this.getConnectorFactory (HttpgQueueConnectorFactory.class).create ((configuration != null) ? configuration : EmptyConfigurationSource.defaultInstance, requestBodyClass, requestBodyEncoder, responseBodyClass, responseBodyEncoder, callback, callbackContext));
 	}
 	
 	@SuppressWarnings ("unchecked")
@@ -181,21 +181,21 @@ public class DefaultCloudletContext<TContext extends DefaultCloudletContext<TCon
 	}
 	
 	@SuppressWarnings ("unchecked")
-	public <TValue, TExtra> KvStoreConnector<TValue, TExtra> createKvStoreConnector (final Configuration configuration, final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder, final Class<? extends KvStoreConnectorCallback<TContext, TValue, TExtra>> callbackClass) {
+	public <TValue, TExtra> KvStoreConnector<TValue, TExtra> createKvStoreConnector (final ConfigurationSource configuration, final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder, final Class<? extends KvStoreConnectorCallback<TContext, TValue, TExtra>> callbackClass) {
 		return (this.createKvStoreConnector (configuration, valueClass, valueEncoder, callbackClass, (TContext) this));
 	}
 	
-	public <TContext, TValue, TExtra> KvStoreConnector<TValue, TExtra> createKvStoreConnector (final Configuration configuration, final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder, final Class<? extends KvStoreConnectorCallback<TContext, TValue, TExtra>> callbackClass, final TContext callbackContext) {
+	public <TContext, TValue, TExtra> KvStoreConnector<TValue, TExtra> createKvStoreConnector (final ConfigurationSource configuration, final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder, final Class<? extends KvStoreConnectorCallback<TContext, TValue, TExtra>> callbackClass, final TContext callbackContext) {
 		return (this.createKvStoreConnector (configuration, valueClass, valueEncoder, this.createCallback (callbackClass), callbackContext));
 	}
 	
 	@SuppressWarnings ("unchecked")
-	public <TValue, TExtra> KvStoreConnector<TValue, TExtra> createKvStoreConnector (final Configuration configuration, final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder, final KvStoreConnectorCallback<TContext, TValue, TExtra> callback) {
+	public <TValue, TExtra> KvStoreConnector<TValue, TExtra> createKvStoreConnector (final ConfigurationSource configuration, final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder, final KvStoreConnectorCallback<TContext, TValue, TExtra> callback) {
 		return (this.createKvStoreConnector (configuration, valueClass, valueEncoder, callback, (TContext) this));
 	}
 	
-	public <TContext, TValue, TExtra> KvStoreConnector<TValue, TExtra> createKvStoreConnector (final Configuration configuration, final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder, final KvStoreConnectorCallback<TContext, TValue, TExtra> callback, final TContext callbackContext) {
-		return (this.getConnectorFactory (KvStoreConnectorFactory.class).create ((configuration != null) ? configuration : PropertyTypeConfiguration.createEmpty (), valueClass, valueEncoder, callback, callbackContext));
+	public <TContext, TValue, TExtra> KvStoreConnector<TValue, TExtra> createKvStoreConnector (final ConfigurationSource configuration, final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder, final KvStoreConnectorCallback<TContext, TValue, TExtra> callback, final TContext callbackContext) {
+		return (this.getConnectorFactory (KvStoreConnectorFactory.class).create ((configuration != null) ? configuration : EmptyConfigurationSource.defaultInstance, valueClass, valueEncoder, callback, callbackContext));
 	}
 	
 	@SuppressWarnings ("unchecked")
@@ -217,21 +217,21 @@ public class DefaultCloudletContext<TContext extends DefaultCloudletContext<TCon
 	}
 	
 	@SuppressWarnings ("unchecked")
-	public <TMessage, TExtra> QueueConsumerConnector<TMessage, TExtra> createQueueConsumerConnector (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final Class<? extends QueueConsumerConnectorCallback<TContext, TMessage, TExtra>> callbackClass) {
+	public <TMessage, TExtra> QueueConsumerConnector<TMessage, TExtra> createQueueConsumerConnector (final ConfigurationSource configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final Class<? extends QueueConsumerConnectorCallback<TContext, TMessage, TExtra>> callbackClass) {
 		return (this.createQueueConsumerConnector (configuration, messageClass, messageEncoder, callbackClass, (TContext) this));
 	}
 	
-	public <TContext, TMessage, TExtra> QueueConsumerConnector<TMessage, TExtra> createQueueConsumerConnector (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final Class<? extends QueueConsumerConnectorCallback<TContext, TMessage, TExtra>> callbackClass, final TContext callbackContext) {
+	public <TContext, TMessage, TExtra> QueueConsumerConnector<TMessage, TExtra> createQueueConsumerConnector (final ConfigurationSource configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final Class<? extends QueueConsumerConnectorCallback<TContext, TMessage, TExtra>> callbackClass, final TContext callbackContext) {
 		return (this.createQueueConsumerConnector (configuration, messageClass, messageEncoder, this.createCallback (callbackClass), callbackContext));
 	}
 	
 	@SuppressWarnings ("unchecked")
-	public <TMessage, TExtra> QueueConsumerConnector<TMessage, TExtra> createQueueConsumerConnector (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback) {
+	public <TMessage, TExtra> QueueConsumerConnector<TMessage, TExtra> createQueueConsumerConnector (final ConfigurationSource configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback) {
 		return (this.createQueueConsumerConnector (configuration, messageClass, messageEncoder, callback, (TContext) this));
 	}
 	
-	public <TContext, TMessage, TExtra> QueueConsumerConnector<TMessage, TExtra> createQueueConsumerConnector (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, final TContext callbackContext) {
-		return (this.getConnectorFactory (QueueConsumerConnectorFactory.class).create ((configuration != null) ? configuration : PropertyTypeConfiguration.createEmpty (), messageClass, messageEncoder, callback, callbackContext));
+	public <TContext, TMessage, TExtra> QueueConsumerConnector<TMessage, TExtra> createQueueConsumerConnector (final ConfigurationSource configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, final TContext callbackContext) {
+		return (this.getConnectorFactory (QueueConsumerConnectorFactory.class).create ((configuration != null) ? configuration : EmptyConfigurationSource.defaultInstance, messageClass, messageEncoder, callback, callbackContext));
 	}
 	
 	@SuppressWarnings ("unchecked")
@@ -253,21 +253,21 @@ public class DefaultCloudletContext<TContext extends DefaultCloudletContext<TCon
 	}
 	
 	@SuppressWarnings ("unchecked")
-	public <TContext, TMessage, TExtra> QueuePublisherConnector<TMessage, TExtra> createQueuePublisherConnector (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final Class<? extends QueuePublisherConnectorCallback<TContext, TMessage, TExtra>> callbackClass) {
+	public <TContext, TMessage, TExtra> QueuePublisherConnector<TMessage, TExtra> createQueuePublisherConnector (final ConfigurationSource configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final Class<? extends QueuePublisherConnectorCallback<TContext, TMessage, TExtra>> callbackClass) {
 		return (this.createQueuePublisherConnector (configuration, messageClass, messageEncoder, callbackClass, (TContext) this));
 	}
 	
-	public <TContext, TMessage, TExtra> QueuePublisherConnector<TMessage, TExtra> createQueuePublisherConnector (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final Class<? extends QueuePublisherConnectorCallback<TContext, TMessage, TExtra>> callbackClass, final TContext callbackContext) {
+	public <TContext, TMessage, TExtra> QueuePublisherConnector<TMessage, TExtra> createQueuePublisherConnector (final ConfigurationSource configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final Class<? extends QueuePublisherConnectorCallback<TContext, TMessage, TExtra>> callbackClass, final TContext callbackContext) {
 		return (this.createQueuePublisherConnector (configuration, messageClass, messageEncoder, this.createCallback (callbackClass), callbackContext));
 	}
 	
 	@SuppressWarnings ("unchecked")
-	public <TContext, TMessage, TExtra> QueuePublisherConnector<TMessage, TExtra> createQueuePublisherConnector (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback) {
+	public <TContext, TMessage, TExtra> QueuePublisherConnector<TMessage, TExtra> createQueuePublisherConnector (final ConfigurationSource configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback) {
 		return (this.createQueuePublisherConnector (configuration, messageClass, messageEncoder, callback, (TContext) this));
 	}
 	
-	public <TContext, TMessage, TExtra> QueuePublisherConnector<TMessage, TExtra> createQueuePublisherConnector (final Configuration configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback, final TContext callbackContext) {
-		return (this.getConnectorFactory (QueuePublisherConnectorFactory.class).create ((configuration != null) ? configuration : PropertyTypeConfiguration.createEmpty (), messageClass, messageEncoder, callback, callbackContext));
+	public <TContext, TMessage, TExtra> QueuePublisherConnector<TMessage, TExtra> createQueuePublisherConnector (final ConfigurationSource configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback, final TContext callbackContext) {
+		return (this.getConnectorFactory (QueuePublisherConnectorFactory.class).create ((configuration != null) ? configuration : EmptyConfigurationSource.defaultInstance, messageClass, messageEncoder, callback, callbackContext));
 	}
 	
 	@SuppressWarnings ("unchecked")
@@ -299,7 +299,7 @@ public class DefaultCloudletContext<TContext extends DefaultCloudletContext<TCon
 		return (this.chain (completions));
 	}
 	
-	public Configuration getConfiguration () {
+	public ConfigurationSource getConfiguration () {
 		return (this.cloudlet.getConfiguration ());
 	}
 	
@@ -318,7 +318,7 @@ public class DefaultCloudletContext<TContext extends DefaultCloudletContext<TCon
 		return (this.chain (completions));
 	}
 	
-	public Configuration spliceConfiguration (final String relative) {
-		return (this.getConfiguration ().spliceConfiguration (ConfigurationIdentifier.resolveRelative (relative)));
+	public ConfigurationSource spliceConfiguration (final String relative) {
+		return (this.getConfiguration ().splice (ConfigurationIdentifier.resolveRelative (relative)));
 	}
 }

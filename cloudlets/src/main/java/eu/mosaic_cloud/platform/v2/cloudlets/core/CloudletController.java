@@ -22,11 +22,11 @@ package eu.mosaic_cloud.platform.v2.cloudlets.core;
 
 
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.core.ConnectorsFactory;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorFactory;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackPassthrough;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 
 
@@ -38,7 +38,7 @@ public interface CloudletController<TContext extends Object>
 	public abstract CallbackCompletion<Void> destroy ();
 	
 	@CallbackPassthrough
-	public abstract Configuration getConfiguration ();
+	public abstract ConfigurationSource getConfiguration ();
 	
 	@Override
 	@CallbackPassthrough

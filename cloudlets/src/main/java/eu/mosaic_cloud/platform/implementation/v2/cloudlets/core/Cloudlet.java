@@ -45,7 +45,6 @@ import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletCallback.DestroyFailed
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletCallback.DestroySucceededArguments;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletState;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.connectors.core.Connector;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
@@ -57,6 +56,7 @@ import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
 import eu.mosaic_cloud.tools.callbacks.tools.CallbackCompletionDeferredFuture;
 import eu.mosaic_cloud.tools.callbacks.tools.StateMachine.StateAndOutput;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 import eu.mosaic_cloud.tools.exceptions.core.CaughtException;
 import eu.mosaic_cloud.tools.exceptions.core.DeferredException;
 import eu.mosaic_cloud.tools.exceptions.tools.QueuedExceptions;
@@ -843,11 +843,11 @@ public final class Cloudlet<TContext extends Object>
 		}
 		
 		@Override
-		public final Configuration getConfiguration () {
+		public final ConfigurationSource getConfiguration () {
 			try {
-				return Cloudlet.this.fsm.new FsmAccess<Void, Configuration> () {
+				return Cloudlet.this.fsm.new FsmAccess<Void, ConfigurationSource> () {
 					@Override
-					protected final Configuration execute (final Void input) {
+					protected final ConfigurationSource execute (final Void input) {
 						return Cloudlet.this.environment.getConfiguration ();
 					}
 				}.trigger (null);

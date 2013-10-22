@@ -24,7 +24,7 @@ package eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.kvstore.
 import eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.kvstore.BaseKvStoreConnector;
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.kvstore.KvStoreConnectorCallback;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 
 
 /**
@@ -42,7 +42,7 @@ import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 public class GenericKvStoreConnector<TContext, TValue, TExtra>
 			extends BaseKvStoreConnector<eu.mosaic_cloud.platform.implementation.v2.connectors.kvstore.generic.GenericKvStoreConnector<TValue>, KvStoreConnectorCallback<TContext, TValue, TExtra>, TContext, TValue, TExtra>
 {
-	public GenericKvStoreConnector (final CloudletController<?> cloudlet, final eu.mosaic_cloud.platform.implementation.v2.connectors.kvstore.generic.GenericKvStoreConnector<TValue> connector, final Configuration config, final KvStoreConnectorCallback<TContext, TValue, TExtra> callback, final TContext context) {
+	public GenericKvStoreConnector (final CloudletController<?> cloudlet, final eu.mosaic_cloud.platform.implementation.v2.connectors.kvstore.generic.GenericKvStoreConnector<TValue> connector, final ConfigurationSource config, final KvStoreConnectorCallback<TContext, TValue, TExtra> callback, final TContext context) {
 		super (cloudlet, connector, config, callback, context);
 	}
 }

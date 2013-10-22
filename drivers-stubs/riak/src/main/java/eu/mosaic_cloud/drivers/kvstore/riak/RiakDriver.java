@@ -27,7 +27,7 @@ import eu.mosaic_cloud.drivers.ConfigProperties;
 import eu.mosaic_cloud.drivers.exceptions.ConnectionException;
 import eu.mosaic_cloud.drivers.ops.IOperationFactory;
 import eu.mosaic_cloud.platform.implementation.v2.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 
@@ -101,7 +101,7 @@ public final class RiakDriver
 	 * @throws IOException
 	 * @throws ConnectionException
 	 */
-	public static RiakDriver create (final Configuration config, final ThreadingContext threading)
+	public static RiakDriver create (final ConfigurationSource config, final ThreadingContext threading)
 				throws IOException, ConnectionException {
 		int port, noThreads;
 		final String host = ConfigUtils.resolveParameter (config, ConfigProperties.KVStoreDriver_0, String.class, "");

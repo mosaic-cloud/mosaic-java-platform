@@ -26,14 +26,12 @@ import java.util.concurrent.ExecutionException;
 
 import eu.mosaic_cloud.drivers.queue.amqp.interop.AmqpStub;
 import eu.mosaic_cloud.platform.implementation.v2.configuration.ConfigUtils;
-import eu.mosaic_cloud.platform.implementation.v2.configuration.PropertyTypeConfiguration;
 import eu.mosaic_cloud.platform.implementation.v2.connectors.queue.amqp.AmqpQueueRawConnector;
 import eu.mosaic_cloud.platform.implementation.v2.serialization.PlainTextDataEncoder;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpExchangeType;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpInboundMessage;
 import eu.mosaic_cloud.platform.interop.common.amqp.AmqpOutboundMessage;
 import eu.mosaic_cloud.platform.interop.specs.amqp.AmqpSession;
-import eu.mosaic_cloud.platform.v2.configuration.Configuration;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorConfiguration;
 import eu.mosaic_cloud.platform.v2.connectors.queue.amqp.AmqpQueueRawConsumerCallback;
 import eu.mosaic_cloud.platform.v2.serialization.DataEncoder;
@@ -41,6 +39,8 @@ import eu.mosaic_cloud.platform.v2.serialization.DataEncoder.EncodeOutcome;
 import eu.mosaic_cloud.platform.v2.serialization.EncodingException;
 import eu.mosaic_cloud.platform.v2.serialization.EncodingMetadata;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
+import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
+import eu.mosaic_cloud.tools.configurations.implementations.basic.PropertiesBackedConfigurationSource;
 import eu.mosaic_cloud.tools.threading.tools.Threading;
 
 import org.junit.AfterClass;
@@ -76,7 +76,7 @@ public class AmqpQueueRawConnectorTest
 	}
 	
 	public void testConsume () {
-		final Configuration configuration = this.scenario.getConfiguration ();
+		final ConfigurationSource configuration = this.scenario.getConfiguration ();
 		final String queue = ConfigUtils.resolveParameter (configuration, "consumer.amqp.queue", String.class, "");
 		final boolean autoAck = ConfigUtils.resolveParameter (configuration, "consumer.amqp.auto_ack", Boolean.class, true);
 		final boolean exclusive = ConfigUtils.resolveParameter (configuration, "consumer.amqp.exclusive", Boolean.class, true);
@@ -93,7 +93,7 @@ public class AmqpQueueRawConnectorTest
 	
 	public void testPublish ()
 				throws EncodingException {
-		final Configuration configuration = this.scenario.getConfiguration ();
+		final ConfigurationSource configuration = this.scenario.getConfiguration ();
 		final String exchange = ConfigUtils.resolveParameter (configuration, "publisher.amqp.exchange", String.class, "");
 		final String routingKey = ConfigUtils.resolveParameter (configuration, "publisher.amqp.routing_key", String.class, "");
 		final boolean manadatory = ConfigUtils.resolveParameter (configuration, "publisher.amqp.manadatory", Boolean.class, true);
@@ -105,7 +105,7 @@ public class AmqpQueueRawConnectorTest
 	}
 	
 	protected void testBindQueue () {
-		final Configuration configuration = this.scenario.getConfiguration ();
+		final ConfigurationSource configuration = this.scenario.getConfiguration ();
 		final String exchange = ConfigUtils.resolveParameter (configuration, "publisher.amqp.exchange", String.class, "");
 		final String routingKey = ConfigUtils.resolveParameter (configuration, "publisher.amqp.routing_key", String.class, "");
 		final String queue = ConfigUtils.resolveParameter (configuration, "consumer.amqp.queue", String.class, "");
@@ -131,21 +131,21 @@ public class AmqpQueueRawConnectorTest
 	public static void setUpBeforeClass () {
 		final String host = System.getProperty (AmqpQueueRawConnectorTest.MOSAIC_AMQP_HOST, AmqpQueueRawConnectorTest.MOSAIC_AMQP_HOST_DEFAULT);
 		final Integer port = Integer.valueOf (System.getProperty (AmqpQueueRawConnectorTest.MOSAIC_AMQP_PORT, AmqpQueueRawConnectorTest.MOSAIC_AMQP_PORT_DEFAULT));
-		final Configuration configuration = PropertyTypeConfiguration.create ();
-		configuration.addParameter ("interop.driver.endpoint", "inproc://f4c74dc5-b548-4ec4-a6a6-ef97c79bf55d");
-		configuration.addParameter ("interop.driver.identity", "f4c74dc5-b548-4ec4-a6a6-ef97c79bf55d");
-		configuration.addParameter ("amqp.host", host);
-		configuration.addParameter ("amqp.port", port);
-		configuration.addParameter ("amqp.driver_threads", 1);
-		configuration.addParameter ("consumer.amqp.queue", "tests.queue");
-		configuration.addParameter ("consumer.amqp.consumer_id", "tests.consumer");
-		configuration.addParameter ("consumer.amqp.auto_ack", true);
-		configuration.addParameter ("consumer.amqp.exclusive", true);
-		configuration.addParameter ("publisher.amqp.exchange", "tests.exchange");
-		configuration.addParameter ("publisher.amqp.routing_key", "tests.queue");
-		configuration.addParameter ("publisher.amqp.manadatory", true);
-		configuration.addParameter ("publisher.amqp.immediate", true);
-		configuration.addParameter ("publisher.amqp.durable", false);
+		final PropertiesBackedConfigurationSource configuration = PropertiesBackedConfigurationSource.create ();
+		configuration.overridePropertyValue ("interop.driver.endpoint", "inproc://f4c74dc5-b548-4ec4-a6a6-ef97c79bf55d");
+		configuration.overridePropertyValue ("interop.driver.identity", "f4c74dc5-b548-4ec4-a6a6-ef97c79bf55d");
+		configuration.overridePropertyValue ("amqp.host", host);
+		configuration.overridePropertyValue ("amqp.port", port.toString ());
+		configuration.overridePropertyValue ("amqp.driver_threads", Integer.toString (1));
+		configuration.overridePropertyValue ("consumer.amqp.queue", "tests.queue");
+		configuration.overridePropertyValue ("consumer.amqp.consumer_id", "tests.consumer");
+		configuration.overridePropertyValue ("consumer.amqp.auto_ack", Boolean.toString (true));
+		configuration.overridePropertyValue ("consumer.amqp.exclusive", Boolean.toString (true));
+		configuration.overridePropertyValue ("publisher.amqp.exchange", "tests.exchange");
+		configuration.overridePropertyValue ("publisher.amqp.routing_key", "tests.queue");
+		configuration.overridePropertyValue ("publisher.amqp.manadatory", Boolean.toString (true));
+		configuration.overridePropertyValue ("publisher.amqp.immediate", Boolean.toString (true));
+		configuration.overridePropertyValue ("publisher.amqp.durable", Boolean.toString (false));
 		final BaseScenario scenario = new BaseScenario (AmqpQueueRawConnectorTest.class, configuration);
 		scenario.registerDriverRole (AmqpSession.DRIVER);
 		BaseConnectorTest.driverStub = AmqpStub.createDetached (configuration, scenario.getDriverChannel (), scenario.getThreading ());
