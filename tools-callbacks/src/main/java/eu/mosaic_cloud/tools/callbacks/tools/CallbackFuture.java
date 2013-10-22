@@ -20,13 +20,14 @@
 // $codepro.audit.disable emptyCatchClause
 // $codepro.audit.disable logExceptions
 
-package eu.mosaic_cloud.tools.callbacks.core;
+package eu.mosaic_cloud.tools.callbacks.tools;
 
 
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.threading.core.Joinable;
 
 import com.google.common.base.Preconditions;
@@ -51,9 +52,7 @@ public final class CallbackFuture<_Outcome_ extends Object>
 	
 	@Override
 	public final boolean await (final long timeout) {
-		if (this.completion.backend == null)
-			return (true);
-		return (this.completion.backend.awaitCompletion (this.completion, timeout));
+		return (this.completion.await (timeout));
 	}
 	
 	@Override
