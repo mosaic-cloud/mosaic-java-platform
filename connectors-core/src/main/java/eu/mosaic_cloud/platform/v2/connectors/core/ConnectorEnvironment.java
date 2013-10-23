@@ -27,6 +27,7 @@ import java.util.Map;
 
 import eu.mosaic_cloud.interoperability.core.ChannelFactory;
 import eu.mosaic_cloud.interoperability.core.ChannelResolver;
+import eu.mosaic_cloud.platform.v2.connectors.component.ComponentConnector;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackReactor;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionResolution;
 import eu.mosaic_cloud.tools.exceptions.core.ExceptionTracer;
@@ -38,19 +39,21 @@ import com.google.common.base.Preconditions;
 
 public final class ConnectorEnvironment
 {
-	private ConnectorEnvironment (final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ChannelFactory channelFactory, final ChannelResolver channelResolver, final Map<String, Object> supplementary) {
+	private ConnectorEnvironment (final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ChannelFactory channelFactory, final ChannelResolver channelResolver, final ComponentConnector componentConnector, final Map<String, Object> supplementary) {
 		super ();
 		Preconditions.checkNotNull (reactor);
 		Preconditions.checkNotNull (threading);
 		Preconditions.checkNotNull (exceptions);
 		Preconditions.checkNotNull (channelFactory);
 		Preconditions.checkNotNull (channelResolver);
+		Preconditions.checkNotNull (componentConnector);
 		Preconditions.checkNotNull (supplementary);
 		this.reactor = reactor;
 		this.threading = threading;
 		this.exceptions = exceptions;
 		this.channelFactory = channelFactory;
 		this.channelResolver = channelResolver;
+		this.componentConnector = componentConnector;
 		this.supplementary = SupplementaryEnvironment.create (supplementary, new UncaughtExceptionHandler () {
 			@Override
 			public void uncaughtException (final Thread thread, final Throwable exception) {
@@ -65,6 +68,10 @@ public final class ConnectorEnvironment
 	
 	public ChannelResolver getChannelResolver () {
 		return this.channelResolver;
+	}
+	
+	public ComponentConnector getComponentConnector () {
+		return this.componentConnector;
 	}
 	
 	public ExceptionTracer getExceptions () {
@@ -85,16 +92,17 @@ public final class ConnectorEnvironment
 	
 	private final ChannelFactory channelFactory;
 	private final ChannelResolver channelResolver;
+	private final ComponentConnector componentConnector;
 	private final ExceptionTracer exceptions;
 	private final CallbackReactor reactor;
 	private final SupplementaryEnvironment supplementary;
 	private final ThreadingContext threading;
 	
-	public static ConnectorEnvironment create (final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ChannelFactory channelFactory, final ChannelResolver channelResolver) {
-		return new ConnectorEnvironment (reactor, threading, exceptions, channelFactory, channelResolver, new HashMap<String, Object> ());
+	public static ConnectorEnvironment create (final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ChannelFactory channelFactory, final ChannelResolver channelResolver, final ComponentConnector componentConnector) {
+		return new ConnectorEnvironment (reactor, threading, exceptions, channelFactory, channelResolver, componentConnector, new HashMap<String, Object> ());
 	}
 	
-	public static ConnectorEnvironment create (final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ChannelFactory channelFactory, final ChannelResolver channelResolver, final Map<String, Object> supplementary) {
-		return new ConnectorEnvironment (reactor, threading, exceptions, channelFactory, channelResolver, supplementary);
+	public static ConnectorEnvironment create (final CallbackReactor reactor, final ThreadingContext threading, final ExceptionTracer exceptions, final ChannelFactory channelFactory, final ChannelResolver channelResolver, final ComponentConnector componentConnector, final Map<String, Object> supplementary) {
+		return new ConnectorEnvironment (reactor, threading, exceptions, channelFactory, channelResolver, componentConnector, supplementary);
 	}
 }

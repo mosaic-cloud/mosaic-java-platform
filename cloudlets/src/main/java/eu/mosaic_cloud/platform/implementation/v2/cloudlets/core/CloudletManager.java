@@ -147,7 +147,7 @@ public final class CloudletManager
 		// FIXME: Currently exceptions from cloudlets are not deferred anywhere.
 		//-- Thus any deferred exception should be treated as an ignored one.
 		final ExceptionTracer exceptions = new CloudletExceptionTracer ();
-		final ConnectorEnvironment connectorEnvironment = ConnectorEnvironment.create (this.reactor, this.threading, exceptions, this.channelFactory, this.channelResolver);
+		final ConnectorEnvironment connectorEnvironment = ConnectorEnvironment.create (this.reactor, this.threading, exceptions, this.channelFactory, this.channelResolver, this.componentConnector);
 		final ConnectorsFactory connectorFactory = DefaultConnectorsFactory.create (connectorEnvironment, null);
 		final CloudletEnvironment environment = CloudletEnvironment.create (cloudletConfiguration, cloudletCallbacksClass, cloudletContextClass, this.classLoader, connectorFactory, connectorEnvironment, this.componentConnector, this.reactor, this.threading, exceptions);
 		final Cloudlet<?> cloudlet = Cloudlet.create (environment);

@@ -23,6 +23,9 @@ package eu.mosaic_cloud.platform.implementation.v2.connectors.tests;
 
 import java.util.UUID;
 
+import eu.mosaic_cloud.components.core.ComponentIdentifier;
+import eu.mosaic_cloud.components.core.ComponentResourceDescriptor;
+import eu.mosaic_cloud.components.core.ComponentResourceSpecification;
 import eu.mosaic_cloud.interoperability.core.Channel;
 import eu.mosaic_cloud.interoperability.core.ChannelFactory;
 import eu.mosaic_cloud.interoperability.core.ChannelResolver;
@@ -31,7 +34,9 @@ import eu.mosaic_cloud.interoperability.core.SessionSpecification;
 import eu.mosaic_cloud.interoperability.implementations.zeromq.ZeroMqChannel;
 import eu.mosaic_cloud.platform.implementation.v2.configuration.ConfigUtils;
 import eu.mosaic_cloud.platform.interop.specs.kvstore.KeyValueSession;
+import eu.mosaic_cloud.platform.v2.connectors.component.ComponentConnector;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
+import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.implementations.basic.BasicCallbackReactor;
 import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 import eu.mosaic_cloud.tools.exceptions.tools.NullExceptionTracer;
@@ -76,7 +81,33 @@ public class BaseScenario
 				callbacks.resolved (this, target, driverIdentity, driverEndpoint);
 			}
 		};
-		this.environment = ConnectorEnvironment.create (this.callbacks, this.threading, this.exceptions, channelFactory, this.channelResolver);
+		this.componentConnector = new ComponentConnector () {
+			@Override
+			public CallbackCompletion<ComponentResourceDescriptor> acquire (final ComponentResourceSpecification resource) {
+				throw (new UnsupportedOperationException ());
+			}
+			
+			@Override
+			public <TInputs, TOutputs> CallbackCompletion<TOutputs> call (final ComponentIdentifier component, final String operation, final TInputs inputs, final Class<TOutputs> outputs) {
+				throw (new UnsupportedOperationException ());
+			}
+			
+			@Override
+			public <TInputs> CallbackCompletion<Void> cast (final ComponentIdentifier component, final String operation, final TInputs inputs) {
+				throw (new UnsupportedOperationException ());
+			}
+			
+			@Override
+			public CallbackCompletion<Void> destroy () {
+				throw (new UnsupportedOperationException ());
+			}
+			
+			@Override
+			public CallbackCompletion<Void> initialize () {
+				throw (new UnsupportedOperationException ());
+			}
+		};
+		this.environment = ConnectorEnvironment.create (this.callbacks, this.threading, this.exceptions, channelFactory, this.channelResolver, this.componentConnector);
 		this.driverChannel.register (KeyValueSession.DRIVER);
 	}
 	
@@ -114,6 +145,7 @@ public class BaseScenario
 	
 	private BasicCallbackReactor callbacks;
 	private ChannelResolver channelResolver;
+	private ComponentConnector componentConnector;
 	private ConfigurationSource configuration;
 	private ZeroMqChannel connectorChannel;
 	private ZeroMqChannel driverChannel;
