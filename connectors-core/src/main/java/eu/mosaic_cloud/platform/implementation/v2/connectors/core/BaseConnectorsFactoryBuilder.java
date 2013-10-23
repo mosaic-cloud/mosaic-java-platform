@@ -27,6 +27,7 @@ import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorFactory;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryBuilder;
+import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryBuilderInitializer;
 
 import com.google.common.base.Preconditions;
 
@@ -34,7 +35,8 @@ import com.google.common.base.Preconditions;
 public abstract class BaseConnectorsFactoryBuilder<TFactory extends BaseConnectorsFactory>
 			extends Object
 			implements
-				ConnectorsFactoryBuilder
+				ConnectorsFactoryBuilder,
+				ConnectorsFactoryBuilderInitializer
 {
 	protected BaseConnectorsFactoryBuilder (final TFactory factory) {
 		super ();

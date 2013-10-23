@@ -21,9 +21,7 @@
 package eu.mosaic_cloud.platform.v2.connectors.core;
 
 
-public interface ConnectorsFactoryBuilder
+public interface ConnectorsFactoryBuilderInitializer
 {
-	public abstract ConnectorsFactory build ();
-	
-	public abstract void initialize (final ConnectorsFactoryInitializer initializer);
+	public abstract <TFactory extends ConnectorFactory<?>> void register (final Class<TFactory> factoryClass, final TFactory factory);
 }

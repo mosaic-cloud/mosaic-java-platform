@@ -25,7 +25,7 @@ import eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors.core.Base
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
-import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryBuilder;
+import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryBuilderInitializer;
 
 import com.google.common.base.Preconditions;
 
@@ -40,7 +40,7 @@ public final class ComponentConnectorFactoryInitializer
 	}
 	
 	@Override
-	protected void initialize_1 (final ConnectorsFactoryBuilder builder, final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final ConnectorsFactory delegate) {
+	protected void initialize_1 (final ConnectorsFactoryBuilderInitializer builder, final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final ConnectorsFactory delegate) {
 		builder.register (eu.mosaic_cloud.platform.v2.cloudlets.connectors.component.ComponentConnectorFactory.class, new ComponentConnectorFactory (cloudlet, this.backingConnector, environment, delegate));
 	}
 	

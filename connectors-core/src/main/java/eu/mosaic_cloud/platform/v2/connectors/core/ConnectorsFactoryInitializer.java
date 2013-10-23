@@ -23,5 +23,5 @@ package eu.mosaic_cloud.platform.v2.connectors.core;
 
 public interface ConnectorsFactoryInitializer
 {
-	public abstract void initialize (final ConnectorsFactoryBuilder builder, final ConnectorEnvironment environment, final ConnectorsFactory delegate);
+	public abstract void initialize (final ConnectorsFactoryBuilderInitializer builder, final ConnectorEnvironment environment, final ConnectorsFactory delegate);
 }

@@ -25,7 +25,7 @@ import eu.mosaic_cloud.platform.implementation.v2.connectors.core.BaseConnectors
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorConfiguration;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
-import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryBuilder;
+import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryBuilderInitializer;
 import eu.mosaic_cloud.platform.v2.connectors.queue.QueueConsumerCallback;
 import eu.mosaic_cloud.platform.v2.connectors.queue.QueueConsumerConnectorFactory;
 import eu.mosaic_cloud.platform.v2.connectors.queue.QueuePublisherConnectorFactory;
@@ -38,7 +38,7 @@ public final class AmqpQueueConnectorFactoryInitializer
 			extends BaseConnectorsFactoryInitializer
 {
 	@Override
-	protected void initialize_1 (final ConnectorsFactoryBuilder builder, final ConnectorEnvironment environment, final ConnectorsFactory delegate) {
+	protected void initialize_1 (final ConnectorsFactoryBuilderInitializer builder, final ConnectorEnvironment environment, final ConnectorsFactory delegate) {
 		builder.register (AmqpQueueRawConnectorFactory.class, new AmqpQueueRawConnectorFactory () {
 			@Override
 			public AmqpQueueRawConnector create (final ConfigurationSource configuration) {

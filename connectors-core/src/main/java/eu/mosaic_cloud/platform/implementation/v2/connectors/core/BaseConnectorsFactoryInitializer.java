@@ -23,7 +23,7 @@ package eu.mosaic_cloud.platform.implementation.v2.connectors.core;
 
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
-import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryBuilder;
+import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryBuilderInitializer;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryInitializer;
 
 import com.google.common.base.Preconditions;
@@ -39,11 +39,11 @@ public abstract class BaseConnectorsFactoryInitializer
 	}
 	
 	@Override
-	public final void initialize (final ConnectorsFactoryBuilder builder, final ConnectorEnvironment environment, final ConnectorsFactory delegate) {
+	public final void initialize (final ConnectorsFactoryBuilderInitializer builder, final ConnectorEnvironment environment, final ConnectorsFactory delegate) {
 		Preconditions.checkNotNull (builder);
 		Preconditions.checkNotNull (environment);
 		this.initialize_1 (builder, environment, delegate);
 	}
 	
-	protected abstract void initialize_1 (final ConnectorsFactoryBuilder builder, final ConnectorEnvironment environment, final ConnectorsFactory delegate);
+	protected abstract void initialize_1 (final ConnectorsFactoryBuilderInitializer builder, final ConnectorEnvironment environment, final ConnectorsFactory delegate);
 }
