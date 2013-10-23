@@ -3,7 +3,6 @@ package eu.mosaic_cloud.tools.configurations.tools;
 
 
 import eu.mosaic_cloud.tools.configurations.core.ConfigurationIdentifier;
-import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
 
 
 public class StringConfigurationParameter
@@ -11,10 +10,6 @@ public class StringConfigurationParameter
 {
 	protected StringConfigurationParameter (final ConfigurationIdentifier identifier, final String defaultValue, final boolean notNullConstraint) {
 		super (identifier, String.class, defaultValue, notNullConstraint);
-	}
-	
-	public String resolveString (final ConfigurationSource source) {
-		return (this.resolve (source));
 	}
 	
 	public static final StringConfigurationParameter create (final ConfigurationIdentifier identifier) {
