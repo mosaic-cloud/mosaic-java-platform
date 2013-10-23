@@ -28,6 +28,10 @@ import com.google.common.base.Strings;
 
 public final class EncodingMetadata
 {
+	public EncodingMetadata (final String contentType) {
+		this (contentType, null);
+	}
+	
 	public EncodingMetadata (final String contentType, final String contentEncoding) {
 		super ();
 		this.contentType = Strings.emptyToNull (contentType);
