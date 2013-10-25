@@ -22,6 +22,8 @@ package eu.mosaic_cloud.platform.implementation.v2.connectors.core;
 
 
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
+import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorFactory;
+import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorVariant;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryBuilderInitializer;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryInitializer;
@@ -46,4 +48,17 @@ public abstract class BaseConnectorsFactoryInitializer
 	}
 	
 	protected abstract void initialize_1 (final ConnectorsFactoryBuilderInitializer builder, final ConnectorEnvironment environment, final ConnectorsFactory delegate);
+	
+	protected final <TFactory extends ConnectorFactory<?>> void register (final ConnectorsFactoryBuilderInitializer builder, final Class<TFactory> factoryClass, final ConnectorVariant variant, final boolean enforceVariant, final boolean fallbackVariant, final TFactory factory) {
+		Preconditions.checkNotNull (builder);
+		Preconditions.checkNotNull (factoryClass);
+		Preconditions.checkNotNull (factory);
+		if (enforceVariant)
+			Preconditions.checkNotNull (variant);
+		if (variant != null)
+			if (!builder.register (factoryClass, variant, factory))
+				throw (new IllegalStateException ("variant is already registered"));
+		if (fallbackVariant)
+			builder.register (factoryClass, ConnectorVariant.fallback, factory);
+	}
 }

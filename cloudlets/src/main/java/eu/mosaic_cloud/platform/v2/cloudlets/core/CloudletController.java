@@ -23,6 +23,7 @@ package eu.mosaic_cloud.platform.v2.cloudlets.core;
 
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.core.ConnectorsFactory;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorFactory;
+import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorVariant;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackPassthrough;
 import eu.mosaic_cloud.tools.callbacks.core.Callbacks;
@@ -42,7 +43,7 @@ public interface CloudletController<TContext extends Object>
 	
 	@Override
 	@CallbackPassthrough
-	public abstract <Factory extends ConnectorFactory<?>> Factory getConnectorFactory (Class<Factory> factory);
+	public abstract <Factory extends ConnectorFactory<?>> Factory getConnectorFactory (Class<Factory> factory, final ConnectorVariant variant);
 	
 	@CallbackPassthrough
 	public abstract CloudletState getState ();

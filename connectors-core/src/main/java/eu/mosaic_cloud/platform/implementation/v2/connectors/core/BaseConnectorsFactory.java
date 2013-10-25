@@ -25,8 +25,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorFactory;
+import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorVariant;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
 import eu.mosaic_cloud.tools.miscellaneous.Monitor;
+import eu.mosaic_cloud.tools.miscellaneous.Pair;
 
 import com.google.common.base.Preconditions;
 
@@ -42,32 +44,37 @@ public abstract class BaseConnectorsFactory
 		this.monitor = Monitor.create (this);
 		this.environment = environment;
 		this.delegate = delegate;
-		this.factories = new ConcurrentHashMap<Class<? extends ConnectorFactory<?>>, ConnectorFactory<?>> ();
+		this.factories = new ConcurrentHashMap<Pair<? extends Class<? extends ConnectorFactory<?>>, ConnectorVariant>, ConnectorFactory<?>> ();
 	}
 	
 	@Override
-	public <Factory extends ConnectorFactory<?>> Factory getConnectorFactory (final Class<Factory> factoryClass) {
-		Factory factory = factoryClass.cast (this.factories.get (factoryClass));
+	public <Factory extends ConnectorFactory<?>> Factory getConnectorFactory (final Class<Factory> factoryClass, final ConnectorVariant variant) {
+		final Pair<Class<Factory>, ConnectorVariant> key = Pair.create (factoryClass, variant);
+		Factory factory = factoryClass.cast (this.factories.get (key));
 		if ((factory == null) && (this.delegate != null)) {
-			factory = this.delegate.getConnectorFactory (factoryClass);
+			factory = this.delegate.getConnectorFactory (factoryClass, variant);
 		}
 		return factory;
 	}
 	
-	protected final <Factory extends ConnectorFactory<?>> void registerFactory (final Class<Factory> factoryClass, final Factory factory) {
+	protected final <Factory extends ConnectorFactory<?>> boolean registerFactory (final Class<Factory> factoryClass, final ConnectorVariant variant, final Factory factory) {
 		Preconditions.checkNotNull (factoryClass);
 		Preconditions.checkArgument (factoryClass.isInterface ());
 		Preconditions.checkArgument (ConnectorFactory.class.isAssignableFrom (factoryClass));
 		Preconditions.checkNotNull (factory);
 		Preconditions.checkArgument (factoryClass.isInstance (factory));
+		Preconditions.checkNotNull (variant);
+		final Pair<Class<Factory>, ConnectorVariant> key = Pair.create (factoryClass, variant);
 		synchronized (this.monitor) {
-			Preconditions.checkState (!this.factories.containsKey (factoryClass));
-			this.factories.put (factoryClass, factory);
+			if (this.factories.containsKey (key))
+				return (false);
+			this.factories.put (key, factory);
+			return (true);
 		}
 	}
 	
 	protected final ConnectorsFactory delegate;
 	protected final ConnectorEnvironment environment;
-	protected final ConcurrentHashMap<Class<? extends ConnectorFactory<?>>, ConnectorFactory<?>> factories;
+	protected final ConcurrentHashMap<Pair<? extends Class<? extends ConnectorFactory<?>>, ConnectorVariant>, ConnectorFactory<?>> factories;
 	protected final Monitor monitor;
 }

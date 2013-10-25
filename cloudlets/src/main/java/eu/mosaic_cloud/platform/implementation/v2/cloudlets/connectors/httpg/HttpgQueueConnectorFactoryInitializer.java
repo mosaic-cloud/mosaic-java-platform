@@ -26,6 +26,7 @@ import eu.mosaic_cloud.platform.v2.cloudlets.connectors.httpg.HttpgQueueConnecto
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.httpg.HttpgQueueConnectorFactory;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
+import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorVariant;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryBuilderInitializer;
 import eu.mosaic_cloud.platform.v2.serialization.DataEncoder;
@@ -40,15 +41,18 @@ public final class HttpgQueueConnectorFactoryInitializer
 	@Override
 	protected void initialize_1 (final ConnectorsFactoryBuilderInitializer builder, final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final ConnectorsFactory delegate) {
 		Preconditions.checkNotNull (delegate);
-		builder.register (HttpgQueueConnectorFactory.class, new HttpgQueueConnectorFactory () {
+		this.register (builder, HttpgQueueConnectorFactory.class, HttpgQueueConnectorFactoryInitializer.variant, true, true, new HttpgQueueConnectorFactory () {
 			@Override
 			public <TContext, TRequestBody, TResponseBody, TExtra> HttpgQueueConnector<TContext, TRequestBody, TResponseBody, TExtra> create (final ConfigurationSource configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final HttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra> callback, final TContext callbackContext) {
+				// TODO: Resolve the connector variant from the configuration!
+				final ConnectorVariant variant = ConnectorVariant.fallback;
 				final HttpgQueueConnector.Callback<TRequestBody, TResponseBody> backingCallback = new HttpgQueueConnector.Callback<TRequestBody, TResponseBody> ();
-				final eu.mosaic_cloud.platform.v2.connectors.httpg.HttpgQueueConnector<TRequestBody, TResponseBody> backingConnector = delegate.getConnectorFactory (eu.mosaic_cloud.platform.v2.connectors.httpg.HttpgQueueConnectorFactory.class).create (configuration, requestBodyClass, requestBodyEncoder, responseBodyClass, responseBodyEncoder, backingCallback);
+				final eu.mosaic_cloud.platform.v2.connectors.httpg.HttpgQueueConnector<TRequestBody, TResponseBody> backingConnector = delegate.getConnectorFactory (eu.mosaic_cloud.platform.v2.connectors.httpg.HttpgQueueConnectorFactory.class, variant).create (configuration, requestBodyClass, requestBodyEncoder, responseBodyClass, responseBodyEncoder, backingCallback);
 				return new HttpgQueueConnector<TContext, TRequestBody, TResponseBody, TExtra> (cloudlet, backingConnector, configuration, callback, callbackContext, backingCallback);
 			}
 		});
 	}
 	
 	public static final HttpgQueueConnectorFactoryInitializer defaultInstance = new HttpgQueueConnectorFactoryInitializer ();
+	public static final ConnectorVariant variant = ConnectorVariant.resolve ("eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors");
 }

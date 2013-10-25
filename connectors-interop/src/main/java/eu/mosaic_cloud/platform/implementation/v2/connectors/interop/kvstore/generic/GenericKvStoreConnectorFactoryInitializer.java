@@ -24,6 +24,7 @@ package eu.mosaic_cloud.platform.implementation.v2.connectors.interop.kvstore.ge
 import eu.mosaic_cloud.platform.implementation.v2.connectors.core.BaseConnectorsFactoryInitializer;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorConfiguration;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
+import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorVariant;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryBuilderInitializer;
 import eu.mosaic_cloud.platform.v2.connectors.kvstore.KvStoreConnectorFactory;
@@ -36,7 +37,7 @@ public final class GenericKvStoreConnectorFactoryInitializer
 {
 	@Override
 	protected void initialize_1 (final ConnectorsFactoryBuilderInitializer builder, final ConnectorEnvironment environment, final ConnectorsFactory delegate) {
-		builder.register (KvStoreConnectorFactory.class, new KvStoreConnectorFactory () {
+		this.register (builder, KvStoreConnectorFactory.class, GenericKvStoreConnectorFactoryInitializer.variant, false, true, new KvStoreConnectorFactory () {
 			@Override
 			public <TValue> GenericKvStoreConnector<TValue> create (final ConfigurationSource configuration, final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder) {
 				return GenericKvStoreConnector.create (ConnectorConfiguration.create (configuration, environment), valueEncoder);
@@ -45,4 +46,5 @@ public final class GenericKvStoreConnectorFactoryInitializer
 	}
 	
 	public static final GenericKvStoreConnectorFactoryInitializer defaultInstance = new GenericKvStoreConnectorFactoryInitializer ();
+	public static final ConnectorVariant variant = ConnectorVariant.resolve ("eu.mosaic_cloud.platform.implementation.v2.connectors.interop");
 }

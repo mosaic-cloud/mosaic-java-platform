@@ -24,6 +24,7 @@ package eu.mosaic_cloud.platform.implementation.v2.connectors.interop.queue.amqp
 import eu.mosaic_cloud.platform.implementation.v2.connectors.core.BaseConnectorsFactoryInitializer;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorConfiguration;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
+import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorVariant;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryBuilderInitializer;
 import eu.mosaic_cloud.platform.v2.connectors.queue.QueueConsumerCallback;
@@ -39,19 +40,19 @@ public final class AmqpQueueConnectorFactoryInitializer
 {
 	@Override
 	protected void initialize_1 (final ConnectorsFactoryBuilderInitializer builder, final ConnectorEnvironment environment, final ConnectorsFactory delegate) {
-		builder.register (AmqpQueueRawConnectorFactory.class, new AmqpQueueRawConnectorFactory () {
+		this.register (builder, AmqpQueueRawConnectorFactory.class, AmqpQueueConnectorFactoryInitializer.variant, true, true, new AmqpQueueRawConnectorFactory () {
 			@Override
 			public AmqpQueueRawConnector create (final ConfigurationSource configuration) {
 				return AmqpQueueRawConnector.create (ConnectorConfiguration.create (configuration, environment));
 			}
 		});
-		builder.register (QueueConsumerConnectorFactory.class, new QueueConsumerConnectorFactory () {
+		this.register (builder, QueueConsumerConnectorFactory.class, AmqpQueueConnectorFactoryInitializer.variant, true, true, new QueueConsumerConnectorFactory () {
 			@Override
 			public <TMessage> AmqpQueueConsumerConnector<TMessage> create (final ConfigurationSource configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueueConsumerCallback<TMessage> callback) {
 				return AmqpQueueConsumerConnector.create (ConnectorConfiguration.create (configuration, environment), messageClass, messageEncoder, callback);
 			}
 		});
-		builder.register (QueuePublisherConnectorFactory.class, new QueuePublisherConnectorFactory () {
+		this.register (builder, QueuePublisherConnectorFactory.class, AmqpQueueConnectorFactoryInitializer.variant, true, true, new QueuePublisherConnectorFactory () {
 			@Override
 			public <TMessage> AmqpQueuePublisherConnector<TMessage> create (final ConfigurationSource configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder) {
 				return AmqpQueuePublisherConnector.create (ConnectorConfiguration.create (configuration, environment), messageClass, messageEncoder);
@@ -60,4 +61,5 @@ public final class AmqpQueueConnectorFactoryInitializer
 	}
 	
 	public static final AmqpQueueConnectorFactoryInitializer defaultInstance = new AmqpQueueConnectorFactoryInitializer ();
+	public static final ConnectorVariant variant = ConnectorVariant.resolve ("eu.mosaic_cloud.platform.implementation.v2.connectors.interop");
 }

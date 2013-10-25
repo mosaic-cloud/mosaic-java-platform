@@ -26,6 +26,7 @@ import eu.mosaic_cloud.platform.v2.cloudlets.connectors.executor.ExecutorCallbac
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.executor.ExecutorFactory;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
+import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorVariant;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryBuilderInitializer;
 import eu.mosaic_cloud.tools.configurations.core.ConfigurationSource;
@@ -36,7 +37,7 @@ public final class ExecutorFactoryInitializer
 {
 	@Override
 	protected void initialize_1 (final ConnectorsFactoryBuilderInitializer builder, final CloudletController<?> cloudlet, final ConnectorEnvironment environment, final ConnectorsFactory delegate) {
-		builder.register (ExecutorFactory.class, new ExecutorFactory () {
+		this.register (builder, ExecutorFactory.class, ExecutorFactoryInitializer.variant, true, true, new ExecutorFactory () {
 			@Override
 			public <TContext, TOutcome, TExtra> Executor<TContext, TOutcome, TExtra> create (final ConfigurationSource configuration, final ExecutorCallback<TContext, TOutcome, TExtra> callback, final TContext callbackContext) {
 				return new Executor<TContext, TOutcome, TExtra> (cloudlet, environment.getThreading (), environment.getExceptions (), configuration, callback, callbackContext);
@@ -45,4 +46,5 @@ public final class ExecutorFactoryInitializer
 	}
 	
 	public static final ExecutorFactoryInitializer defaultInstance = new ExecutorFactoryInitializer ();
+	public static final ConnectorVariant variant = ConnectorVariant.resolve ("eu.mosaic_cloud.platform.implementation.v2.cloudlets.connectors");
 }

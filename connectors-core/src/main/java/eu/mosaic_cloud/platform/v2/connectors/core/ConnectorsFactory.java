@@ -28,5 +28,5 @@ package eu.mosaic_cloud.platform.v2.connectors.core;
  */
 public interface ConnectorsFactory
 {
-	<TFactory extends ConnectorFactory<?>> TFactory getConnectorFactory (Class<TFactory> factory);
+	<TFactory extends ConnectorFactory<?>> TFactory getConnectorFactory (Class<TFactory> factory, final ConnectorVariant variant);
 }

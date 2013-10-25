@@ -24,6 +24,7 @@ package eu.mosaic_cloud.platform.implementation.v2.connectors.interop.httpg;
 import eu.mosaic_cloud.platform.implementation.v2.connectors.core.BaseConnectorsFactoryInitializer;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorConfiguration;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
+import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorVariant;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryBuilderInitializer;
 import eu.mosaic_cloud.platform.v2.connectors.httpg.HttpgQueueCallback;
@@ -37,7 +38,7 @@ public final class HttpgQueueConnectorFactoryInitializer
 {
 	@Override
 	protected void initialize_1 (final ConnectorsFactoryBuilderInitializer builder, final ConnectorEnvironment environment, final ConnectorsFactory delegate) {
-		builder.register (HttpgQueueConnectorFactory.class, new HttpgQueueConnectorFactory () {
+		this.register (builder, HttpgQueueConnectorFactory.class, HttpgQueueConnectorFactoryInitializer.variant, false, true, new HttpgQueueConnectorFactory () {
 			@Override
 			public <TRequestBody, TResponseBody> eu.mosaic_cloud.platform.v2.connectors.httpg.HttpgQueueConnector<TRequestBody, TResponseBody> create (final ConfigurationSource configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final HttpgQueueCallback<TRequestBody, TResponseBody> callback) {
 				return HttpgQueueConnector.create (ConnectorConfiguration.create (configuration, environment), requestBodyClass, requestBodyEncoder, responseBodyClass, responseBodyEncoder, callback);
@@ -46,4 +47,5 @@ public final class HttpgQueueConnectorFactoryInitializer
 	}
 	
 	public static final HttpgQueueConnectorFactoryInitializer defaultInstance = new HttpgQueueConnectorFactoryInitializer ();
+	public static final ConnectorVariant variant = ConnectorVariant.resolve ("eu.mosaic_cloud.platform.implementation.v2.connectors.interop");
 }

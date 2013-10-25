@@ -47,6 +47,7 @@ import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletState;
 import eu.mosaic_cloud.platform.v2.connectors.core.Connector;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
+import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorVariant;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackFunnelHandler;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackHandler;
@@ -62,6 +63,7 @@ import eu.mosaic_cloud.tools.exceptions.core.DeferredException;
 import eu.mosaic_cloud.tools.exceptions.tools.QueuedExceptions;
 import eu.mosaic_cloud.tools.exceptions.tools.QueueingExceptionTracer;
 import eu.mosaic_cloud.tools.miscellaneous.ExtendedFormatter;
+import eu.mosaic_cloud.tools.miscellaneous.Pair;
 import eu.mosaic_cloud.tools.threading.core.ThreadingContext;
 import eu.mosaic_cloud.tools.transcript.core.Transcript;
 import eu.mosaic_cloud.tools.transcript.tools.TranscriptExceptionTracer;
@@ -716,32 +718,35 @@ public final class Cloudlet<TContext extends Object>
 	{
 		ConnectorsFactory () {
 			super ();
-			this.factories = new ConcurrentHashMap<Class<? extends eu.mosaic_cloud.platform.v2.connectors.core.ConnectorFactory<?>>, ConnectorFactory<? extends eu.mosaic_cloud.platform.v2.connectors.core.ConnectorFactory<?>>> ();
+			this.factories = new ConcurrentHashMap<Pair<? extends Class<? extends eu.mosaic_cloud.platform.v2.connectors.core.ConnectorFactory<?>>, ConnectorVariant>, ConnectorFactory<? extends eu.mosaic_cloud.platform.v2.connectors.core.ConnectorFactory<?>>> ();
 			this.componentConnectorFactory = new ComponentConnectorFactory (Cloudlet.this.controllerProxy, Cloudlet.this.environment.getComponentConnector (), Cloudlet.this.environment.getConnectorEnvironment (), Cloudlet.this.environment.getConnectors ());
-			this.factories.put (eu.mosaic_cloud.platform.v2.cloudlets.connectors.component.ComponentConnectorFactory.class, new ConnectorFactory<eu.mosaic_cloud.platform.v2.cloudlets.connectors.component.ComponentConnectorFactory> (eu.mosaic_cloud.platform.v2.cloudlets.connectors.component.ComponentConnectorFactory.class, this.componentConnectorFactory));
+			this.factories.put (Pair.create (eu.mosaic_cloud.platform.v2.cloudlets.connectors.component.ComponentConnectorFactory.class, ConnectorVariant.fallback), new ConnectorFactory<eu.mosaic_cloud.platform.v2.cloudlets.connectors.component.ComponentConnectorFactory> (eu.mosaic_cloud.platform.v2.cloudlets.connectors.component.ComponentConnectorFactory.class, this.componentConnectorFactory));
 		}
 		
 		@Override
-		public final <Factory extends eu.mosaic_cloud.platform.v2.connectors.core.ConnectorFactory<?>> Factory getConnectorFactory (final Class<Factory> factoryClass) {
+		public final <Factory extends eu.mosaic_cloud.platform.v2.connectors.core.ConnectorFactory<?>> Factory getConnectorFactory (final Class<Factory> factoryClass, final ConnectorVariant variant) {
 			Preconditions.checkNotNull (factoryClass);
 			Preconditions.checkArgument (factoryClass.isInterface ());
 			Preconditions.checkArgument (eu.mosaic_cloud.platform.v2.connectors.core.ConnectorFactory.class.isAssignableFrom (factoryClass));
+			Preconditions.checkNotNull (variant);
+			final Pair<Class<Factory>, ConnectorVariant> key = Pair.create (factoryClass, variant);
 			try {
 				return Cloudlet.this.fsm.new FsmAccess<Void, Factory> () {
 					@Override
 					protected final Factory execute (final Void input) {
 						{
-							final ConnectorFactory<?> factory = ConnectorsFactory.this.factories.get (factoryClass);
+							final ConnectorFactory<?> factory = ConnectorsFactory.this.factories.get (key);
 							if (factory != null) {
 								return factoryClass.cast (factory.factoryProxy);
 							}
 						}
 						{
-							final Factory factoryDelegate = Cloudlet.this.connectorsFactoryDelegate.getConnectorFactory (factoryClass);
-							Preconditions.checkArgument (factoryDelegate != null);
+							final Factory factoryDelegate = Cloudlet.this.connectorsFactoryDelegate.getConnectorFactory (factoryClass, variant);
+							if (factoryDelegate == null)
+								return (null);
 							Preconditions.checkArgument (factoryClass.isInstance (factoryDelegate));
 							final ConnectorFactory<Factory> factory = new ConnectorFactory<Factory> (factoryClass, factoryDelegate);
-							final ConnectorFactory<?> factory1 = ConnectorsFactory.this.factories.putIfAbsent (factoryClass, factory);
+							final ConnectorFactory<?> factory1 = ConnectorsFactory.this.factories.putIfAbsent (key, factory);
 							Preconditions.checkState (factory1 == null);
 							return factory.factoryProxy;
 						}
@@ -755,7 +760,7 @@ public final class Cloudlet<TContext extends Object>
 		}
 		
 		private final eu.mosaic_cloud.platform.v2.cloudlets.connectors.component.ComponentConnectorFactory componentConnectorFactory;
-		private final ConcurrentHashMap<Class<? extends eu.mosaic_cloud.platform.v2.connectors.core.ConnectorFactory<?>>, ConnectorFactory<? extends eu.mosaic_cloud.platform.v2.connectors.core.ConnectorFactory<?>>> factories;
+		private final ConcurrentHashMap<Pair<? extends Class<? extends eu.mosaic_cloud.platform.v2.connectors.core.ConnectorFactory<?>>, ConnectorVariant>, ConnectorFactory<? extends eu.mosaic_cloud.platform.v2.connectors.core.ConnectorFactory<?>>> factories;
 	}
 	
 	final class ControllerHandler
@@ -859,12 +864,12 @@ public final class Cloudlet<TContext extends Object>
 		}
 		
 		@Override
-		public final <Factory extends eu.mosaic_cloud.platform.v2.connectors.core.ConnectorFactory<?>> Factory getConnectorFactory (final Class<Factory> factory) {
+		public final <Factory extends eu.mosaic_cloud.platform.v2.connectors.core.ConnectorFactory<?>> Factory getConnectorFactory (final Class<Factory> factory, final ConnectorVariant variant) {
 			try {
 				return Cloudlet.this.fsm.new FsmAccess<Void, Factory> () {
 					@Override
 					protected final Factory execute (final Void input) {
-						return Cloudlet.this.connectorsFactory.getConnectorFactory (factory);
+						return Cloudlet.this.connectorsFactory.getConnectorFactory (factory, variant);
 					}
 				}.trigger (null);
 			} catch (final CaughtException.Wrapper wrapper) {

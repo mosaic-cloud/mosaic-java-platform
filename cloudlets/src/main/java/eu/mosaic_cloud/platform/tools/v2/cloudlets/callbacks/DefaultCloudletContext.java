@@ -43,6 +43,7 @@ import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueuePublisherConn
 import eu.mosaic_cloud.platform.v2.cloudlets.connectors.queue.QueuePublisherConnectorFactory;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.Callback;
 import eu.mosaic_cloud.platform.v2.cloudlets.core.CloudletController;
+import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorVariant;
 import eu.mosaic_cloud.platform.v2.serialization.DataEncoder;
 import eu.mosaic_cloud.tools.callbacks.core.CallbackCompletion;
 import eu.mosaic_cloud.tools.configurations.core.ConfigurationIdentifier;
@@ -97,7 +98,7 @@ public class DefaultCloudletContext<TContext extends DefaultCloudletContext<TCon
 	}
 	
 	public <TContext, TExtra> ComponentConnector<TExtra> createComponentConnector (final ComponentConnectorCallbacks<TContext, TExtra> callback, final TContext callbackContext) {
-		return (this.getConnectorFactory (ComponentConnectorFactory.class).create (callback, callbackContext));
+		return (this.getConnectorFactory (ComponentConnectorFactory.class, this.resolveConnectorVariant (null)).create (callback, callbackContext));
 	}
 	
 	@SuppressWarnings ("unchecked")
@@ -114,7 +115,7 @@ public class DefaultCloudletContext<TContext extends DefaultCloudletContext<TCon
 	}
 	
 	public <TContext, TOutcome, TExtra> Executor<TOutcome, TExtra> createExecutor (final ConfigurationSource configuration, final ExecutorCallback<TContext, TOutcome, TExtra> callback, final TContext callbackContext) {
-		return (this.getConnectorFactory (ExecutorFactory.class).create ((configuration != null) ? configuration : EmptyConfigurationSource.defaultInstance, callback, callbackContext));
+		return (this.getConnectorFactory (ExecutorFactory.class, this.resolveConnectorVariant (configuration)).create ((configuration != null) ? configuration : EmptyConfigurationSource.defaultInstance, callback, callbackContext));
 	}
 	
 	@SuppressWarnings ("unchecked")
@@ -159,7 +160,7 @@ public class DefaultCloudletContext<TContext extends DefaultCloudletContext<TCon
 	}
 	
 	public <TContext, TRequestBody, TResponseBody, TExtra> HttpgQueueConnector<TRequestBody, TResponseBody, TExtra> createHttpgQueueConnector (final ConfigurationSource configuration, final Class<TRequestBody> requestBodyClass, final DataEncoder<TRequestBody> requestBodyEncoder, final Class<TResponseBody> responseBodyClass, final DataEncoder<TResponseBody> responseBodyEncoder, final HttpgQueueConnectorCallback<TContext, TRequestBody, TResponseBody, TExtra> callback, final TContext callbackContext) {
-		return (this.getConnectorFactory (HttpgQueueConnectorFactory.class).create ((configuration != null) ? configuration : EmptyConfigurationSource.defaultInstance, requestBodyClass, requestBodyEncoder, responseBodyClass, responseBodyEncoder, callback, callbackContext));
+		return (this.getConnectorFactory (HttpgQueueConnectorFactory.class, this.resolveConnectorVariant (configuration)).create ((configuration != null) ? configuration : EmptyConfigurationSource.defaultInstance, requestBodyClass, requestBodyEncoder, responseBodyClass, responseBodyEncoder, callback, callbackContext));
 	}
 	
 	@SuppressWarnings ("unchecked")
@@ -195,7 +196,7 @@ public class DefaultCloudletContext<TContext extends DefaultCloudletContext<TCon
 	}
 	
 	public <TContext, TValue, TExtra> KvStoreConnector<TValue, TExtra> createKvStoreConnector (final ConfigurationSource configuration, final Class<TValue> valueClass, final DataEncoder<TValue> valueEncoder, final KvStoreConnectorCallback<TContext, TValue, TExtra> callback, final TContext callbackContext) {
-		return (this.getConnectorFactory (KvStoreConnectorFactory.class).create ((configuration != null) ? configuration : EmptyConfigurationSource.defaultInstance, valueClass, valueEncoder, callback, callbackContext));
+		return (this.getConnectorFactory (KvStoreConnectorFactory.class, this.resolveConnectorVariant (configuration)).create ((configuration != null) ? configuration : EmptyConfigurationSource.defaultInstance, valueClass, valueEncoder, callback, callbackContext));
 	}
 	
 	@SuppressWarnings ("unchecked")
@@ -231,7 +232,7 @@ public class DefaultCloudletContext<TContext extends DefaultCloudletContext<TCon
 	}
 	
 	public <TContext, TMessage, TExtra> QueueConsumerConnector<TMessage, TExtra> createQueueConsumerConnector (final ConfigurationSource configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueueConsumerConnectorCallback<TContext, TMessage, TExtra> callback, final TContext callbackContext) {
-		return (this.getConnectorFactory (QueueConsumerConnectorFactory.class).create ((configuration != null) ? configuration : EmptyConfigurationSource.defaultInstance, messageClass, messageEncoder, callback, callbackContext));
+		return (this.getConnectorFactory (QueueConsumerConnectorFactory.class, this.resolveConnectorVariant (configuration)).create ((configuration != null) ? configuration : EmptyConfigurationSource.defaultInstance, messageClass, messageEncoder, callback, callbackContext));
 	}
 	
 	@SuppressWarnings ("unchecked")
@@ -267,7 +268,7 @@ public class DefaultCloudletContext<TContext extends DefaultCloudletContext<TCon
 	}
 	
 	public <TContext, TMessage, TExtra> QueuePublisherConnector<TMessage, TExtra> createQueuePublisherConnector (final ConfigurationSource configuration, final Class<TMessage> messageClass, final DataEncoder<TMessage> messageEncoder, final QueuePublisherConnectorCallback<TContext, TMessage, TExtra> callback, final TContext callbackContext) {
-		return (this.getConnectorFactory (QueuePublisherConnectorFactory.class).create ((configuration != null) ? configuration : EmptyConfigurationSource.defaultInstance, messageClass, messageEncoder, callback, callbackContext));
+		return (this.getConnectorFactory (QueuePublisherConnectorFactory.class, this.resolveConnectorVariant (configuration)).create ((configuration != null) ? configuration : EmptyConfigurationSource.defaultInstance, messageClass, messageEncoder, callback, callbackContext));
 	}
 	
 	@SuppressWarnings ("unchecked")
@@ -303,8 +304,14 @@ public class DefaultCloudletContext<TContext extends DefaultCloudletContext<TCon
 		return (this.cloudlet.getConfiguration ());
 	}
 	
-	public <Factory extends ConnectorFactory<?>> Factory getConnectorFactory (final Class<Factory> factory) {
-		return (this.cloudlet.getConnectorFactory (factory));
+	public <Factory extends ConnectorFactory<?>> Factory getConnectorFactory (final Class<Factory> factory, final ConnectorVariant variant) {
+		final Factory requestedFactory = this.cloudlet.getConnectorFactory (factory, variant);
+		if (requestedFactory != null)
+			return (requestedFactory);
+		final Factory fallbackFactory = this.cloudlet.getConnectorFactory (factory, ConnectorVariant.fallback);
+		if (fallbackFactory != null)
+			return (fallbackFactory);
+		throw (new IllegalStateException ("could not resolve factory"));
 	}
 	
 	public CallbackCompletion<Void> initializeConnectors (final Connector ... connectors) {
@@ -320,5 +327,11 @@ public class DefaultCloudletContext<TContext extends DefaultCloudletContext<TCon
 	
 	public ConfigurationSource spliceConfiguration (final String relative) {
 		return (this.getConfiguration ().splice (ConfigurationIdentifier.resolveRelative (relative)));
+	}
+	
+	protected ConnectorVariant resolveConnectorVariant (final ConfigurationSource configuration) {
+		// TODO: Resolve the connector variant from the configuration!
+		final ConnectorVariant variant = ConnectorVariant.fallback;
+		return (variant);
 	}
 }

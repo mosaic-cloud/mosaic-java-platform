@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorEnvironment;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorFactory;
+import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorVariant;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactory;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryBuilder;
 import eu.mosaic_cloud.platform.v2.connectors.core.ConnectorsFactoryBuilderInitializer;
@@ -55,14 +56,15 @@ public abstract class BaseConnectorsFactoryBuilder<TFactory extends BaseConnecto
 	}
 	
 	@Override
-	public final <TConnectorFactory extends ConnectorFactory<?>> void register (final Class<TConnectorFactory> factoryClass, final TConnectorFactory factory) {
+	public final <TConnectorFactory extends ConnectorFactory<?>> boolean register (final Class<TConnectorFactory> factoryClass, final ConnectorVariant variant, final TConnectorFactory factory) {
 		Preconditions.checkState (!this.built.get ());
 		Preconditions.checkNotNull (factoryClass);
 		Preconditions.checkArgument (factoryClass.isInterface ());
 		Preconditions.checkArgument (ConnectorFactory.class.isAssignableFrom (factoryClass));
 		Preconditions.checkNotNull (factory);
 		Preconditions.checkArgument (factoryClass.isInstance (factory));
-		this.factory.registerFactory (factoryClass, factory);
+		Preconditions.checkNotNull (variant);
+		return (this.factory.registerFactory (factoryClass, variant, factory));
 	}
 	
 	protected void build_1 () {}
@@ -73,8 +75,8 @@ public abstract class BaseConnectorsFactoryBuilder<TFactory extends BaseConnecto
 	
 	protected void initialize_1 () {}
 	
-	protected <TConnectorFactory extends ConnectorFactory<?>> void register_1 (final Class<TConnectorFactory> factoryClass, final TConnectorFactory factory) {
-		this.factory.registerFactory (factoryClass, factory);
+	protected <TConnectorFactory extends ConnectorFactory<?>> boolean register_1 (final Class<TConnectorFactory> factoryClass, final ConnectorVariant variant, final TConnectorFactory factory) {
+		return (this.factory.registerFactory (factoryClass, variant, factory));
 	}
 	
 	protected final ConnectorsFactory delegate;

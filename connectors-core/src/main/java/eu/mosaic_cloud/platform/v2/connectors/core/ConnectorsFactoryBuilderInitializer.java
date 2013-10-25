@@ -23,5 +23,5 @@ package eu.mosaic_cloud.platform.v2.connectors.core;
 
 public interface ConnectorsFactoryBuilderInitializer
 {
-	public abstract <TFactory extends ConnectorFactory<?>> void register (final Class<TFactory> factoryClass, final TFactory factory);
+	public abstract <TFactory extends ConnectorFactory<?>> boolean register (final Class<TFactory> factoryClass, final ConnectorVariant variant, final TFactory factory);
 }
