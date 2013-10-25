@@ -22,8 +22,9 @@ public final class ConnectorVariant
 		final String specifier = specifier_.intern ();
 		final ConnectorVariant variant;
 		synchronized (ConnectorVariant.variants) {
-			if (ConnectorVariant.variants.containsKey (specifier))
-				variant = ConnectorVariant.variants.get (specifier);
+			final ConnectorVariant existingVariant = ConnectorVariant.variants.get (specifier);
+			if (existingVariant != null)
+				variant = existingVariant;
 			else
 				variant = new ConnectorVariant (specifier);
 			ConnectorVariant.variants.put (specifier, variant);

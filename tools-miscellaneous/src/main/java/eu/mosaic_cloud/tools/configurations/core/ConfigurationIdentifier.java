@@ -121,8 +121,9 @@ public final class ConfigurationIdentifier
 		final boolean absolute = anchorAbsolute || relativeAbsolute;
 		final ConfigurationIdentifier identifier;
 		synchronized (ConfigurationIdentifier.identifiers) {
-			if (ConfigurationIdentifier.identifiers.containsKey (path))
-				identifier = ConfigurationIdentifier.identifiers.get (path);
+			final ConfigurationIdentifier existingIdentifier = ConfigurationIdentifier.identifiers.get (path);
+			if (existingIdentifier != null)
+				identifier = existingIdentifier;
 			else
 				identifier = new ConfigurationIdentifier (absolute ? Type.Absolute : Type.Relative, path);
 			ConfigurationIdentifier.identifiers.put (path, identifier);
