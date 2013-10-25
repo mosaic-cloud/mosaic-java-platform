@@ -1,5 +1,5 @@
 
-package eu.mosaic_cloud.platform.implementation.v2.connectors.riak;
+package eu.mosaic_cloud.platform.implementation.v2.connectors.direct.riak;
 
 
 import java.io.IOException;

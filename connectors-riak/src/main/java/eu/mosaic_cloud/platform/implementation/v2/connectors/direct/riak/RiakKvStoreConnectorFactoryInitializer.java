@@ -1,5 +1,5 @@
 
-package eu.mosaic_cloud.platform.implementation.v2.connectors.riak;
+package eu.mosaic_cloud.platform.implementation.v2.connectors.direct.riak;
 
 
 import eu.mosaic_cloud.platform.implementation.v2.connectors.core.BaseConnectorsFactoryInitializer;
@@ -27,5 +27,5 @@ public final class RiakKvStoreConnectorFactoryInitializer
 	}
 	
 	public static final RiakKvStoreConnectorFactoryInitializer defaultInstance = new RiakKvStoreConnectorFactoryInitializer ();
-	public static final ConnectorVariant variant = ConnectorVariant.resolve ("eu.mosaic_cloud.platform.implementation.v2.connectors.native.riak");
+	public static final ConnectorVariant variant = ConnectorVariant.resolve ("eu.mosaic_cloud.platform.implementation.v2.connectors.direct.riak");
 }
