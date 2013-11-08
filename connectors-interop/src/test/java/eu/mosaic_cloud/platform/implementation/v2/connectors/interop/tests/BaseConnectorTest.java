@@ -18,7 +18,7 @@
  * #L%
  */
 
-package eu.mosaic_cloud.platform.implementation.v2.connectors.tests;
+package eu.mosaic_cloud.platform.implementation.v2.connectors.interop.tests;
 
 
 import java.util.concurrent.ExecutionException;
