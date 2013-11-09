@@ -41,6 +41,17 @@ if test "${_mosaic_deploy_artifactory:-false}" == true ; then
 	esac
 fi
 
+case "${_maven_pom_classifier}" in
+		( component | *-component )
+		;;
+		( artifacts )
+			exit 0
+		;;
+		( * )
+			exit 1
+		;;
+esac
+
 if test "${_mosaic_deploy_cp:-false}" == true ; then
 	test -n "${_mosaic_deploy_cp_store}"
 	_mosaic_deploy_cp_target="${_mosaic_deploy_cp_store}/${_package_name}--${_package_version}.tar.gz"
