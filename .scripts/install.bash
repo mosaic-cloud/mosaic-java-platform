@@ -5,19 +5,19 @@ if ! test "${#}" -eq 0 ; then
 	exit 1
 fi
 
-case "${_maven_pom_classifier}" in
+case "${_pom_classifier}" in
 	
 	( component | *-component )
 		env "${_mvn_env[@]}" "${_mvn_bin}" \
 				-f "${_mvn_pom}" \
-				--projects "${_maven_pom_group}:${_maven_pom_artifact}" \
+				--projects "${_pom_group}:${_pom_artifact}" \
 				--also-make \
 				"${_mvn_args[@]}" \
 				install \
 				-DskipTests=true \
-				-D_maven_pom_skip_analyze=true \
-				-D_maven_pom_skip_licenses=true \
-				-D_maven_pom_skip_formatter=true
+				-D_mvn_skip_analyze=true \
+				-D_mvn_skip_licenses=true \
+				-D_mvn_skip_formatter=true
 	;;
 	
 	( artifacts )
@@ -28,9 +28,9 @@ case "${_maven_pom_classifier}" in
 				"${_mvn_args[@]}" \
 				install \
 				-DskipTests=true \
-				-D_maven_pom_skip_analyze=true \
-				-D_maven_pom_skip_licenses=true \
-				-D_maven_pom_skip_formatter=true
+				-D_mvn_skip_analyze=true \
+				-D_mvn_skip_licenses=true \
+				-D_mvn_skip_formatter=true
 	;;
 	
 	( * )

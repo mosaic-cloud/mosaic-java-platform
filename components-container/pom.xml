@@ -116,8 +116,8 @@
 	</build>
 	
 	<properties>
-		<_maven_pom_package>mosaic-components-java-component-container</_maven_pom_package>
-		<_maven_pom_classifier>component</_maven_pom_classifier>
+		<_pom_package>mosaic-components-java-component-container</_pom_package>
+		<_pom_classifier>component</_pom_classifier>
 	</properties>
 	
 </project>

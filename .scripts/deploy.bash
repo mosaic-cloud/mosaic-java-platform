@@ -6,19 +6,19 @@ if ! test "${#}" -eq 0 ; then
 fi
 
 if test "${_mosaic_deploy_artifactory:-false}" == true ; then
-	case "${_maven_pom_classifier}" in
+	case "${_pom_classifier}" in
 		
 		( component | *-component )
 			env "${_mvn_env[@]}" "${_mvn_bin}" \
 					-f "${_mvn_pom}" \
-					--projects "${_maven_pom_group}:${_maven_pom_artifact}" \
+					--projects "${_pom_group}:${_pom_artifact}" \
 					--also-make \
 					"${_mvn_args[@]}" \
 					deploy \
 					-DskipTests=true \
-					-D_maven_pom_skip_analyze=true \
-					-D_maven_pom_skip_licenses=true \
-					-D_maven_pom_skip_formatter=true
+					-D_mvn_skip_analyze=true \
+					-D_mvn_skip_licenses=true \
+					-D_mvn_skip_formatter=true
 		;;
 		
 		( artifacts )
@@ -29,9 +29,9 @@ if test "${_mosaic_deploy_artifactory:-false}" == true ; then
 					"${_mvn_args[@]}" \
 					deploy \
 					-DskipTests=true \
-					-D_maven_pom_skip_analyze=true \
-					-D_maven_pom_skip_licenses=true \
-					-D_maven_pom_skip_formatter=true
+					-D_mvn_skip_analyze=true \
+					-D_mvn_skip_licenses=true \
+					-D_mvn_skip_formatter=true
 			exit 0
 		;;
 		
@@ -41,7 +41,7 @@ if test "${_mosaic_deploy_artifactory:-false}" == true ; then
 	esac
 fi
 
-case "${_maven_pom_classifier}" in
+case "${_pom_classifier}" in
 		( component | *-component )
 		;;
 		( artifacts )
