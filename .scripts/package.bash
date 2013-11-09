@@ -59,7 +59,7 @@ mkdir -- "${_outputs}/package/lib"
 
 mkdir -- "${_outputs}/package/lib/java"
 find -H "${_workbench}/target" -type f -name "${_package_jar_name}" -exec cp -t "${_outputs}/package/lib/java" -- {} \;
-find -H "${_workbench}/lib" -xtype f \( -name 'lib*.so' -o -name 'lib*.so.*' \) -exec cp -t "${_outputs}/package/lib/java" -- {} \;
+find -H "${_tools}/lib" -xtype f \( -name 'lib*.so' -o -name 'lib*.so.*' \) -exec cp -t "${_outputs}/package/lib/java" -- {} \;
 
 mkdir -- "${_outputs}/package/lib/scripts"
 

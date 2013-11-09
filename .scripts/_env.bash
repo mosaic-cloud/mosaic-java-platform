@@ -78,16 +78,11 @@ case "${_maven_pom_classifier}" in
 	( component | *-component )
 		test -n "${_maven_pom_package}"
 		_package_name="${_maven_pom_package}"
-		_package_jar_name="${_maven_pom_artifact}-${_maven_pom_version}-${_maven_pom_classifier}.jar"
-		_package_scripts=( run-component )
 		_package_version="${mosaic_distribution_version:-0.7.0_mosaic_dev}"
-		_package_cook="${mosaic_distribution_cook:-cook@agent1.builder.mosaic.ieat.ro}"
-		_mosaic_deploy_cook="${_mosaic_deploy_cook:-true}"
-		_mosaic_deploy_artifactory="${_mosaic_deploy_artifactory:-true}"
+		_package_scripts=( run-component )
+		_package_jar_name="${_maven_pom_artifact}-${_maven_pom_version}-${_maven_pom_classifier}.jar"
 	;;
 	( artifacts )
-		_mosaic_deploy_cook=false
-		_mosaic_deploy_artifactory="${_mosaic_deploy_artifactory:-true}"
 	;;
 	( * )
 		false
