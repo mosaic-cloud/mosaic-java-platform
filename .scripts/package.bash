@@ -14,21 +14,21 @@ if test -e "${_outputs}/package.tar.gz" ; then
 	rm -- "${_outputs}/package.tar.gz"
 fi
 
-case "${_maven_pom_classifier}" in
+case "${_pom_classifier}" in
 	
 	( component | *-component )
 		
 		###		--offline \
 		env "${_mvn_env[@]}" "${_mvn_bin}" \
 				-f "${_mvn_pom}" \
-				--projects "${_maven_pom_group}:${_maven_pom_artifact}" \
+				--projects "${_pom_group}:${_pom_artifact}" \
 				--also-make \
 				"${_mvn_args[@]}" \
 				package \
 				-DskipTests=true \
-				-D_maven_pom_skip_analyze=true \
-				-D_maven_pom_skip_licenses=true \
-				-D_maven_pom_skip_formatter=true
+				-D_mvn_skip_analyze=true \
+				-D_mvn_skip_licenses=true \
+				-D_mvn_skip_formatter=true
 	;;
 	
 	( artifacts )
@@ -41,9 +41,9 @@ case "${_maven_pom_classifier}" in
 				"${_mvn_args[@]}" \
 				package \
 				-DskipTests=true \
-				-D_maven_pom_skip_analyze=true \
-				-D_maven_pom_skip_licenses=true \
-				-D_maven_pom_skip_formatter=true
+				-D_mvn_skip_analyze=true \
+				-D_mvn_skip_licenses=true \
+				-D_mvn_skip_formatter=true
 		
 		exit 0
 	;;
@@ -59,7 +59,7 @@ mkdir -- "${_outputs}/package/lib"
 
 mkdir -- "${_outputs}/package/lib/java"
 find -H "${_workbench}/target" -type f -name "${_package_jar_name}" -exec cp -t "${_outputs}/package/lib/java" -- {} \;
-find -H "${_workbench}/lib" -xtype f \( -name 'lib*.so' -o -name 'lib*.so.*' \) -exec cp -t "${_outputs}/package/lib/java" -- {} \;
+find -H "${_tools}/lib" -xtype f \( -name 'lib*.so' -o -name 'lib*.so.*' \) -exec cp -t "${_outputs}/package/lib/java" -- {} \;
 
 mkdir -- "${_outputs}/package/lib/scripts"
 

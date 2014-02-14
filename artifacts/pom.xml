@@ -28,7 +28,7 @@
 	</modules>
 	
 	<properties>
-		<_maven_pom_classifier>artifacts</_maven_pom_classifier>
+		<_pom_classifier>artifacts</_pom_classifier>
 	</properties>
 	
 </project>

@@ -44,7 +44,7 @@ else
 fi
 _mvn_args=(
 		--errors
-		-D_maven_pom_outputs="${_temporary}/mosaic-java-platform--$( readlink -m -- "${_workbench}/.outputs" | tr -d '\n' | md5sum -t | tr -d ' \n-' )"
+		-D_mvn_outputs="${_temporary}/mosaic-java-platform--$( readlink -m -- "${_workbench}/.outputs" | tr -d '\n' | md5sum -t | tr -d ' \n-' )"
 )
 if test -z "${_mvn_verbose:-}" ; then
 	_mvn_args+=( --quiet )
@@ -53,9 +53,9 @@ _mvn_env=(
 		"${_generic_env[@]}"
 )
 
-while read _maven_pom_variable ; do
-	test -n "${_maven_pom_variable}" || continue
-	declare "${_maven_pom_variable}"
+while read _pom_variable ; do
+	test -n "${_pom_variable}" || continue
+	declare "${_pom_variable}"
 done <<<"$(
 		###		--offline \
 		env "${_mvn_env[@]}" "${_mvn_bin}" \
@@ -64,30 +64,25 @@ done <<<"$(
 				help:effective-pom \
 				-Doutput=/dev/stderr \
 			3>&1 1>&2 2>&3 \
-		| grep -o -E -e '<echo message="_maven_pom_[a-z]+=.+&#xA;" file="/dev/stdout" />' \
-		| sed -r -e 's!^<echo message="(_maven_pom_[a-z]+=.+)&#xA;" file="/dev/stdout" />$!\1!'
+		| grep -o -E -e '<echo message="_pom_[a-z]+=.+&#xA;" file="/dev/stdout" />' \
+		| sed -r -e 's!^<echo message="(_pom_[a-z]+=.+)&#xA;" file="/dev/stdout" />$!\1!'
 )"
 
 _mvn_pom="${_mvn_umbrella_pom}"
 
-test -n "${_maven_pom_artifact:-}"
-test -n "${_maven_pom_version:-}"
-test -n "${_maven_pom_classifier:-}"
+test -n "${_pom_artifact:-}"
+test -n "${_pom_version:-}"
+test -n "${_pom_classifier:-}"
 
-case "${_maven_pom_classifier}" in
+case "${_pom_classifier}" in
 	( component | *-component )
-		test -n "${_maven_pom_package}"
-		_package_name="${_maven_pom_package}"
-		_package_jar_name="${_maven_pom_artifact}-${_maven_pom_version}-${_maven_pom_classifier}.jar"
-		_package_scripts=( run-component )
+		test -n "${_pom_package}"
+		_package_name="${_pom_package}"
 		_package_version="${mosaic_distribution_version:-0.7.0_mosaic_dev}"
-		_package_cook="${mosaic_distribution_cook:-cook@agent1.builder.mosaic.ieat.ro}"
-		_mosaic_deploy_cook="${_mosaic_deploy_cook:-true}"
-		_mosaic_deploy_artifactory="${_mosaic_deploy_artifactory:-true}"
+		_package_scripts=( run-component )
+		_package_jar_name="${_pom_artifact}-${_pom_version}-${_pom_classifier}.jar"
 	;;
 	( artifacts )
-		_mosaic_deploy_cook=false
-		_mosaic_deploy_artifactory="${_mosaic_deploy_artifactory:-true}"
 	;;
 	( * )
 		false
