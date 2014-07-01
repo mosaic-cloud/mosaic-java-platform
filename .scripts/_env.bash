@@ -6,19 +6,40 @@ export -n BASH_ENV
 
 _workbench="$( readlink -e -- . )"
 _scripts="${_workbench}/scripts"
-_tools="${mosaic_distribution_tools:-${_workbench}/.tools}"
 _outputs="${_workbench}/.outputs"
-_temporary="${mosaic_distribution_temporary:-/tmp}"
+_tools="${pallur_tools:-${_workbench}/.tools}"
+_temporary="${pallur_temporary:-${pallur_TMPDIR:-${TMPDIR:-/tmp}}}"
 
-_PATH="${_tools}/bin:${PATH}"
+_PATH="${pallur_PATH:-${_tools}/bin:${PATH}}"
+_HOME="${pallur_HOME:-${HOME}}"
+_TMPDIR="${pallur_TMPDIR:-${TMPDIR:-${_temporary}}}"
 
-_java_bin="$( PATH="${_PATH}" type -P -- java || true )"
+if test -n "${pallur_pkg_java:-}" ; then
+	_JAVA_HOME="${pallur_pkg_java}"
+else
+	_JAVA_HOME="${JAVA_HOME:-}"
+fi
+if test -n "${pallur_pkg_mvn:-}" ; then
+	_M2_HOME="${pallur_pkg_mvn}"
+else
+	_M2_HOME="${M2_HOME:-}"
+fi
+
+if test -n "${_JAVA_HOME:-}" ; then
+	_java_bin="${_JAVA_HOME}/bin/java"
+else
+	_java_bin="$( PATH="${_PATH}" type -P -- java || true )"
+fi
 if test -z "${_java_bin}" ; then
 	echo "[ee] missing \`java\` (Java interpreter) executable in path: \`${_PATH}\`; ignoring!" >&2
 	exit 1
 fi
 
-_mvn_bin="$( PATH="${_PATH}" type -P -- mvn || true )"
+if test -n "${_M2_HOME:-}" ; then
+	_mvn_bin="${_M2_HOME}/bin/mvn"
+else
+	_mvn_bin="$( PATH="${_PATH}" type -P -- mvn || true )"
+fi
 if test -z "${_mvn_bin}" ; then
 	echo "[ee] missing \`mvn\` (Java Maven tool) executable in path: \`${_PATH}\`; ignoring!" >&2
 	exit 1
@@ -26,7 +47,10 @@ fi
 
 _generic_env=(
 		PATH="${_PATH}"
-		TMPDIR="${_temporary}"
+		HOME="${_HOME}"
+		TMPDIR="${_TMPDIR}"
+		JAVA_HOME="${_JAVA_HOME}"
+		M2_HOME="${_M2_HOME}"
 )
 
 _java_args=(
@@ -44,9 +68,15 @@ else
 fi
 _mvn_args=(
 		--errors
+		--batch-mode
 		-D_mvn_outputs="${_temporary}/mosaic-java-platform--$( readlink -m -- "${_workbench}/.outputs" | tr -d '\n' | md5sum -t | tr -d ' \n-' )"
+		--log-file /dev/stderr
 )
-if test -z "${_mvn_verbose:-}" ; then
+if test -n "${_mvn_debug:-}" ; then
+	_mvn_args+=( --debug )
+elif test -n "${_mvn_verbose:-}" ; then
+	_mvn_args+=( )
+else
 	_mvn_args+=( --quiet )
 fi
 _mvn_env=(
@@ -57,7 +87,7 @@ while read _pom_variable ; do
 	test -n "${_pom_variable}" || continue
 	declare "${_pom_variable}"
 done <<<"$(
-		###		--offline \
+		# FIXME: Add `--offline` flag, if Maven has already downloaded required plugins. (See `mosaic-distribution`.)
 		env "${_mvn_env[@]}" "${_mvn_bin}" \
 				-f "${_mvn_this_pom}" \
 				"${_mvn_args[@]}" \
@@ -78,7 +108,7 @@ case "${_pom_classifier}" in
 	( component | *-component )
 		test -n "${_pom_package}"
 		_package_name="${_pom_package}"
-		_package_version="${mosaic_distribution_version:-0.7.0_mosaic_dev}"
+		_package_version="${pallur_distribution_version:-0.7.0_mosaic_dev}"
 		_package_scripts=( run-component )
 		_package_jar_name="${_pom_artifact}-${_pom_version}-${_pom_classifier}.jar"
 	;;

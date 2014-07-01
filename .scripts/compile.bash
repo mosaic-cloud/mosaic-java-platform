@@ -8,24 +8,25 @@ fi
 case "${_pom_classifier}" in
 	
 	( component | *-component )
-		
-		###		--offline \
-		exec env "${_mvn_env[@]}" "${_mvn_bin}" \
+		# FIXME: Add `--offline` flag, if Maven has already downloaded required plugins. (See `mosaic-distribution`.)
+		exec env -i "${_mvn_env[@]}" "${_mvn_bin}" \
 				-f "${_mvn_pom}" \
 				--projects "${_pom_group}:${_pom_artifact}" \
 				--also-make \
 				"${_mvn_args[@]}" \
-				compile test-compile
+				compile test-compile \
+				-D_mvn_skip_all=true
 	;;
 	
 	( artifacts )
+		# FIXME: Add `--offline` flag, if Maven has already downloaded required plugins. (See `mosaic-distribution`.)
 		# FIXME: We have to fix this...
-		###		--offline \
-		exec env "${_mvn_env[@]}" "${_mvn_bin}" \
+		exec env -i "${_mvn_env[@]}" "${_mvn_bin}" \
 				-f "${_mvn_pom}" \
 				--also-make \
 				"${_mvn_args[@]}" \
-				compile test-compile
+				compile test-compile \
+				-D_mvn_skip_all=true
 	;;
 	
 	( * )
