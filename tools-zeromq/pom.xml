@@ -29,8 +29,8 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
-				<version>${versions.plugins.license}</version>
 				<configuration>
+					<skipUpdateProjectLicense>true</skipUpdateProjectLicense>
 					<skipUpdateLicense>true</skipUpdateLicense>
 				</configuration>
 			</plugin>
