@@ -6,9 +6,9 @@ export -n BASH_ENV
 
 _workbench="$( readlink -e -- . )"
 _scripts="${_workbench}/scripts"
-_outputs="${_workbench}/.outputs"
 _tools="${pallur_tools:-${_workbench}/.tools}"
 _temporary="${pallur_temporary:-${pallur_TMPDIR:-${TMPDIR:-/tmp}}}"
+_outputs="${_temporary}/$( basename -- "${_workbench}" )--outputs--$( readlink -e -- "${_workbench}" | tr -d '\n' | md5sum -t | tr -d ' \n-' )"
 
 _PATH="${pallur_PATH:-${_tools}/bin:${PATH}}"
 _HOME="${pallur_HOME:-${HOME}}"
