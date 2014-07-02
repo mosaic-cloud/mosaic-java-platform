@@ -22,6 +22,7 @@ case "${_pom_classifier}" in
 				-f "${_mvn_pom}" \
 				--projects "${_pom_group}:${_pom_artifact}" \
 				--also-make \
+				--activate-profiles "${_mvn_profiles}" \
 				"${_mvn_args[@]}" \
 				package \
 				-D_mvn_skip_all=true
@@ -33,6 +34,7 @@ case "${_pom_classifier}" in
 		env -i "${_mvn_env[@]}" "${_mvn_bin}" \
 				-f "${_mvn_pom}" \
 				--also-make \
+				--activate-profiles "${_mvn_profiles}" \
 				"${_mvn_args[@]}" \
 				package \
 				-D_mvn_skip_all=true
@@ -49,7 +51,7 @@ mkdir -- "${_outputs}/package/bin"
 mkdir -- "${_outputs}/package/lib"
 
 mkdir -- "${_outputs}/package/lib/java"
-find -H "${_workbench}/target" -type f -name "${_package_jar_name}" -exec cp -t "${_outputs}/package/lib/java" -- {} \;
+find -H "${_outputs}/${_pom_group}--${_pom_artifact}--${_pom_version}/target" -type f -name "${_package_jar_name}" -exec cp -t "${_outputs}/package/lib/java" -- {} \;
 find -H "${_tools}/lib" -xtype f \( -name 'lib*.so' -o -name 'lib*.so.*' \) -exec cp -t "${_outputs}/package/lib/java" -- {} \;
 
 mkdir -- "${_outputs}/package/lib/scripts"

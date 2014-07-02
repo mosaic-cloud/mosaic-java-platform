@@ -27,152 +27,9 @@
 	<build>
 		
 		<defaultGoal>validate</defaultGoal>
+		<directory>${_mvn_target}</directory>
 		
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>verify</id>
-						<phase>verify${_mvn_skip_analyze}</phase>
-						<goals>
-							<goal>analyze-only</goal>
-						</goals>
-						<configuration>
-							<failOnWarning>true</failOnWarning>
-							<ignoreNonCompile>true</ignoreNonCompile>
-							<skip>${_mvn_skip_analyze}</skip>
-						</configuration>
-					</execution>
-					<execution>
-						<id>initialize</id>
-						<phase>initialize${_mvn_skip_update}</phase>
-						<goals>
-							<goal>resolve-plugins</goal>
-							<goal>resolve</goal>
-						</goals>
-						<configuration>
-							<includeScope>compile</includeScope>
-							<excludeReactor>true</excludeReactor>
-							<excludeScope>test</excludeScope>
-							<excludeGroupIds>eu.mosaic_cloud,eu.mosaic_cloud.tools</excludeGroupIds>
-							<skip>${_mvn_skip_update}</skip>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>license-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>generate-sources${_mvn_skip_licenses}</phase>
-						<goals>
-							<goal>download-licenses</goal>
-							<goal>update-project-license</goal>
-							<goal>update-file-header</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<canUpdateCopyright>true</canUpdateCopyright>
-					<canUpdateLicense>true</canUpdateLicense>
-					<canUpdateDescription>true</canUpdateDescription>
-					<skipUpdateProjectLicense>${_mvn_skip_licenses}</skipUpdateProjectLicense>
-					<skipUpdateLicense>${_mvn_skip_licenses}</skipUpdateLicense>
-					<offline>${_mvn_skip_licenses}</offline>
-				</configuration>
-			</plugin>
-			<!-- FIXME: Broken plugin!
-			<plugin>
-				<groupId>eu.mosaic_cloud.plugins</groupId>
-				<artifactId>java-formatter-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>generate-sources${_mvn_skip_formatter}</phase>
-						<goals>
-							<goal>format</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<compilerSource>${versions.java.source}</compilerSource>
-					<compilerCompliance>${versions.java.source}</compilerCompliance>
-					<compilerTarget>${versions.java.target}</compilerTarget>
-					<overrideConfigCompilerVersion>true</overrideConfigCompilerVersion>
-					<configFile>mosaic-java-formatter-maven-plugin-default-configuration.xml</configFile>
-					<lineEnding>LF</lineEnding>
-				</configuration>
-			</plugin>
-			-->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>run</goal>
-						</goals>
-						<configuration>
-							<target>
-								<echo
-									message="_pom_group=${project.groupId}${line.separator}"
-									file="/dev/stdout" />
-								<echo
-									message="_pom_artifact=${project.artifactId}${line.separator}"
-									file="/dev/stdout" />
-								<echo message="_pom_version=${project.version}${line.separator}"
-									file="/dev/stdout" />
-								<echo
-									message="_pom_classifier=${_pom_classifier}${line.separator}"
-									file="/dev/stdout" />
-								<echo
-									message="_pom_package=${_pom_package}${line.separator}"
-									file="/dev/stdout" />
-							</target>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<phase>initialize${_mvn_skip_outputs}</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<executable>/bin/bash</executable>
-							<arguments>
-								<argument>-c</argument>
-								<argument>
-									if test \
-											\( ! -e '${project.build.directory}' -a -L '${project.build.directory}' \) -o \
-											\( -n '${_mvn_outputs}' -a ! -e '${project.build.directory}' \) -o \
-											\( -n '${_mvn_outputs}' -a -d '${project.build.directory}' \)
-									then
-										if test -L '${project.build.directory}' ; then
-											mkdir -p -- "$( readlink -m -- '${project.build.directory}' )" || exit 1 ;
-										elif test -d '${project.build.directory}' ; then
-											mkdir -p -- '${_mvn_outputs}/${project.groupId}:${project.artifactId}:${project.version}' || exit 1 ;
-											mv -T -- '${project.build.directory}' '${_mvn_outputs}/${project.groupId}:${project.artifactId}:${project.version}/target' || exit 1 ;
-											ln -s -T -- '${_mvn_outputs}/${project.groupId}:${project.artifactId}:${project.version}/target' '${project.build.directory}' || exit 1 ;
-										else
-											mkdir -p -- '${_mvn_outputs}/${project.groupId}:${project.artifactId}:${project.version}/target' || exit 1 ;
-											ln -s -T -- '${_mvn_outputs}/${project.groupId}:${project.artifactId}:${project.version}/target' '${project.build.directory}' || exit 1 ;
-										fi ;
-									fi ;
-									exit 0 ;
-								</argument>
-							</arguments>
-							<skip>${_mvn_skip_outputs}</skip>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
 		
 		<pluginManagement>
@@ -333,13 +190,16 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		
 		<extensions>
+			<!-- FIXME: This should be part of the `use-mosaic-s3-repositories` profile! -->
 			<extension>
 				<groupId>org.springframework.build</groupId>
 				<artifactId>aws-maven</artifactId>
 				<version>${versions.plugins.aws}</version>
 			</extension>
 		</extensions>
+		
 	</build>
 	
 	<properties>
@@ -390,22 +250,17 @@
 		
 		<license.licenseName>apache_v2</license.licenseName>
 		
-		<repositories.mosaic_dev.enabled>false</repositories.mosaic_dev.enabled>
-		<repositories.mosaic_s3.enabled>false</repositories.mosaic_s3.enabled>
-		
-		<_mvn_outputs />
-		<_mvn_skip_all>true</_mvn_skip_all>
-		<_mvn_skip_outputs>false</_mvn_skip_outputs>
-		<_mvn_skip_update>true</_mvn_skip_update>
-		<_mvn_skip_analyze>${_mvn_skip_all}</_mvn_skip_analyze>
+		<_mvn_target>${project.basedir}/target</_mvn_target>
+		<_mvn_skip_all>false</_mvn_skip_all>
 		<_mvn_skip_tests>${_mvn_skip_all}</_mvn_skip_tests>
 		<_mvn_skip_source>${_mvn_skip_all}</_mvn_skip_source>
 		<_mvn_skip_javadoc>${_mvn_skip_all}</_mvn_skip_javadoc>
-		<_mvn_skip_licenses>${_mvn_skip_all}</_mvn_skip_licenses>
-		<_mvn_skip_formatter>${_mvn_skip_all}</_mvn_skip_formatter>
 		
-		<_pom_package />
+		<_pom_group>${project.groupId}${line.separator}</_pom_group>
+		<_pom_artifact>${project.artifactId}</_pom_artifact>
+		<_pom_version>${project.version}</_pom_version>
 		<_pom_classifier />
+		<_pom_package />
 		
 	</properties>
 	
@@ -417,88 +272,279 @@
 		</license>
 	</licenses>
 	
-	<repositories>
-		<repository>
-			<id>mosaic-dev</id>
-			<name>mOSAIC Repository (developers.mosaic-cloud.eu)</name>
-			<url>http://developers.mosaic-cloud.eu/artifactory/mosaic</url>
-			<layout>default</layout>
-			<releases>
-				<enabled>${repositories.mosaic_dev.enabled}</enabled>
-			</releases>
-			<snapshots>
-				<enabled>${repositories.mosaic_dev.enabled}</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>mosaic-s3</id>
-			<name>mOSAIC Repository (S3)</name>
-			<url>s3://mosaic-java-platform--artifacts/</url>
-			<layout>default</layout>
-			<releases>
-				<enabled>${repositories.mosaic_s3.enabled}</enabled>
-			</releases>
-			<snapshots>
-				<enabled>${repositories.mosaic_s3.enabled}</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
-	
-	<pluginRepositories>
-		<pluginRepository>
-			<id>mosaic-dev</id>
-			<name>mOSAIC Repository (developers.mosaic-cloud.eu)</name>
-			<url>http://developers.mosaic-cloud.eu/artifactory/mosaic</url>
-			<layout>default</layout>
-			<releases>
-				<enabled>${repositories.mosaic_dev.enabled}</enabled>
-			</releases>
-			<snapshots>
-				<enabled>${repositories.mosaic_dev.enabled}</enabled>
-			</snapshots>
-		</pluginRepository>
-		<!-- NOTE: Currently disabled.
-		<pluginRepository>
-			<id>mosaic-s3</id>
-			<name>mOSAIC Repository (AWS)</name>
-			<url>s3://mosaic-java-platform- -artifacts/</url>
-			<layout>default</layout>
-			<releases>
-				<enabled>${repositories.mosaic_s3.enabled}</enabled>
-			</releases>
-			<snapshots>
-				<enabled>${repositories.mosaic_s3.enabled}</enabled>
-			</snapshots>
-		</pluginRepository>
-		-->
-	</pluginRepositories>
-	
-	<distributionManagement>
-		<repository>
-			<id>mosaic-dev-releases</id>
-			<name>mOSAIC Releases Repository (developers.mosaic-cloud.eu)</name>
-			<url>http://developers.mosaic-cloud.eu/artifactory/mosaic</url>
-		</repository>
-		<snapshotRepository>
-			<id>mosaic-dev-snapshots</id>
-			<name>mOSAIC Snapshots Repository (developers.mosaic-cloud.eu)</name>
-			<url>http://developers.mosaic-cloud.eu/artifactory/mosaic</url>
-			<uniqueVersion>false</uniqueVersion>
-		</snapshotRepository>
-		<!-- NOTE: Currently disabled.
-		<repository>
-			<id>mosaic-s3-releases</id>
-			<name>mOSAIC Releases Repository (S3)</name>
-			<url>s3://mosaic-java-platform- -artifacts/</url>
-		</repository>
-		<snapshotRepository>
-			<id>mosaic-s3-snapshots</id>
-			<name>mOSAIC Snapshots Repository (S3)</name>
-			<url>s3://mosaic-java-platform- -artifacts/</url>
-			<uniqueVersion>false</uniqueVersion>
-		</snapshotRepository>
-		-->
-	</distributionManagement>
+	<profiles>
+		
+		<profile>
+			<id>use-mosaic-dev-repositories</id>
+			<repositories>
+				<repository>
+					<id>mosaic-dev</id>
+					<url>http://developers.mosaic-cloud.eu/artifactory/mosaic</url>
+					<layout>default</layout>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>mosaic-dev</id>
+					<url>http://developers.mosaic-cloud.eu/artifactory/mosaic</url>
+					<layout>default</layout>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</pluginRepository>
+			</pluginRepositories>
+			<distributionManagement>
+				<repository>
+					<id>mosaic-dev-releases</id>
+					<url>http://developers.mosaic-cloud.eu/artifactory/mosaic</url>
+				</repository>
+				<snapshotRepository>
+					<id>mosaic-dev-snapshots</id>
+					<url>http://developers.mosaic-cloud.eu/artifactory/mosaic</url>
+					<uniqueVersion>false</uniqueVersion>
+				</snapshotRepository>
+			</distributionManagement>
+		</profile>
+		
+		<profile>
+			<id>use-mosaic-s3-repositories</id>
+			<repositories>
+				<repository>
+					<id>mosaic-s3</id>
+					<url>s3://mosaic-java-platform--artifacts/</url>
+					<layout>default</layout>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>mosaic-s3</id>
+					<url>s3://mosaic-java-platform--artifacts/</url>
+					<layout>default</layout>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</pluginRepository>
+			</pluginRepositories>
+			<distributionManagement>
+				<repository>
+					<id>mosaic-s3-releases</id>
+					<url>s3://mosaic-java-platform--artifacts/</url>
+				</repository>
+				<snapshotRepository>
+					<id>mosaic-s3-snapshots</id>
+					<url>s3://mosaic-java-platform--artifacts/</url>
+					<uniqueVersion>false</uniqueVersion>
+				</snapshotRepository>
+			</distributionManagement>
+			<build>
+			</build>
+		</profile>
+		
+		<profile>
+			<id>do-dependency-update</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>initialize</phase>
+								<goals>
+									<goal>resolve-plugins</goal>
+									<goal>resolve</goal>
+								</goals>
+								<configuration>
+									<includeScope>compile</includeScope>
+									<excludeReactor>true</excludeReactor>
+									<excludeScope>test</excludeScope>
+									<excludeGroupIds>eu.mosaic_cloud,eu.mosaic_cloud.tools</excludeGroupIds>
+									<skip>${_mvn_skip_update}</skip>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+			<properties>
+				<_mvn_skip_update>${_mvn_skip_all}</_mvn_skip_update>
+			</properties>
+		</profile>
+		
+		<profile>
+			<id>do-dependency-analysis</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>verify</phase>
+								<goals>
+									<goal>analyze-only</goal>
+								</goals>
+								<configuration>
+									<failOnWarning>true</failOnWarning>
+									<ignoreNonCompile>true</ignoreNonCompile>
+									<skip>${_mvn_skip_analyze}</skip>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+			<properties>
+				<_mvn_skip_analyze>${_mvn_skip_all}</_mvn_skip_analyze>
+			</properties>
+		</profile>
+		
+		<profile>
+			<id>do-licenses-update</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>license-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>download-licenses</goal>
+									<goal>update-project-license</goal>
+									<goal>update-file-header</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<canUpdateCopyright>true</canUpdateCopyright>
+							<canUpdateLicense>true</canUpdateLicense>
+							<canUpdateDescription>true</canUpdateDescription>
+							<skipUpdateProjectLicense>${_mvn_skip_licenses}</skipUpdateProjectLicense>
+							<skipUpdateLicense>${_mvn_skip_licenses}</skipUpdateLicense>
+							<offline>${_mvn_skip_licenses}</offline>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+			<properties>
+				<_mvn_skip_licenses>${_mvn_skip_all}</_mvn_skip_licenses>
+			</properties>
+		</profile>
+		
+		<profile>
+			<id>do-formatter-updates</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>eu.mosaic_cloud.plugins</groupId>
+						<artifactId>java-formatter-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>generate-sources</phase>
+								<goals>
+									<goal>format</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<compilerSource>${versions.java.source}</compilerSource>
+							<compilerCompliance>${versions.java.source}</compilerCompliance>
+							<compilerTarget>${versions.java.target}</compilerTarget>
+							<overrideConfigCompilerVersion>true</overrideConfigCompilerVersion>
+							<configFile>mosaic-java-formatter-maven-plugin-default-configuration.xml</configFile>
+							<lineEnding>LF</lineEnding>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+			<properties>
+				<_mvn_skip_formatter>${_mvn_skip_all}</_mvn_skip_formatter>
+			</properties>
+		</profile>
+		
+		<profile>
+			<id>use-mvn-outputs-with-target</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>initialize</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<executable>/bin/bash</executable>
+									<arguments>
+										<argument>-c</argument>
+										<argument>
+											if test \
+													\( ! -e '${_mvn_target}' -a -L '${_mvn_target}' \) -o \
+													\( -n '${_mvn_target_store}' -a ! -e '${_mvn_target}' \) -o \
+													\( -n '${_mvn_target_store}' -a -d '${_mvn_target}' \)
+											then
+												if test -L '${_mvn_target}' ; then
+													mkdir -p -- "$( readlink -m -- '${_mvn_target}' )" || exit 1 ;
+												elif test -d '${_mvn_target}' ; then
+													mkdir -p -- "$( dirname -- "$( readlink -m -- '${_mvn_target_store}' )" )" || exit 1 ;
+													mv -T -- '${_mvn_target}' '${_mvn_target_store}' || exit 1 ;
+													ln -s -T -- '${_mvn_target_store}' '${_mvn_target}' || exit 1 ;
+												else
+													mkdir -p -- "$( readlink -m -- '${_mvn_target_store}' )" || exit 1 ;
+													ln -s -T -- '${_mvn_target_store}' '${_mvn_target}' || exit 1 ;
+												fi ;
+											fi ;
+											exit 0 ;
+										</argument>
+									</arguments>
+									<skip>${_mvn_skip_target_ln}</skip>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+			<properties>
+				<_mvn_target>${project.basedir}/target</_mvn_target>
+				<_mvn_target_store>${_mvn_outputs}/${project.groupId}--${project.artifactId}--${project.version}/target</_mvn_target_store>
+				<_mvn_outputs>${_mvn_TMPDIR}</_mvn_outputs>
+				<_mvn_TMPDIR>${java.io.tmpdir}</_mvn_TMPDIR>
+				<_mvn_skip_target_ln>${_mvn_skip_all}</_mvn_skip_target_ln>
+			</properties>
+		</profile>
+		
+		<profile>
+			<id>use-mvn-outputs-without-target</id>
+			<properties>
+				<_mvn_target>${_mvn_outputs}/${project.groupId}--${project.artifactId}--${project.version}/target</_mvn_target>
+				<_mvn_outputs>${_mvn_TMPDIR}</_mvn_outputs>
+				<_mvn_TMPDIR>${java.io.tmpdir}</_mvn_TMPDIR>
+				<_mvn_skip_target_ln>true</_mvn_skip_target_ln>
+			</properties>
+		</profile>
+		
+	</profiles>
 	
 	<organization>
 		<name>Institute e-Austria Timisoara (Romania)</name>

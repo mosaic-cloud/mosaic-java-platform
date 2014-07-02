@@ -14,6 +14,7 @@ if test "${pallur_deploy_artifactory:-false}" == true ; then
 					-f "${_mvn_pom}" \
 					--projects "${_pom_group}:${_pom_artifact}" \
 					--also-make \
+					--activate-profiles "${_mvn_profiles}" \
 					"${_mvn_args[@]}" \
 					deploy \
 					-D_mvn_skip_all=true
@@ -25,6 +26,7 @@ if test "${pallur_deploy_artifactory:-false}" == true ; then
 			env -i "${_mvn_env[@]}" "${_mvn_bin}" \
 					-f "${_mvn_pom}" \
 					--also-make \
+					--activate-profiles "${_mvn_profiles}" \
 					"${_mvn_args[@]}" \
 					deploy \
 					-D_mvn_skip_all=true

@@ -66,10 +66,12 @@ if test -e "${_workbench}/pom-umbrella.xml" ; then
 else
 	_mvn_umbrella_pom="${_workbench}/pom.xml"
 fi
+_mvn_profiles=use-mvn-outputs-without-target,use-mosaic-dev-repositories
 _mvn_args=(
 		--errors
 		--batch-mode
-		-D_mvn_outputs="${_temporary}/mosaic-java-platform--$( readlink -m -- "${_workbench}/.outputs" | tr -d '\n' | md5sum -t | tr -d ' \n-' )"
+		-D_mvn_outputs="${_outputs}"
+		-D_mvn_TMPDIR="${_TMPDIR}"
 		--log-file /dev/stderr
 )
 if test -n "${_mvn_debug:-}" ; then
@@ -90,12 +92,11 @@ done <<<"$(
 		# FIXME: Add `--offline` flag, if Maven has already downloaded required plugins. (See `mosaic-distribution`.)
 		env "${_mvn_env[@]}" "${_mvn_bin}" \
 				-f "${_mvn_this_pom}" \
-				"${_mvn_args[@]}" \
 				help:effective-pom \
-				-Doutput=/dev/stderr \
-			3>&1 1>&2 2>&3 \
-		| grep -o -E -e '<echo message="_pom_[a-z]+=.+&#xA;" file="/dev/stdout" />' \
-		| sed -r -e 's!^<echo message="(_pom_[a-z]+=.+)&#xA;" file="/dev/stdout" />$!\1!'
+				-Doutput=/dev/fd/3 \
+			3>&1 \
+		| grep -o -E -e '^ *<_pom_[a-z]+>.*</_pom_[a-z]+>$' \
+		| sed -r -e 's!^ *<(_pom_[a-z]+)>(.*)</_pom_[a-z]+>$!\1=\2!'
 )"
 
 _mvn_pom="${_mvn_umbrella_pom}"

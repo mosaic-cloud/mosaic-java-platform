@@ -13,6 +13,7 @@ case "${_pom_classifier}" in
 				-f "${_mvn_pom}" \
 				--projects "${_pom_group}:${_pom_artifact}" \
 				--also-make \
+				--activate-profiles "${_mvn_profiles}" \
 				"${_mvn_args[@]}" \
 				compile test-compile \
 				-D_mvn_skip_all=true
@@ -24,6 +25,7 @@ case "${_pom_classifier}" in
 		exec env -i "${_mvn_env[@]}" "${_mvn_bin}" \
 				-f "${_mvn_pom}" \
 				--also-make \
+				--activate-profiles "${_mvn_profiles}" \
 				"${_mvn_args[@]}" \
 				compile test-compile \
 				-D_mvn_skip_all=true
