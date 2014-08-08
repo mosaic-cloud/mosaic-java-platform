@@ -28,8 +28,11 @@
 	</modules>
 	
 	<properties>
-		<_pom_package>mosaic-java-platform-artifacts</_pom_package>
+		<_pom_group>eu.mosaic_cloud</_pom_group>
+		<_pom_artifact>artifacts</_pom_artifact>
+		<_pom_version>0.7.0_mosaic_dev-SNAPSHOT</_pom_version>
 		<_pom_classifier>artifacts</_pom_classifier>
+		<_pom_package>mosaic-java-platform-artifacts</_pom_package>
 	</properties>
 	
 </project>

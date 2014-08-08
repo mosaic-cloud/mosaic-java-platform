@@ -256,12 +256,6 @@
 		<_mvn_skip_source>${_mvn_skip_all}</_mvn_skip_source>
 		<_mvn_skip_javadoc>${_mvn_skip_all}</_mvn_skip_javadoc>
 		
-		<_pom_group>${project.groupId}${line.separator}</_pom_group>
-		<_pom_artifact>${project.artifactId}</_pom_artifact>
-		<_pom_version>${project.version}</_pom_version>
-		<_pom_classifier />
-		<_pom_package />
-		
 	</properties>
 	
 	<licenses>

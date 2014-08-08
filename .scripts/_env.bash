@@ -94,17 +94,14 @@ while read _pom_variable ; do
 	declare "${_pom_variable}"
 done <<<"$(
 		# FIXME: Add `--offline` flag, if Maven has already downloaded required plugins. (See `mosaic-distribution`.)
-		env "${_mvn_env[@]}" "${_mvn_bin}" \
-				-f "${_mvn_this_pom}" \
-				help:effective-pom \
-				-Doutput=/dev/fd/3 \
-			3>&1 \
-		| grep -o -E -e '^ *<_pom_[a-z]+>.*</_pom_[a-z]+>$' \
-		| sed -r -e 's!^ *<(_pom_[a-z]+)>(.*)</_pom_[a-z]+>$!\1=\2!'
+		cat -- "${_mvn_this_pom}" \
+		| grep -o -E -e '^\s*<_pom_[a-z]+>.*</_pom_[a-z]+>\s*$' \
+		| sed -r -e 's!^\s*<(_pom_[a-z]+)>(.*)</_pom_[a-z]+>\s*$!\1=\2!'
 )"
 
 _mvn_pom="${_mvn_umbrella_pom}"
 
+test -n "${_pom_group:-}"
 test -n "${_pom_artifact:-}"
 test -n "${_pom_version:-}"
 test -n "${_pom_classifier:-}"
