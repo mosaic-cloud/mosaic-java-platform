@@ -28,6 +28,7 @@
 	</modules>
 	
 	<properties>
+		<_pom_package>mosaic-java-platform-artifacts</_pom_package>
 		<_pom_classifier>artifacts</_pom_classifier>
 	</properties>
 	
