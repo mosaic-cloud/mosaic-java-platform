@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>eu.mosaic_cloud.tools</groupId>
 		<artifactId>tools-parent</artifactId>
-		<version>0.7.0_mosaic_dev-SNAPSHOT</version>
+		<version>0.7.0_dev-SNAPSHOT</version>
 		<relativePath>../tools-parent</relativePath>
 	</parent>
 	

@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>eu.mosaic_cloud.platform</groupId>
 		<artifactId>platform-parent</artifactId>
-		<version>0.7.0_mosaic_dev-SNAPSHOT</version>
+		<version>0.7.0_dev-SNAPSHOT</version>
 		<relativePath>../platform-parent</relativePath>
 	</parent>
 	

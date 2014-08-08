@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>eu.mosaic_cloud.components</groupId>
 		<artifactId>components-parent</artifactId>
-		<version>0.7.0_mosaic_dev-SNAPSHOT</version>
+		<version>0.7.0_dev-SNAPSHOT</version>
 		<relativePath>../components-parent</relativePath>
 	</parent>
 	
@@ -117,7 +117,7 @@
 	<properties>
 		<_pom_group>eu.mosaic_cloud.components</_pom_group>
 		<_pom_artifact>components-container</_pom_artifact>
-		<_pom_version>0.7.0_mosaic_dev-SNAPSHOT</_pom_version>
+		<_pom_version>0.7.0_dev-SNAPSHOT</_pom_version>
 		<_pom_classifier>component</_pom_classifier>
 		<_pom_package>mosaic-components-java-component-container</_pom_package>
 	</properties>
