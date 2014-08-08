@@ -36,7 +36,7 @@ else
 fi
 if test -z "${_java_bin}" ; then
 	echo "[ee] missing \`java\` (Java interpreter) executable in path: \`${_PATH}\`; ignoring!" >&2
-	exit 1
+	_java_bin=false
 fi
 
 if test -n "${_M2_HOME:-}" ; then
@@ -46,7 +46,7 @@ else
 fi
 if test -z "${_mvn_bin}" ; then
 	echo "[ee] missing \`mvn\` (Java Maven tool) executable in path: \`${_PATH}\`; ignoring!" >&2
-	exit 1
+	_mvn_bin=false
 fi
 
 _generic_env=(
