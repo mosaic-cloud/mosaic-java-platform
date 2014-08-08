@@ -112,6 +112,7 @@ case "${_pom_classifier}" in
 		_package_version="${pallur_distribution_version:-0.7.0_mosaic_dev}"
 		_package_scripts=( run-component )
 		_package_jar_name="${_pom_artifact}-${_pom_version}-${_pom_classifier}.jar"
+		_artifacts_cache="${pallur_artifacts:-}"
 	;;
 	( artifacts )
 	;;
