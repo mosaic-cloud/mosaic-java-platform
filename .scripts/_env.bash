@@ -50,7 +50,7 @@ if test -z "${_mvn_bin}" ; then
 fi
 
 _generic_env=(
-		PATH="${_PATH}"
+		PATH="${_JAVA_HOME}/bin:${_M2_HOME}/bin:${_PATH}"
 		HOME="${_HOME}"
 		TMPDIR="${_TMPDIR}"
 		JAVA_HOME="${_JAVA_HOME}"
