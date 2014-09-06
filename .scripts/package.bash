@@ -59,7 +59,8 @@ mkdir -- "${_outputs}/package/lib/scripts"
 cat >"${_outputs}/package/lib/scripts/_do.sh" <<'EOS'
 #!/bin/bash
 
-set -e -E -u -o pipefail || exit 1
+set -e -E -u -o pipefail -o noclobber -o noglob +o braceexpand || exit 1
+trap 'printf "[ee] failed: %s\n" "${BASH_COMMAND}" >&2' ERR || exit 1
 
 _self_basename="$( basename -- "${0}" )"
 _self_realpath="$( readlink -e -- "${0}" )"
@@ -69,7 +70,39 @@ _package="$( readlink -e -- . )"
 cmp -s -- "${_package}/lib/scripts/_do.sh" "${_self_realpath}"
 test -e "${_package}/lib/scripts/${_self_basename}.bash"
 
-_PATH="${_package}/bin:${PATH:-}"
+test -d "${_package}/env/paths"
+_PATH="$(
+		find "${_package}/env/paths" -xdev -mindepth 1 -maxdepth 1 -type l -xtype d \
+		| sort \
+		| while read -r _path ; do
+			printf ':%s' "$( readlink -m -- "${_path}" )"
+		done
+)"
+_PATH="${_PATH/:}"
+export PATH="${_PATH}"
+
+if test -e "${_package}/env/variables" ; then
+	while read -r _path ; do
+		_name="$( basename -- "${_path}" )"
+		case "${_name}" in
+			( @a:* )
+				test -L "${_path}"
+				_name="${_name/*:}"
+				_value="$( readlink -e -- "${_path}" )"
+			;;
+			( * )
+				echo "[ee] invalid variable \`${_path}\`; aborting!"
+				exit 1
+			;;
+		esac
+		export -- "${_name}=${_value}"
+	done < <(
+			find "${_package}/env/variables" -xdev -mindepth 1 \
+			| sort
+	)
+	
+fi
+
 _LD_LIBRARY_PATH="${_package}/lib/java:${LD_LIBRARY_PATH:-}"
 
 _java_bin="$( PATH="${_PATH}" type -P -- java || true )"
@@ -115,6 +148,8 @@ for _script_name in "${_package_scripts[@]}" ; do
 	ln -s -T -- ./_do.sh "${_outputs}/package/lib/scripts/${_script_name}"
 	cat >"${_outputs}/package/bin/${_package_name}--${_script_name}" <<EOS
 #!/bin/bash
+set -e -E -u -o pipefail -o noclobber -o noglob +o braceexpand || exit 1
+trap 'printf "[ee] failed: %s\n" "\${BASH_COMMAND}" >&2' ERR || exit 1
 if test "\${#}" -eq 0 ; then
 	exec "\$( dirname -- "\$( readlink -e -- "\${0}" )" )/../lib/scripts/${_script_name}"
 else
@@ -124,7 +159,7 @@ EOS
 	chmod +x -- "${_outputs}/package/bin/${_package_name}--${_script_name}"
 done
 
-chmod -R a+rX-w -- "${_outputs}/package"
+chmod -R a+rX-w,u+w -- "${_outputs}/package"
 
 cd "${_outputs}/package"
 find . \
