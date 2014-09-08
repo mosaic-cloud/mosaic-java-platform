@@ -21,10 +21,10 @@ elif test -e "${_tools}/pkg/java" ; then
 else
 	_JAVA_HOME="${JAVA_HOME:-}"
 fi
-if test -n "${pallur_pkg_mvn:-}" ; then
-	_M2_HOME="${pallur_pkg_mvn}"
-elif test -e "${_tools}/pkg/mvn" ; then
-	_M2_HOME="${_tools}/pkg/mvn"
+if test -n "${pallur_pkg_maven:-}" ; then
+	_M2_HOME="${pallur_pkg_maven}"
+elif test -e "${_tools}/pkg/maven" ; then
+	_M2_HOME="${_tools}/pkg/maven"
 else
 	_M2_HOME="${M2_HOME:-}"
 fi
