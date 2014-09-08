@@ -1,12 +1,10 @@
 
 .*
 !.gitignore
-!.hgignore
 !/.scripts
-!/.scripts/**
+!/.scripts/*
 
 target
-lib
 META-INF
 
 *#
