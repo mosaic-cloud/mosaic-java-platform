@@ -1,0 +1,4 @@
+
+{process_group_alias, 'mosaic-components:java-driver-riak', <<16#a3e40f0b2c041bc694ace68ace08420d40f9cbc0 : 160>>}.
+{process_configurator, 'mosaic-components:java-driver-riak', term, {mosaic_component_process_configurators, configure_hardcoded, defaults}}.
+{process_configurator, 'mosaic-components:java-driver-riak', json, {mosaic_component_process_configurators, configure_hardcoded, defaults}}.

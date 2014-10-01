@@ -54,6 +54,16 @@ mkdir -- "${_outputs}/package/lib/java"
 find -H "${_outputs}/${_pom_group}--${_pom_artifact}--${_pom_version}/target" -type f -name "${_package_jar_name}" -exec cp -t "${_outputs}/package/lib/java" -- {} \;
 find -H "${pallur_pkg_jzmq}/lib" -xtype f \( -name 'lib*.so' -o -name 'lib*.so.*' \) -exec cp -t "${_outputs}/package/lib/java" -- {} \;
 
+mkdir -- "${_outputs}/package/lib/mosaic-platform-definitions"
+find "${_outputs}" -maxdepth 1 -type d \
+| while read _module ; do
+	if test -e "${_module}/target/classes/mosaic_platform_definitions.term" ; then
+		cp -T -- \
+				"${_module}/target/classes/mosaic_platform_definitions.term" \
+				"${_outputs}/package/lib/mosaic-platform-definitions/$( basename -- "${_module}" ).term"
+	fi
+done
+
 mkdir -- "${_outputs}/package/lib/scripts"
 
 cat >"${_outputs}/package/lib/scripts/_do.sh" <<'EOS'
