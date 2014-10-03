@@ -5,12 +5,14 @@ if ! test "${#}" -eq 0 ; then
 	exit 1
 fi
 
+## chunk::3c8b019c663118b00172b22aeae97568::begin ##
 if test ! -e "${_temporary}" ; then
 	mkdir -- "${_temporary}"
 fi
 if test ! -e "${_outputs}" ; then
 	mkdir -- "${_outputs}"
 fi
+## chunk::3c8b019c663118b00172b22aeae97568::end ##
 
 case "${_pom_classifier}" in
 	
