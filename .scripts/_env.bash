@@ -78,9 +78,9 @@ _mvn_args=(
 		-D_mvn_TMPDIR="${_TMPDIR}"
 		--log-file /dev/stderr
 )
-if test -n "${_mvn_debug:-}" ; then
+if test "${_mvn_debug:-false}" == true ; then
 	_mvn_args+=( --debug )
-elif test -n "${_mvn_verbose:-}" ; then
+elif test "${_mvn_verbose:-true}" == true ; then
 	_mvn_args+=( )
 else
 	_mvn_args+=( --quiet )
